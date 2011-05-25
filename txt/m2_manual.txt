@@ -1,0 +1,660 @@
+
+=============================================================
+== Related Software ==
+
+KeyWords: graphical user interface microcontroller
+
+PEG		http://www.swellsoftware.com/
+  > 90 KB Flash-ROM
+
+MiniGUI	http://www.minigui.org/
+  > 700KB Flash-ROM
+
+emWin	http://www.segger.com
+  10-60 KB Flash-ROM
+
+EasyGUI	http://www.easygui.com/
+  30-350 KB Flash-ROM
+  
+Contiki		http://en.wikipedia.org/wiki/Contiki
+  Contiki basically is an OS.
+  "typical system" requires 40KB Flash ROM, not clear of GUI is included or not.
+  Not much documentation about the GUI itself.
+
+storyboard	http://www.cranksoftware.com/storyboard
+  No Flash-ROM size given, however, it seems that "Storyboard" requires more than 32KB 
+
+=============================================================
+
+Spendeneinnamen
+- Steuerpflichtig
+- Impressumspflichtig
+
+http://www.retosphere.de/offenenetze/2010/06/16/flattr-und-andere-zahlungsdienste-in-blogs-rechtliche-implikationen/
+http://www.homepage-forum.de/showthread.php?t=23659
+http://www.bmj.de/DE/Service/StatistikenFachinfaormationenPublikationen/Fachinformationen/LeitfadenzurImpressumspflicht/_node.html
+beispiele:
+http://www.nagvis.org/impressum
+hoster:
+http://www.berlios.de/
+http://flattr.com/
+
+== Software Architecture ==
+
+Event Prozessing
+  Contains Navigation Structure
+  Calls Event Handler
+  
+
+=============================================================
+== Source File Structre ==
+
+  File Structure
+  
+  Top-Level API  
+      m2.c				Event Processing (init, step)
+	m2utl.c
+      m2draw.c			Draw procedure for the event processing loop
+      
+  Event Handler
+      m2eh2bs.c			2 button simplified handler
+      m2eh2bd.c		2 button handler with data entry mode
+      
+  Event Handler Support procedures
+      m2usrupdn.c		Navigation procedures, will call navigation subsystem
+      m2usrnext.c		Navigation procedures, will call navigation subsystem
+      m2usrprev.c		Navigation procedures, will call navigation subsystem
+
+  Navigation Subsystem
+      m2navinit.c
+      m2navroot.c
+      m2navutil.c
+      m2navupdn.c
+      m2navnext.c 
+      m2navprev.c 
+      m2navlast.c 
+      m2navfirst.c 
+      m2navdataup.c
+      m2navdatadn.c
+
+  Parser for option string
+      m2opt.c
+      
+  Access layer
+      m2ae.c
+      
+  Calls to element functions
+      m2fnarg.c
+      
+  Low Level Graphics 
+    m2gfxutl.c
+      
+  Element (Widget) Files
+    Base Elements (DO NOT USE DIRECTLY IN THE TREE)
+      m2elfnfmt.c			m2_el_fnfmt_fn [m2_el_fnfmt_t]
+      m2elu8base.c			m2_el_u8base_fn [m2_el_u8_t]
+      m2elsetval.c			m2_el_setval_fn [m2_el_setval_t]
+      m2ellistbase.c 			m2_el_listbase_fn [m2_el_list_t]
+    Container (List) Elements 
+      m2ellistcalc.c 
+      m2ellistv.c 				m2_el_listv_fn [m2_el_list_t]
+      m2ellisth.c 			m2_el_listh_fn [m2_el_list_t]
+      m2ellistgrid.c			m2_el_listgrid_fn [m2_el_list_t]
+    Align Element
+      m2elalign.c			m2_el_align_fn [m2_el_align_t]
+    Number entry: uint8_t
+      m2elu8num.c 			m2_el_u8num_fn [m2_el_u8_t]
+      m2elu8hs.c			m2_el_u8hs_fn [m2_el_u8_t]
+      m2eltoggle.c			m2_el_toggle_fn [m2_el_setval_t]	Only values 0 and 1
+      m2elradio.c			m2_el_radio_fn [m2_el_setval_t]
+    Number entry: uint32_t
+      m2elu32.c				m2_el_u32_fn [m2_el_u32_t]
+    String entry: char *
+      m2eltext.c				m2_el_text_fn [m2_el_text_t]
+    Select Elements
+      m2elroot.c				m2_el_root_fn [m2_el_root_t]		Change root element
+      m2ellabel.c				m2_el_label_fn [m2_el_str_t]		Read only text
+      m2elstr.c				m2_el_str_fn [m2_el_str_t]
+      m2elstrup.c			m2_el_str_up_fn [m2_el_str_t]		Go up one level
+    Utility Procedures
+      m2elsubutl.c			helper procedures for m2elu32.c, m2eltext.c
+
+  Element Hierarchy
+    S:m2_el_fnfmt, F:m2_el_fnfmt
+      S:m2_el_u8, F:m2_el_u8base
+	F:m2_el_u8num
+	F:m2_el_u8hs
+      S:m2_el_str, F:m2_el_str
+	F:m2_el_label
+	S:m2_el_root, F:m2_el_root
+
+
+=============================================================
+== Element definition ==
+
+Field Element
+  Description:
+    Stores some data, has no further children
+  Characteristics:
+    M2_EL_MSG_GET_LIST_LEN returns 0
+  Examples:
+    u8, txt
+
+Container Element
+  Description:
+    Allows to select childs
+  Characteristics:
+    M2_EL_MSG_GET_LIST_LEN returns not 0
+    M2_EL_MSG_IS_AUTO_SKIP returns 0
+  Examples:
+    grid, hlist, vlist
+
+Design Element
+  Description:
+    Only used for display/format.
+  Characteristics:
+    M2_EL_MSG_GET_LIST_LEN returns not 0
+    M2_EL_MSG_IS_AUTO_SKIP returns not 0
+  Examples:
+    align
+
+=============================================================
+== Notification Messages ==
+
+For any message which is not processed, a 0 must be returned.
+
+
+M2_EL_MSG_SELECT
+  Description:
+    If the field is not a data entry (M2_EL_MSG_IS_DATA_ENTRY) nor a 
+    list field (M2_EL_MSG_GET_LIST_LEN returns not 0), then this message is sent by event handler.
+    In other words, if the event handler does not know how to react on a select event, then
+    this message is sent. 
+    
+    This message is catched by "mnu_el_str_up_fn" to return the
+    user to the previous level.
+  arg:		
+    -
+  data:		
+    mnu_nav_p
+  return value:
+    1, if the message has been processed sucessfully
+
+M2_EL_MSG_SHOW
+M2_EL_MSG_DBG_SHOW
+  Description:
+    The field should render itself to the graphics sub system (mnu_gfx - functions).
+  arg:
+    0: no focus
+    1: focus, but not the leaf element
+    2: focus and leaf element
+    3: focus and data entry
+  data:
+    mnu_box_p
+      Lower left edge of the element should be at the coordinates of the x and y members of the 
+      mnu_box_p structure.
+  return value:
+    1, if the message has been processed sucessfully
+      
+M2_EL_MSG_GET_LIST_LEN
+  Description:
+    This message requests the number of child elements (if any) for this element.
+    0 must be returned, if there are no childs at all.
+  arg:
+    -
+  data:
+    -
+  return value:
+    The number of childs for this element.
+    
+M2_EL_MSG_GET_LIST_ELEMENT
+  Description:
+    This message requests a pointer the the structure of the child
+  arg: 
+    element position 
+  data: 
+    m2_rom_void_p * 
+  return value:
+    1, if the message has been processed sucessfully
+
+M2_EL_MSG_IS_AUTO_DOWN
+  Description:
+    This message requests if another go down should be issued.
+    Usually only required for design elements
+  arg:
+    -
+  data:
+    -
+  return value:
+    The number of childs for this element.
+
+M2_EL_MSG_IS_READ_ONLY
+  Description:
+    Indicate an element as pure read only element
+  arg:
+    -
+  data:
+    -
+  return value:
+    1, if this is a read only element
+
+M2_EL_MSG_GET_LIST_BOX
+  Description:
+    This message requests the position of a child element. The message is part of the
+    render-algorithm (mnu_draw()) for the menu.
+    This message is only generated if M2_EL_MSG_GET_LIST_LEN returns a value
+    greater than 0.
+  arg:
+    element position
+  data:
+    mnu_pcbox_p
+  return value:
+    1, if the message has been processed sucessfully
+  Note:
+    data points to the pcbox structure which has the following members:
+      p.x	read only		left x position of the parent box
+      p.y	read only		lower y position of the parent box
+      p.w	read only		(obsolete)
+      p.h	read only		(obsolete)
+      c.x	write only		handled over to SHOW msg
+      c.y	write only		handled over to SHOW msg
+      c.w	write only		handled over to SHOW msg	(obsolete)
+      c.h	write only		handled over to SHOW msg	(obsolete)
+
+
+
+    
+M2_EL_MSG_GET_SIZE
+  OBSOLETE
+
+  Description:
+    A request for the size of the element. The result must be written into a "mnu_size_p" structure.
+  arg:
+    -
+  data:
+    mnu_size_p
+  return value:
+    1, if the message has been processed sucessfully
+
+M2_EL_MSG_GET_HEIGHT
+  Description:
+    A request for the height of the element. The result is returned as the result of the procedure.
+    The total height must be returned. This means, that all borders from from the gfx subsystem must be
+    applied (e.g. m2_gfx_add_normal_border_height() must be called)
+  arg:
+    -
+  data:
+    -
+  return value:
+    height
+
+M2_EL_MSG_GET_WIDTH
+  Description:
+    A request for the width of the element. The result is returned as the result of the procedure
+    The total width must be returned. This means, that all borders from from the gfx subsystem must be
+    applied (e.g. m2_gfx_add_normal_border_width() must be called)
+  arg:
+    -
+  data:
+    -
+  return value:
+    width
+
+
+
+M2_EL_MSG_GET_OPT
+  Description:
+    A request for a specific option (provided in arg) of the element. The result must be written into a "uint8_t *" of 'data'.
+  arg:
+    value for the option string (e.g. 'd');
+  data:
+    uint8_t *
+  return value:
+    1, if the message has been processed sucessfully
+
+
+M2_EL_MSG_IS_DATA_ENTRY
+  Description:
+    The element must report, if data entry is possible or not.
+  pos:
+    Element position within the parent
+  arg:
+    -
+  data
+    -
+  return value:
+    0: Data entry is not possible
+    1, Data entry mode is available
+  
+M2_EL_MSG_DATA_UP
+M2_EL_MSG_DATA_DOWN
+  Description:
+    The data for this element must be modified (incremented or decremented)
+  pos:
+    Element position within the parent
+  arg:
+    -
+  data
+    -
+  return value:
+    1, if the message has been processed sucessfully
+
+=============================================================
+== Element Function Prototype ==
+
+All element function have the same prototype:
+  uint8_t mnu_el_fn(mnu_fn_arg_p fn_arg)
+
+Return value:
+  0, by default or in the case of an error
+  1, if the message has been processed
+  any value for some messages
+  
+arg:
+  A pointer to the following structure:
+  struct _mnu_fn_arg
+  {
+    uint8_t attrib;		/* rom attribute of el */
+    void *el;		/* pointer to the element structure */
+    uint8_t msg;		/* message M2_EL_MSG_xxx */
+    uint8_t arg;		/* depends on message */
+    void *data;  		/* depends on message */
+    mnu_nav_p nav;	/* reference to navigation object */
+  };
+
+
+
+== Element Functions ==
+uint8_t mnu_el_str_fn(mnu_fn_arg_p fn_arg)
+  Description: 
+    Displays a selectable string
+  Element:
+    mnu_el_str_p
+  Options:
+    -
+  Based on:
+    -
+    
+uint8_t mnu_el_str_up_fn(mnu_fn_arg_p fn_arg)
+  Description: 
+    String field which will return to the previous menu if selected.
+    Some event handlers do not have a "ok" or "return" button. In this
+    case special fields are quired which brings the user back to the
+    previous level.
+  Element:
+    mnu_el_str_p
+  Options:
+    -
+  Based on:
+    mnu_el_str_fn
+    
+uint8_t mnu_el_u8_fn
+  Description: 
+    Enter 8 bit unsigned value.
+  Element:
+    mnu_el_u8_p
+  Options:
+    'c'		Number of digits, default is 3
+  Based on:
+    -
+
+uint8_t mnu_el_u32_fn
+  Description: 
+    Enter 32 bit unsigned value.
+  Element:
+    mnu_el_u32_p
+  Usage:
+    M2_U32NUM(Identifier, Options, Variable);
+  Options:
+    'c'		Number of digits, default is 9
+    'a'		Auto-skip option, default is 0 (deactived)
+  Based on:
+    -
+
+
+uint8_t m2_el_gridlist_fn(mnu_fn_arg_p fn_arg)
+  Description: 
+    Elements are arranged as a matrix. The number of columns is defined by the option 'c' (see below).
+    Elements are alligned center & left.
+  Element
+    m2_el_list_p
+  Options:
+    'c'		Number of columns of the grid
+  Based on
+    -
+
+=============================================================
+== Element Option  ==
+
+
+Option: 
+  'c'
+Description:
+  Number of columns.
+Used by
+  grid, u32
+Values:
+  0..255
+
+Option: 
+  'a'
+Description:
+  Auto-Skip option. This will modify the behavior of some elements  
+Used by
+  u32, text
+Values:
+  0:	Auto Skip option disabled: Additional "Select" is required.
+  1:	Auto Skip option enabled: "Next" will move trough the sub-elements.
+
+
+Option: 
+  'd'
+Description:
+  Draw without focus flag. Used inside the draw procedure.
+Values:
+  0: Do not draw this element and its child without having focus
+  1: Draw always
+
+Option: 
+  'v'
+Description:
+  Provide additional user value for some elements
+Used by
+  radio
+Values:
+  0..255
+  
+Option: 
+  'w'
+Description:
+  Width.
+Values:
+  0..254
+  255		not specified
+
+Option: 
+  'h'
+Description:
+  Height.
+Values:
+  0..254
+  255		not specified
+
+Option: 
+  '-'
+Description:
+  Horizontal alignment
+Values:
+  0 left
+  1 center (default)
+  2 right
+
+Option: 
+  '|'
+Description:
+  Vertical alignment
+Values:
+  0 bottom
+  1 center (default)
+  2 up
+
+=============================================================
+== Event Processing API ==
+  
+Prototype:
+  void mnu_ep_init(mnu_ep_p ep, uint8_t attrib, void *element, mnu_eh_p eh)
+
+Description: 
+  Setup and prepare event processing. Sets the root object of the user interface.
+  
+ep:
+  Pointer to the event processing data structure. The current state of the
+  event processing will be stored in the event processing data structure
+  
+attrib:
+  Specifies attributes of the pointer 'element'
+
+element:
+  A pointer to the root element of the user interface.
+  
+eh:
+  Event handler, see below
+
+File:
+  mnuep.c
+
+See also:
+  mnu_ep_step()
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Prototype:
+  uint8_t mnu_ep_step(mnu_ep_p ep)
+
+Description: 
+  Process any events for the user interface: 
+  1) Get events from the user interface
+  2) Process and update the user interface
+ 
+ep:
+  Pointer to the event processing data structure. 
+  
+File:
+  mnuep.c
+
+See also:
+  mnu_ep_init()
+  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+Prototype:
+  mnu_nav_p mnu_ep_get_nav(mnu_ep_p ep)
+
+Description:
+  Returns the root object (third argument of mnu_ep_int()) of the user interface. 
+  
+ep:
+  Pointer to the event processing data structure.
+
+Returns:
+  Pointer to root user interface object
+
+File:
+  mnu.h
+
+See also:
+  mnu_ep_init()
+
+=============================================================
+== Event Handler ==
+
+An Event-Handler implements a certain behaviour of the user interface. It mainly defines which
+and how many input devices are used.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Event handler:
+  uint8_t mnu_eh_2b(mnu_ep_p ep, uint8_t msg, uint8_t arg)
+
+Description:
+  Two button (next and select) event handler. Uses data mode to switch between data change and 
+  focus change.
+
+File:
+  mnueh2b.c
+  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Event handler:
+  uint8_t mnu_eh_2bs(mnu_ep_p ep, uint8_t msg, uint8_t arg)
+
+Description:
+  Simplified two button (next and select) event handler. Does not use data mode, instead the 
+  select button is used to change data if required.
+
+File:
+  mnueh2bs.c
+  
+
+
+
+=============================================================
+== Event Handler Messages ==
+typedef uint8_t (*mnu_eh_p)(mnu_ep_p ep, uint8_t msg, uint8_t arg);
+
+Event messages are generated internally by the event source. The event handler must 
+process these messages. The following event messages are important for the implementation
+of new event handlers.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Message:
+  MNU_EP_MSG_SELECT
+
+Description:
+  The select or enter event has occured.
+  Usually a function like 'mnu_nav_down()' is called.
+
+Arg:
+  -
+  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Message:
+  MNU_EP_MSG_NEXT
+
+Description:
+  The 'next' event has occured. 
+  Usually a function like 'mnu_nav_data_up()' or 'mnu_nav_next_cycle' 
+  could be called.
+
+Arg:
+  -
+
+
+=============================================================
+== Event Source Handler ==
+
+typedef uint8_t (*mnu_es_p)(mnu_ep_p ep, uint8_t msg);
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Message:
+  MNU_ES_MSG_GET_KEY
+
+Description:
+  Return a suitable key event or M2_KEY_NONE if there was no key press
+
+Return:
+    M2_KEY_NONE
+    M2_KEY_SELECT
+    M2_KEY_EXIT
+    M2_KEY_NEXT
+    M2_KEY_PREV
+
+
+=============================================================
+== Notes ==
+
+* Borders from the gfx subsystem are only added to atomic elements (lists do not have borders from
+  the gfx subsystem)

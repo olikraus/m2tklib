@@ -1,0 +1,677 @@
+strategy:
+  - data always valid: the field fns do not backup and restore any values
+  - first release will have no scrolling
+
+field functions
+  open
+  close
+  start focus
+  end focus
+  start data entry	--> if keys are limited, then data is entered here
+  end data entry
+  draw ( mode )	--> mode: NO_FOCUS, FOCUS, CONTROL (= data mode)
+  
+  A field does not care about focus change.
+  mode = NO_FOCUS: No keys are received		--> mode will change automatically
+  mode = FOCUS: Only data up/down is received.	--> mode will change automatically
+  mode = CONTROL: All keys are passed		--> mode must be changed manually
+    fld_LeaveControlMode()
+  
+  maybe data mode also reflects the hierarchy.
+  for a sub-dialog the sub dialog is entered only when the sub-dialog is in data mode.
+  
+  
+  
+  
+keys
+
+  data-entry system:
+    Next-key	
+      - change focus
+      - change data
+    Select-key
+      - select field (buttons or selection)
+      - change data entry mode
+  
+  integrated system
+    Next-key
+      - change focus
+    Data-key
+      - change data
+      - select field
+
+-----------------------------------------
+
+28.9.2010
+
+exec-stack
+draw-stack
+
+dlg = stack.Push()
+stack.Pop()
+dlg = stack.Curr()
+
+dlg.fn
+dlg.data
+dlg.child_focus --> inside data
+dlg.Msg()
+
+focus start
+  dlg.child_focus=0
+
+focus next:
+  if ( dlg.child_focus == dlg.total_number_of_elements() )
+    if ( cdlg.is_focus_moves_through_child(this) )
+      stack.Pop()
+      
+    
+  dlg.child_focus++
+  cdlg=stack.Push()
+  if ( cdlg.is_focus_moves_through_child(dlg.child_focus) )
+    cdlg.StartFocus()
+  
+  
+select:
+  container dlg:
+    cdlg=stack.Push()
+  push-button return
+    cdlg=stack.Pop()
+  atomic dlg:
+    data  select
+    
+is_focus_moves_through_child
+  returns 0 or 1
+  
+15.10.2010
+
+statische beschreibung der menu struktur
+
+format = { width, height, font }
+
+atom_str = { fn, format, str }
+atom_bm = { fn, format, bm}
+
+list = { entry1, entry2, entry3 }
+  list = { CP(container), AP(atomic),  AP(atomic) }
+
+container = { fn, P(format), P(list) }
+
+22.10.2010
+
+ich brauche erst mal eine komplette baum navigation
+  --> erledigt 30.10.2010
+
+30.10.2010
+
+TODO
+  * IS_LIST entfernen
+     --> ERLEDIG 2.11.2010
+    
+  * Aufteilen in einzelne, kleinere funktionen
+  * DBG_SHOW: arg kann haben
+      0 kein fokus
+      1 fokus
+      2 fokus und data entry mode
+     --> 2 wird durch den handler gemanaged
+     --> Indirect, der event handler setzt zur ein flag, das dann später zu den werten 0, 1 oder 2 ergänzt wird.
+     --> ERLEDIG 2.11.2010
+
+  * UP durch spezielles attribut-bit simulieren (2 knopf mode)
+     --> ein führung eines entsprechenden attribut bits
+	  ODER: ein eigenes element dafür definieren, dann wird aber noch eine MSG benötigt
+     --> wird durch den handler gemanaged
+     --> ERLEDIG 2.11.2010
+  * Mehrere Sprachen unterstützen --> mal überlegen.. --> eigener satz an funktionen aufgesetzt auf die existierenden
+  * (optional: ENTER/LEAVE FOCUS --> aufgabe des UI Handlers)
+     --> ERLEDIG 2.11.2010
+  * MNU_FN_MSG ---> Menu Field Notification Message
+       --> ERLEDIG 2.11.2010
+
+  * Aux-Handler, der bei down/up_cyclic aufgerufen wird, Idee ist die implementierung langer listen, bei der nur
+    ein teil zu sehen ist. Über den aux handler könnte das problem auf die oberste ebene verschoben werden.
+http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
+
+  Aufgaben des UI Handlers
+    - ggf data entry mode 
+    - rücksprung attribut --> ersetzen durch Nachricht und erweiterung der basis handler
+    
+    - ENTER/LEAVE FOCUS 
+    
+31.10.2010
+
+  Event Prozessing
+  1) Umsetzen der Quellen in Event nachrichten
+      --> 22.4.2011 ERLEDIGT 
+  2) Der Event Handler verarbeitet die Event Nachrichten und setzt die um.
+      --> 22.4.2011 ERLEDIGT 
+
+7.11.2010
+  MNU_FN_MSG_SHOW
+    für die texteingabe muss das element wissen, an welcher position es steht.
+      --> 22.4.2011 ERLEDIGT 
+
+  TODO
+    * Aufteilen in einzelne, kleinere funktionen
+      --> 22.4.2011 ERLEDIGT 
+    * statt einzerlner argumente, sollte an die feld funktion eine sammel struct übergeben werden.
+	--> angefangen
+      --> 22.4.2011 ERLEDIGT 
+    * implementierung der texteingabe --> virtuelle buchstaben eingabefunktion --> erfordert positionsinfo
+      --> 22.4.2011 ERLEDIGT 
+    * konzept für rückgabe/ergebnisse
+      --> 22.4.2011 weis nimmer, was ich damit meinte
+    * RAM/ROM attribute
+      --> 22.4.2011 ERLEDIGT (bis auf die liste)
+    * scrollen... spezielle liste?
+	--> ja und zusätzlich callbackfunktionen über die der listeninhalt ermittelt wird. Steuerung/Navigation
+	  über die button-field fuction (s.u.)
+10.11.2010
+    * einbau positionsinfo --> umbau des aufrufs der fieldfunctions
+      --> 22.4.2011 ERLEDIGT (glaube schon)
+    * generische button-field function, bei der man eine callback fn angeben kann, wenn selektiert wird, ähnlich
+	der strup function 
+      --> 22.4.2011 DOPPELT, wird noch gemacht
+12.11.2010
+    * pos kann aus fn_arg wieder rausgenommen werden
+      --> 22.4.2011 ERLEDIGT
+    * das text-element brauch noch ein rücksprung feld beim 2b handler
+	und wie??ß
+      --> 22.4.2011 ERLEDIGT
+    
+14.12.2010
+    * Idee: Man könnte ein Flag einbauen, das entscheidet, ob  beim abtauchen das untermenue gemalt
+	wird oder nicht (wenn kein fokus gesetzt)
+	Das wird benötigt, weil sonst der inhalt u.U. nicht sichtbar ist.
+      --> 22.4.2011 ERLEDIGT (oder?)
+	
+13.02.2011
+  * Einbauen eines strings, der die informationen zum base_format in textform enthält
+    das wäre dann VIEL flexibler.
+      erledigt
+  * vermutlich bräuchte man sowas wie eine globale struktur, in der auch die default werte gespeichert sind
+      --> 22.4.2011 ERLEDIGT
+  * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+      --> 22.4.2011 ÜBERNAHME, s.u.
+  * SDL: -lSDL, tutorial: file:///usr/share/doc/libsdl1.2-dev/docs/index.html
+      --> 22.4.2011 ERLEDIGT
+  
+27.02.2011
+  * "border" für list ist auf 1 festgelegt. das sollte flexibler gehandhabt werden.
+      --> 22.4.2011 DOPPELT, wird angegangen
+01.03.2011
+  * zur positionierung von sub-listen eine liste mit einem child einführen
+      (breite, höhe, position innerhalb, eventuell border)
+      --> erledigt (el align)
+  * "go down": automatisches überspringen solcher listen mit einem element oder entsprechendes flag (bzw neue msg)
+    Kann auf msg/flag verzichtet werden und das direkt von der frage abgeleitet werden, ob das ein Kontainer ist?
+    ... vermutlich schon. Allerdings könnten dann keine zwei listen geschachtelt werden.. oder es wäre recht aufwändig
+      (user muss liste durchlaufen, mnu am ende ein level hochspringen).
+    Spezifikation:
+      - Info: element types
+	  MNU_FN_MSG_GET_LIST_LEN == 0 --> leaf elements (e.g. u8 element)
+	  MNU_FN_MSG_GET_LIST_LEN > 0, MNU_FN_MSG_IS_AUTO_DOWN = 1	design elements (e.g. align element)
+	  MNU_FN_MSG_GET_LIST_LEN > 0, MNU_FN_MSG_IS_AUTO_DOWN = 0	selectable list elements (e.g. grid element)
+      - root_element: go down while design element + if selectable element: go down once more
+    UNGELÖST 
+      - (sehe beispiel) ist der focus, der stern wird nicht angezeigt
+      - wie war das mit dem show fall thorugh. gab es da nicht ein flag? --> flag d auf 1 setzen?
+    Es hilft wohl alles nichts: Ich muss eine neue ebene einziehen zwischen dem event handler und den navigations routinen.
+    letztlich muss man automatisch hoch und runter an den automatic felder entlang. 
+   --> ERLEDIGT
+  
+  12.03.2011
+    * ae konsequent einsetzen
+	--> für el_list einigermaßen umgesetzt
+      --> 22.4.2011 ERLEDIGT
+    * Umstieg auf GET_HEIGHT und GET_WIDTH
+	--> partly done
+	--> 9.4.211 ERLEDIGT
+    * vereinfachte menu-beschreibung mit hilfe von macros
+      --> 22.4.2011 ÜBERNAHME, s.u.
+    * restrukturierung der "mnu element list functionen"
+	mnuelstb 		mnu element list base
+	mnuelstv		mnu element list vertical 
+	mnuelsth		mnu element list horizontal
+	mnuelstg		mnu element list grid
+      --> 22.4.2011 ERLEDIGT, ja das ist ja dann gemacht worden
+	
+    
+14.03.2011
+  * neue dateinamenskonvention... eher langfristig
+  1-2		um = micro menu
+  3-4		el = element callback
+		eh = event handler
+		es = event source
+  * select root element
+      --> ERLEDIGT umgesetzt ist es --> beispiel machen
+      
+26.03.2011
+  * vlist (list) --> reihenfolge umdrehen
+      --> 11.4.2011 ERLEDIGT
+  * IS_AUTO_DOWN --> ggf umbenennen, da es eigentlich mehr ein überspringen in beide richtungen ist.
+      --> 9.4.2011 ERLEDIGT
+  
+  * schönere buttons zeichnen... ggf nav übergeben, da ja u.U. der parent benötigt wird.
+      --> oder aber die tatsächliche größe übergeben
+  * mehr beispiele
+      --> 9.4.2011 ERLEDIGT
+  * "read only" elemente für labels etc... sollte dann wohl eine message sein
+      --> 9.4.2011 ERLEDIGT
+      
+31.03.2011
+  * txt field braucht rücksprung
+      --> 9.4.2011 ERLEDIGT
+  * string/text felder müssen korrekte größe zurückgeben
+	    --> 22.4.2011 ERLEDIGT Sollte jetzt gehen
+  * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+	    --> 22.4.2011 ÜBERTRAG, s.u,
+01.04.2011
+  * mnu_fmt_t kann man wohl löschen
+      --> 9.4.2011 ERLEDIGT
+02.04.2011
+  * gfx_text funktion zu ende programmieren (style und pos) und benutzen
+      --> 9.4.211 ERLEDIGT
+04.04.2011
+   * pos (und style) argument wieder entfernen aus mnu_gfx_text und zu Ende programmieren 
+	statt dessen:
+	void mnu_gfx_selected(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+	void mnu_gfx_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+      --> NOCH NICHT ERLEDIGT
+   * 'arg' für MNU_FN_MSG_SHOW hat sich geändert --> prüfen ob das stimmt.
+      --> 9.4.211 soweit ERLEDIGT
+   * MNU_FN_MSG_GET_SIZE vollständig entfernen --> alle cases müssen bereinigt werden, 
+      da können vor allem in mnuellst noch ein funktionen wegfallen
+      --> 9.4.211 ERLEDIGT
+   * IDEE: z.B. beim u8 man könnte einfach mit select hochzählen. Im moment wird erst der data entry mode aktiviert.
+      --> 11.4.2011 ERLEDIGT mittels 2bs handler
+   * Was war denn mit diesem 'a' flag????
+      --> 9.4.2011 ERLEDIGT --> vollständig gelöscht
+11.04.2011
+  * single selection: generisch eventuell unter angabe eine hilfsfunktion, die die strings ermittelt
+      void aux(uint8_t msg, void *in, void *out)
+	  msg = GET_LEN		--> in = ref, out = * uint_8
+	  msg = GET_STR		--> in = ref, out = ** char
+	  oder 2 getrennte funktionen?
+	  oder integrieren in die aktuelle aux funktion?
+12.04.2011
+    * verwendung der ae access procedures: u8, txt, list, str, strup, root, align --> erledigt
+	    --> 14.4.2011 ERLEDIGT 
+      * mnu_el_list_get_fmt() umsetzen
+	    --> 12.4.2011 ERLEDIGT 
+      * mnu_el_list_get_child() programmieren
+	    --> 12.4.2011 ERLEDIGT 
+    * neuer Name: mii=mini interative interface toolkit library --> abkürzung: m2tklib oder m2
+	--> ERLEDIGT      
+    * radio button: *val mit wert via fmt, aktiv wenn *val == fmt-value
+	--> 21.4.2011 ERLEDIGT      
+    * checkbox mit *val, toggle 
+	--> 20.4.2011 ERLEDIGT      
+    * action button mit callback function
+	    --> 22.4.2011 ÜBERTRAG, s.u,
+    * für mnu_el_xxx_get_fmt: mal sehen ob sowas wie
+      #if offsetof(xxx,fmt) == offsetof(str,fmt) funktioniert...
+	  --> WIRD NICHT FUNKTIONIEREN, da offsetof nicht unterstützt wird in #if
+
+15.04.2011
+    * m2_eh-navigation procedures: sollte man eigentlich die eh struktur übergeben!
+	Es gibt keine eh struktur, gemeint ist war wohl die ep struktur (22.4.2011)
+	keine gute idee... die routinen werden an zu vielen stellen verwendet, an denen es nur das nav object gibt.
+	vielleicht so: erst umbenennen von _eh_ nach _menu_ oder _user_
+	    --> 22.4.2011 ERLEDIGT      	
+    * m2_draw sollte dem ep zugeordnet werden
+	--> 18.4.2011 ERLEDIGT
+    * m2_ep durch m2 ersetzen: das wird dann das gesamt API
+	    --> 22.4.2011 ÜBERTRAG, s.u,
+    * m2_el_list_fn (vlist) umbennen in m2_el_vlist_fn
+	--> 18.4.2011 ERLEDIGT
+    * BORDER entfernen für die list elemente
+	    --> 22.4.2011 ÜBERTRAG, s.u,
+    * Prüfen, ob -foptimize-sibling-calls bezüglich stack etwas bringt (kaskadierte el_fn calls). Könnte aber u.U. erst ab gcc 4.1 bugfrei sein.
+	    --> 22.4.2011 ÜBERTRAG, s.u,
+    * m2_el_str: wozu braucht man das eigentlich. Im grunde ist das mehr eine base function (derzeit für m2_el_label)
+	Denkbar wären auch die (noch zu programmierenden) radio button/check box functions. In dem zusammenhang
+	sollte ich vielleicht doch unions einführen, damit m2_el_str tatsächlich wiederverwendet werden kann... würde das klappen?
+	Wie sieht so eine union aus?
+	Lösung hier: http://c-faq.com/struct/oop.jxh.html, aber keine union, sondern geschachtelte "structs"
+	--> das könnte man auch für den fmt pointer verwenden und die ganzen get_fmt funktionen einsparen
+	--> 16.4.2011 ERLEDIGT
+    * implement m2elfnfmt.c, d.h. umwandeln aller strukturen und aufruf der base classe
+	--> UNVOLLSTÄNDIG align und setval fehlen noc
+	--> 18.4.2011 ERLEDIGT (setval, s.u.)
+    * m2_el_label_fn --> sollte die str get routine aufrufen anstelle den pointer direkt auszulesen
+	--> 16.4.2011 ERLEDIGT
+    * uint8_t m2_el_list_opt_get_val_zero_default(m2_attrib_element_p ae, char cmd) (m2ellistbase.c) --> fmt zugriff ist falsch
+	--> 16.4.2011 ERLEDIGT
+    * m2_el_setval_t angelegt, aber noch keine funktion programmiert
+	--> 20.4.2011 ERLEDIGT      
+    * Element Hierarchie neu erstellen, aber genaue vererbung inklusive den class funktionen extra dazu...
+	--> 20.4.2011 ERLEDIGT  (mnu_manual.txt)
+    
+19.04.2011
+    * uint32_t function testen --> enthält noch ein paar bugs
+	--> 20.4.2011 ERLEDIGT      
+    * das erste element (die el liste) in der nav struction sollte von el nach ae umbenannt werden.
+	--> 22.4.2011 ERLEDIGT (umbenannt in ae_list)
+    * Dokumentation: Zu den Element-Funktionen sollte noch der benötigte Strukturname genannt werden.
+	--> 22.4.2011 ERLEDIGT      
+21.04.2011
+    * Beispiel für elradio erstellen
+	--> 22.4.2011 ERLEDIGT      
+    * Scheinbar gibt es ein refresh problem mit sdl: hgrid, letzter toggle
+	--> 22.4.2011 ERLEDIGT      (update procedure wurde nicht aufgerufen)
+    * icon draw graphics procedure einführen mit ein paar macros gfx_draw_icon(x, y, font, icontype)
+	M2_ICON_TOGGLE_SELECTED, M2_ICON_TOGGLE_UNSELECTED, 
+	M2_ICON_RADIO_SELECTED, M2_ICON_RADIO_UNSELECTED
+	    --> 22.4.2011 ERLEDIGT   ... however renamed to ACTIVE and INACTIVE   
+    * Umbenennen:
+	  m2_fn_p in m2_el_fnptr
+	  m2_eh_p in m2_eh_fnptr 
+	  m2_es_p in m2_es_fnptr
+	    --> 22.4.2011 ERLEDIGT      
+    * Rename m2_gfx_selected() to m2_gfx_highlight() or even better m2_gfx_focus(), which is a better term for selected
+	    --> 22.4.2011 ERLEDIGT     renamed to m2_gfx_focus()
+22.04.2011
+    * Umbenennen:
+	m2ehupdn.c	  
+	m2ehprev.c 
+	m2ehnext.c
+	    in m2usrXXX.c
+	    --> S.U.
+    * m2_ep durch m2 ersetzen: das wird dann das gesamt API
+	    --> S.U.
+    * BORDER entfernen für die list elemente (25.04.2011 ERLEDIGT), Border zentral dazunehmen via gfx funktion
+	hohe und breite wird jetzt bei den list funktionen (das sind die einzigen, die das brauchen) berechnet --> wird nochmal geändert 25.04.2011
+	die lokalen draw funktionen sollten jetzt proceduren aufrufen, die in fnfmt stehen und auf basis des  box parameters arbeiten
+	tatsächlich könnte die fnfmt funktion auch das zeichnen übernehmen.
+	elu8num wurde umgebaut: 
+	  zunächst die fnfmt aufrufen
+	  dann die xy werte anpassen; eventuell könnte auch gfx_text_add_border eingeführt werden
+	    --> u8num, u8hs, text, toggle, radio erledigt
+	--> 25.04.2011 ERLEDIGT 
+    * action button mit callback function
+	    --> S.U.
+    * Prüfen, ob -foptimize-sibling-calls bezüglich stack etwas bringt (kaskadierte el_fn calls). Könnte aber u.U. erst ab gcc 4.1 bugfrei sein.
+	    --> S.U.
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+	    --> S.U.
+    * vereinfachte menu-beschreibung mit hilfe von macros
+	--> angefangen. Jedes Menu braucht noch eine extern declaration M2_EXTERN_ALIGN
+	Probleme macht die Liste. Eventuell hilft __VA_ARGS__, aber eigentlich sollte man einen zweiten listentyp einführen.
+	vermutlich brauche ich das attrib gar nicht. Es sollte reichen immer alles im ROM zu halten.
+	--> 23.04.2011 ERLEDIGT 
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+	    --> S.U.
+    * introduce ROM access abstraction layer, fix m2_el_list_get_child in m2ellistbase.c
+	    --> S.U.
+    * Eventuell alles auf ROM umstellen und das attrib feld entfernen.
+	    --> S.U.
+    * m2fnarg.c: Die funktionsaufrufe müssen noch das attrib-feld auswerten
+	    --> S.U.
+    * Vermutung: die draw procedure malt zuerst die tieferen element: Das ist dann falsch beim u32 und text element, da dort
+	zuerst die einzelnen zeichen dran kommen und dann das darüberliegende element.
+	Umsetzung:
+	  - neue nachricht: PRE_SHOW
+	  - draw procedure erweitern, damit PRE_SHOW aufgerufen wird
+	  - elu32 und eltext ändern
+	    --> S.U.
+    * Um Platz zu sparen müssten auf text-dot-matrix LCDs eigentlich zwei verschiedene arten von Borders geben: für selectierbare
+	und nicht selectierbare felder (labels). Eventuell auch für einzelne buchstaben (eltext) oder ziffern (u32)
+	    border_normal		--> alle größeren felder ausser labels		ALHPANUM: links/rechts marker
+	    border_small			--> subfelder in u32 und text			ALHPANUM: HW Cursor		GRAPHICS: Schmaler Rahmen
+	    border_unselectable	--> labels							ALHPANUM: gar kein rahmen
+	Umsetzung:
+	  - m2_gfx_add_border_xxx in die element funktion hineinziehen
+	  - ABER: alle aufrufe an uint8_t m2_fn_get_xxx(m2_attrib_element_p ae) müssen überarbeitet werden, 
+		da dort ja jetzt die border mit zurückgegeben wird. Die el-fn kann sich also nicht mehr selbst aufrufen um
+		die breite oder höhe zu bestimmen
+		Andere funktionen wie die in m2elfnfmt könnten einfacher werden.
+	  - hilfe für die messages anpassen
+	  - zweiten satz von border funktionen einführen
+	  Zur Erinnerung: sed -e 's/foo/bar/g' myfile.txt bzw: sed -i 's/foo/bar/g' myfile.txt   (-i: in place edit)
+	--> 25.04.2011 ERLEDIGT 
+    * Als ergebnis der letzten änderung sind leider die zeilen im grid nicht mehr ausgerichtet. Zwei möglichkeiten
+	1) label höher machen	--> macht nicht so viel sinn
+	2) grid-felder zentrieren
+	    --> 25.04.2011 ERLEDIGT (aber irgendwie scheint mir da noch ein pixel versatz zu sein... manchmal) 
+    * gfx_text: die beiden letzten argumente entfernen
+	--> 25.04.2011 ERLEDIGT 
+    * einführen des moduls "m2gfxutl.c" in der zusatzfunktionen zusammengefasst sind (die stehen derzeit in m2elfnfmt.c)
+	--> 25.04.2011 ERLEDIGT 
+26.04.2011
+    * Umbenennen:
+	m2ehupdn.c	  
+	m2ehprev.c 
+	m2ehnext.c
+	    in m2usrXXX.c
+	--> 26.04.2011 ERLEDIGT 
+    * m2_ep durch m2 ersetzen: das wird dann das gesamt API
+	--> 28.04.2011 ERLEDIGT 
+    * action button mit callback function
+	    --> S.U.
+    * Prüfen, ob -foptimize-sibling-calls bezüglich stack etwas bringt (kaskadierte el_fn calls). Könnte aber u.U. erst ab gcc 4.1 bugfrei sein.
+	    --> S.U.
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+	    --> S.U.
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+	    --> S.U.
+    * introduce ROM access abstraction layer, fix m2_el_list_get_child in m2ellistbase.c
+	angefangen: m2rom.c, fix m2_el_list_get_child in m2ellistbase.c erledigt
+	--> 28.04.2011 ERLEDIGT 
+    * M2_ALL_PGM löschen --> ist jetzt immer aktiv, ae wird es nicht mehr geben
+	--> 30.04.2011 ERLEDIGT 
+    * atribut_element struktur auflösen
+	nächster schritt: m2_el_list_get_len_by_ae ersetzen durch m2_el_list_get_len_by_element
+	--> 30.04.2011 ERLEDIGT 
+    * prüfen, welche m2_get_ae_ gelöscht werden können
+	--> 30.04.2011 ERLEDIGT 
+    * Eventuell alles auf ROM umstellen und das attrib feld entfernen.
+	--> 30.04.2011 ERLEDIGT 
+    * m2fnarg.c: Die funktionsaufrufe müssen noch das attrib-feld auswerten
+	--> 27.04.2011 attrib feld wird entfernt, insofern: ERLEDIGT 
+    * Vermutung: die draw procedure malt zuerst die tieferen element: Das ist dann falsch beim u32 und text element, da dort
+	zuerst die einzelnen zeichen dran kommen und dann das darüberliegende element.
+	Umsetzung:
+	  - neue nachricht: PRE_SHOW
+	  - draw procedure erweitern, damit PRE_SHOW aufgerufen wird
+	  - elu32 und eltext ändern
+	    --> S.U.
+    * m2_gfx_get_list_overlap_height, m2_gfx_get_list_overlap_width
+	Nur für listen, gibt an, wie stark sich die elemente überlappen --> ergibt u.U. etwas kompaktere ergebnisse auf dem screen
+	    --> S.U.
+    * Macros für Listen, M2_ROOT und M2_ALIGN, sowie die extern declaration umsetzen (mnusdl.c)
+	    --> S.U.
+    * Replace m2_pgm_char_t * with m2_rom_byte_p
+	--> 27.04.2011 ERLEDIGT 
+    * Replace m2_rom_byte_x with m2_rom_char_x
+           find . -name "*.[hc]" -exec sed -i 's/m2_rom_byte_p/m2_rom_char_p/g' {} \;
+           find . -name "*.[hc]" -exec sed -i 's/m2_rom_byte_t/m2_rom_char_t/g' {} \;
+	--> 27.04.2011 ERLEDIGT 
+    * prüfen, ob "uint8_t m2_el_list_get_len(m2_fn_arg_p fn_arg)" (m2ellistbase.c) nicht entfallen kann.
+	--> 30.04.2011 ERLEDIGT (lassen, wie es ist)
+30.04.2011
+    * action button mit callback function
+	--> s.u.
+    * Prüfen, ob -foptimize-sibling-calls bezüglich stack etwas bringt (kaskadierte el_fn calls). Könnte aber u.U. erst ab gcc 4.1 bugfrei sein.
+	--> s.u.
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+	--> s.u.
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+	--> s.u.
+    * Vermutung: die draw procedure malt zuerst die tieferen element: Das ist dann falsch beim u32 und text element, da dort
+	zuerst die einzelnen zeichen dran kommen und dann das darüberliegende element.
+	Umsetzung:
+	  - neue nachricht: PRE_SHOW
+	  - draw procedure erweitern, damit PRE_SHOW aufgerufen wird
+	  - elu32 und eltext ändern
+ 	--> 30.04.2011 ERLEDIGT (PRE_SHOW NICHT notwendig, da zuerst der parent gezeichnet wird)
+    * m2_gfx_get_list_overlap_height, m2_gfx_get_list_overlap_width
+	Nur für listen, gibt an, wie stark sich die elemente überlappen --> ergibt u.U. etwas kompaktere ergebnisse auf dem screen
+	--> 30.04.2011 ERLEDIGT
+    * Macros für Listen, M2_ROOT und M2_ALIGN, sowie die extern declaration umsetzen (mnusdl.c)
+	--> s.u.
+    * automatisches abtauchen, beispielsweise beim u32 feld, wie umsetzen? ist das einfach?
+	--> 02.05.2011 ERLEDIGT ('a' option)
+    * entsprechend der small/normal border brauchen wir auch einen small/normal focus
+	das tritt im zusammenhang mit dem a1 mode beim text und u32 für die zeichen/ziffern auf
+ 	--> 04.05.2011 ERLEDIGT
+    * m2_ep_p umbenennen in m2_p, gleiches gilt für M2_EP_KEY_NONE --> M2_KEY_NONE
+ 	--> 03.05.2011 ERLEDIGT
+    * m2_gfx_init sollte in m2_Init mit aufgenommen werden
+	--> 03.05.2011 ERLEDIGT
+    * mnu.h umbenennen in m2.h
+	--> 03.05.2011 ERLEDIGT
+    * m2ep.c umbenennen in m2.c
+	--> 03.05.2011 ERLEDIGT
+    * _m2_fn_arg in _m2_el_fnarg (und abgeleitete typen) umbenennen
+	--> 03.05.2011 ERLEDIGT
+    * M2_FN_DEF in M2_EL_FN_DEF umbenennen
+	--> 03.05.2011 ERLEDIGT
+    * M2_FN_MSG > M2_EL_MSG
+	--> s.u.
+    * m2_gfx_show --> gfx_end
+	--> 04.05.2011 ERLEDIGT
+    * Grafik Handler
+	--> 04.05.2011 ERLEDIGT
+04.05.2011
+    * action button mit callback function
+	--> siehe unten
+    * Prüfen, ob -foptimize-sibling-calls bezüglich stack etwas bringt (kaskadierte el_fn calls). Könnte aber u.U. erst ab gcc 4.1 bugfrei sein.
+	--> bringt nichts (warum auch immer)
+	--> 10.05.2011 ERLEDIGT
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+	--> siehe unten
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+	--> siehe unten
+    * Macros für Listen, M2_ROOT und M2_ALIGN, sowie die extern declaration umsetzen (mnusdl.c)
+	--> ERLEDIGT
+    * M2_FN_MSG > M2_EL_MSG
+	--> 07.05.2011 ERLEDIGT
+    * m2_gfx_get_text_width braucht noch das font argument
+	--> zur hälfte umgesetzt, vor allem die char width/height funktionen brauchen das argument auch.
+	--> 06.05.2011 ERLEDIGT
+    * gemeinsame functionen in m2elu32 und m2eltext, z.B. 
+	static m2_rom_void_p m2_el_u32_get_parent_element(m2_nav_p nav)
+	static uint8_t m2_el_u32_get_font(m2_nav_p nav)
+	--> 05.05.2011 ERLEDIGT
+    * m2_nav_load_child
+	sollte die position im array auch setzen, das vereinfacht die arbeit in den aufrufenden routinen.
+	alternative: gar kein pos argument übergeben sondern die aktuelle position nachladen...
+	--> 10.05.2011 ERLEDIGT (1. alternative)
+    * M2_EL_MSG_DATA_UP/DOWN
+      brauchen wir das pos argument überhaupt. Ich glaube es kann entfernt werden.
+	--> siehe unten
+    * Veralgemeinertes debounce, routinen vom pde code übernehmen
+	--> siehe unten
+    * Code Optimierung
+	COMMON_FLAGS += -ffunction-sections -fdata-sections -Wl,--gc-sections
+	  automatisches entfernen von unbenutzten funktionen (hätte mir das aufteilen auf einzelne dateien erspart)
+	COMMON_FLAGS += -Wl,--relax
+	  [nicht sicher] benutzt sowas wie near calls 
+	COMMON_FLAGS += -mcall-prologues
+	  benutzt zentrale funktionen für push/pop
+	  Quelle: http://www.tty1.net/blog/2008-04-29-avr-gcc-optimisations_en.html
+		--> 10.05.2011 ERLEDIGT
+    * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
+	--> siehe unten
+    * M2_PROGMEM funktioniert ein bischen... aber nicht korrekt
+	für CPP wird eine warnung erzeugt:
+	    warning: only initialized variables can be placed into program memory area
+	    http://gcc.gnu.org/bugzilla/show_bug.cgi?id=34734
+	    workaround: __attribute__((section(".progmem.data")))
+	--> 16.05.2011 ERLEDIGT
+    * M2_PROGMEM bei den struktur defs weglassen --> U8
+	--> 16.05.2011 ERLEDIGT
+    * bei der definition des speichers den workaround anwenden?
+	--> 16.05.2011 ERLEDIGT (klappt ganz gut)
+    * progmem label (labelP) einführen... erfordert aber ein erweitertes gfx interface
+	--> mal testen
+    * XY Grid erstellen
+	--> 19.05.2011 ERLEDIGT
+    * format option "f" verwenden (dogm graphics handler),  um buttons zu zeichnen
+	--> 21.05.2011 ERLEDIGT, aber ACHTUNG: Es muss eigentlich dann auch der rückgabewert für die font-höhe angepast
+	  werden (oder?)
+    * M2_GFX_MSG_DRAW_HLINE, M2_GFX_MSG_DRAW_VLINE --> brauchen wir die?
+	--> ja, für den Slider
+	--> 19.05.2011 ERLEDIGT
+    * Alignment benutzt glaube ich auch x und y, was mit dem xylist kollidiert
+	x,y beim alignment durch - und | ersetzen
+	--> 20.05.2011 ERLEDIGT
+    * M2_EL_MSG_SHOW umbenennen in M2_EL_MSG_SHOW_PRE und
+       einführen von M2_EL_MSG_SHOW_POST. Grund waren vor allem eltext und elu32
+       (glaube ich)
+       --> umgesetzt, aber deaktiviert. Das problem ist eigentlich eher, in welcher
+	reihenfolge rahmen und inhalt gezeichnet werden.
+	#ifdef M2_FRAME_AT_END
+	#else
+	#endif
+	M2_FRAME_AT_END durch globale var ersetzen, die aber bei jedem draw aus der m2 struct
+	befüllt wird. der treiber setzt die variable in der m2 struct (bzw wird danach gefragt)
+	--> message für den treiber M2_GFX_MSG_IS_FRAME_AT_END
+	--> 21.05.2011 ERLEDIGT
+    * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
+	oder man nimmt eine eigene funktion
+	--> siehe unten
+    * high level funktionen: 1. init, 2. high lev fn setzen, 3. m2_Step/Draw (bleibt immer gleich)
+        void m2_SetMsgBox(uint8_t *result, char *text, char *button);
+	--> siehe unten
+    * Nachdem das root element gesetzt wurde, muss m2_Step true zurückliefern
+	--> 20.05.2011 ERLEDIGT
+    * Als Beispiel: XY List mit mehreren ALIGN Elementen und ein paar texten darin
+	--> siehe unten
+    * LABEL sollte vielleicht eine 'b' option haben um das element genauso groß wie die selectable elemente zu machen
+	--> 21.05.2011 ERLEDIGT, nicht umgesetzt, da ja dazu die READ ONLY Border da ist.
+    * Bei nachrichten wie M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT sollte noch der font dabei sein.
+	Über die option f kann nicht nur der font, sondern auch der style geändert werden.
+	Beispiel:
+	  M2_GFX_MSG_GET_CHAR_HEIGHT(f0) -->  10
+	  normaler style/f0				Höhe: 10+3
+	  normaler style/f0 und focus		Höhe: 10+3
+	  M2_GFX_MSG_GET_CHAR_HEIGHT(f4) -->  12
+	  button style/f4				Höhe: 10+2+3
+	  button style/f4 und focus		Höhe: 10+2+3
+	  Wenn aber M2_GFX_MSG_GET_CHAR_HEIGHT(f4) -->  10, dann wird der button style und der focus
+	  übereinandergelegt
+	  button style/f4				Höhe: 10+3
+	  button style/f4 und focus		Höhe: 10+3
+      --> erledigt für die focus routinen
+	--> 23.05.2011 ERLEDIGT
+    * Nochmal grundsätzlich darüber nachdenken, wie die frames gezeichnet werden müssen.
+	Kategorien:	normal, small
+	Für diese zwei Kategorien gibt es select stati:
+	    normal: not selected, focus, data_entry, go_up
+	    small: not selected, focus
+	Das problem ist eigentlich, dass es keinen not selected (no focus) gibt.
+	Man sollte eventuell M2_GFX_MSG_DRAW_DATA_ENTRY umbenennen in M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY
+	Jedenfalls wäre wohl ein M2_GFX_MSG_NORMAL_NO_FOCUS ganz hilfreich.
+	--> 25.05.2011 ERLEDIGT
+    * Wieso wird eigentlich M2_EL_MSG_SHOW in EL_TEXT behandelt in EL_U32 aber nicht?
+	--> 25.05.2011 ERLEDIGT, EL_TEXT korrigiert (warum ist mir das nicht eher aufgefallen???)
+	aha: beim box style (wenn SMALL und NORMAL focus durch xor erzeugt werden)
+	darf man natürlich nicht beide foci zeichenen. Beim frame style wäre es aber wiederum ganz nett,
+	das trotzdem zu tun, denn beim frame style wird der SMALL focus durch xor gemacht und der rest durch
+	(eben) frames:
+	Einführung eines NORMAL_PARENT_FOCUS, das aber nur vom U32 und vom EL_TEXT verwendet wird
+	--> 25.05.2011 ERLEDIGT
+25.05.2011
+    * action button mit callback function
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+    * M2_EL_MSG_DATA_UP/DOWN
+      brauchen wir das pos argument überhaupt. Ich glaube es kann entfernt werden.
+    * Veralgemeinertes debounce, routinen vom pde code übernehmen
+    * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
+    * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
+	oder man nimmt eine eigene funktion
+    * high level funktionen: 1. init, 2. high lev fn setzen, 3. m2_Step/Draw (bleibt immer gleich)
+        void m2_SetMsgBox(uint8_t *result, char *text, char *button);
+    * Als Beispiel: XY List mit mehreren ALIGN Elementen und ein paar texten darin
+    * Konzept für das einbinden display spezifischer handler
+	  m2ghdogm.h	--> dogm handler
+	--> 25.05.2011 ERLEDIGT
+	  m2gharduinolcd.h		--> licuid crystal handler 
+    * icon malen for die dogm128 lib
+	--> 25.05.2011 ERLEDIGT
+    * bei den element macros sollte der adressoperator explizit angegeben werden.
+	--> 25.05.2011 ERLEDIGT
+	
+	
