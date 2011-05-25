@@ -46,8 +46,8 @@ BOARD:=uno
 # -DDOG_DOUBLE_MEMORY
 DEFS=-DDOGM128_HW
   
-M2TKLIB_PATH:=/home/kraus/src/m2/hg/m2tklib/src/
-M2DEV_PATH:=/home/kraus/src/m2/hg/m2tklib/dev/dogm128/
+M2TKLIB_PATH:=/home/kraus/src/m2/m2tklib/src/
+M2DEV_PATH:=/home/kraus/src/m2/m2tklib/dev/dogm128/
 #DOGM128_PATH:=/home/kraus/src/arduino/dogm128/hg/libraries/Dogm/utility/
 
 # The location where the avr tools (e.g. avr-gcc) are located. Requires a '/' at the end.
