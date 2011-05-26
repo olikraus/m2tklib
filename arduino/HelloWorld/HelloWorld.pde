@@ -1,6 +1,6 @@
 /*
 
-  m2navlast.c
+  HelloWorld.pde
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -19,25 +19,35 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+  SCL (SPI Clock)   Pin 13
+  SI (MOSI)         Pin 11
+  CS (Chip Select)  Pin 10
+  MISO (Pin 12) is not used, but can not be reused as generic I/O
+  
 */
 
+#include "Dogm.h"
 #include "m2.h"
+#include "m2ghdogm.h"
 
-/*
-  Description:
-    Navigate to last element.
-  Return value:
-    0, if max depth is 0 or 1.
-  Implementation Status
-    Could be moved to different file
-*/
-uint8_t m2_nav_last(m2_nav_p nav)
-{
-  uint8_t last;
-  if ( nav->depth <= 1 )
-    return 0;
-  last = m2_nav_get_parent_list_len(nav);
-  last--;
-  m2_nav_load_child(nav, last);
-  return 1;  
+int a0Pin = 9;      // address line a0 for the dogm module
+
+// initialize the dogm library
+Dogm dogm(a0Pin);
+
+// create a label 
+M2_LABEL(hello_world_label, "", "Hello World");
+
+void setup() {
+  m2_Init(&hello_world_label, NULL, m2_eh_2bs, m2_gh_dogm_fbs);	
 }
+
+void loop() {
+    dogm.start();
+    do{
+      m2_Draw();
+    } while( dogm.next() );
+}
+
+

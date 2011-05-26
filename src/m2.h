@@ -138,9 +138,17 @@ typedef const char *m2_opt_p;
 
 */
 
-void m2_Init(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);	/* m2ep.c */
-uint8_t m2_Step(m2_p m2);												/* m2ep.c */
-void m2_Draw(m2_p m2);												/* m2draw.c */
+/* object interface */
+void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);	/* m2ep.c */
+uint8_t m2_StepM2(m2_p m2);												/* m2ep.c */
+void m2_DrawM2(m2_p m2);												/* m2draw.c */
+
+/* simplified interface */
+void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
+uint8_t m2_Step(void);
+void m2_Draw(void);
+
+
 extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
 
 

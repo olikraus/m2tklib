@@ -1,5 +1,23 @@
 /*
 
+  Example.pde
+
+  m2tklib = Mini Interative Interface Toolkit Library
+  
+  Copyright (C) 2011  olikraus@gmail.com
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
   SCL (SPI Clock)   Pin 13
@@ -25,25 +43,12 @@
       Assign down button pin to variable uiKeyDownPin2. Default is DOGM132 Shield
       Assign fire button pin to variable uiKeySelectPin2. Default is DOGM132 Shield
 	  Remember to define DOGM132_HW and DOG_REVERSE
-
-  FPS
-  Arduino Uno, FPS at end of 1st level
-    DOGXL160_HW_GR		no 2x Mem		no REV			14 FPS
-    DOGXL160_HW_GR		no 2x Mem		with REV			14 FPS
-    DOGXL160_HW_GR		with 2x Mem		no REV			18 FPS
-    DOGXL160_HW_GR		with 2x Mem		with REV			17 FPS
-    DOGXL160_HW_BW		no 2x Mem		no REV			19 FPS
-    DOGXL160_HW_BW		no 2x Mem		with REV			19 FPS
-    DOGXL160_HW_BW		with 2x Mem		no REV			21 FPS
-    DOGXL160_HW_BW		with 2x Mem		with REV			21 FPS
   
 */
 
 #include "Dogm.h"
 #include "m2.h"
 #include "m2ghdogm.h"
-
-m2_t m2;
 
 int a0Pin = 9;      // address line a0 for the dogm module
 uint16_t sensorPin = 0;  // analog input
@@ -247,20 +252,10 @@ extern "C" uint8_t m2_es_arduino(m2_p ep, uint8_t msg)
 /*==============================================================*/
 
 
-/*==============================================================*/
-
-
-/*==============================================================*/
-
-/*==============================================================*/
-/*==============================================================*/
-/*==============================================================*/
-
-
 void setup() {
   
   uiSetup();
-  m2_Init(&m2, &top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);	
+  m2_Init(&top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);	
   //m2_Init(&m2, &top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_box);	
 
   next_sec_time = millis() + 1000UL;
@@ -272,14 +267,14 @@ void loop() {
   dogm.showLibInfo();
   
   uiStep();
-  if ( m2_Step(&m2) != 0 )
+  if ( m2_Step() != 0 )
   {
     dogm.start();
     do{
       dog_DrawStr(0, 55, font_5x7, dog_itoa(fps)); 
       dog_DrawStr(20, 55, font_5x7, dog_itoa(uiKeyDetected)); 
       dog_DrawStr(40, 55, font_5x7, dog_itoa(uiKeyMsg)); 
-      m2_Draw(&m2);
+      m2_Draw();
     } while( dogm.next() );
   }
   dog_Delay(10);

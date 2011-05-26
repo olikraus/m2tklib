@@ -36,53 +36,29 @@
 
 #include "m2.h"
 
+m2_t m2_global_object;
 
-void m2_Init(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh)
+
+
+void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh)
 {
-  m2->is_frame_draw_at_end = 0;
-  m2->es = es;
-  m2->eh = eh;
-  m2->gh = gh;
-  m2_gfx_init(gh);
-  m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
-  m2->forced_key = M2_KEY_REFRESH;
-  m2_nav_init(m2_get_nav(m2),  element);
+  m2_InitM2(&m2_global_object, element, es, eh, gh);
 }
+
 
 /*
   return:
     0: nothing happend
     1:	event has been processed
 */
-uint8_t m2_Step(m2_p m2)
+uint8_t m2_Step(void)
 {
-  uint8_t key;
-  
-  /* check if a key should be forced */
-  key = m2->forced_key;
-  if ( key != M2_KEY_NONE )
-  {
-    m2->forced_key = M2_KEY_NONE;
-  }
-  else
-  {
-    /* request key information from the event source */
-    key = m2->es(m2, M2_ES_MSG_GET_KEY);
-  }
-    
-  /* if there is a valid key, process the key event */
-  /* note, that key numbers are equal to message numbers */
-  if ( key != M2_KEY_NONE )
-  {
-    /* handle the key */
-    m2->eh(m2, key, 0);
-    /* check if the root node has been changed */
-    m2_nav_check_and_assign_new_root(m2_get_nav(m2));
-    return 1;
-  }
-  
-  return 0;
+  return m2_StepM2(&m2_global_object);  
 }
 
+void m2_Draw(void)
+{
+  m2_DrawM2(&m2_global_object);
+}
 
 

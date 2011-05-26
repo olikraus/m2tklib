@@ -153,16 +153,15 @@ M2_ALIGN(el_top, "w128h64", &_el_top);
 
 int main(void)
 {
-  m2_t m2;
   // m2_ep_init(&ep, 0, &a_eli, m2_es_sdl, m2_eh_2b);
   //m2_ep_init(&ep, 0, &el_top, m2_es_sdl, m2_eh_2b);
-  m2_Init(&m2, &el_label_list, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
+  m2_Init(&el_label_list, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
   
-  m2_Draw(&m2);
+  m2_Draw();
   for(;;)
   {
-    if ( m2_Step(&m2) != 0 )
-      m2_Draw(&m2);
+    if ( m2_Step() != 0 )
+      m2_Draw();
   }
 
   return 0;
