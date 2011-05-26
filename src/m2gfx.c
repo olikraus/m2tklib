@@ -317,3 +317,11 @@ void m2_gfx_end(void)
   m2_gfx_call_handler(M2_GFX_MSG_END);
 }
 
+void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr)
+{
+  m2_curr_gfx_fnptr = fnptr;
+  m2_gfx_arg_object.font = font_idx;
+  m2_gfx_arg_object.s = (const char *)font_ptr;
+  m2_gfx_call_handler(M2_GFX_MSG_SET_FONT);
+}
+

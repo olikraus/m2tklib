@@ -61,4 +61,8 @@ void m2_Draw(void)
   m2_DrawM2(&m2_global_object);
 }
 
+void m2_SetFont(uint8_t font_idx, const void *font_ptr)
+{
+  m2_SetFontM2(&m2_global_object, font_idx, font_ptr);
+}
 

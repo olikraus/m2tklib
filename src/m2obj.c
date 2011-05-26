@@ -77,10 +77,13 @@ uint8_t m2_StepM2(m2_p m2)
   /* note, that key numbers are equal to message numbers */
   if ( key != M2_KEY_NONE )
   {
-    /* handle the key */
-    m2->eh(m2, key, 0);
-    /* check if the root node has been changed */
-    m2_nav_check_and_assign_new_root(m2_get_nav(m2));
+    if ( m2->eh != NULL )
+    {
+      /* handle the key */
+      m2->eh(m2, key, 0);
+      /* check if the root node has been changed */
+      m2_nav_check_and_assign_new_root(m2_get_nav(m2));
+    }
     return 1;
   }
   

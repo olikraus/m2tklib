@@ -153,3 +153,10 @@ uint8_t m2_dogm_get_icon_width(uint8_t font, uint8_t icon)
 {
   return 8;
 }
+
+uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
+{
+  switch(arg->msg)
+  {
+  }
+}

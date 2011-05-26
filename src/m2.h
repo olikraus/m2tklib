@@ -142,11 +142,13 @@ typedef const char *m2_opt_p;
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);	/* m2ep.c */
 uint8_t m2_StepM2(m2_p m2);												/* m2ep.c */
 void m2_DrawM2(m2_p m2);												/* m2draw.c */
+void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr);
 
 /* simplified interface */
 void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
 uint8_t m2_Step(void);
 void m2_Draw(void);
+void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 
 
 extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
@@ -243,6 +245,7 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_GFX_MSG_GET_ICON_HEIGHT 				33
 #define M2_GFX_MSG_GET_ICON_WIDTH 					34
 #define M2_GFX_MSG_IS_FRAME_DRAW_AT_END			35
+#define M2_GFX_MSG_SET_FONT						36
 
 /*==============================================================*/
 /* object function */
@@ -674,6 +677,7 @@ uint8_t m2_gfx_get_icon_width(uint8_t font, uint8_t icon_number);
 uint8_t m2_gfx_is_frame_draw_at_end(void);
 
 void m2_gfx_end(void);
+void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr);
 
 /*==============================================================*/
 void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t font, const char *s) M2_NOINLINE;			/* m2gfxutl.c */

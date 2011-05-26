@@ -37,10 +37,10 @@ int a0Pin = 9;      // address line a0 for the dogm module
 Dogm dogm(a0Pin);
 
 // create a label 
-M2_LABEL(hello_world_label, "", "Hello World");
+M2_LABEL(hello_world_label, "", "Hello World!");
 
 void setup() {
-  m2_Init(&hello_world_label, NULL, m2_eh_2bs, m2_gh_dogm_fbs);	
+  m2_Init(&hello_world_label, NULL, NULL, m2_gh_dogm_fbs);	
 }
 
 void loop() {
