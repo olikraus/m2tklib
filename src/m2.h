@@ -531,7 +531,8 @@ typedef struct _m2_pcbox_struct *m2_pcbox_p;
 /* Event Processing, */
 
 
-
+/* must be power of 2 */
+#define M2_KEY_QUEUE_LEN 4
 struct _m2_struct
 {
   m2_nav_t nav;		/* current focus */
@@ -540,6 +541,17 @@ struct _m2_struct
   m2_gfx_fnptr gh;		/* graphics handler */
   uint8_t forced_key; 	/* additional key, which will be processed by the next call to m2_Step() */
   uint8_t is_frame_draw_at_end;
+  
+  /* internal values for the debounce algorithm */
+  uint8_t detected_key_code;
+  uint8_t detected_key_timer;
+  /* result from the debounce algorithm */
+  uint8_t pressed_key_code;
+  
+  /* key queue */
+  uint8_t key_queue_array[M2_KEY_QUEUE_LEN];
+  uint8_t key_queue_pos;
+  uint8_t key_queue_len;
 };
 
 m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */

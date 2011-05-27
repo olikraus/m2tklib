@@ -95,8 +95,6 @@ void uiSetup(void) {
   digitalWrite(uiKeyDownPin2, HIGH);       // turn on pullup resistors
   pinMode(uiKeySelectPin2, INPUT);           // set pin to input
   digitalWrite(uiKeySelectPin2, HIGH);       // turn on pullup resistors
-  
-  
 }
 
 // calculate new output values
