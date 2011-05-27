@@ -1,6 +1,7 @@
-
-
 /*
+
+  m2key.c
+
 */
 
 #include "m2.h"
@@ -24,15 +25,20 @@ uint8_t m2_GetKeyFromQueue(m2_p m2)
 void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
 {
   uint8_t pos;
+  
+  if ( key_code == M2_KEY_NONE )
+    return;
+
+  pos = m2->key_queue_pos;
+  pos += m2->key_queue_len;
+  pos &= (M2_KEY_QUEUE_LEN-1);
+  m2->key_queue_array[pos] = key_code;
+  
   if ( m2->key_queue_len >= M2_KEY_QUEUE_LEN ) 
     m2->key_queue_pos++;
   else
     m2->key_queue_len++;
   
-  pos = m2->key_queue_pos;
-  pos += m2->key_queue_len;
-  pos &= (M2_KEY_QUEUE_LEN-1);
-  m2->key_queue_array[pos] = key_code;
 }
 
 void m2_SetDetectedKey(m2_p m2, uint8_t key_code)

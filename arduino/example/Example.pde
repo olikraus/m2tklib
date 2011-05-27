@@ -68,12 +68,6 @@ uint8_t uiKeyUpPin2 = 7;
 uint8_t uiKeyDownPin2 = 3;
 uint8_t uiKeySelectPin2 = 2;
 
-// output values
-uint8_t uiKeyDetected = M2_KEY_NONE;
-uint8_t uiKeyMsg = M2_KEY_NONE;
-
-uint8_t uiKeyCnt = 0;
-#define UI_KEY_DELAY 1
 
 // initialize the dogm library
 Dogm dogm(a0Pin);
@@ -97,8 +91,7 @@ void uiSetup(void) {
   digitalWrite(uiKeySelectPin2, HIGH);       // turn on pullup resistors
 }
 
-// calculate new output values
-void uiStep(void) 
+uint8_t uiGetKey(void)
 {
   uint8_t local_key;
   if ( digitalRead(uiKeyUpPin) == LOW || digitalRead(uiKeyUpPin2) == LOW )
@@ -109,35 +102,8 @@ void uiStep(void)
     local_key = M2_KEY_SELECT;
   else 
     local_key = M2_KEY_NONE;
-  if ( uiKeyDetected == M2_KEY_NONE )
-  {
-    if ( local_key != M2_KEY_NONE )
-    {
-      uiKeyDetected = local_key;
-      uiKeyCnt = 0;
-    }
-  }
-  else
-  {
-    if ( local_key != uiKeyDetected )
-    {
-      if ( uiKeyCnt >= UI_KEY_DELAY )
-      {
-	uiKeyMsg = uiKeyDetected;
-      }
-      uiKeyDetected = M2_KEY_NONE;
-      uiKeyCnt = 0;
-    }
-    else
-    {
-      if ( uiKeyCnt < UI_KEY_DELAY )
-      {
-	uiKeyCnt++;
-      }
-    }
-  }
+  return local_key;
 }
-
 
 M2_EXTERN_ALIGN(top_el);
 M2_ROOT(goto_top_el, "f4x0y0", "Home", &top_el);
@@ -235,9 +201,7 @@ extern "C" uint8_t m2_es_arduino(m2_p ep, uint8_t msg)
   {
     case M2_ES_MSG_GET_KEY:
     {
-      uint8_t k = uiKeyMsg;
-      uiKeyMsg = M2_KEY_NONE;
-      return k;
+      return uiGetKey();
     }
     case M2_ES_MSG_INIT:
       uiSetup();
@@ -266,14 +230,14 @@ void setup() {
 void loop() {
   dogm.showLibInfo();
   
-  uiStep();
+  m2_CheckKey();
   if ( m2_Step() != 0 )
   {
     dogm.start();
     do{
+      m2_CheckKey();
       dog_DrawStr(0, 55, font_5x7, dog_itoa(fps)); 
-      dog_DrawStr(20, 55, font_5x7, dog_itoa(uiKeyDetected)); 
-      dog_DrawStr(40, 55, font_5x7, dog_itoa(uiKeyMsg)); 
+      m2_CheckKey();
       m2_Draw();
     } while( dogm.next() );
   }

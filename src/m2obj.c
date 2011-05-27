@@ -40,6 +40,8 @@
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh)
 {
   m2->is_frame_draw_at_end = 0;
+  m2->key_queue_len = 0;
+  m2->key_queue_pos = 0;
   m2->es = es;
   m2->eh = eh;
   m2->gh = gh;
@@ -49,6 +51,33 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2_nav_init(m2_get_nav(m2),  element);
 }
 
+void m2_CheckKeyM2(m2_p m2)
+{
+  uint8_t key;
+  
+  /* step 1: get raw key */
+  
+  /* check if a key should be forced */
+  key = m2->forced_key;
+  if ( key != M2_KEY_NONE )
+  {
+    m2->forced_key = M2_KEY_NONE;
+    m2_PutKeyIntoQueue(m2, key);
+  }
+  else
+  {
+    /* request key information from the event source */
+    if ( m2->es != NULL )
+    {
+      key = m2->es(m2, M2_ES_MSG_GET_KEY);
+      m2_SetDetectedKey(m2, key);
+    }
+    else
+      key = M2_KEY_NONE;
+  }
+}
+
+
 /*
   return:
     0: nothing happend
@@ -56,27 +85,19 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
 */
 uint8_t m2_StepM2(m2_p m2)
 {
+  uint8_t is_redraw_required = 0;
   uint8_t key;
   
-  /* check if a key should be forced */
-  key = m2->forced_key;
-  if ( key != M2_KEY_NONE )
+  for(;;)
   {
-    m2->forced_key = M2_KEY_NONE;
-  }
-  else
-  {
-    /* request key information from the event source */
-    if ( m2->es != NULL )
-      key = m2->es(m2, M2_ES_MSG_GET_KEY);
-    else
-      key = M2_KEY_NONE;
-  }
+    key = m2_GetKeyFromQueue(m2);
+
+    /* if there are no more keys, break out of the loop */
+    if ( key == M2_KEY_NONE )
+      break;
     
-  /* if there is a valid key, process the key event */
-  /* note, that key numbers are equal to message numbers */
-  if ( key != M2_KEY_NONE )
-  {
+    /* otherwise, process the key event */
+    /* note, that key numbers are equal to message numbers */
     if ( m2->eh != NULL )
     {
       /* handle the key */
@@ -84,8 +105,9 @@ uint8_t m2_StepM2(m2_p m2)
       /* check if the root node has been changed */
       m2_nav_check_and_assign_new_root(m2_get_nav(m2));
     }
-    return 1;
+    
+    is_redraw_required = 1;
   }
   
-  return 0;
+  return is_redraw_required;
 }

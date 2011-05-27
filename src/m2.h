@@ -140,12 +140,14 @@ typedef const char *m2_opt_p;
 
 /* object interface */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);	/* m2ep.c */
+void m2_CheckKeyM2(m2_p m2);
 uint8_t m2_StepM2(m2_p m2);												/* m2ep.c */
 void m2_DrawM2(m2_p m2);												/* m2draw.c */
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr);
 
 /* simplified interface */
 void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
+void m2_CheckKey(void);
 uint8_t m2_Step(void);
 void m2_Draw(void);
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
@@ -283,6 +285,11 @@ uint8_t m2_opt_get_val(m2_rom_char_p str, char cmd) M2_NOINLINE;									/* m2op
 uint8_t m2_opt_get_val_zero_default(m2_rom_char_p str, char cmd) M2_NOINLINE;						/* m2opt.c */
 uint8_t m2_opt_get_val_any_default(m2_rom_char_p str, char cmd, uint8_t default_value) M2_NOINLINE;		/* m2opt.c */
 
+
+/*==============================================================*/
+uint8_t m2_GetKeyFromQueue(m2_p m2);														/* m2key.c */
+void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code);												/* m2key.c */
+void m2_SetDetectedKey(m2_p m2, uint8_t key_code);												/* m2key.c */
 
 
 /*==============================================================*/

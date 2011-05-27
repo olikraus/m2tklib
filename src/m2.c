@@ -45,6 +45,10 @@ void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr
   m2_InitM2(&m2_global_object, element, es, eh, gh);
 }
 
+void m2_CheckKey(void)
+{
+  m2_CheckKeyM2(&m2_global_object);
+}
 
 /*
   return:
