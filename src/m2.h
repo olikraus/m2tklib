@@ -188,6 +188,11 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_KEY_PREV 4
 #define M2_KEY_REFRESH 5
 
+/* mark key as event */
+#define M2_KEY_EVENT_MASK (64)
+#define M2_KEY_EVENT(k) ((k)|M2_KEY_EVENT_MASK)
+#define M2_IS_KEY_EVENT(k) ((k)&M2_KEY_EVENT_MASK)
+
 /* Messages to the element callback procedures, see documentation */
 #define M2_EL_MSG_GET_LIST_LEN 2
 #define M2_EL_MSG_GET_LIST_ELEMENT 3

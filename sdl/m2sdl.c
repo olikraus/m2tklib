@@ -160,6 +160,7 @@ int main(void)
   m2_Draw();
   for(;;)
   {
+    m2_CheckKey();
     if ( m2_Step() != 0 )
       m2_Draw();
   }

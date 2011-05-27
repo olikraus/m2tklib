@@ -46,7 +46,10 @@ uint8_t m2_es_test(m2_p ep, uint8_t msg)
     case M2_ES_MSG_GET_KEY:
       key = key_events[key_pos];
       if ( key != M2_KEY_NONE) 
+      {
 	key_pos++;
+	return M2_KEY_EVENT(key);
+      }
       return key;
     case M2_ES_MSG_INIT:
       key_pos = 0;
@@ -81,8 +84,12 @@ void test_set_3_key(uint8_t k1, uint8_t k2, uint8_t k3)
 void test_exec_steps(void)
 {
    m2_DrawM2(&ep);
+  m2_CheckKeyM2(&ep);
   while(m2_StepM2(&ep) != 0)
-      m2_DrawM2(&ep); 
+  {
+    m2_DrawM2(&ep); 
+    m2_CheckKeyM2(&ep);
+  }
 }
 
 void test_exec_1_key(uint8_t k1)

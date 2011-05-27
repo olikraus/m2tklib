@@ -190,9 +190,9 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		switch( event.key.keysym.sym )
 		{
 		  case SDLK_s:
-		    return M2_KEY_SELECT;
+		    return M2_KEY_EVENT(M2_KEY_SELECT);
 		  case SDLK_n:
-		    return M2_KEY_NEXT;
+		    return M2_KEY_EVENT(M2_KEY_NEXT);
 		  case SDLK_q:
 		    exit(0);
 		    break;
