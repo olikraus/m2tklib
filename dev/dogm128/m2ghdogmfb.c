@@ -119,5 +119,5 @@ uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_IS_FRAME_DRAW_AT_END:
       return 1;
   }
-  return m2_gh_dummy(arg);
+  return m2_gh_dogm_base(arg);
 }

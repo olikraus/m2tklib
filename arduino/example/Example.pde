@@ -217,7 +217,7 @@ M2_XYLIST(xy_el, "", xy_list);
 
 
 M2_ROOT(goto_radio_el, "","Select", &radio_el);
-M2_ROOT(goto_rgb_el, "","RGB", &rgb_el);
+M2_ROOT(goto_rgb_el, "","rgb", &rgb_el);
 M2_ROOT(goto_xy_el, "","Name", &xy_el);
 
   
@@ -257,6 +257,8 @@ void setup() {
   uiSetup();
   m2_Init(&top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);	
   //m2_Init(&m2, &top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_box);	
+
+  m2_SetFont(0, font_7x13);
 
   next_sec_time = millis() + 1000UL;
   fps = 0;

@@ -679,3 +679,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 26.05.2011 ERLEDIGT
     * m2_SetFont
         halb umgesetzt ... dogm128 handler
+	--> 27.05.2011 ERLEDIGT
+    * ich glaube der font offset ist noch falsch. beim DrawStr muss y etwas angehoben werde (descent?)
+    
+	

@@ -154,9 +154,29 @@ uint8_t m2_dogm_get_icon_width(uint8_t font, uint8_t icon)
   return 8;
 }
 
+
+DOG_PGM_P m2_gh_dogm_fonts[4];
+
+
 uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
   {
+    case M2_GFX_MSG_SET_FONT:
+    {
+      uint8_t idx;
+      idx = arg->font;
+      idx &=3;
+      m2_gh_dogm_fonts[idx] = (DOG_PGM_P)(arg->s);
+    }
+    return 0;
   }
+  return m2_gh_dummy(arg);
 }
+
+DOG_PGM_P m2_dogm_get_font(uint8_t font)
+{
+  font &= 3;
+  return m2_gh_dogm_fonts[font];
+}
+

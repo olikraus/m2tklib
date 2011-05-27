@@ -37,6 +37,7 @@ uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_fbs(m2_gfx_arg_p  arg);
 
+  
 /* utility procedures */
 
 void m2_dogm_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
@@ -45,6 +46,9 @@ void m2_dogm_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_dogm_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon);
 uint8_t m2_dogm_get_icon_height(uint8_t font, uint8_t icon);
 uint8_t m2_dogm_get_icon_width(uint8_t font, uint8_t icon);
+
+uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg);
+DOG_PGM_P m2_dogm_get_font(uint8_t font);
   
 #ifdef __cplusplus
 }
