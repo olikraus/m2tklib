@@ -101,7 +101,7 @@ typedef struct _m2_gfx_arg *m2_gfx_arg_p;
 typedef uint8_t (*m2_eh_fnptr)(m2_p ep, uint8_t msg, uint8_t arg);
 
 /* event source (callback procedure) */
-typedef uint8_t (*m2_es_fnptr)(m2_p ep, uint8_t msg, void *data);
+typedef uint8_t (*m2_es_fnptr)(m2_p ep, uint8_t msg);
 
 /* graphics handler (callback procedure) */
 typedef uint8_t (*m2_gfx_fnptr)(m2_gfx_arg_p arg);
@@ -139,11 +139,12 @@ typedef const char *m2_opt_p;
 */
 
 /* object interface */
-void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);	/* m2obj.c */
-void m2_CheckKeyM2(m2_p m2);
-uint8_t m2_StepM2(m2_p m2);															/* m2obj.c */
-void m2_DrawM2(m2_p m2);																/* m2draw.c */
-void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr);								/* m2obj.c */
+void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
+void m2_CheckKeyM2(m2_p m2) M2_NOINLINE;
+uint8_t m2_StepM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
+void m2_DrawM2(m2_p m2) M2_NOINLINE;													/* m2draw.c */
+void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;					/* m2obj.c */
+void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
 
 /* simplified interface */
 void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
@@ -161,6 +162,7 @@ extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
 
 /* event sources */
 uint8_t m2_es_sdl(m2_p ep, uint8_t msg, void *data);		/* m2ghsdl.c: SDL Event Source */
+uint8_t m2_es_arduino(m2_p ep, uint8_t msg);			/* m2esarduino.c */
 
 /* event handler */
 uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bd.c 2 Button Handler with data entry mode */
@@ -186,6 +188,8 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_KEY_NEXT 3
 #define M2_KEY_PREV 4
 #define M2_KEY_REFRESH 5
+
+#define M2_KEY_CNT 5
 
 /* mark key as event */
 #define M2_KEY_EVENT_MASK (64)
@@ -575,14 +579,6 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 /* messages for the event source callback procedure */
 #define M2_ES_MSG_GET_KEY 0
 #define M2_ES_MSG_INIT 1
-struct _m2_pin_struct
-{
-  uint8_t msg;
-  uint8_t pin;
-};
-typedef struct _m2_pin_struct m2_pin_t;
-typedef struct _m2_pin_struct m2_pin_p;
-#define M2_ES_MSG_SET_PIN 2
 
 
 /*==============================================================*/
@@ -720,6 +716,13 @@ uint8_t m2_gfx_get_char_height_with_small_border(uint8_t font) M2_NOINLINE;					
 uint8_t m2_gfx_get_char_width_with_small_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_height_with_normal_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_width_with_normal_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
+
+
+/*==============================================================*/
+void m2_SetPin(uint8_t key, uint8_t pin);				/* m2pin.c */
+uint8_t m2_GetPin(uint8_t key);						/* m2pin.c */
+uint8_t m2_IsPinAssigned(uint8_t key);					/* m2pin.c */
+
 
 #ifdef __cplusplus
 }

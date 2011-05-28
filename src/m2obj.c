@@ -31,6 +31,15 @@
 
 #include "m2.h"
 
+void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es)
+{
+  if ( es != NULL )
+  {
+    m2->es = es;
+    m2->es(m2, M2_ES_MSG_INIT);
+  }
+}
+
 /*
   element: 	the root element
   es:			event source handler, can be NULL
@@ -42,13 +51,13 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2->is_frame_draw_at_end = 0;
   m2->key_queue_len = 0;
   m2->key_queue_pos = 0;
-  m2->es = es;
   m2->eh = eh;
   m2->gh = gh;
   m2_gfx_init(gh);
   m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
   m2->forced_key = M2_KEY_REFRESH;
   m2_nav_init(m2_get_nav(m2),  element);
+  m2_SetEventSourceHandlerM2(m2, es);
 }
 
 void m2_CheckKeyM2(m2_p m2)
@@ -69,7 +78,7 @@ void m2_CheckKeyM2(m2_p m2)
     /* request key information from the event source */
     if ( m2->es != NULL )
     {
-      key = m2->es(m2, M2_ES_MSG_GET_KEY, NULL);
+      key = m2->es(m2, M2_ES_MSG_GET_KEY);
       m2_SetDetectedKey(m2, key);
     }
     else
@@ -117,11 +126,3 @@ void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
   m2_gfx_set_font(m2->gh, font_idx, font_ptr);
 }
 
-void m2_SetPinM2(m2_p m2, uint8_t msg, uint8_t pin)
-{
-  m2_pin_t pin_data;
-  pin_data.msg = msg;
-  pin_data.pin = pin;
-  if ( m2->es != NULL )
-    m2->es(m2, M2_ES_MSG_SET_PIN, &pin_data);
-}
