@@ -69,6 +69,7 @@ AVRDUDE_PORT:=/dev/ttyACM0
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/LiquidCrystal/
 #EXTRA_DIRS+=$(ARDUINO_PATH)libraries/Dogm/
 EXTRA_DIRS+=/home/kraus/src/arduino/dogm128/hg/libraries/Dogm/
+EXTRA_DIRS+=/home/kraus/src/m2/m2tklib/dev/arduino/
 
 #=== fetch parameter from boards.txt processor parameter ===
 # the basic idea is to get most of the information from boards.txt

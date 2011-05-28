@@ -58,52 +58,23 @@ uint16_t sensorPin = 0;  // analog input
 unsigned long next_sec_time;
 uint8_t fps, frame_cnt;
 
-// DOGS102 configuration values
+#ifdef DOGS102_HW
+// DOGS102 shield 
 uint8_t uiKeyUpPin = 5;
 uint8_t uiKeyDownPin = 3;
 uint8_t uiKeySelectPin = 4;
+#else
+// DOGM132, DOGM128 and DOGXL160 shield
+uint8_t uiKeyUpPin = 7;
+uint8_t uiKeyDownPin = 3;
+uint8_t uiKeySelectPin = 2;
+#endif
 
-// DOGM132 configuration values
-uint8_t uiKeyUpPin2 = 7;
-uint8_t uiKeyDownPin2 = 3;
-uint8_t uiKeySelectPin2 = 2;
 
 
 // initialize the dogm library
 Dogm dogm(a0Pin);
 
-// setup the user interface
-void uiSetup(void) {
-  // configure input keys 
-  
-  pinMode(uiKeyUpPin, INPUT);           // set pin to input
-  digitalWrite(uiKeyUpPin, HIGH);       // turn on pullup resistors
-  pinMode(uiKeyDownPin, INPUT);           // set pin to input
-  digitalWrite(uiKeyDownPin, HIGH);       // turn on pullup resistors
-  pinMode(uiKeySelectPin, INPUT);           // set pin to input
-  digitalWrite(uiKeySelectPin, HIGH);       // turn on pullup resistors
-
-  pinMode(uiKeyUpPin2, INPUT);           // set pin to input
-  digitalWrite(uiKeyUpPin2, HIGH);       // turn on pullup resistors
-  pinMode(uiKeyDownPin2, INPUT);           // set pin to input
-  digitalWrite(uiKeyDownPin2, HIGH);       // turn on pullup resistors
-  pinMode(uiKeySelectPin2, INPUT);           // set pin to input
-  digitalWrite(uiKeySelectPin2, HIGH);       // turn on pullup resistors
-}
-
-uint8_t uiGetKey(void)
-{
-  uint8_t local_key;
-  if ( digitalRead(uiKeyUpPin) == LOW || digitalRead(uiKeyUpPin2) == LOW )
-    local_key = M2_KEY_PREV;
-  else if ( digitalRead(uiKeyDownPin) == LOW || digitalRead(uiKeyDownPin2) == LOW )
-    local_key = M2_KEY_NEXT;
-  else if ( digitalRead(uiKeySelectPin) == LOW || digitalRead(uiKeySelectPin2) == LOW )
-    local_key = M2_KEY_SELECT;
-  else 
-    local_key = M2_KEY_NONE;
-  return local_key;
-}
 
 M2_EXTERN_ALIGN(top_el);
 M2_ROOT(goto_top_el, "f4x0y0", "Home", &top_el);
@@ -193,35 +164,17 @@ M2_LIST(top_list) = {
 M2_GRIDLIST(top_grid_el,"c1", top_list);
 M2_ALIGN(top_el, "w128h64", &top_grid_el);
 
- 
-extern "C" uint8_t m2_es_arduino(m2_p ep, uint8_t msg)
-{
-  
-  switch(msg)
-  {
-    case M2_ES_MSG_GET_KEY:
-    {
-      return uiGetKey();
-    }
-    case M2_ES_MSG_INIT:
-      uiSetup();
-      return 0;
-  }
-  return 0;
-}
-
-
 /*==============================================================*/
 
 
 void setup() {
   
-  uiSetup();
   m2_Init(&top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);	
-  //m2_Init(&m2, &top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_box);	
 
   m2_SetFont(0, font_7x13);
-
+  m2_SetPin(M2_KEY_SELECT, uiKeySelectPin);
+  m2_SetPin(M2_KEY_NEXT, uiKeyDownPin);
+  
   next_sec_time = millis() + 1000UL;
   fps = 0;
   frame_cnt = 0;
@@ -236,7 +189,9 @@ void loop() {
     dogm.start();
     do{
       m2_CheckKey();
+      
       dog_DrawStr(0, 55, font_5x7, dog_itoa(fps)); 
+      dog_DrawStr(10, 55, font_5x7, dog_itoa(m2_GetPin(M2_KEY_NEXT))); 
       m2_CheckKey();
       m2_Draw();
     } while( dogm.next() );

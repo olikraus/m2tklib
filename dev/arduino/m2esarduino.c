@@ -24,6 +24,7 @@
 
 */
 
+#include "wiring.h"
 #include "m2.h"
 
 static void m2_arduino_setup_key(uint8_t key) M2_NOINLINE;

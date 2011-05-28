@@ -35,6 +35,7 @@ void m2_SetPin(uint8_t key, uint8_t pin)
   uint8_t idx = m2_get_idx_by_key(key);
   m2_key_to_pin_array[idx].status |= M2_IS_KEY_ASSIGNED;
   m2_key_to_pin_array[idx].pin = pin;
+  m2_InitEventSource();
 }
 
 uint8_t m2_GetPin(uint8_t key)
@@ -46,6 +47,6 @@ uint8_t m2_GetPin(uint8_t key)
 uint8_t m2_IsPinAssigned(uint8_t key)
 {
   uint8_t idx = m2_get_idx_by_key(key);
-  return m2_key_to_pin_array[key].status & M2_IS_KEY_ASSIGNED;
+  return m2_key_to_pin_array[idx].status & M2_IS_KEY_ASSIGNED;
 }
 

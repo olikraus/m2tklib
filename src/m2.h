@@ -152,6 +152,7 @@ void m2_CheckKey(void);
 uint8_t m2_Step(void);
 void m2_Draw(void);
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
+void m2_InitEventSource(void);
 
 
 extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
