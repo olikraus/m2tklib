@@ -682,6 +682,13 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 27.05.2011 ERLEDIGT
     * ich glaube der font offset ist noch falsch. beim DrawStr muss y etwas angehoben werde (descent?)
     * SetFont Nachrichten im dummy handler verarbeiten und das font array in das m2 object verschieben?
+	--> nein, das ist overhead für das LCD
+	--> 28.05.2011 ERLEDIGT
     * source handler für arduino schreiben
 	m2_SetArduinoPin(msg, pin)
-	
+	SET_PIN Nachricht wieder rausnehmen und den handler vereinfachen. Vielmehr wäre ein unabhängiges file
+	vermutlich einfacher.
+	m2_SetPin(msg, pin)
+	m2_GetPin(msg)
+    * m2_StepM2 umbenennen --> m2_HandleKeyM2
+    

@@ -171,7 +171,7 @@ uint8_t m2_sdl_get_text_width(const char *s)
 }
 
 /* event source for SDL */
-uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
+uint8_t m2_es_sdl(m2_p ep, uint8_t msg, void *data)
 {
   switch(msg)
   {

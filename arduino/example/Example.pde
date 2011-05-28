@@ -194,7 +194,7 @@ M2_GRIDLIST(top_grid_el,"c1", top_list);
 M2_ALIGN(top_el, "w128h64", &top_grid_el);
 
  
-extern "C" uint8_t m2_es_arduino(m2_p ep, uint8_t msg)
+extern "C" uint8_t m2_es_arduino(m2_p ep, uint8_t msg, void *data)
 {
   
   switch(msg)

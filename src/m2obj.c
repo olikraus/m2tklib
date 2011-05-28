@@ -69,7 +69,7 @@ void m2_CheckKeyM2(m2_p m2)
     /* request key information from the event source */
     if ( m2->es != NULL )
     {
-      key = m2->es(m2, M2_ES_MSG_GET_KEY);
+      key = m2->es(m2, M2_ES_MSG_GET_KEY, NULL);
       m2_SetDetectedKey(m2, key);
     }
     else
@@ -110,4 +110,18 @@ uint8_t m2_StepM2(m2_p m2)
   }
   
   return is_redraw_required;
+}
+
+void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
+{
+  m2_gfx_set_font(m2->gh, font_idx, font_ptr);
+}
+
+void m2_SetPinM2(m2_p m2, uint8_t msg, uint8_t pin)
+{
+  m2_pin_t pin_data;
+  pin_data.msg = msg;
+  pin_data.pin = pin;
+  if ( m2->es != NULL )
+    m2->es(m2, M2_ES_MSG_SET_PIN, &pin_data);
 }

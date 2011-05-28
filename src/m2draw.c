@@ -198,7 +198,3 @@ void m2_DrawM2(m2_p ep)
   m2_gfx_end();
 }
 
-void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
-{
-  m2_gfx_set_font(m2->gh, font_idx, font_ptr);
-}
