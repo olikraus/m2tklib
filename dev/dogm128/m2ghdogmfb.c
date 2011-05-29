@@ -49,10 +49,10 @@ uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg)
       dog_SetBox(arg->x, arg->y, arg->x+arg->w, arg->y+arg->h);
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      dog_DrawStr(arg->x, arg->y, font_5x7, arg->s);
+      dog_DrawStr(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), font_5x7, arg->s);
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
-      dog_DrawStrP(arg->x, arg->y, font_5x7, arg->s);
+      dog_DrawStrP(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), font_5x7, arg->s);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )

@@ -25,25 +25,6 @@
   CS (Chip Select)  Pin 10
   MISO (Pin 12) is not used, but can not be reused as generic I/O
   
-  Note:
-    1) Set correct display hardware in Dogm/utility/dogm128.h
-    2) Set top/bottom view (DOG_REVERSE) in Dogm/utility/dogm128.h
-    See also: http://code.google.com/p/dogm128/wiki/install 
-
-  User Interface:
-    Analog Potentiometer: 
-      Assign pin number to variable "sensorPin". Default is analog pin 0.
-    Digital Input:
-      Assign up button pin to variable uiKeyUpPin. Default is DOGS102 Shield
-      Assign down button pin to variable uiKeyDownPin. Default is DOGS102 Shield
-      Assign fire button pin to variable uiKeySelectPin. Default is DOGS102 Shield
-	  Remember to define DOGS102_HW
-    additionally another button set can be define
-      Assign up button pin to variable uiKeyUpPin2. Default is DOGM132 Shield
-      Assign down button pin to variable uiKeyDownPin2. Default is DOGM132 Shield
-      Assign fire button pin to variable uiKeySelectPin2. Default is DOGM132 Shield
-	  Remember to define DOGM132_HW and DOG_REVERSE
-  
 */
 
 #include "Dogm.h"
@@ -169,7 +150,11 @@ M2_ALIGN(top_el, "w128h64", &top_grid_el);
 
 void setup() {
   
+#ifdef DOGXL160_HW_GR
+  m2_Init(&top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogxl160);	
+#else
   m2_Init(&top_el, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);	
+#endif
 
   m2_SetFont(0, font_7x13);
   m2_SetPin(M2_KEY_SELECT, uiKeySelectPin);
@@ -191,7 +176,7 @@ void loop() {
       m2_CheckKey();
       
       dog_DrawStr(0, 55, font_5x7, dog_itoa(fps)); 
-      dog_DrawStr(10, 55, font_5x7, dog_itoa(m2_GetPin(M2_KEY_NEXT))); 
+      dog_DrawStr(10, 55, font_5x7, dog_itoa(dog_GetFontBBXHeight(font_7x13))); 
       m2_CheckKey();
       m2_Draw();
     } while( dogm.next() );

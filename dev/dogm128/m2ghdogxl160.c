@@ -1,6 +1,6 @@
 /*
 
-  m2ghdogmbfs.c
+  m2ghdogmfbs.c
   
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -25,17 +25,59 @@
 #include "m2ghdogm.h"
 
 /*
-  focus cursor: filled (xor) box
-  buttom style: shadow frame
+  focus cursor: shadow frame
+  buttom style: filled (xor) box
 */
 
-uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg)
+void m2_dogm_draw_frame_dogx160(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t is_in)
+{
+  uint8_t x1; 
+  uint8_t y1;
+  uint8_t c0 = 0;
+  uint8_t c2 = 2;
+  if ( is_in )
+  {
+    c0 = 2;
+    c2 = 0;
+  }
+  x1 = x0;
+  y1 = y0;
+  w-=2;
+  h-=2;
+  x1 += w;
+  y1 += h;
+  
+  y0++;
+  y1++;
+
+  dog_SetPixelValue(c0);
+  dog_SetHLine(x0, x1, y1);
+  dog_SetVLine(x0, y0, y1);
+  dog_SetPixelValue(c2);
+  dog_SetHLine(x0, x1, y0);
+  dog_SetVLine(x1, y0, y1);
+  if ( is_in == 0 )
+  {  
+    x0++;
+    x1++;
+    y0--;
+    y1--;
+    dog_SetHLine(x0, x1, y0);
+    dog_SetVLine(x1, y0, y1);
+  }
+  dog_SetPixelValue(3);
+}
+
+uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg)
 {
   switch(arg->msg)
   {
-    case M2_GFX_MSG_INIT:				
+    case M2_GFX_MSG_INIT:		
       break;
     case M2_GFX_MSG_START:
+      dog_SetPixelValue(1);
+      dog_SetBox(0, 0, DOG_WIDTH-1, DOG_HEIGHT-1);
+      dog_SetPixelValue(3);
       break;
     case M2_GFX_MSG_END:
       break;
@@ -49,56 +91,49 @@ uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg)
       dog_SetBox(arg->x, arg->y, arg->x+arg->w, arg->y+arg->h);
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      dog_DrawStr(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), font_5x7, arg->s);
+      dog_DrawStr(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
-      dog_DrawStrP(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), font_5x7, arg->s);
+      dog_DrawStrP(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
-	m2_dogm_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
+	m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 1);
+	//m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
-      m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
+    case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
+      m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 0);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_DATA_ENTRY:
-      m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
+      m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 0);
       break;
-      
     case M2_GFX_MSG_DRAW_GO_UP:
-      m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h/2);
+      m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_ICON:
       m2_dogm_draw_icon(arg->x, arg->y, arg->font, arg->icon);
       break;    
     case M2_GFX_MSG_GET_TEXT_WIDTH:
-      return dog_GetStrWidth(font_5x7, arg->s);
+      return dog_GetStrWidth(m2_dogm_get_font(arg->font), arg->s);
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
-      return dog_GetStrWidthP(font_5x7, arg->s);
+      return dog_GetStrWidthP(m2_dogm_get_font(arg->font), arg->s);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      return dog_GetFontBBXWidth(font_5x7);
+      return dog_GetFontBBXWidth(m2_dogm_get_font(arg->font));
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
-      return dog_GetFontBBXHeight(font_5x7);
+      return dog_GetFontBBXHeight(m2_dogm_get_font(arg->font));
 
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
-      if ( (arg->font & 4) != 0 )
-	return 3;
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      if ( (arg->font & 4) != 0 )
-	return 3;
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      if ( (arg->font & 4) != 0 )
-	return 1;
-      return 0;
+      return 1;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
-      if ( (arg->font & 4) != 0 )
-	return 2;
-      return 0;
+      return 2;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:

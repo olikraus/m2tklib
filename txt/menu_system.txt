@@ -681,6 +681,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
         halb umgesetzt ... dogm128 handler
 	--> 27.05.2011 ERLEDIGT
     * ich glaube der font offset ist noch falsch. beim DrawStr muss y etwas angehoben werde (descent?)
+	--> 29.05.2011 ERLEDIGT
     * SetFont Nachrichten im dummy handler verarbeiten und das font array in das m2 object verschieben?
 	--> nein, das ist overhead für das LCD
 	--> 28.05.2011 ERLEDIGT
