@@ -132,9 +132,9 @@ M2_XYLIST(xy_el, "", xy_list);
 /* top menu */
 
 
-M2_ROOT(goto_radio_el, "","Select", &radio_el);
-M2_ROOT(goto_rgb_el, "","rgb", &rgb_el);
-M2_ROOT(goto_xy_el, "","Name", &xy_el);
+M2_ROOT(goto_radio_el, "w70f12","Select", &radio_el);
+M2_ROOT(goto_rgb_el, "w70f12","rgb", &rgb_el);
+M2_ROOT(goto_xy_el, "w70f12","Name", &xy_el);
 
   
 M2_LIST(top_list) = { 

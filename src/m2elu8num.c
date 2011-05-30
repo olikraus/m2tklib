@@ -74,7 +74,7 @@ M2_EL_FN_DEF(m2_el_u8num_fn)
 	if ( m2_is_frame_draw_at_end == 0 )
 	  m2_el_u8base_fn(fn_arg);
 	
-	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, font, m2_utl_u8d(*val_ptr, digits));
+	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, m2_utl_u8d(*val_ptr, digits));
 	
 	if ( m2_is_frame_draw_at_end != 0 )
 	  m2_el_u8base_fn(fn_arg);

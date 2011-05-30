@@ -46,7 +46,7 @@ M2_EL_FN_DEF(m2_el_label_fn)
 	if ( m2_is_frame_draw_at_end == 0 )
 	  m2_el_fnfmt_fn(fn_arg);
 	  
-	m2_gfx_draw_text_add_readonly_border_offset(b->x, b->y, font, m2_el_str_get_str(fn_arg));
+	m2_gfx_draw_text_add_readonly_border_offset(b->x, b->y, 0, 0, font, m2_el_str_get_str(fn_arg));
 	
 	if ( m2_is_frame_draw_at_end != 0 )
 	  m2_el_fnfmt_fn(fn_arg);

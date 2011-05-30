@@ -77,20 +77,24 @@ void m2_gfx_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   m2_gfx_call_handler(M2_GFX_MSG_DRAW_BOX);
 }
 
-void m2_gfx_text(uint8_t x0, uint8_t y0, uint8_t font, const char *s)
+void m2_gfx_text(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s)
 {
   m2_gfx_arg_object.x = x0;
   m2_gfx_arg_object.y = y0;
+  m2_gfx_arg_object.w = w;
+  m2_gfx_arg_object.h = h;
   m2_gfx_arg_object.font = font;
   m2_gfx_arg_object.s = s;
   m2_gfx_call_handler(M2_GFX_MSG_DRAW_TEXT);
 }
 
 /* assumes that s is a pointer into PROGMEM */
-void m2_gfx_text_p(uint8_t x0, uint8_t y0, uint8_t font, const char *s)
+void m2_gfx_text_p(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s)
 {
   m2_gfx_arg_object.x = x0;
   m2_gfx_arg_object.y = y0;
+  m2_gfx_arg_object.w = w;
+  m2_gfx_arg_object.h = h;
   m2_gfx_arg_object.font = font;
   m2_gfx_arg_object.s = s;
   m2_gfx_call_handler(M2_GFX_MSG_DRAW_TEXT_P);

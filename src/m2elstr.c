@@ -59,9 +59,9 @@ M2_EL_FN_DEF(m2_el_str_fn)
     case M2_EL_MSG_GET_LIST_LEN:
       return 0;  /* not a list, return 0 */
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_gfx_add_normal_border_height(font, m2_gfx_get_char_height(font));
+      return m2_gfx_add_normal_border_height(font, m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_normal_border_width(font, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg)));
+      return m2_gfx_add_normal_border_width(font, m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg))));
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
@@ -80,7 +80,10 @@ M2_EL_FN_DEF(m2_el_str_fn)
 	if ( m2_is_frame_draw_at_end == 0 )
 	  m2_el_fnfmt_fn(fn_arg);
 	
-	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, font, m2_el_str_get_str(fn_arg));
+	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 
+	      m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg))),
+	      m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)),
+	      font, m2_el_str_get_str(fn_arg));
 	
 	if ( m2_is_frame_draw_at_end != 0 )
 	  m2_el_fnfmt_fn(fn_arg);

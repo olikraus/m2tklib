@@ -42,13 +42,13 @@ void m2_dogm_draw_frame_dogx160(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, ui
   }
   x1 = x0;
   y1 = y0;
-  w-=2;
-  h-=2;
+  w-=1;
+  h-=1;
   x1 += w;
   y1 += h;
   
-  y0++;
-  y1++;
+  //y0++;
+  //y1++;
 
   dog_SetPixelValue(c0);
   dog_SetHLine(x0, x1, y1);
@@ -56,6 +56,7 @@ void m2_dogm_draw_frame_dogx160(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, ui
   dog_SetPixelValue(c2);
   dog_SetHLine(x0, x1, y0);
   dog_SetVLine(x1, y0, y1);
+  /*
   if ( is_in == 0 )
   {  
     x0++;
@@ -65,6 +66,7 @@ void m2_dogm_draw_frame_dogx160(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, ui
     dog_SetHLine(x0, x1, y0);
     dog_SetVLine(x1, y0, y1);
   }
+  */
   dog_SetPixelValue(3);
 }
 
@@ -91,25 +93,37 @@ uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg)
       dog_SetBox(arg->x, arg->y, arg->x+arg->w, arg->y+arg->h);
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      dog_DrawStr(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
+    {
+      /* arg->w contains the cell width if arg->w > 0 */
+      uint8_t x = arg->x;
+      if ( (arg->font & 8) != 0 )
+	if ( arg->w != 0 )
+	{
+	  x = arg->w;
+	  x -= dog_GetStrWidth(m2_dogm_get_font(arg->font), arg->s);
+	  x >>= 1;
+	  x += arg->x;
+	}
+      dog_DrawStr(x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
       break;
+    }
     case M2_GFX_MSG_DRAW_TEXT_P:
       dog_DrawStrP(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
-	m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 1);
+	m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 0);
 	//m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
-      m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 0);
+      m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 1);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_DATA_ENTRY:
-      m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 0);
+      m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 1);
       break;
     case M2_GFX_MSG_DRAW_GO_UP:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
@@ -127,13 +141,13 @@ uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg)
       return dog_GetFontBBXHeight(m2_dogm_get_font(arg->font));
 
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
-      return 3;
+      return 2;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      return 3;
+      return 2;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
       return 1;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
-      return 2;
+      return 1;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:

@@ -659,6 +659,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * M2_EL_MSG_DATA_UP/DOWN
       brauchen wir das pos argument überhaupt. Ich glaube es kann entfernt werden.
     * Veralgemeinertes debounce, routinen vom pde code übernehmen
+	--> 29.05.2011 ERLEDIGT
     * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
     * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
 	oder man nimmt eine eigene funktion
@@ -691,5 +692,14 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	vermutlich einfacher.
 	m2_SetPin(msg, pin)
 	m2_GetPin(msg)
+	--> 29.05.2011 ERLEDIGT
     * m2_StepM2 umbenennen --> m2_HandleKeyM2
+    * speziellen dogxl160 handler
+	--> 30.05.2011 ERLEDIGT
+    * einführung von text localen formatier-anweisungen
+	f8 --> center --> erledigt im dogxl160 handler, offen für alle anderen
+	w/h für element --> erledigt für elstr und alle abgeleiteten elemente
+	    offen für: ellabel, eventuell auch ein rechts allignment für ellabel
+	    ebenfalls offen für eltext, elu32, elu8
+	  
     

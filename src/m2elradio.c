@@ -35,9 +35,9 @@ M2_EL_FN_DEF(m2_el_radio_fn)
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_gfx_add_normal_border_height(font, m2_gfx_get_icon_height(0, M2_ICON_RADIO_ACTIVE));
+      return m2_gfx_add_normal_border_height(font, m2_gfx_get_icon_height(font, M2_ICON_RADIO_ACTIVE));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_normal_border_width(font, m2_gfx_get_icon_width(0, M2_ICON_RADIO_ACTIVE));
+      return m2_gfx_add_normal_border_width(font, m2_gfx_get_icon_width(font, M2_ICON_RADIO_ACTIVE));
     case M2_EL_MSG_SELECT:
       {
 	uint8_t *ptr;
@@ -77,7 +77,7 @@ M2_EL_FN_DEF(m2_el_radio_fn)
 	{
 	  icon = M2_ICON_RADIO_ACTIVE; 
 	}
-	m2_gfx_draw_icon_add_normal_border_offset(b->x, b->y, 0, icon);
+	m2_gfx_draw_icon_add_normal_border_offset(b->x, b->y, font, icon);
 	
 	/* handle focus and its border */
 	if ( m2_is_frame_draw_at_end != 0 )

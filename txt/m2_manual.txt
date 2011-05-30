@@ -371,7 +371,9 @@ uint8_t mnu_el_str_fn(mnu_fn_arg_p fn_arg)
   Element:
     mnu_el_str_p
   Options:
-    -
+    'f'		(font) style selection
+    'w'	field width
+    'h'	field height
   Based on:
     -
     
@@ -384,7 +386,9 @@ uint8_t mnu_el_str_up_fn(mnu_fn_arg_p fn_arg)
   Element:
     mnu_el_str_p
   Options:
-    -
+    'f'		(font) style selection
+    'w'	field width
+    'h'	field height
   Based on:
     mnu_el_str_fn
     
@@ -426,16 +430,6 @@ uint8_t m2_el_gridlist_fn(mnu_fn_arg_p fn_arg)
 =============================================================
 == Element Option  ==
 
-
-Option: 
-  'c'
-Description:
-  Number of columns.
-Used by
-  grid, u32
-Values:
-  0..255
-
 Option: 
   'a'
 Description:
@@ -448,12 +442,32 @@ Values:
 
 
 Option: 
+  'c'
+Description:
+  Number of columns.
+Used by
+  grid, u32
+Values:
+  0..255
+
+
+Option: 
   'd'
 Description:
   Draw without focus flag. Used inside the draw procedure.
 Values:
   0: Do not draw this element and its child without having focus
   1: Draw always
+
+Option: 
+  'f'
+Description:
+  (font) style selection
+Values (depends on graphics driver):
+  0-3		normal fonts
+  4-7		highlight text
+  8-11	centered normal font
+  12-15	centered highlight text
 
 Option: 
   'v'

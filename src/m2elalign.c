@@ -61,7 +61,12 @@ uint8_t m2_el_align_get_child_size(m2_el_fnarg_p fn_arg, uint8_t is_height)
   return m2_fn_get_width(element);
 }
 
-uint8_t m2_el_align_get_new_size(m2_el_fnarg_p fn_arg, uint8_t is_height)
+/*
+use
+uint8_t m2_align_get_max_size(m2_el_fnarg_p fn_arg, uint8_t size, uint8_t is_height)
+
+*/
+uint8_t m2_align_get_new_size(m2_el_fnarg_p fn_arg, uint8_t is_height)
 {
   uint8_t max, val;
   if ( is_height != 0 )
@@ -81,7 +86,7 @@ uint8_t m2_align_get_pos(m2_el_fnarg_p fn_arg, uint8_t is_height, uint8_t pos)
   if ( pos == 0 )
     return 0;
   
-  d = m2_el_align_get_new_size(fn_arg, is_height);
+  d = m2_align_get_new_size(fn_arg, is_height);
   d -= m2_el_align_get_child_size(fn_arg, is_height);
   
   if ( pos == 2 )
@@ -108,15 +113,15 @@ uint8_t m2_el_align_fn(m2_el_fnarg_p fn_arg)
       ((m2_pcbox_p)(fn_arg->data))->c.y += ((m2_pcbox_p)(fn_arg->data))->p.y; 
       ((m2_pcbox_p)(fn_arg->data))->c.x += ((m2_pcbox_p)(fn_arg->data))->p.x; 
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_el_align_get_new_size(fn_arg, 1);
+      return m2_align_get_new_size(fn_arg, 1);
     case M2_EL_MSG_GET_WIDTH:
-      return m2_el_align_get_new_size(fn_arg, 0);
+      return m2_align_get_new_size(fn_arg, 0);
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
 	uint8_t h, w;
-	h = m2_el_align_get_new_size(fn_arg, 1);
-	w = m2_el_align_get_new_size(fn_arg, 0);
+	h = m2_align_get_new_size(fn_arg, 1);
+	w = m2_align_get_new_size(fn_arg, 0);
 	printf("align w:%d h:%d arg:%d \n", w, h, fn_arg->arg);
       }
       break;
@@ -126,8 +131,8 @@ uint8_t m2_el_align_fn(m2_el_fnarg_p fn_arg)
       if ( fn_arg->arg > 0 )
       {
 	uint8_t h, w;
-	h = m2_el_align_get_new_size(fn_arg, 1);
-	w = m2_el_align_get_new_size(fn_arg, 0);
+	h = m2_align_get_new_size(fn_arg, 1);
+	w = m2_align_get_new_size(fn_arg, 0);
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
 	m2_gfx_box(m2_gfx_add_normal_border_x(b->x), m2_gfx_add_normal_border_y(b->y), w, h);
       }

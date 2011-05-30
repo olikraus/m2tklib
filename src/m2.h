@@ -657,8 +657,8 @@ void m2_gfx_hline(uint8_t x0, uint8_t y0, uint8_t w);
 void m2_gfx_vline(uint8_t x0, uint8_t y0, uint8_t h);
 void m2_gfx_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 
-void m2_gfx_text(uint8_t x0, uint8_t y0, uint8_t font, const char *s);
-void m2_gfx_text_p(uint8_t x0, uint8_t y0, uint8_t font, const char *s);
+void m2_gfx_text(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s);
+void m2_gfx_text_p(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s);
 
 void m2_gfx_normal_no_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 void m2_gfx_normal_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
@@ -708,11 +708,14 @@ void m2_gfx_end(void);
 void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr);
 
 /*==============================================================*/
-void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t font, const char *s) M2_NOINLINE;			/* m2gfxutl.c */
+
+void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_text_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+
+
 void m2_gfx_draw_icon_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t font, uint8_t icon_number) M2_NOINLINE;	/* m2gfxutl.c */
-void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t font, const char *s) M2_NOINLINE;			/* m2gfxutl.c */
-void m2_gfx_draw_text_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t font, const char *s) M2_NOINLINE;		/* m2gfxutl.c */
-void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t font, const char *s) M2_NOINLINE;		/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_height_with_small_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_width_with_small_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_height_with_normal_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
@@ -723,6 +726,12 @@ uint8_t m2_gfx_get_char_width_with_normal_border(uint8_t font) M2_NOINLINE;					
 void m2_SetPin(uint8_t key, uint8_t pin);				/* m2pin.c */
 uint8_t m2_GetPin(uint8_t key);						/* m2pin.c */
 uint8_t m2_IsPinAssigned(uint8_t key);					/* m2pin.c */
+
+
+/*==============================================================*/
+uint8_t m2_align_get_max_height(m2_el_fnarg_p fn_arg, uint8_t size);		/* m2align.c */
+uint8_t m2_align_get_max_width(m2_el_fnarg_p fn_arg, uint8_t size);		/* m2align.c */
+
 
 
 #ifdef __cplusplus
