@@ -151,6 +151,7 @@ void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr
 void m2_CheckKey(void);
 uint8_t m2_Step(void);
 void m2_Draw(void);
+void m2_SetKey(uint8_t key);
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 

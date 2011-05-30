@@ -133,8 +133,8 @@ M2_XYLIST(xy_el, "", xy_list);
 
 
 M2_ROOT(goto_radio_el, "w70f12","Select", &radio_el);
-M2_ROOT(goto_rgb_el, "w70f12","rgb", &rgb_el);
-M2_ROOT(goto_xy_el, "w70f12","Name", &xy_el);
+M2_ROOT(goto_rgb_el, "w70f12","RGB", &rgb_el);
+M2_ROOT(goto_xy_el, "w70f12","Name Entry", &xy_el);
 
   
 M2_LIST(top_list) = { 
@@ -143,7 +143,7 @@ M2_LIST(top_list) = {
   &goto_xy_el  
   };
 M2_GRIDLIST(top_grid_el,"c1", top_list);
-M2_ALIGN(top_el, "w128h64", &top_grid_el);
+M2_ALIGN(top_el, "w160h104", &top_grid_el);
 
 /*==============================================================*/
 
@@ -181,7 +181,10 @@ void loop() {
       m2_Draw();
     } while( dogm.next() );
   }
-  dog_Delay(10);
+  /*
+  dog_Delay(1000);
+  m2_SetKey(M2_KEY_NEXT);
+  */
   
   frame_cnt++;
   if ( next_sec_time < millis() )
