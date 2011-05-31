@@ -32,7 +32,6 @@
 #include "m2ghdogm.h"
 
 int a0Pin = 9;      // address line a0 for the dogm module
-uint16_t sensorPin = 0;  // analog input
 
 
 // frames per second
@@ -56,6 +55,9 @@ uint8_t uiKeySelectPin = 2;
 // initialize the dogm library
 Dogm dogm(a0Pin);
 
+
+/*==============================================================*/
+/* forward & common declaratations */
 
 M2_EXTERN_ALIGN(top_el);
 M2_ROOT(goto_top_el, "f4x0y0", "Home", &top_el);
