@@ -92,7 +92,7 @@ void m2_CheckKeyM2(m2_p m2)
     0: nothing happend
     1:	event has been processed
 */
-uint8_t m2_StepM2(m2_p m2)
+uint8_t m2_HandleKeyM2(m2_p m2)
 {
   uint8_t is_redraw_required = 0;
   uint8_t key;

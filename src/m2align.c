@@ -1,6 +1,8 @@
 /*
 
-  HelloWorld.pde
+  m2align.c
+  
+  utility procedure for aligning (do not confuse with m2elalign.c which provides the align element)
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -19,32 +21,24 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-  SCL (SPI Clock)   Pin 13
-  SI (MOSI)         Pin 11
-  CS (Chip Select)  Pin 10
-  MISO (Pin 12) is not used, but can not be reused as generic I/O
-  
 */
 
-#include "Dogm.h"
-#include "M2tk.h"
-#include "m2ghdogm.h"
+#include "m2.h"
 
-int a0Pin = 9;
-Dogm dogm(a0Pin);
-
-M2_LABEL(hello_world_label, "", "Hello World!");
-M2tk m2(&hello_world_label, NULL, NULL, m2_gh_dogm_fbs);
-
-void setup() {
-  m2.setFont(0, font_7x13);
+uint8_t m2_align_get_max_height(m2_el_fnarg_p fn_arg, uint8_t size)
+{
+  uint8_t max;
+  max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'h'); 
+  if ( max < size )
+    max = size;
+  return max;
 }
 
-void loop() {
-  dogm.start();
-  do{
-    m2.draw();
-  } while( dogm.next() );
+uint8_t m2_align_get_max_width(m2_el_fnarg_p fn_arg, uint8_t size)
+{
+  uint8_t max;
+  max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'w'); 
+  if ( max < size )
+    max = size;
+  return max;
 }
-
-

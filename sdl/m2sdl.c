@@ -150,18 +150,21 @@ M2_GRIDLIST(_el_top,"c2",top_list);
 /*m2_el_list_t _el_top = { { m2_el_vlist_fn, "" } , sizeof(top_list)/sizeof(*top_list), top_list };*/
 M2_ALIGN(el_top, "w128h64", &_el_top);
 
+M2_LABEL(hello_world_label, "", "Hello World!");
+
 
 int main(void)
 {
   // m2_ep_init(&ep, 0, &a_eli, m2_es_sdl, m2_eh_2b);
   //m2_ep_init(&ep, 0, &el_top, m2_es_sdl, m2_eh_2b);
+  //m2_Init(&hello_world_label, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
   m2_Init(&el_label_list, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
   
   m2_Draw();
   for(;;)
   {
     m2_CheckKey();
-    if ( m2_Step() != 0 )
+    if ( m2_HandleKey() != 0 )
       m2_Draw();
   }
 

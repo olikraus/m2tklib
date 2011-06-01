@@ -68,7 +68,7 @@ M2_ROOT(goto_top_el, "f4x0y0", "Home", &top_el);
 uint8_t radio_val = 0;
 
 M2_LABEL(opt1_label, "", "Option 1:");
-M2_LABEL(opt2_label, "", "Option 2:");
+M2_LABEL(opt2_label, "w99", "Option 2:");
 M2_LABEL(opt3_label, "", "Option 3:");
 
 M2_RADIO(opt1_el,"v0", &radio_val);
@@ -171,12 +171,11 @@ void loop() {
   dogm.showLibInfo();
   
   m2_CheckKey();
-  if ( m2_Step() != 0 )
+  if ( m2_HandleKey() != 0 )
   {
     dogm.start();
     do{
-      m2_CheckKey();
-      
+      m2_CheckKey();      
       dog_DrawStr(0, 55, font_5x7, dog_itoa(fps)); 
       dog_DrawStr(10, 55, font_5x7, dog_itoa(dog_GetFontBBXHeight(font_7x13))); 
       m2_CheckKey();

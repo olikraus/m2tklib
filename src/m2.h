@@ -141,7 +141,7 @@ typedef const char *m2_opt_p;
 /* object interface */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
 void m2_CheckKeyM2(m2_p m2) M2_NOINLINE;
-uint8_t m2_StepM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
+uint8_t m2_HandleKeyM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
 void m2_DrawM2(m2_p m2) M2_NOINLINE;													/* m2draw.c */
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;					/* m2obj.c */
 void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
@@ -149,7 +149,7 @@ void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2
 /* simplified interface */
 void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
 void m2_CheckKey(void);
-uint8_t m2_Step(void);
+uint8_t m2_HandleKey(void);
 void m2_Draw(void);
 void m2_SetKey(uint8_t key);
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);

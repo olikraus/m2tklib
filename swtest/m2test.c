@@ -85,7 +85,7 @@ void test_exec_steps(void)
 {
    m2_DrawM2(&ep);
   m2_CheckKeyM2(&ep);
-  while(m2_StepM2(&ep) != 0)
+  while(m2_HandleKeyM2(&ep) != 0)
   {
     m2_DrawM2(&ep); 
     m2_CheckKeyM2(&ep);

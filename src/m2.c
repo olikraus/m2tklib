@@ -55,9 +55,9 @@ void m2_CheckKey(void)
     0: nothing happend
     1:	event has been processed
 */
-uint8_t m2_Step(void)
+uint8_t m2_HandleKey(void)
 {
-  return m2_StepM2(&m2_global_object);  
+  return m2_HandleKeyM2(&m2_global_object);  
 }
 
 void m2_Draw(void)
