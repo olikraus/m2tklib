@@ -24,6 +24,7 @@
 #ifndef _M2GHDOGM_H
 #define _M2GHDOGM_H
 
+#include "m2.h"
 #include "dogm128.h"
 
 #ifdef __cplusplus

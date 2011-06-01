@@ -1,0 +1,20 @@
+rm -rf libraries
+mkdir libraries
+mkdir libraries/M2tklib
+mkdir libraries/M2tklib/examples
+mkdir libraries/M2tklib/examples/HelloWorld
+mkdir libraries/M2tklib/utility
+cp ../../cpp/*.cpp ./libraries/M2tklib/.
+cp ../../cpp/*.h ./libraries/M2tklib/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/M2tk.h
+cp ../../src/*.c ./libraries/M2tklib/utility/.
+cp ../../src/*.h ./libraries/M2tklib/utility/.
+cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/dogm128/*.[hc] ./libraries/M2tklib/utility/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghdogm.h
+sed -i 's|dogm128.h|utility/dogm128.h|g' ./libraries/M2tklib/utility/m2ghdogm.h
+cp ../../arduino/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
+sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
+cd libraries 
+zip -r ../m2tklib_dogm128.zip *
+cd ..

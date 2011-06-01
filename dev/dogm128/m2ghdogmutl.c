@@ -24,7 +24,7 @@
 */
 
 #include "m2.h"
-#include "dogm128.h"
+#include "m2ghdogm.h"
 
 void m2_dogm_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {

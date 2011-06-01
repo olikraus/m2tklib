@@ -705,4 +705,4 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
         w/h beeinflussen erst mal nur den frame (so es einen gibt).
 	f8 würde dann den text zentrieren
 	vorlage: m2elstr.c
-    
+    * m2_GetRootElement, m2_SetRootElement wäre wohl ganz praktisch
