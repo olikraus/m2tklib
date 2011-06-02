@@ -101,13 +101,13 @@ uint8_t m2_gh_dogm_fbs(m2_gfx_arg_p  arg)
       return 0;
       
     case M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT:
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_READONLY_BORDER_WIDTH:
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET:
-      return 0;
+      return 1;
     case M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET:
-      return 0;
+      return 2;
     case M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH:

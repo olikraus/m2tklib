@@ -42,7 +42,7 @@ M2_EL_FN_DEF(m2_el_button_fn)
       m2_button_fnptr fn;
       fn = m2_el_button_get_callback(fn_arg);
       if ( fn != NULL )
-	fn(fn_arg->element);
+	fn(fn_arg);
       return 1;
     }
   }

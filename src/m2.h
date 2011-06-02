@@ -346,15 +346,15 @@ typedef m2_el_str_t *m2_el_str_p;
 M2_EL_FN_DEF(m2_el_str_fn);
 M2_EL_FN_DEF(m2_el_str_up_fn);
 #define M2_STR_UP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_str_up_fn, (fmt) }, (str) }
-#define M2_EXTERN_STR_UP(el) extern m2_el_str_t el;
+#define M2_EXTERN_STR_UP(el) extern m2_el_str_t el
 
 M2_EL_FN_DEF(m2_el_label_fn);
 #define M2_LABEL(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_label_fn, (fmt) }, (str) }
-#define M2_EXTERN_LABEL(el) extern m2_el_str_t el;
+#define M2_EXTERN_LABEL(el) extern m2_el_str_t el
 
 M2_EL_FN_DEF(m2_el_labelp_fn);
 #define M2_LABELP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_labelp_fn, (fmt) }, (str) }
-#define M2_EXTERN_LABELP(el) extern m2_el_str_t el;
+#define M2_EXTERN_LABELP(el) extern m2_el_str_t el
 
 
 struct _m2_el_root_struct
@@ -378,6 +378,7 @@ typedef m2_el_button_t *m2_el_button_p;
 
 M2_EL_FN_DEF(m2_el_button_fn);
 #define M2_BUTTON(el, fmt, str, callback) m2_el_button_t el M2_SECTION_PROGMEM = { { { m2_el_button_fn, (fmt) }, (str) },  (callback)  }
+#define M2_EXTERN_BUTTON(el) extern m2_el_button_t el
 
 
 struct _m2_el_u8_struct
@@ -419,6 +420,10 @@ M2_EL_FN_DEF(m2_el_xylist_fn);
 #define M2_GRIDLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_gridlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
 #define M2_XYLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_xylist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
 
+#define M2_EXTERN_VLIST(el) extern m2_el_list_t el
+#define M2_EXTERN_HLIST(el) extern m2_el_list_t el
+#define M2_EXTERN_GRIDLIST(el) extern m2_el_list_t el
+#define M2_EXTERN_XYLIST(el) extern m2_el_list_t el
 
 
 
@@ -433,6 +438,7 @@ typedef m2_el_text_t *m2_el_text_p;
 
 M2_EL_FN_DEF(m2_el_text_fn);
 #define M2_TEXT(el,fmt,text,len) m2_el_text_t el M2_SECTION_PROGMEM = { { m2_el_text_fn, (fmt) }, (text), (len) }
+#define M2_EXTERN_TEXT(el) extern m2_el_text_t el
 
 struct _m2_el_u32_struct
 {
@@ -444,6 +450,7 @@ typedef m2_el_u32_t *m2_el_u32_p;
 
 M2_EL_FN_DEF(m2_el_u32_fn);
 #define M2_U32NUM(el,fmt,variable) m2_el_u32_t el M2_SECTION_PROGMEM = { { m2_el_u32_fn, (fmt) }, (variable) }
+#define M2_EXTERN_U32NUM(el) extern m2_el_u32_t el
 
 struct _m2_el_align_struct
 {
