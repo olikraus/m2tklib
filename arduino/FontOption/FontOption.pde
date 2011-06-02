@@ -36,9 +36,10 @@ Dogm dogm(a0Pin);
 M2_LABEL(label0, "f0", "5x7 abcdefg");
 M2_LABEL(label1, "f1", "6x12 abcdefg");
 M2_LABEL(label2, "f2", "7x13 abcdefg");
-M2_LIST(label_list) = { &label0, &label1, &label2 };
-M2_VLIST(list_element,"",&label_list);
-M2tk m2(&label1, NULL, NULL, m2_gh_dogm_fbs);
+M2_BUTTON(button, "f0", "ok", (m2_button_fnptr)NULL);
+M2_LIST(label_list) = { &label0, &label1, &label2, &button };
+M2_VLIST(list_element, NULL,label_list);
+M2tk m2(&list_element, NULL, NULL, m2_gh_dogm_fbs);
 
 void setup() {
   m2.setFont(0, font_5x7);

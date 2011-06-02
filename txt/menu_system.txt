@@ -653,7 +653,6 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	Einführung eines NORMAL_PARENT_FOCUS, das aber nur vom U32 und vom EL_TEXT verwendet wird
 	--> 25.05.2011 ERLEDIGT
 25.05.2011
-    * action button mit callback function
     * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
     * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
     * M2_EL_MSG_DATA_UP/DOWN
@@ -707,4 +706,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	vorlage: m2elstr.c
     * m2_GetRootElement, m2_SetRootElement wäre wohl ganz praktisch
     * die M2_xxx_EXTERN declarationen fehlen noch für die meisten elenemente
+    * action button mit callback function
+	--> M2_BUTTON 
+	--> 02.06.2011 ERLEDIGT
     

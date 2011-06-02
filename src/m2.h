@@ -81,6 +81,11 @@ extern "C" {
 /*==============================================================*/
 /* Forward declarations */
 
+/* generic element pointer */
+typedef struct _m2_el_fnfmt_struct m2_el_fnfmt_t;
+typedef m2_el_fnfmt_t *m2_el_fnfmt_p;
+  
+  
 /* toplevel API */
 typedef struct _m2_struct m2_t;
 typedef struct _m2_struct *m2_p;
@@ -108,6 +113,9 @@ typedef uint8_t (*m2_gfx_fnptr)(m2_gfx_arg_p arg);
 
 /* element callback procedure */
 typedef uint8_t (*m2_el_fnptr)(m2_el_fnarg_p fn_arg);
+
+/* button callback procedure */
+typedef void (*m2_button_fnptr)(m2_el_fnfmt_p el);
 
 /* generic rom pointers */
 typedef void m2_rom_void M2_PROGMEM;
@@ -317,8 +325,10 @@ struct _m2_el_fnfmt_struct
   m2_el_fnptr fn;		/* fn must be the first member of the struct */
   m2_rom_char_p fmt; 
 };
+/* see above 
 typedef struct _m2_el_fnfmt_struct m2_el_fnfmt_t;
 typedef m2_el_fnfmt_t *m2_el_fnfmt_p;
+*/
 
 /* do not used this element procedure directly! */
 /* it is more an abstract base class procedure... */
@@ -357,6 +367,17 @@ typedef m2_el_root_t *m2_el_root_p;
 
 M2_EL_FN_DEF(m2_el_root_fn);
 #define M2_ROOT(el, fmt, str, element) m2_el_root_t el M2_SECTION_PROGMEM = { { { m2_el_root_fn, (fmt) }, (str) },  (element)  }
+
+struct _m2_el_button_struct
+{
+  m2_el_str_t el_str;
+  m2_button_fnptr button_callback;
+};
+typedef struct _m2_el_button_struct m2_el_button_t;
+typedef m2_el_button_t *m2_el_button_p;
+
+M2_EL_FN_DEF(m2_el_button_fn);
+#define M2_BUTTON(el, fmt, str, callback) m2_el_button_t el M2_SECTION_PROGMEM = { { { m2_el_button_fn, (fmt) }, (str) },  (callback)  }
 
 
 struct _m2_el_u8_struct

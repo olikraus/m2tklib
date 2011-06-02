@@ -71,6 +71,15 @@ void *align_list[] = { &align_go_top, &align_t0 };
 m2_el_list_t el_alignlist = { { m2_el_vlist_fn, "" } , sizeof(align_list)/sizeof(*align_list), align_list };
 
 /*===================================================================*/
+
+M2_LABEL(flabel0, "f0", "5x7 abcdefg");
+M2_LABEL(flabel1, "f1", "6x12 abcdefg");
+M2_LABEL(flabel2, "f2", "7x13 abcdefg");
+M2_LIST(flabel_list) = { &flabel0, &flabel1, &flabel2 };
+M2_VLIST(flist_element,"",flabel_list);
+
+
+/*===================================================================*/
 /* hlist */
 
 uint8_t radio_val = 0;
@@ -158,8 +167,9 @@ int main(void)
   // m2_ep_init(&ep, 0, &a_eli, m2_es_sdl, m2_eh_2b);
   //m2_ep_init(&ep, 0, &el_top, m2_es_sdl, m2_eh_2b);
   //m2_Init(&hello_world_label, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
-  m2_Init(&el_label_list, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
-  
+  //m2_Init(&el_label_list, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
+  m2_Init(&flist_element, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
+  //flist_element
   m2_Draw();
   for(;;)
   {
