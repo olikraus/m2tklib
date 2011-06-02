@@ -33,7 +33,7 @@
 int a0Pin = 9;
 Dogm dogm(a0Pin);
 
-M2_LABEL(hello_world_label, "", "Hello World!");
+M2_LABEL(hello_world_label, NULL, "Hello World");
 M2tk m2(&hello_world_label, NULL, NULL, m2_gh_dogm_fbs);
 
 void setup() {
