@@ -115,7 +115,7 @@ typedef uint8_t (*m2_gfx_fnptr)(m2_gfx_arg_p arg);
 typedef uint8_t (*m2_el_fnptr)(m2_el_fnarg_p fn_arg);
 
 /* button callback procedure */
-typedef void (*m2_button_fnptr)(m2_el_fnfmt_p el);
+typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 
 /* generic rom pointers */
 typedef void m2_rom_void M2_PROGMEM;
