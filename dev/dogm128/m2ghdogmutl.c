@@ -162,6 +162,24 @@ uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
   {
+    case M2_GFX_MSG_DRAW_TEXT:
+      {
+	uint8_t y;
+	y = arg->y;
+	y += dog_GetFontBBXDescent(m2_dogm_get_font(arg->font));
+	y--;			/* Correction: Baseline for DOG fonts is one pixel above */
+	dog_DrawStr(arg->x, y, m2_dogm_get_font(arg->font), arg->s);
+      }
+      break;
+    case M2_GFX_MSG_DRAW_TEXT_P:
+      {
+	uint8_t y;
+	y = arg->y;
+	y += dog_GetFontBBXDescent(m2_dogm_get_font(arg->font));
+	y--;			/* Correction: Baseline for DOG fonts is one pixel above */
+	dog_DrawStrP(arg->x, y, m2_dogm_get_font(arg->font), arg->s);
+      }
+      break;
     case M2_GFX_MSG_SET_FONT:
     {
       uint8_t idx;
