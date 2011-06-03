@@ -79,3 +79,14 @@ void m2_InitEventSource(void)
 {
   m2_SetEventSourceHandlerM2(&m2_global_object, m2_global_object.es);  
 }
+
+void m2_SetRoot(m2_rom_void_p element)
+{
+  m2_SetRootM2(&m2_global_object, element);
+}
+
+m2_rom_void_p m2_GetRoot(void)
+{
+  return m2_GetRootM2(&m2_global_object);
+}
+

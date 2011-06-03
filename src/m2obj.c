@@ -1,5 +1,5 @@
 /*
-  m2.c
+  m2obj.c
   
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -124,5 +124,15 @@ uint8_t m2_HandleKeyM2(m2_p m2)
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
 {
   m2_gfx_set_font(m2->gh, font_idx, font_ptr);
+}
+
+void m2_SetRootM2(m2_p m2, m2_rom_void_p element)
+{
+  m2_nav_set_root(m2_get_nav(m2),  element);
+}
+
+m2_rom_void_p m2_GetRootM2(m2_p m2)
+{
+  return m2_get_nav(m2)->element_list[0];
 }
 

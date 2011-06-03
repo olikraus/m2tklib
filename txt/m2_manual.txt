@@ -24,6 +24,10 @@ Contiki		http://en.wikipedia.org/wiki/Contiki
 storyboard	http://www.cranksoftware.com/storyboard
   No Flash-ROM size given, however, it seems that "Storyboard" requires more than 32KB 
 
+Links:
+http://www.eg3.com/gui.htm
+http://www.eg3.com/WebID/software/gui/blank/free-stuff/1-a-e.htm
+
 =============================================================
 
 Spendeneinnamen
