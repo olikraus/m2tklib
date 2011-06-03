@@ -80,6 +80,10 @@ void m2_InitEventSource(void)
   m2_SetEventSourceHandlerM2(&m2_global_object, m2_global_object.es);  
 }
 
+void m2_SetGraphicsHandler(m2_gfx_fnptr gh)
+{
+  m2_SetGraphicsHandlerM2(&m2_global_object, gh);
+}
 void m2_SetRoot(m2_rom_void_p element)
 {
   m2_SetRootM2(&m2_global_object, element);

@@ -40,6 +40,15 @@ void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es)
   }
 }
 
+void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh)
+{
+  if ( gh != NULL )
+  {
+    m2->gh = gh;
+    m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
+  }
+}
+
 /*
   element: 	the root element
   es:			event source handler, can be NULL
@@ -56,6 +65,7 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2_gfx_init(gh);
   m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
   m2->forced_key = M2_KEY_REFRESH;
+  m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
   m2_nav_init(m2_get_nav(m2),  element);
   m2_SetEventSourceHandlerM2(m2, es);
 }
@@ -67,6 +77,7 @@ void m2_CheckKeyM2(m2_p m2)
   /* step 1: get raw key */
   
   /* check if a key should be forced */
+  /* obsolete
   key = m2->forced_key;
   if ( key != M2_KEY_NONE )
   {
@@ -74,6 +85,7 @@ void m2_CheckKeyM2(m2_p m2)
     m2_PutKeyIntoQueue(m2, key);
   }
   else
+  */
   {
     /* request key information from the event source */
     if ( m2->es != NULL )
@@ -124,6 +136,7 @@ uint8_t m2_HandleKeyM2(m2_p m2)
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
 {
   m2_gfx_set_font(m2->gh, font_idx, font_ptr);
+  m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
 }
 
 void m2_SetRootM2(m2_p m2, m2_rom_void_p element)

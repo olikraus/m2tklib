@@ -69,9 +69,9 @@ void setup() {
 }
 
 void loop() {
-  dogm.start();
   m2.checkKey();
   if ( m2.handleKey() ) {
+    dogm.start();
     do{
       m2.checkKey();
       m2.draw();

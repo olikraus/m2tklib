@@ -155,6 +155,7 @@ void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;	
 void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
 void m2_SetRootM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;								/* m2obj.c */
 m2_rom_void_p m2_GetRootM2(m2_p m2) M2_NOINLINE;										/* m2obj.c */
+void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh);
 
 /* simplified interface */
 void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
@@ -166,6 +167,7 @@ void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetRoot(m2_rom_void_p element);
 m2_rom_void_p m2_GetRoot(void);
+void m2_SetGraphicsHandler(m2_gfx_fnptr gh);
 
 
 extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
