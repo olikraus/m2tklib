@@ -37,6 +37,7 @@ uint8_t m2_gh_dogm_bf(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_fbs(m2_gfx_arg_p  arg);
+uint8_t m2_gh_dogm_ffs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg);
 
   

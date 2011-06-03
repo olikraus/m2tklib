@@ -58,17 +58,20 @@ Dogm dogm(a0Pin);
 uint8_t select_handler = 0;
 uint8_t old_value_select_handler = 0;
 
-M2_LABEL(el_label1, NULL, "bf");
+M2_LABEL(el_label1, "f1", "bf");
 M2_RADIO(el_radio1, "v0", &select_handler);
 
-M2_LABEL(el_label2, NULL, "bfs");
+M2_LABEL(el_label2, "f1", "bfs");
 M2_RADIO(el_radio2, "v1", &select_handler);
 
-M2_LABEL(el_label3, NULL, "fb");
+M2_LABEL(el_label3, "f1", "fb");
 M2_RADIO(el_radio3, "v2", &select_handler);
 
-M2_LABEL(el_label4, NULL, "fbs");
+M2_LABEL(el_label4, "f1", "fbs");
 M2_RADIO(el_radio4, "v3", &select_handler);
+
+M2_LABEL(el_label5, "f1", "ffs");
+M2_RADIO(el_radio5, "v4", &select_handler);
 
 M2_BUTTON(el_cancel, "f4", "cancel", fn_cancel);
 M2_BUTTON(el_ok, "f4", " ok ", fn_ok);
@@ -78,9 +81,10 @@ M2_LIST(handler_list) = {
     &el_label2, &el_radio2,  
     &el_label3, &el_radio3, 
     &el_label4, &el_radio4, 
+    &el_label5, &el_radio5, 
     &el_cancel, &el_ok 
 };
-M2_GRIDLIST(el_handler_menu, "c2",handler_list);
+M2_GRIDLIST(el_handler_menu, "c2", handler_list);
 
 /*=============================*/
 
@@ -127,6 +131,7 @@ void set_handler(void) {
     case 1: m2_SetGraphicsHandler(m2_gh_dogm_bfs); break;
     case 2: m2_SetGraphicsHandler(m2_gh_dogm_fb); break;
     case 3: m2_SetGraphicsHandler(m2_gh_dogm_fbs ); break;
+    case 4: m2_SetGraphicsHandler(m2_gh_dogm_ffs ); break;
   }
 }
 
@@ -147,7 +152,8 @@ void fn_goto_handler_selection(m2_el_fnarg_p fnarg) {
 
 void setup() {
   set_handler();
-  m2.setFont(0, font_5x8);
+  m2.setFont(0, font_4x6);
+  m2.setFont(1, font_4x6);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
 }
