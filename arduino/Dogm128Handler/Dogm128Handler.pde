@@ -89,20 +89,20 @@ void fn_5x7(m2_el_fnarg_p fnarg) { m2.setFont(0, font_5x7); }
 void fn_5x8(m2_el_fnarg_p fnarg) { m2.setFont(0, font_5x8); }
 void fn_6x9(m2_el_fnarg_p fnarg) { m2.setFont(0, font_6x9); }
 void fn_6x10(m2_el_fnarg_p fnarg) { m2.setFont(0, font_6x10); }
-void fn_6x12(m2_el_fnarg_p fnarg) { m2.setFont(0, font_6x12); m2.setRoot(&el_text_menu); }
+void fn_6x12(m2_el_fnarg_p fnarg) { m2.setFont(0, font_6x12); }
 void fn_6x13(m2_el_fnarg_p fnarg) { m2.setFont(0, font_6x13); }
 
 
-M2_BUTTON(el_4x6, "", "4x6", fn_4x6);
-M2_BUTTON(el_5x7, "", "5x7", fn_5x7);
-M2_BUTTON(el_5x8, "", "5x8", fn_5x8);
-M2_BUTTON(el_6x9, "", "6x9", fn_6x9);
-M2_BUTTON(el_6x10, "", "6x10", fn_6x10);
-M2_BUTTON(el_6x12, "", "6x12", fn_6x12);
-M2_BUTTON(el_6x13, "", "6x13", fn_6x13);
+M2_BUTTON(el_4x6, "", "4x6 ", fn_4x6);
+M2_BUTTON(el_5x7, "", "5x7 ", fn_5x7);
+M2_BUTTON(el_5x8, "", "5x8 ", fn_5x8);
+M2_BUTTON(el_6x9, "", "6x9 ", fn_6x9);
+M2_BUTTON(el_6x10, "", "6x10 ", fn_6x10);
+M2_BUTTON(el_6x12, "", "6x12 ", fn_6x12);
+M2_BUTTON(el_6x13, "", "6x13 ", fn_6x13);
   
 M2_EXTERN_VLIST(el_text_menu);
-M2_ROOT(el_root, "", "Back", &el_text_menu);
+M2_ROOT(el_root, "", "Back ", &el_text_menu);
 M2_LIST(list_font_select) = { &el_4x6, &el_5x7, &el_5x8, &el_6x9, &el_6x10, &el_6x12 , &el_6x13, &el_root };
 M2_GRIDLIST(el_font_select, "c2", list_font_select);
 

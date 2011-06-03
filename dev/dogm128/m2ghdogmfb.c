@@ -49,10 +49,10 @@ uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg)
       dog_SetBox(arg->x, arg->y, arg->x+arg->w, arg->y+arg->h);
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      dog_DrawStr(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), font_5x7, arg->s);
+      dog_DrawStr(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
-      dog_DrawStrP(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), font_5x7, arg->s);
+      dog_DrawStrP(arg->x, arg->y+dog_GetFontBBXDescent(m2_dogm_get_font(arg->font)), m2_dogm_get_font(arg->font), arg->s);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
@@ -75,13 +75,13 @@ uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg)
       m2_dogm_draw_icon(arg->x, arg->y, arg->font, arg->icon);
       break;    
     case M2_GFX_MSG_GET_TEXT_WIDTH:
-      return dog_GetStrWidth(font_5x7, arg->s);
+      return dog_GetStrWidth(m2_dogm_get_font(arg->font), arg->s);
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
-      return dog_GetStrWidthP(font_5x7, arg->s);
+      return dog_GetStrWidthP(m2_dogm_get_font(arg->font), arg->s);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      return dog_GetFontBBXWidth(font_5x7);
+      return dog_GetFontBBXWidth(m2_dogm_get_font(arg->font));
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
-      return dog_GetFontBBXHeight(font_5x7);
+      return dog_GetFontBBXHeight(m2_dogm_get_font(arg->font));
 
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
       return 2;
