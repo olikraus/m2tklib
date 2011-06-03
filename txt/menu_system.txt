@@ -705,7 +705,9 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	f8 würde dann den text zentrieren
 	vorlage: m2elstr.c
     * m2_GetRootElement, m2_SetRootElement wäre wohl ganz praktisch
+	--> 03.06.2011 ERLEDIGT (s.u.)
     * die M2_xxx_EXTERN declarationen fehlen noch für die meisten elenemente
+	--> 03.06.2011 ERLEDIGT
     * action button mit callback function
 	--> M2_BUTTON 
 	--> 02.06.2011 ERLEDIGT
@@ -715,4 +717,5 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 03.06.2011 ERLEDIGT
     * kapitel über forward declaration
 	--> 03.06.2011 ERLEDIGT
-      
+    * on event call procedure wäre u.U. ganz gut. 
+    

@@ -371,6 +371,7 @@ typedef m2_el_root_t *m2_el_root_p;
 
 M2_EL_FN_DEF(m2_el_root_fn);
 #define M2_ROOT(el, fmt, str, element) m2_el_root_t el M2_SECTION_PROGMEM = { { { m2_el_root_fn, (fmt) }, (str) },  (element)  }
+#define M2_EXTERN_ROOT(el) extern m2_el_root_t el
 
 struct _m2_el_button_struct
 {
@@ -398,8 +399,10 @@ typedef m2_el_u8_t *m2_el_u8_p;
 M2_EL_FN_DEF(m2_el_u8base_fn);												/* m2elu8base.c */
 M2_EL_FN_DEF(m2_el_u8num_fn);
 #define M2_U8NUM(el,fmt,min,max,variable) m2_el_u8_t el M2_SECTION_PROGMEM = { { m2_el_u8num_fn, (fmt) }, (min), (max), (variable) }
+#define M2_EXTERN_U8NUM(el) extern m2_el_u8_t el
 M2_EL_FN_DEF(m2_el_u8hs_fn);
 #define M2_U8HS(el,fmt,min,max,variable) m2_el_u8_t el M2_SECTION_PROGMEM = { { m2_el_u8hs_fn, (fmt) }, (min), (max), (variable) }
+#define M2_EXTERN_U8HS(el) extern m2_el_u8_t el
 
 
 
@@ -416,8 +419,6 @@ M2_EL_FN_DEF(m2_el_vlist_fn);
 M2_EL_FN_DEF(m2_el_hlist_fn);
 M2_EL_FN_DEF(m2_el_gridlist_fn);
 M2_EL_FN_DEF(m2_el_xylist_fn);
-
-
 
 #define M2_VLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_vlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
 #define M2_HLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_hlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
@@ -466,7 +467,7 @@ typedef m2_el_align_t *m2_el_align_p;
 
 M2_EL_FN_DEF(m2_el_align_fn);
 #define M2_ALIGN(el, fmt, element) m2_el_align_t el M2_SECTION_PROGMEM = {{ m2_el_align_fn, (fmt) }, (element) }
-#define M2_EXTERN_ALIGN(el) extern m2_el_align_t el;
+#define M2_EXTERN_ALIGN(el) extern m2_el_align_t el
 
 /* used for toggle and radio buttons */
 struct _m2_el_setval_struct
@@ -480,8 +481,11 @@ typedef m2_el_setval_t *m2_el_setval_p;
 M2_EL_FN_DEF(m2_el_setval_fn);
 M2_EL_FN_DEF(m2_el_toggle_fn);
 #define M2_TOGGLE(el,fmt,variable) m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_toggle_fn, (fmt) }, (variable) }
+#define M2_EXTERN_TOGGLE(el) extern m2_el_setval_t el
+
 M2_EL_FN_DEF(m2_el_radio_fn);
 #define M2_RADIO(el,fmt,variable) m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_radio_fn, (fmt) }, (variable) }
+#define M2_EXTERN_RADIO(el) extern m2_el_setval_t el
 
 /*==============================================================*/
 /* m2nav....c */
