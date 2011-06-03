@@ -64,8 +64,6 @@ M2_ROOT(el_ok2, NULL, " Goto 1 ", &el_list1);
 M2_LIST(list2) = { &el_label2, &el_ok2 };
 M2_VLIST(el_list2, NULL, list2);
 
-
-
 void setup() {
   m2.setFont(0, font_6x12);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);

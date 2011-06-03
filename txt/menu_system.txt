@@ -711,4 +711,6 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 02.06.2011 ERLEDIGT
     * READONLY border sollte immer identisch zur NORMAL border sein (dog-graphics handler)
     * setRoot und getRoot dokumentieren, sowie M2_ROOT element beschreiben (Beispiel ChangeMenu)
-    
+	set root erledigt
+    * kapitel über forward declaration
+      
