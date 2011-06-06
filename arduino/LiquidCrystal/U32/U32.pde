@@ -33,8 +33,6 @@ uint8_t uiKeyNextPin = 9;
 
 uint32_t number = 1234;
 
-
-
 void fn_ok(m2_el_fnarg_p fnarg) {
   /* do something with the number */
 }

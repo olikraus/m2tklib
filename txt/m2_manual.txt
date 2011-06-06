@@ -1,47 +1,4 @@
 
-=============================================================
-== Related Software ==
-
-KeyWords: graphical user interface microcontroller
-
-PEG		http://www.swellsoftware.com/
-  > 90 KB Flash-ROM
-
-MiniGUI	http://www.minigui.org/
-  > 700KB Flash-ROM
-
-emWin	http://www.segger.com
-  10-60 KB Flash-ROM
-
-EasyGUI	http://www.easygui.com/
-  30-350 KB Flash-ROM
-  
-Contiki		http://en.wikipedia.org/wiki/Contiki
-  Contiki basically is an OS.
-  "typical system" requires 40KB Flash ROM, not clear of GUI is included or not.
-  Not much documentation about the GUI itself.
-
-storyboard	http://www.cranksoftware.com/storyboard
-  No Flash-ROM size given, however, it seems that "Storyboard" requires more than 32KB 
-
-Links:
-http://www.eg3.com/gui.htm
-http://www.eg3.com/WebID/software/gui/blank/free-stuff/1-a-e.htm
-
-=============================================================
-
-Spendeneinnamen
-- Steuerpflichtig
-- Impressumspflichtig
-
-http://www.retosphere.de/offenenetze/2010/06/16/flattr-und-andere-zahlungsdienste-in-blogs-rechtliche-implikationen/
-http://www.homepage-forum.de/showthread.php?t=23659
-http://www.bmj.de/DE/Service/StatistikenFachinfaormationenPublikationen/Fachinformationen/LeitfadenzurImpressumspflicht/_node.html
-beispiele:
-http://www.nagvis.org/impressum
-hoster:
-http://www.berlios.de/
-http://flattr.com/
 
 == Software Architecture ==
 

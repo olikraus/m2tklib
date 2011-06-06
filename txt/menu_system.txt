@@ -725,6 +725,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 04.06.2011 ERLEDIGT für alle (in den base handler verschoben)
     * debounce auch für das loslassen erweitern
     * m2_gh_lc_16x2 programmieren, routinen in ein util.cpp auslagern.
-    
+	--> 07.06.2011 ERLEDIGT
+    * Doku für die Handler schreiben
     * INFO: LCD mit festem rechteck 520x280, dann auf 50% skalieren
     
