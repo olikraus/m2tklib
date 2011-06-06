@@ -26,6 +26,8 @@
 #include "M2tk.h"
 #include "m2ghlc.h"
 
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
 uint8_t uiKeySelectPin = 10;
 uint8_t uiKeyNextPin = 9;
 
@@ -58,9 +60,10 @@ M2_LIST(list) = {
     &el_cancel, &el_ok 
 };
 M2_GRIDLIST(list_element, "c2",list);
-M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_lc_16x4);
+M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_lc);
 
 void setup() {
+  m2_SetLiquidCrystal(&lcd, 16, 4);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
 }

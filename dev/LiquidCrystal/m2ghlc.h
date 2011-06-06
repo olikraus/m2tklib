@@ -24,11 +24,19 @@
 #ifndef _M2GHLC_H
 #define _M2GHLC_H
 
+#include <LiquidCrystal.h>
+
+void m2_SetLiquidCrystal(LiquidCrystal *lc_ptr, uint8_t cols, uint8_t rows);
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* specific 16x4 handler with fixed pin setup */
 uint8_t m2_gh_lc_16x4(m2_gfx_arg_p  arg);
+
+/* more flexible handler, but requires a call to m2_SetLiquidCrystal() */
+uint8_t m2_gh_lc(m2_gfx_arg_p  arg);
   
 #ifdef __cplusplus
 }
