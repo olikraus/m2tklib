@@ -71,6 +71,9 @@ void loop() {
     dogm.start();
     do{
       m2.checkKey();
+      // dog_DrawStr(0, 50, font_4x6, dog_itoa(m2_global_object.debounce_state));
+      // dog_DrawStr(10, 50, font_4x6, dog_itoa(m2_global_object.detected_key_code));
+      // dog_DrawStr(20, 50, font_4x6, dog_itoa(m2_global_object.detected_key_timer));
       m2.draw();
     } while( dogm.next() );
   }

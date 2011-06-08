@@ -158,6 +158,7 @@ m2_rom_void_p m2_GetRootM2(m2_p m2) M2_NOINLINE;										/* m2obj.c */
 void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh);
 
 /* simplified interface */
+extern m2_t m2_global_object;
 void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh);
 void m2_CheckKey(void);
 uint8_t m2_HandleKey(void);
@@ -208,6 +209,9 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_KEY_CNT 5
 
 /* mark key as event */
+/* if the EVENT bit is set, then the key is directly passed to the queue */
+/* if the EVENT bit is not set, then it is assumed, that this value has to be debounced */
+/* this is only important for the event source */
 #define M2_KEY_EVENT_MASK (64)
 #define M2_KEY_EVENT(k) ((k)|M2_KEY_EVENT_MASK)
 #define M2_IS_KEY_EVENT(k) ((k)&M2_KEY_EVENT_MASK)
@@ -605,6 +609,7 @@ struct _m2_struct
   /* internal values for the debounce algorithm */
   uint8_t detected_key_code;
   uint8_t detected_key_timer;
+  uint8_t debounce_state; 
   /* result from the debounce algorithm */
   uint8_t pressed_key_code;
   
@@ -614,6 +619,12 @@ struct _m2_struct
   uint8_t key_queue_len;
 };
 
+#define M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS 	0
+#define M2_DEBOUNCE_STATE_PRESS				1
+#define M2_DEBOUNCE_STATE_WAIT_FOR_KEY_RELEASE	2
+#define M2_DEBOUNCE_STATE_RELEASE				3
+
+
 m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 
 
@@ -622,7 +633,12 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 #define M2_EP_MSG_NEXT M2_KEY_NEXT
 
 /* messages for the event source callback procedure */
+/* request to return a key value */
+/* option 1: no EVENT bit set: return an unbounced raw value from the hardware */
+/* option 2: EVENT bit set: Suppress debounce and pass this event directly to the event queue */
+
 #define M2_ES_MSG_GET_KEY 0
+/* first call to the event source handler is this message */
 #define M2_ES_MSG_INIT 1
 
 
