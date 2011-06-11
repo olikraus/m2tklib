@@ -145,7 +145,6 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code)
       else if ( m2->detected_key_timer == 0 )
       { 
 	m2->debounce_state = M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS;
-	//m2->pressed_key_code = m2->detected_key_code;
 	m2_PutKeyIntoQueue(m2, m2->detected_key_code);
       }
       else if ( key_code != M2_KEY_NONE && m2->detected_key_code != key_code )
@@ -157,42 +156,7 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code)
 	m2->detected_key_timer--;
       }
       break;
-  }
-  
-  /* obsolete
-  if ( m2->pressed_key_code == M2_KEY_NONE )
-  {
-    if ( m2->detected_key_code != key_code )
-    {
-      m2->detected_key_code = key_code;
-      m2->detected_key_timer = M2_DEBOUNCE_CNT;
-    }
-    else
-    {
-      if ( m2->detected_key_timer == 0 )
-      {
-	m2->pressed_key_code = m2->detected_key_code;
-      }
-      else
-      {
-	m2->detected_key_timer--;
-      }
-    }
-  }
-  else
-  {
-    if ( m2->pressed_key_code != key_code )
-    {
-      m2_PutKeyIntoQueue(m2, m2->pressed_key_code);
-      m2->pressed_key_code = key_code;
-      if ( key_code != M2_KEY_NONE )
-      {
-	m2->detected_key_code = key_code;
-	m2->detected_key_timer = M2_DEBOUNCE_CNT;
-      }
-    }
-  }
-  */
+  }  
 }
 
 

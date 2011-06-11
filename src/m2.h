@@ -611,7 +611,7 @@ struct _m2_struct
   uint8_t detected_key_timer;
   uint8_t debounce_state; 
   /* result from the debounce algorithm */
-  uint8_t pressed_key_code;
+  //uint8_t pressed_key_code;
   
   /* key queue */
   uint8_t key_queue_array[M2_KEY_QUEUE_LEN];

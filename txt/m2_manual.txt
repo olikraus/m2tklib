@@ -633,3 +633,17 @@ Return:
 
 * Borders from the gfx subsystem are only added to atomic elements (lists do not have borders from
   the gfx subsystem)
+
+
+=============================================================
+== Graphics Handler ==
+
+|	Name		Normal		Normal		Normal			Highlight		Highlight 			Highlight
+|							Focus		Focus/Data Up					Focus			Focus/Data Up
+|=======================================================================
+|	bf						Inv-Box		Half-Inv-Box		Frame		Frame+Inv-Box		Half-Inv-Box
+|	bfs						Inv-Box		Half-Inv-Box		Shadow		Shadow+Inv-Box 	Half-Inv-Box
+|	fb						Frame		Inv-Box			Inv-Box             Frame			Inv-Box
+|	fbs						Shadow		Inv-Box			Inv-Box		Shadow			Inv-Box
+|	ffs						Shadow		Shadow+Inv-Box	Shadow		Shadow+Inv-Box	Shadow+Inv-Box
+

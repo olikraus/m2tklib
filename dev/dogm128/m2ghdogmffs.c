@@ -76,7 +76,10 @@ uint8_t m2_gh_dogm_ffs(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
       m2_dogm_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
       if ( (arg->font & 4) != 0 )
-	dog_SetHLine(arg->x, arg->x+arg->w-1, arg->y+2);
+      {
+	//dog_SetHLine(arg->x, arg->x+arg->w-1, arg->y+2);
+	m2_dogm_draw_xorbox(arg->x+1, arg->y+2, arg->w-3, arg->h-3);
+      }
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);

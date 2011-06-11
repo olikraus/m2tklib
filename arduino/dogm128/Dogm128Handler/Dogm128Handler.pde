@@ -113,13 +113,15 @@ M2_GRIDLIST(el_font_select, "c2", list_font_select);
 /*=============================*/
 
 #define TEXT_LEN 4
-char text[TEXT_LEN+1] = "abcd";
+char text1[TEXT_LEN+1] = "abcd";
+char text2[TEXT_LEN+1] = "abcd";
 
 M2_LABEL(el_label, "", "Enter Text:");
-M2_TEXT(el_text, NULL, text, TEXT_LEN);
+M2_TEXT(el_text1, NULL, text1, TEXT_LEN);
+M2_TEXT(el_text2, "f4", text2, TEXT_LEN);
 M2_BUTTON(el_goto_handler_selection, "f4", "gfx handler", fn_goto_handler_selection);
 M2_ROOT(el_goto_font_selection, "f4", "select font", &el_font_select);
-M2_LIST(list) = { &el_label, &el_text, &el_goto_handler_selection, &el_goto_font_selection };
+M2_LIST(list) = { &el_label, &el_text1, &el_text2,&el_goto_handler_selection, &el_goto_font_selection };
 M2_VLIST(el_text_menu, NULL, list);
 
 
