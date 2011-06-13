@@ -125,7 +125,7 @@ M2_LIST(list) = { &el_label, &el_text1, &el_text2,&el_goto_handler_selection, &e
 M2_VLIST(el_text_menu, NULL, list);
 
 
-M2tk m2(&el_text_menu, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);
+M2tk m2(&el_text_menu, m2_es_arduino, m2_eh_4bs, m2_gh_dogm_fbs);
 
 void set_handler(void) {
   switch(select_handler) {
@@ -158,6 +158,7 @@ void setup() {
   m2.setFont(1, font_4x6);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
+  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
 }
 
 void loop() {

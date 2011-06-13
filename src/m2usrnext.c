@@ -1,6 +1,6 @@
 /*
 
-  m2ehnext.c
+  m2usrnext.c
   
   navigation procedure for the event handler: next
 

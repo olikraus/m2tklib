@@ -1,6 +1,6 @@
 /*
 
-  m2ehprev.c
+  m2usrprev.c
   
   navigation procedure for the event handler: prev 
 

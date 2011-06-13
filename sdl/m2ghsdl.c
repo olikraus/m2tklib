@@ -171,7 +171,7 @@ uint8_t m2_sdl_get_text_width(const char *s)
 }
 
 /* event source for SDL */
-uint8_t m2_es_sdl(m2_p ep, uint8_t msg, void *data)
+uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 {
   switch(msg)
   {
@@ -192,7 +192,11 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg, void *data)
 		  case SDLK_s:
 		    return M2_KEY_EVENT(M2_KEY_SELECT);
 		  case SDLK_n:
+		    puts("SDLK_n");
 		    return M2_KEY_EVENT(M2_KEY_NEXT);
+		  case SDLK_p:
+		    puts("SDLK_p");
+		    return M2_KEY_EVENT(M2_KEY_PREV);
 		  case SDLK_q:
 		    exit(0);
 		    break;

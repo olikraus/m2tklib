@@ -41,11 +41,11 @@ uint8_t m2_nav_prev(m2_nav_p nav)
     return 0;
   d-=2;
   pos = nav->pos[d];
-  pos++;
   if ( pos == 0 )
   {
     return 0;
   }
+  pos--;
   m2_nav_load_child(nav, pos);
   return 1;
 }

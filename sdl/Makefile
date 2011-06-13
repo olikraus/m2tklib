@@ -31,7 +31,7 @@ CFLAGS = $(COMMON_FLAGS) -std=gnu99 -I../src -DM2_USE_DBG_SHOW
 LDLIBS = `sdl-config --libs` -lSDL_ttf
 
 LIBSRC =
-LIBSRC += m2eh2bd.c m2eh2bs.c  m2.c m2obj.c m2key.c
+LIBSRC += m2eh2bd.c m2eh2bs.c m2eh4bs.c m2.c m2obj.c m2key.c
 LIBSRC += m2gfx.c m2ghdummy.c 
 LIBSRC += m2usrnext.c m2usrprev.c m2usrupdn.c m2align.c
 LIBSRC += m2navutl.c m2navinit.c m2navroot.c m2navupdn.c

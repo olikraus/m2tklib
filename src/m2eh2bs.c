@@ -1,4 +1,7 @@
 /*
+
+  m2eh2bs.c
+
   Event Handler
   
   2 Buttons: Next + Select
@@ -21,6 +24,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+  SELECT:
+    - Execute actions on buttons
+    - Go down one level in the element tree
+    - Go up one level if the "go up" feature of a field is aktive
+    - Increment data on data entry fields
+    
+  NEXT:
+    - Go to the next field
+  
 
 */
 

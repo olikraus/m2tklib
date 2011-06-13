@@ -178,12 +178,13 @@ extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
 /* Arguments for m2_Init() */
 
 /* event sources */
-uint8_t m2_es_sdl(m2_p ep, uint8_t msg, void *data);		/* m2ghsdl.c: SDL Event Source */
+uint8_t m2_es_sdl(m2_p ep, uint8_t msg);		/* m2ghsdl.c: SDL Event Source */
 uint8_t m2_es_arduino(m2_p ep, uint8_t msg);			/* m2esarduino.c */
 
 /* event handler */
-uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bd.c 2 Button Handler with data entry mode */
-uint8_t m2_eh_2bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bs.c simplified 2 Button Handler */
+uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bd.c 2 Button Handler with data entry mode SELECT, NEXT */
+uint8_t m2_eh_2bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bs.c simplified 2 Button Handler SELECT, NEXT */
+uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT*/
 
 /* graphics handler */
 uint8_t m2_gh_dummy(m2_gfx_arg_p arg);
@@ -631,6 +632,8 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 /* messages for the event handler callback procedure */
 #define M2_EP_MSG_SELECT M2_KEY_SELECT
 #define M2_EP_MSG_NEXT M2_KEY_NEXT
+#define M2_EP_MSG_PREV M2_KEY_PREV
+#define M2_EP_MSG_EXIT M2_KEY_EXIT
 
 /* messages for the event source callback procedure */
 /* request to return a key value */
