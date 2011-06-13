@@ -735,5 +735,13 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     
     * INFO: LCD Photo mit festem rechteck 520x280, dann auf 50% skalieren
     * Tutorial schreiben
-    * 5-button generischen arduino handler schreiben
-    
+    * 4-button generischen arduino handler schreiben
+	--> 13.06.2011 ERLEDIGT
+    * Im 4 Button handler funktioniert der Exit button nicht besonders gut. Im grunde ist nur dann ein exit sinnvoll, wenn
+	es tatsächlich irgendeine art von exit gibt. Das sind:
+	  - data entry modi U32 und text
+	  - andere sub menu modi (da gibt es aber nicht mal ein beispiel)
+	Man kann vom aktuellen element e0 nach oben zu e1, wenn
+	  - es ein parent e2 zu e1 gibt
+	  - für e1 die option "a0" gesetzt ist.
+	  

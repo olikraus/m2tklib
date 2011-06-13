@@ -90,6 +90,9 @@ m2_el_setval_t r3 = { { m2_el_radio_fn, "v2" }, &radio_val };
 void *hlist[] = { &el_goto_top, &r1, &r2, &r3 };
 m2_el_list_t el_hlist = { { m2_el_hlist_fn, "" } , sizeof(hlist)/sizeof(*hlist), hlist };
 
+void *hlist2[] = { &r1, &r2, &r3 };
+m2_el_list_t el_hlist2 = { { m2_el_hlist_fn, "d1" } , sizeof(hlist2)/sizeof(*hlist2), hlist2 };
+
 
 /*===================================================================*/
 /* labeled list */
@@ -112,12 +115,15 @@ uint8_t label_toggle_val = 0;
 M2_LABEL(label3, "", "Toggle: ");
 M2_TOGGLE(label_el_toggle_val,"",&label_toggle_val);
 
+M2_LABEL(label4, "", "Radio: ");
+
 void *label_list[] = 
 { &label0, &label_el_val, 
-  &label0hs, &label_el_val_hs, 
+  //&label0hs, &label_el_val_hs, 
   &label1, &label_el_text, 
   &label2, &label_el_val32, 
   &label3, &label_el_toggle_val, 
+  &label4, &el_hlist2, 
   &el_goto_top };
 M2_GRIDLIST(el_label_list,"c2d0h50w120",label_list);
 
