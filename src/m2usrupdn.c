@@ -49,7 +49,6 @@ uint8_t m2_nav_user_up(m2_nav_p nav)
   }
 
   return 1;
-  
 }
 
 /*
