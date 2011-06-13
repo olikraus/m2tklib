@@ -28,9 +28,28 @@
 
 uint8_t m2_nav_user_up(m2_nav_p nav)
 {
-  if ( m2_nav_do_auto_up(nav) == 0 )
+  uint8_t previous_depth = nav->depth;
+  
+  if ( m2_nav_do_auto_up(nav) == 0 )	/* m2navupdn.c */
     return 0;
-  return m2_nav_up(nav);
+  if ( m2_nav_up(nav) == 0 )
+    return 0;
+  /* m2_nav_do_auto_up() has ensured, that option a0 is now set, so only check if there are more parents. */
+  
+  if ( nav->depth < 2 )
+  {
+    nav->depth = previous_depth;	/* restore old depth, because there can't be more parents */
+    return 0;
+  }
+  
+  if ( m2_nav_get_parent_list_len(nav) == 0 )
+  {
+    nav->depth = previous_depth;	/* restore old depth, because parent is not a list */
+    return 0;
+  }
+
+  return 1;
+  
 }
 
 /*

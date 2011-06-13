@@ -38,7 +38,8 @@
     Navigate one level up, "goto parent". Used by draw algorithm.
     The root node will be removed.
   Return value:
-    0, if the depth is 0 or 1. 
+    0, if the depth is 0 or 1.
+  Side Effects: nav->depth
 */
 uint8_t m2_nav_up(m2_nav_p nav)
 {
@@ -86,6 +87,8 @@ uint8_t m2_nav_down(m2_nav_p nav, uint8_t is_msg)
 /*
   as long as the parent has "auto skip" active, go to the parent.
   will only return 0 in case of an error.
+
+  Side Effects: nav->depth
 */
 uint8_t m2_nav_do_auto_up(m2_nav_p nav)
 {
