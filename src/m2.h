@@ -184,7 +184,9 @@ uint8_t m2_es_arduino(m2_p ep, uint8_t msg);			/* m2esarduino.c */
 /* event handler */
 uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bd.c 2 Button Handler with data entry mode SELECT, NEXT */
 uint8_t m2_eh_2bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bs.c simplified 2 Button Handler SELECT, NEXT */
-uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT*/
+uint8_t m2_eh_4bd(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh4bd.c */		
+uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh4bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT */
+uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN */
 
 /* graphics handler */
 uint8_t m2_gh_dummy(m2_gfx_arg_p arg);
@@ -205,9 +207,11 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_KEY_EXIT 2
 #define M2_KEY_NEXT 3
 #define M2_KEY_PREV 4
-#define M2_KEY_REFRESH 5
+#define M2_KEY_DATA_UP 5
+#define M2_KEY_DATA_DOWN 6
+#define M2_KEY_REFRESH 7
 
-#define M2_KEY_CNT 5
+#define M2_KEY_CNT 7
 
 /* mark key as event */
 /* if the EVENT bit is set, then the key is directly passed to the queue */
@@ -634,6 +638,8 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 #define M2_EP_MSG_NEXT M2_KEY_NEXT
 #define M2_EP_MSG_PREV M2_KEY_PREV
 #define M2_EP_MSG_EXIT M2_KEY_EXIT
+#define M2_EP_MSG_DATA_UP M2_KEY_DATA_UP
+#define M2_EP_MSG_DATA_DOWN M2_KEY_DATA_DOWN
 
 /* messages for the event source callback procedure */
 /* request to return a key value */

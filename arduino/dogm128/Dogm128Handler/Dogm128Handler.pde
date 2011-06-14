@@ -42,11 +42,13 @@ extern M2tk m2;
 uint8_t uiKeyUpPin = 5;
 uint8_t uiKeyDownPin = 3;
 uint8_t uiKeySelectPin = 4;
+uint8_t uiKeyExitPin = 2;
 #else
 // DOGM132, DOGM128 and DOGXL160 shield
 uint8_t uiKeyUpPin = 7;
 uint8_t uiKeyDownPin = 3;
 uint8_t uiKeySelectPin = 2;
+uint8_t uiKeyExitPin = 8; // ????
 #endif
 
 int a0Pin = 9;
@@ -118,14 +120,14 @@ char text2[TEXT_LEN+1] = "abcd";
 
 M2_LABEL(el_label, "", "Enter Text:");
 M2_TEXT(el_text1, NULL, text1, TEXT_LEN);
-M2_TEXT(el_text2, "f4", text2, TEXT_LEN);
+M2_TEXT(el_text2, "f4a1", text2, TEXT_LEN);
 M2_BUTTON(el_goto_handler_selection, "f4", "gfx handler", fn_goto_handler_selection);
 M2_ROOT(el_goto_font_selection, "f4", "select font", &el_font_select);
 M2_LIST(list) = { &el_label, &el_text1, &el_text2,&el_goto_handler_selection, &el_goto_font_selection };
 M2_VLIST(el_text_menu, NULL, list);
 
 
-M2tk m2(&el_text_menu, m2_es_arduino, m2_eh_4bs, m2_gh_dogm_fbs);
+M2tk m2(&el_text_menu, m2_es_arduino, m2_eh_4bd, m2_gh_dogm_fbs);
 
 void set_handler(void) {
   switch(select_handler) {
@@ -159,6 +161,8 @@ void setup() {
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);
+  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);
+  
 }
 
 void loop() {

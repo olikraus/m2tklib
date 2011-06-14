@@ -1,10 +1,10 @@
 /*
 
-  m2eh4bs.c
+  m2eh6bs.c
 
   Event Handler
   
-  4 Buttons: Next/Prev + Select + Exit
+  6 Buttons: Next/Prev + Select + Exit + Data Up/Down
   Simplified data entry without data entry mode
   
   m2tklib = Mini Interative Interface Toolkit Library
@@ -38,12 +38,18 @@
 
   PREV:
     - Go to the prev field
+    
+  DATA_UP:
+    - increment data
+  
+  DATA_DOWN:
+    - decrement data
 
 */
 
 #include "m2.h"
 
-uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg)
+uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg)
 {
   m2_nav_p nav = m2_get_nav(ep);
   switch(msg)
@@ -65,6 +71,12 @@ uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg)
 
     case M2_EP_MSG_PREV:
       return m2_nav_user_prev(m2_get_nav(ep));
+    
+    case M2_EP_MSG_DATA_DOWN:
+	return m2_nav_data_down(m2_get_nav(ep));
+      
+    case M2_EP_MSG_DATA_UP:
+	return m2_nav_data_up(m2_get_nav(ep));
 
   }
   return 0;

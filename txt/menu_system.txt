@@ -744,4 +744,18 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	Man kann vom aktuellen element e0 nach oben zu e1, wenn
 	  - es ein parent e2 zu e1 gibt
 	  - für e1 die option "a0" gesetzt ist.
-	  
+	--> 13.06.2011 ERLEDIGT
+    * 6-button generischen arduino handler schreiben
+	--> 13.06.2011 ERLEDIGT
+    * beispiel für data entry erstellen: U32NUM und U8NUM, sowie button für zero
+	DataEntry.pde --> in Arbeit
+	--> 13.06.2011 ERLEDIGT
+    * data entry 
+      umbenennen:
+	m2_gfx_data_entry  --> m2_gfx_normal_data_entry
+	M2_GFX_MSG_DRAW_DATA_ENTRY  --> M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY
+      neu:
+	m2_gfx_small_data_entry
+	M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY
+      
+	

@@ -200,6 +200,12 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		  case SDLK_p:
 		    puts("SDLK_p");
 		    return M2_KEY_EVENT(M2_KEY_PREV);
+		  case SDLK_u:
+		    puts("SDLK_u");
+		    return M2_KEY_EVENT(M2_KEY_DATA_UP);
+		  case SDLK_d:
+		    puts("SDLK_d");
+		    return M2_KEY_EVENT(M2_KEY_DATA_DOWN);
 		  case SDLK_q:
 		    exit(0);
 		    break;

@@ -173,7 +173,7 @@ int main(void)
   // m2_ep_init(&ep, 0, &a_eli, m2_es_sdl, m2_eh_2b);
   //m2_ep_init(&ep, 0, &el_top, m2_es_sdl, m2_eh_2b);
   //m2_Init(&hello_world_label, m2_es_sdl, m2_eh_2bs, m2_gh_sdl);
-  m2_Init(&el_top, m2_es_sdl, m2_eh_4bs, m2_gh_sdl);
+  m2_Init(&el_top, m2_es_sdl, m2_eh_6bs, m2_gh_sdl);
   //m2_Init(&flist_element, m2_es_sdl, m2_eh_4bs, m2_gh_sdl);
   //flist_element
   m2_Draw();

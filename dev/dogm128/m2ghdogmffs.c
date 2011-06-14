@@ -29,7 +29,7 @@
   buttom style: filled (xor) box
 */
 
-uint8_t m2_gh_dogm_ffs(m2_gfx_arg_p  arg)
+uint8_t m2_gh_dogm_ffs(m2_gfx_arg_p arg)
 {
   switch(arg->msg)
   {
