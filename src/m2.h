@@ -311,6 +311,7 @@ uint32_t m2_rom_get_u32(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;							/
 m2_rom_void_p m2_rom_get_rom_ptr(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;					/* m2rom.c */
 void *m2_rom_get_ram_ptr(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;							/* m2rom.c */
 m2_el_fnptr m2_rom_get_el_fnptr(m2_rom_void_p base) M2_NOINLINE;									/* m2rom.c */
+m2_el_fnptr m2_rom_get_fnptr(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;							/* m2rom.c */
 m2_rom_void_p m2_rom_get_ptr_list_rom_ptr(m2_rom_void_p base, uint8_t idx) M2_NOINLINE;				/* m2rom.c */
 /*==============================================================*/
 /* option string */
@@ -324,6 +325,12 @@ uint8_t m2_opt_get_val_any_default(m2_rom_char_p str, char cmd, uint8_t default_
 uint8_t m2_GetKeyFromQueue(m2_p m2);														/* m2key.c */
 void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code);												/* m2key.c */
 void m2_SetDetectedKey(m2_p m2, uint8_t key_code);												/* m2key.c */
+
+
+/*==============================================================*/
+
+/* combo box (callback procedure) */
+typedef const char *(*m2_get_str_fnptr)(uint8_t idx);
 
 
 /*==============================================================*/
@@ -498,6 +505,21 @@ M2_EL_FN_DEF(m2_el_toggle_fn);
 M2_EL_FN_DEF(m2_el_radio_fn);
 #define M2_RADIO(el,fmt,variable) m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_radio_fn, (fmt) }, (variable) }
 #define M2_EXTERN_RADIO(el) extern m2_el_setval_t el
+
+
+struct _m2_el_combo_struct
+{
+  m2_el_setval_t setval;
+  uint8_t cnt;
+  m2_get_str_fnptr get_str_fnptr;
+};
+typedef struct _m2_el_combo_struct m2_el_combo_t;
+typedef m2_el_combo_t *m2_el_combo_p;
+
+M2_EL_FN_DEF(m2_el_combo_fn);
+#define M2_COMBO(el,fmt,variable,cnt,fnptr) m2_el_combo_t el M2_SECTION_PROGMEM = { { { m2_el_combo_fn, (fmt) }, (variable) }, (cnt), (fnptr) }
+#define M2_EXTERN_COMBO(el) extern m2_el_combo_t el
+
 
 /*==============================================================*/
 /* m2nav....c */

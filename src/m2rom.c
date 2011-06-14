@@ -89,10 +89,17 @@ void *m2_rom_get_ram_ptr(m2_rom_void_p base, uint8_t offset)
   return m2_rom_tmp_area.ram_ptr;
 }
 
-/* the element function pointer is always the first member of the element data structure, so assum 0 for the offset */
+/* the element function pointer is always the first member of the element data structure, so assume 0 for the offset */
 m2_el_fnptr m2_rom_get_el_fnptr(m2_rom_void_p base)
 {
   m2_rom_low_level_copy(&(m2_rom_tmp_area.el_fnptr),  ((m2_rom_char_p)base), sizeof(m2_el_fnptr));
+  return m2_rom_tmp_area.el_fnptr;
+}
+
+/* return function pointer, treat it as el_fnptr, but could be any function pointer */
+m2_el_fnptr m2_rom_get_fnptr(m2_rom_void_p base, uint8_t offset)
+{
+  m2_rom_low_level_copy(&(m2_rom_tmp_area.el_fnptr),  ((m2_rom_char_p)base)+offset, sizeof(m2_el_fnptr));
   return m2_rom_tmp_area.el_fnptr;
 }
 

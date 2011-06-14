@@ -41,8 +41,24 @@ m2_el_str_t t2 = { {m2_el_str_fn, base_fmt}, "CCC" };
 m2_el_str_t t3 = { {m2_el_str_up_fn, base_fmt}, "OK" };
 
 /*===================================================================*/
+/* yes/no combo */
+uint8_t yn_val = 0;
+
+const char *yes_no_fn(uint8_t idx)
+{
+  if ( idx == 0 )
+    return "no";
+  return "yes";
+}
+
+
+M2_COMBO(yn_combo, NULL, &yn_val, 2, yes_no_fn);
+
+
+/*===================================================================*/
 /* gridlist */
-void *li[] = { &t0, &t1,  &t2,  &t3, &el_goto_top };
+
+void *li[] = { &t0, &t1,  &t2,  &t3, &yn_combo, &el_goto_top };
 m2_el_list_t el_gridlist = { { m2_el_gridlist_fn, "c3d0h50w100" } , sizeof(li)/sizeof(*li), li };
 
 m2_el_str_t s1 = { {m2_el_str_fn, base_fmt}, "abc" };

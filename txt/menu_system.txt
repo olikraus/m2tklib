@@ -719,6 +719,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * kapitel über forward declaration
 	--> 03.06.2011 ERLEDIGT
     * on key event call procedure wäre u.U. ganz gut. 
+    
     * dog_DrawText(x,y) 
        die grundlinie des textes ist um ein pixel höher als y. damit sollte y um eins nach unten korrigiert werden.
        --> erledigt für den ffs handler
@@ -735,6 +736,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     
     * INFO: LCD Photo mit festem rechteck 520x280, dann auf 50% skalieren
     * Tutorial schreiben
+    
     * 4-button generischen arduino handler schreiben
 	--> 13.06.2011 ERLEDIGT
     * Im 4 Button handler funktioniert der Exit button nicht besonders gut. Im grunde ist nur dann ein exit sinnvoll, wenn
@@ -757,5 +759,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
       neu:
 	m2_gfx_small_data_entry
 	M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY
-      
+	--> 13.06.2011 ERLEDIGT
+    * COMBO Box: Eine Zeile, mehrere auswählbare elemente
+	--> m2elcombo.c angefangen, noch nicht im hg
 	
