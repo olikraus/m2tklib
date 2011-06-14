@@ -653,18 +653,8 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	Einführung eines NORMAL_PARENT_FOCUS, das aber nur vom U32 und vom EL_TEXT verwendet wird
 	--> 25.05.2011 ERLEDIGT
 25.05.2011
-    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
-    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
-    * M2_EL_MSG_DATA_UP/DOWN
-      brauchen wir das pos argument überhaupt. Ich glaube es kann entfernt werden.
     * Veralgemeinertes debounce, routinen vom pde code übernehmen
 	--> 29.05.2011 ERLEDIGT
-    * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
-    * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
-	oder man nimmt eine eigene funktion
-    * high level funktionen: 1. init, 2. high lev fn setzen, 3. m2_Step/Draw (bleibt immer gleich)
-        void m2_SetMsgBox(uint8_t *result, char *text, char *button);
-    * Als Beispiel: XY List mit mehreren ALIGN Elementen und ein paar texten darin
     * Konzept für das einbinden display spezifischer handler
 	  m2ghdogm.h	--> dogm handler
 	--> 25.05.2011 ERLEDIGT
@@ -673,8 +663,6 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 25.05.2011 ERLEDIGT
     * bei den element macros sollte der adressoperator explizit angegeben werden.
 	--> 25.05.2011 ERLEDIGT
-    * idee: scrollbare liste mit entries: ähnliche implementierung wie elu8
-      mit data up und down wird dann navigiert.
     * vereinfachtes interface m2_Init durch m2_InitObj ersetzen m2_Init initalisiert dann ein globales object
 	--> 26.05.2011 ERLEDIGT
     * m2_SetFont
@@ -696,14 +684,6 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 31.05.2011 ERLEDIGT
     * speziellen dogxl160 handler
 	--> 30.05.2011 ERLEDIGT
-    * einführung von text localen formatier-anweisungen
-	f8 --> center --> erledigt im dogxl160 handler, offen für alle anderen
-	w/h für element --> erledigt für elstr & ellabel und alle abgeleiteten elemente
-	    eventuell auch ein rechts allignment für ellabel
-	    ebenfalls offen für eltext, elu32, elu8
-        w/h beeinflussen erst mal nur den frame (so es einen gibt).
-	f8 würde dann den text zentrieren
-	vorlage: m2elstr.c
     * m2_GetRootElement, m2_SetRootElement wäre wohl ganz praktisch
 	--> 03.06.2011 ERLEDIGT (s.u.)
     * die M2_xxx_EXTERN declarationen fehlen noch für die meisten elenemente
@@ -711,32 +691,21 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * action button mit callback function
 	--> M2_BUTTON 
 	--> 02.06.2011 ERLEDIGT
-    * READONLY border sollte immer identisch zur NORMAL border sein (dog-graphics handler)
-    
     * setRoot und getRoot dokumentieren, sowie M2_ROOT element beschreiben (Beispiel ChangeMenu)
 	set root erledigt
 	--> 03.06.2011 ERLEDIGT
     * kapitel über forward declaration
 	--> 03.06.2011 ERLEDIGT
-    * on key event call procedure wäre u.U. ganz gut. 
-    
     * dog_DrawText(x,y) 
        die grundlinie des textes ist um ein pixel höher als y. damit sollte y um eins nach unten korrigiert werden.
        --> erledigt für den ffs handler
 	--> 04.06.2011 ERLEDIGT für alle (in den base handler verschoben)
     * debounce auch für das loslassen erweitern
-	--> 08.06.2011 ERLEDIGT
-	
+	--> 08.06.2011 ERLEDIGT	
     * m2_gh_lc_16x2 programmieren, routinen in ein util.cpp auslagern.
 	--> 07.06.2011 ERLEDIGT
-    * Doku für die Graphics Handler schreiben
-	--> m2_manual.txt
-	
-    * create release für DOGM128 anpassen (examples sind eine ebene tiefer gerutscht)
     
     * INFO: LCD Photo mit festem rechteck 520x280, dann auf 50% skalieren
-    * Tutorial schreiben
-    
     * 4-button generischen arduino handler schreiben
 	--> 13.06.2011 ERLEDIGT
     * Im 4 Button handler funktioniert der Exit button nicht besonders gut. Im grunde ist nur dann ein exit sinnvoll, wenn
@@ -762,4 +731,32 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 13.06.2011 ERLEDIGT
     * COMBO Box: Eine Zeile, mehrere auswählbare elemente
 	--> m2elcombo.c angefangen, noch nicht im hg
-	
+	--> 14.06.2011 ERLEDIGT
+14.06.2011
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+    * M2_EL_MSG_DATA_UP/DOWN
+      brauchen wir das pos argument überhaupt. Ich glaube es kann entfernt werden.
+    * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
+    * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
+	oder man nimmt eine eigene funktion
+    * high level funktionen: 1. init, 2. high lev fn setzen, 3. m2_Step/Draw (bleibt immer gleich)
+        void m2_SetMsgBox(uint8_t *result, char *text, char *button);
+    * Als Beispiel: XY List mit mehreren ALIGN Elementen und ein paar texten darin
+    * idee: scrollbare liste mit entries: ähnliche implementierung wie elu8
+      mit data up und down wird dann navigiert.
+    * einführung von text localen formatier-anweisungen
+	f8 --> center --> erledigt im dogxl160 handler, offen für alle anderen
+	w/h für element --> erledigt für elstr & ellabel und alle abgeleiteten elemente
+	    eventuell auch ein rechts allignment für ellabel
+	    ebenfalls offen für eltext, elu32, elu8
+        w/h beeinflussen erst mal nur den frame (so es einen gibt).
+	f8 würde dann den text zentrieren
+	vorlage: m2elstr.c
+    * READONLY border sollte immer identisch zur NORMAL border sein (dog-graphics handler)    
+    * on key event call procedure wäre u.U. ganz gut. 
+    * Doku für die Graphics Handler schreiben
+	--> m2_manual.txt	
+    * create release für DOGM128 anpassen (examples sind eine ebene tiefer gerutscht)
+    * Tutorial schreiben
+    
