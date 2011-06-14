@@ -165,9 +165,17 @@ M2_EL_FN_DEF(m2_el_char_fn)
 	    m2_gfx_draw_text_add_small_border_offset(b->x, b->y, 0, 0, m2_el_parent_get_font(fn_arg->nav), s);
 
 	  if ( fn_arg->arg == 2 )
+	  {
 	    m2_gfx_small_focus(b->x, b->y, m2_gfx_get_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
+	  }
+	  else if ( fn_arg->arg == 3 )
+	  {
+	    m2_gfx_small_data_entry(b->x, b->y, m2_gfx_get_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
+	  }
 	  else
+	  {
 	    m2_el_fnfmt_fn(fn_arg);
+	  }
 	  
 	  if ( m2_is_frame_draw_at_end == 0 )
 	    m2_gfx_draw_text_add_small_border_offset(b->x, b->y, 0, 0, m2_el_parent_get_font(fn_arg->nav), s);

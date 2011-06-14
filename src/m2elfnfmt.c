@@ -72,7 +72,7 @@ M2_EL_FN_DEF(m2_el_fnfmt_fn)
 	else if ( fn_arg->arg == 2 )
 	  m2_gfx_normal_focus(b->x, b->y, w, h, font);
 	else if ( fn_arg->arg == 3 )
-	  m2_gfx_data_entry(b->x, b->y, w, h, font);
+	  m2_gfx_normal_data_entry(b->x, b->y, w, h, font);
       }
       return 1;
   }

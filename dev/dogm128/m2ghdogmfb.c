@@ -67,9 +67,12 @@ uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
-    case M2_GFX_MSG_DRAW_DATA_ENTRY:
-      m2_dogm_draw_frame(arg->x, arg->y, arg->w, arg->h);
+    case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
+      dog_SetHLine(arg->x, arg->x+arg->w-1, arg->y);
       break;
+    case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
+      dog_SetHLine(arg->x, arg->x+arg->w-1, arg->y);
+      break;      
     case M2_GFX_MSG_DRAW_GO_UP:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;

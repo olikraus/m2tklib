@@ -638,12 +638,12 @@ Return:
 =============================================================
 == Graphics Handler ==
 
-|	Name		Normal		Normal		Normal			Highlight		Highlight 			Highlight
-|							Focus		Focus/Data Up					Focus			Focus/Data Up
-|=======================================================================
-|	bf						Inv-Box		Half-Inv-Box		Frame		Frame+Inv-Box		Half-Inv-Box
-|	bfs						Inv-Box		Half-Inv-Box		Shadow		Shadow+Inv-Box 	Half-Inv-Box
-|	fb						Frame		Inv-Box			Inv-Box             Frame			Inv-Box
-|	fbs						Shadow		Inv-Box			Inv-Box		Shadow			Inv-Box
-|	ffs						Shadow		Shadow+Inv-Box	Shadow		Shadow+Inv-Box	Shadow+Inv-Box
+|	Name		Normal		Normal		Normal			Normal		Highlight		Highlight 			Highlight
+|							Focus		Focus/Data Up		Data Entry				Focus			Focus/Data Up
+|=======================================================================================
+|	bf						Inv-Box		Half-Inv-Box		Underline		Frame		Frame+Inv-Box		Half-Inv-Box
+|	bfs						Inv-Box		Half-Inv-Box		Underline		Shadow		Shadow+Inv-Box 	Half-Inv-Box
+|	fb						Frame		Inv-Box			Underline		Inv-Box             Frame			Inv-Box
+|	fbs						Shadow		Inv-Box			Underline		Inv-Box		Shadow			Inv-Box
+|	ffs						Shadow		Shadow+Inv-Box	Underline		Shadow		Shadow+Inv-Box	Shadow+Inv-Box
 

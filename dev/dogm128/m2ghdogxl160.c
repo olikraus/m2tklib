@@ -122,7 +122,7 @@ uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg)
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_dogm_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
       break;
-    case M2_GFX_MSG_DRAW_DATA_ENTRY:
+    case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
       m2_dogm_draw_frame_dogx160(arg->x, arg->y, arg->w, arg->h, 1);
       break;
     case M2_GFX_MSG_DRAW_GO_UP:

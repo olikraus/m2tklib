@@ -119,7 +119,7 @@ void m2_gfx_vline(uint8_t x0, uint8_t y0, uint8_t h) {}
 void m2_gfx_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h) {}
 void m2_gfx_text(uint8_t x0, uint8_t y0, const char *s) {}
 void m2_gfx_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h) {}
-void m2_gfx_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h) {}
+void m2_gfx_normal_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h) {}
 void m2_gfx_go_up(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h) {}
 uint8_t m2_gfx_get_text_width(const char *s) { return strlen(s); }
 uint8_t m2_gfx_get_char_width(void) { return 1; }

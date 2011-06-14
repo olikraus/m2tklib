@@ -142,14 +142,24 @@ void m2_gfx_small_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t fo
 
 
 
-void m2_gfx_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font)
+void m2_gfx_normal_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font)
 {
   m2_gfx_arg_object.x = x0;
   m2_gfx_arg_object.y = y0;
   m2_gfx_arg_object.w = w;
   m2_gfx_arg_object.h = h;
   m2_gfx_arg_object.font = font;
-  m2_gfx_call_handler(M2_GFX_MSG_DRAW_DATA_ENTRY);
+  m2_gfx_call_handler(M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY);
+}
+
+void m2_gfx_small_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font)
+{
+  m2_gfx_arg_object.x = x0;
+  m2_gfx_arg_object.y = y0;
+  m2_gfx_arg_object.w = w;
+  m2_gfx_arg_object.h = h;
+  m2_gfx_arg_object.font = font;
+  m2_gfx_call_handler(M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY);
 }
 
 void m2_gfx_go_up(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font)

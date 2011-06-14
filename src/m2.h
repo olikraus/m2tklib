@@ -256,31 +256,32 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_GFX_MSG_DRAW_NORMAL_FOCUS 				9
 #define M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS		10
 #define M2_GFX_MSG_DRAW_SMALL_FOCUS 				11
-#define M2_GFX_MSG_DRAW_DATA_ENTRY 				12
-#define M2_GFX_MSG_DRAW_GO_UP 					13
-#define M2_GFX_MSG_DRAW_ICON 						14
-#define M2_GFX_MSG_GET_TEXT_WIDTH 					15
-#define M2_GFX_MSG_GET_TEXT_WIDTH_P 				16
-#define M2_GFX_MSG_GET_CHAR_WIDTH 					17	
-#define M2_GFX_MSG_GET_CHAR_HEIGHT 				18
-#define M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT 		19
-#define M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH 		20
-#define M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET 		21
-#define M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET 		22
-#define M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT 		23
-#define M2_GFX_MSG_GET_SMALL_BORDER_WIDTH 			24
-#define M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET 		25
-#define M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET 		26
-#define M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT 		27
-#define M2_GFX_MSG_GET_READONLY_BORDER_WIDTH 		28
-#define M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET 	29
-#define M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET 	30
-#define M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT 			31
-#define M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH 			32
-#define M2_GFX_MSG_GET_ICON_HEIGHT 				33
-#define M2_GFX_MSG_GET_ICON_WIDTH 					34
-#define M2_GFX_MSG_IS_FRAME_DRAW_AT_END			35
-#define M2_GFX_MSG_SET_FONT						36
+#define M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY 			12
+#define M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY 			13
+#define M2_GFX_MSG_DRAW_GO_UP 					14
+#define M2_GFX_MSG_DRAW_ICON 						15
+#define M2_GFX_MSG_GET_TEXT_WIDTH 					16
+#define M2_GFX_MSG_GET_TEXT_WIDTH_P 				17
+#define M2_GFX_MSG_GET_CHAR_WIDTH 					18	
+#define M2_GFX_MSG_GET_CHAR_HEIGHT 				19
+#define M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT 		20
+#define M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH 		21
+#define M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET 		22
+#define M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET 		23
+#define M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT 		24
+#define M2_GFX_MSG_GET_SMALL_BORDER_WIDTH 			25
+#define M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET 		26
+#define M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET 		27
+#define M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT 		28
+#define M2_GFX_MSG_GET_READONLY_BORDER_WIDTH 		29
+#define M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET 	30
+#define M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET 	31
+#define M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT 			32
+#define M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH 			33
+#define M2_GFX_MSG_GET_ICON_HEIGHT 				34
+#define M2_GFX_MSG_GET_ICON_WIDTH 					35
+#define M2_GFX_MSG_IS_FRAME_DRAW_AT_END			36
+#define M2_GFX_MSG_SET_FONT						37
 
 /*==============================================================*/
 /* object function */
@@ -734,7 +735,8 @@ void m2_gfx_normal_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t f
 /* used only of there is also a small focus */
 void m2_gfx_normal_parent_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 void m2_gfx_small_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
-void m2_gfx_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
+void m2_gfx_normal_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
+void m2_gfx_small_data_entry(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 void m2_gfx_go_up(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 
 uint8_t m2_gfx_get_text_width(uint8_t font, const char *s);				/* used for lables and buttons */

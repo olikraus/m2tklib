@@ -445,7 +445,7 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_sdlgfx_small_focus(arg->x, arg->y, arg->w, arg->h);
       break;
-    case M2_GFX_MSG_DRAW_DATA_ENTRY:
+    case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
       m2_sdlgfx_data_entry(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_GO_UP:
