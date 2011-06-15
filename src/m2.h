@@ -203,7 +203,7 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_PSTR(s) s
 
 /* Define the maximum depth of  the menu tree */
-#define M2_DEPTH_MAX 5
+#define M2_DEPTH_MAX 7
 
 /* Key values */
 #define M2_KEY_NONE 0
@@ -560,7 +560,11 @@ M2_EL_FN_DEF(m2_el_combo_fn);
 struct _m2_nav_struct
 {
   /* stores pointers to nested elements */
+#ifdef __unix__
+  m2_el_fnfmt_p element_list[M2_DEPTH_MAX];
+#else
   m2_rom_void_p element_list[M2_DEPTH_MAX];
+#endif
   
   /* local copy of the element fmt structure, automatically updated */
   /* probably only used because of the attrib value */

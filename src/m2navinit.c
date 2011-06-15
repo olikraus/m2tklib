@@ -36,13 +36,17 @@
 static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
 {
   /*obsolete: m2_nav_do_auto_down(nav); */
-    
+  
   if ( m2_nav_get_list_len(nav) >= 1 )
   {
     m2_nav_user_down(nav, 0);
   }
-  
+
   m2_nav_do_auto_down(nav);
+  
+  if ( m2_nav_is_read_only(nav) != 0 )
+    m2_nav_user_next(nav);
+  
 }
 
 /* constructor: init a new cursor into our tree */
@@ -52,7 +56,7 @@ static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
 void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element)
 {
   nav->is_data_entry_active = 0;
-  nav->element_list[0] = element;
+  nav->element_list[0] = (m2_el_fnfmt_p)element;
   nav->pos[0] = 0;
   nav->depth = 1;
   nav->new_root_element = NULL;

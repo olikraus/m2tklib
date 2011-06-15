@@ -98,7 +98,7 @@ uint8_t m2_opt_get_hH(m2_rom_char_p str)
 
 uint8_t m2_el_fnfmt_get_hH(const m2_el_fnarg_p fn_arg)
 {
-  m2_opt_get_hH(m2_el_fnfmt_get_fmt(fn_arg));
+  return m2_opt_get_hH(m2_el_fnfmt_get_fmt(fn_arg));
 }
 
 uint8_t m2_el_fnfmt_get_hH_by_element(m2_rom_void_p element)

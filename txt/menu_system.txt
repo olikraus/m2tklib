@@ -767,4 +767,17 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
     * M2_COMBO dokumentieren
     * Warum geht denn das "a1" beim m2_MessageB2...()  nicht?
+	war gar nicht implementiert 
+	--> 15.06.2011 ERLEDIGT, funktioniert aber immer noch nicht korrekt
     * Kann man irgendwie beim VList/Hlist center angeben?
+    * DFS successor neu programmieren, das klappt mit dem a1 nicht so recht.
+	successor:
+	  schleife
+	    wenn nav_next() ok
+	      solange is_list() und is_auto_skip() dann
+		nav_down() + nav_first()
+	      beende schleife
+	    sonst [nav_next() nicht ok]
+	      wenn nav_up() nicht ok	// und zwar nur einmal, unabgängig vom a1 status 
+		beende schleife
+    
