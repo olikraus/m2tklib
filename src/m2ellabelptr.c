@@ -26,7 +26,7 @@
 
 #include "m2.h"
 
-M2_EL_FN_DEF(m2_el_label_fn)
+M2_EL_FN_DEF(m2_el_labelptr_fn)
 {
   uint8_t font;
 
@@ -38,7 +38,7 @@ M2_EL_FN_DEF(m2_el_label_fn)
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_add_readonly_border_height(font, m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_readonly_border_width(font, m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg))));
+      return m2_gfx_add_readonly_border_width(font, m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_strptr_get_str(fn_arg))));
     case M2_EL_MSG_SHOW:
       {
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
@@ -47,9 +47,9 @@ M2_EL_FN_DEF(m2_el_label_fn)
 	  m2_el_fnfmt_fn(fn_arg);
 	  
 	m2_gfx_draw_text_add_readonly_border_offset(b->x, b->y, 
-	  m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg))), 
+	  m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_strptr_get_str(fn_arg))), 
 	  m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)), 
-	  font, m2_el_str_get_str(fn_arg));
+	  font, m2_el_strptr_get_str(fn_arg));
 	
 	if ( m2_is_frame_draw_at_end != 0 )
 	  m2_el_fnfmt_fn(fn_arg);
@@ -57,6 +57,6 @@ M2_EL_FN_DEF(m2_el_label_fn)
       }
       return 1;    
   }
-  return m2_el_str_fn(fn_arg);
+  return m2_el_strptr_fn(fn_arg);
 }
 

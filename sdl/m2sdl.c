@@ -157,10 +157,25 @@ void *xy_list[] =
 M2_XYLIST(el_xy_list,"",xy_list);
   
 /*===================================================================*/
-/* top menu */
+/* u32num */
 
 M2_U32NUM(single_u32,"a1c5",&label_val32);
 
+/*===================================================================*/
+/* m2_Message */
+  
+void fn_msg_ok(m2_el_fnarg_p fnarg) 
+{
+  m2_SetRoot(&el_top);
+}
+
+void fn_set_msg(m2_el_fnarg_p fnarg) 
+{
+  m2_MessageFn("Hello World", " ok ", fn_msg_ok);
+}
+
+
+  
 /*===================================================================*/
 /* top menu */
 
@@ -170,11 +185,11 @@ M2_ROOT(el_to_labellist, base_fmt,"LabelList",&el_label_list);
 M2_ROOT(el_to_hlist, base_fmt, "H-List", &el_hlist);
 M2_ROOT(el_to_single_u32, base_fmt, "U32", &single_u32);
 M2_ROOT(el_to_xy_list, base_fmt, "XY", &el_xy_list);
+M2_BUTTON(el_set_msg, NULL, "MSG", fn_set_msg);
 
-  
 
 
-void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list };
+void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_set_msg };
 
 M2_GRIDLIST(_el_top,"c2",top_list);
 

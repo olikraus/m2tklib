@@ -171,6 +171,9 @@ m2_rom_void_p m2_GetRoot(void);
 void m2_SetGraphicsHandler(m2_gfx_fnptr gh);
 
 
+void m2_MessageFn(const char *text, const char *button, m2_button_fnptr fn);
+
+
 extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
 
 
@@ -356,6 +359,33 @@ typedef m2_el_fnfmt_t *m2_el_fnfmt_p;
 /* do not used this element procedure directly! */
 /* it is more an abstract base class procedure... */
 M2_EL_FN_DEF(m2_el_fnfmt_fn);
+
+
+struct _m2_el_strptr_struct
+{
+  m2_el_fnfmt_t ff;
+  const char **strptr;
+};
+typedef struct _m2_el_strptr_struct m2_el_strptr_t;
+typedef m2_el_strptr_t *m2_el_strptr_p;
+
+M2_EL_FN_DEF(m2_el_strptr_fn);
+
+M2_EL_FN_DEF(m2_el_labelptr_fn);
+#define M2_LABELPTR(el,fmt,strptr) m2_el_strptr_t el M2_SECTION_PROGMEM = { { m2_el_labelptr_fn, (fmt) }, (strptr) }
+#define M2_EXTERN_LABELPTR(el) extern m2_el_strptr_t el
+
+struct _m2_el_buttonptr_struct
+{
+  m2_el_strptr_t el_strptr;
+  m2_button_fnptr button_callback;
+};
+typedef struct _m2_el_buttonptr_struct m2_el_buttonptr_t;
+typedef m2_el_buttonptr_t *m2_el_buttonptr_p;
+
+M2_EL_FN_DEF(m2_el_buttonptr_fn);
+#define M2_BUTTONPTR(el, fmt,strptr,callback) m2_el_buttonptr_t el M2_SECTION_PROGMEM = { { { m2_el_buttonptr_fn, (fmt) }, (strptr) },  (callback)  }
+#define M2_EXTERN_BUTTONPTR(el) extern m2_el_buttonptr_t el
 
 
 struct _m2_el_str_struct
@@ -716,6 +746,11 @@ uint8_t *m2_el_u8_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elu8
 
 /*==============================================================*/
 char *m2_el_str_get_str(m2_el_fnarg_p fn_arg) M2_NOINLINE;									/* m2elstr.c */
+
+/*==============================================================*/
+char *m2_el_strptr_get_str(m2_el_fnarg_p fn_arg) M2_NOINLINE;									/* m2elstrptr.c */
+
+
 
 /*==============================================================*/
 m2_rom_char_p m2_el_fnfmt_get_fmt_by_element(m2_rom_void_p element) M2_NOINLINE;			/* m2elfnfmt.c */

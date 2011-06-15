@@ -1,8 +1,8 @@
 /*
 
-  m2elsetval.c
+  m2elcombo.c
   
-  base class for radio and toggle elements
+  selection between some string items
 
   m2tklib = Mini Interative Interface Toolkit Library
   
