@@ -79,3 +79,55 @@ M2_EL_FN_DEF(m2_el_fnfmt_fn)
   return 0;
 }
 
+/*==============================================================*/
+
+uint8_t m2_opt_get_hH(m2_rom_char_p str)
+{
+    uint8_t val;
+    uint16_t tmp;
+    val = m2_opt_get_val_zero_default(str, 'h'); 
+    if ( val == 0 )
+    {
+      tmp = m2_opt_get_val_zero_default(str, 'H');
+      tmp *= m2_gfx_get_display_height();
+      tmp >>= 6;
+      val = tmp;
+    }  
+    return val;
+}
+
+uint8_t m2_el_fnfmt_get_hH(const m2_el_fnarg_p fn_arg)
+{
+  m2_opt_get_hH(m2_el_fnfmt_get_fmt(fn_arg));
+}
+
+uint8_t m2_el_fnfmt_get_hH_by_element(m2_rom_void_p element)
+{
+  return m2_opt_get_hH(m2_el_fnfmt_get_fmt_by_element(element));
+}
+
+uint8_t m2_opt_get_wW(m2_rom_char_p str)
+{
+    uint8_t val;
+    uint16_t tmp;
+    val = m2_opt_get_val_zero_default(str, 'w'); 
+    if ( val == 0 )
+    {
+      tmp = m2_opt_get_val_zero_default(str, 'W');
+      tmp *= m2_gfx_get_display_width();
+      tmp >>= 6;
+      val = tmp;
+    }  
+    return val;
+}
+
+uint8_t m2_el_fnfmt_get_wW(const m2_el_fnarg_p fn_arg)
+{
+  return m2_opt_get_wW(m2_el_fnfmt_get_fmt(fn_arg));
+}
+
+uint8_t m2_el_fnfmt_get_wW_by_element(m2_rom_void_p element)
+{
+  return m2_opt_get_wW(m2_el_fnfmt_get_fmt_by_element(element));
+}
+

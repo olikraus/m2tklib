@@ -93,7 +93,7 @@ void m2_calc_vlist_box(m2_rom_void_p element, uint8_t arg, m2_pcbox_p data)
   /* get min height */
   min = m2_calc_vlist_height_overlap_correction(m2_el_calc_child_fn(element, 0, len, 1, 1), len);
   /* get target height */
-  target = m2_el_list_opt_get_val_zero_default(element, 'h');
+  target = m2_el_fnfmt_get_hH_by_element(element);
   /* calculate lower space */
   delta = 0;
   if ( target > min )

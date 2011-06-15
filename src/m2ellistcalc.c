@@ -63,7 +63,12 @@ uint8_t m2_el_calc_child_fn(m2_rom_void_p element, uint8_t start, uint8_t end, u
 uint8_t m2_expand_direction(m2_rom_void_p element, uint8_t in, uint8_t optchar)
 {
   uint8_t v;
-  v = m2_el_list_opt_get_val_zero_default(element, optchar);
+  if ( optchar == 'w' )
+    v  = m2_el_fnfmt_get_wW_by_element(element);
+  else  if ( optchar == 'h' )
+    v  = m2_el_fnfmt_get_hH_by_element(element);
+  else
+    v = m2_el_list_opt_get_val_zero_default(element, optchar);
   if ( in < v )
     return v;
   return in;

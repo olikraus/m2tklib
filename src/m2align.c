@@ -28,7 +28,8 @@
 uint8_t m2_align_get_max_height(m2_el_fnarg_p fn_arg, uint8_t size)
 {
   uint8_t max;
-  max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'h'); 
+  /* max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'h'); */
+  max = m2_el_fnfmt_get_hH(fn_arg);
   if ( max < size )
     max = size;
   return max;
@@ -37,7 +38,8 @@ uint8_t m2_align_get_max_height(m2_el_fnarg_p fn_arg, uint8_t size)
 uint8_t m2_align_get_max_width(m2_el_fnarg_p fn_arg, uint8_t size)
 {
   uint8_t max;
-  max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'w'); 
+  /* max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'w'); */
+  max = m2_el_fnfmt_get_wW(fn_arg);
   if ( max < size )
     max = size;
   return max;
