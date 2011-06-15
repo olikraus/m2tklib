@@ -285,6 +285,8 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_GFX_MSG_GET_ICON_WIDTH 					35
 #define M2_GFX_MSG_IS_FRAME_DRAW_AT_END			36
 #define M2_GFX_MSG_SET_FONT						37
+#define M2_GFX_MSG_GET_DISPLAY_WIDTH				38
+#define M2_GFX_MSG_GET_DISPLAY_HEIGHT				39
 
 /*==============================================================*/
 /* object function */
@@ -834,6 +836,10 @@ uint8_t m2_gfx_is_frame_draw_at_end(void);
 
 void m2_gfx_end(void);
 void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr);
+
+uint8_t m2_gfx_get_display_width(void);
+uint8_t m2_gfx_get_display_height(void);
+
 
 /*==============================================================*/
 

@@ -181,13 +181,17 @@ uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
       }
       break;
     case M2_GFX_MSG_SET_FONT:
-    {
-      uint8_t idx;
-      idx = arg->font;
-      idx &=3;
-      m2_gh_dogm_fonts[idx] = (DOG_PGM_P)(arg->s);
-    }
-    return 0;
+      {
+	uint8_t idx;
+	idx = arg->font;
+	idx &=3;
+	m2_gh_dogm_fonts[idx] = (DOG_PGM_P)(arg->s);
+      }
+      return 0;
+    case M2_GFX_MSG_GET_DISPLAY_WIDTH:
+      return DOG_WIDTH;
+    case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
+      return DOG_HEIGHT;
   }
   return m2_gh_dummy(arg);
 }

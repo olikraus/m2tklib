@@ -70,9 +70,29 @@ uint8_t m2_align_get_new_size(m2_el_fnarg_p fn_arg, uint8_t is_height)
 {
   uint8_t max, val;
   if ( is_height != 0 )
+  {
     max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'h'); 
+    if ( max == 0 )
+    {
+      uint16_t tmp;
+      tmp = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'H');
+      tmp *= m2_gfx_get_display_height();
+      tmp >>= 7;
+      max = tmp;
+    }
+  }
   else
+  {
     max = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'w'); 
+    if ( max == 0 )
+    {
+      uint16_t tmp;
+      tmp = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'W');
+      tmp *= m2_gfx_get_display_width();
+      tmp >>= 7;
+      max = tmp;
+    }
+  }
   val = m2_el_align_get_child_size(fn_arg, is_height);
   if ( max < val )
     max = val;

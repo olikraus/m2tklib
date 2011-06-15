@@ -339,3 +339,12 @@ void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr)
   m2_gfx_call_handler(M2_GFX_MSG_SET_FONT);
 }
 
+uint8_t m2_gfx_get_display_width(void)
+{
+  return m2_gfx_call_handler(M2_GFX_MSG_GET_DISPLAY_WIDTH);
+}
+
+uint8_t m2_gfx_get_display_height(void)
+{
+  return m2_gfx_call_handler(M2_GFX_MSG_GET_DISPLAY_HEIGHT);
+}

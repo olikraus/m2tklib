@@ -456,6 +456,24 @@ Values:
   255		not specified
 
 Option: 
+  'W'
+Description:
+  Width, 0..128, relative to display width
+Values:
+  0..255
+  128: equals to display width
+  64: half display width
+
+Option: 
+  'H'
+Description:
+  height, 0..128, relative to display height
+Values:
+  0..255
+  128: equals to display height
+  64: half display height
+
+Option: 
   '-'
 Description:
   Horizontal alignment

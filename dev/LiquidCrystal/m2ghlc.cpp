@@ -127,6 +127,10 @@ extern "C" uint8_t m2_gh_lc(m2_gfx_arg_p  arg)
       return 2;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
       return 1;
+    case M2_GFX_MSG_GET_DISPLAY_WIDTH:
+      return m2_lc_cols;
+    case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
+      return m2_lc_rows;
   }
   return m2_gh_dummy(arg);
 }
