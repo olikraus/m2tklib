@@ -780,4 +780,31 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	    sonst [nav_next() nicht ok]
 	      wenn nav_up() nicht ok	// und zwar nur einmal, unabgängig vom a1 status 
 		beende schleife
+		
+	down_first:
+	      solange is_list() und is_auto_skip() dann
+		nav_down() + nav_first()
+
+	successor':
+	  schleife
+	    wenn nav_next() ok
+	      down_first()
+	      beende schleife
+	    sonst [nav_next() nicht ok]
+	      wenn nav_up() nicht ok	// und zwar nur einmal, unabgängig vom a1 status 
+		beende schleife
     
+	usr_next:
+	  schleife
+	    successor()
+	  solange read_only()
+	  
+	usr_first:
+	  down_first();
+	  wenn read_only()
+	    usr_next();
+	  
+	  m2_usr_nav_first() in .h aufnehmen
+	  m2_nav_do_auto_down() und m2_nav_do_auto_up() kann vermutlich ersetzt werden durch...? löschen...?
+	  m2_usr_nav_prev entsprechend ändern
+	  
