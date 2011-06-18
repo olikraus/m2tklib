@@ -109,7 +109,7 @@ void m2_calc_vlist_box(m2_rom_void_p element, uint8_t arg, m2_pcbox_p data)
   arg++;
   data->c.y -= m2_calc_vlist_height_overlap_correction(m2_el_calc_child_fn(element, 0, arg, 1, 1), arg);
   data->c.y += data->p.y;
-  data->c.x = data->p.x;  
+  data->c.x = data->p.x;
 }
 
 uint8_t m2_el_vlist_fn(m2_el_fnarg_p fn_arg)

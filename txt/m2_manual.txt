@@ -458,20 +458,20 @@ Values:
 Option: 
   'W'
 Description:
-  Width, 0..128, relative to display width
+  Width, 0..64, relative to display width
 Values:
   0..255
-  128: equals to display width
-  64: half display width
+  64: equals to display width
+  32: half display width
 
 Option: 
   'H'
 Description:
-  height, 0..128, relative to display height
+  height, 0..64, relative to display height
 Values:
   0..255
-  128: equals to display height
-  64: half display height
+  64: equals to display height
+  32: half display height
 
 Option: 
   '-'

@@ -862,9 +862,10 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * 3 (4)-Button Handler mit Select, Next und Data Up (sowie ggf ein Exit Button)
     * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
     * M2_COMBO dokumentieren
-    * Kann man irgendwie beim VList/Hlist center angeben?
+    * Kann man irgendwie beim VList/Hlist center angeben? ... leider nicht, aber man könnte den code von align übernehmen.
     * DFS successor neu programmieren, das klappt mit dem a1 nicht so recht.
 	--> ERLEDIGT 18.06.2011
     * "a1": wird auf jedenfall beibehalten, sollte aber default für alle listen sein
 	--> ERLEDIGT 18.06.2011
+    * f4 für SDL handler übernehmen
     

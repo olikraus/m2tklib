@@ -171,7 +171,7 @@ void fn_msg_ok(m2_el_fnarg_p fnarg)
 
 void fn_set_msg(m2_el_fnarg_p fnarg) 
 {
-  m2_MessageB2Fn("Hello World", " Ok ", fn_msg_ok, " Cancel ", fn_msg_ok);
+  m2_MessageB2Fn("==== Hello World ====", " Ok ", fn_msg_ok, " Cancel ", fn_msg_ok);
 }
 
 

@@ -41,7 +41,7 @@ void m2_fn_message_b2(m2_el_fnarg_p fnarg)
     m2_message_fn2(fnarg);
 }
 
-M2_LABELPTR(m2_message_el_label, NULL, &m2_message_text);
+M2_LABELPTR(m2_message_el_label, "W64f4", &m2_message_text);
 M2_BUTTONPTR(m2_message_el_b1, NULL, &m2_message_button1, m2_fn_message_b1);
 M2_LIST(m2_message_list) = {&m2_message_el_label, &m2_message_el_b1 };
 M2_VLIST(m2_message_el_vlist, NULL, m2_message_list);
@@ -58,11 +58,12 @@ void m2_MessageFn(const char *text, const char *button, m2_button_fnptr fn)
 M2_BUTTONPTR(m2_message_el_b2, NULL, &m2_message_button2, m2_fn_message_b2);
 
 M2_LIST(m2_message_b2list) = {&m2_message_el_b1, &m2_message_el_b2 };
-M2_HLIST(m2_message_el_b2list, "a1", m2_message_b2list);
+M2_HLIST(m2_message_el_b2list, NULL, m2_message_b2list);
+M2_ALIGN(m2_message_el_button_align_b2, "W64", &m2_message_el_b2list);
 
-M2_LIST(m2_message_listb2) = {&m2_message_el_label, &m2_message_el_b2list };
-M2_VLIST(m2_message_el_vlistb2, "a1", m2_message_listb2);
-M2_ALIGN(m2_message_el_top_align_b2, "W64H64a1", &m2_message_el_vlistb2);
+M2_LIST(m2_message_listb2) = {&m2_message_el_label, &m2_message_el_button_align_b2 };
+M2_VLIST(m2_message_el_vlistb2, NULL, m2_message_listb2);
+M2_ALIGN(m2_message_el_top_align_b2, "W64H64", &m2_message_el_vlistb2);
 
 
 void m2_MessageB2Fn(const char *text, const char *button1, m2_button_fnptr fn1, const char *button2, m2_button_fnptr fn2)
