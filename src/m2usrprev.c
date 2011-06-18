@@ -29,7 +29,10 @@
 
 #include "m2.h"
 
+static void m2_nav_user_down_last(m2_nav_p nav) M2_NOINLINE;
+static uint8_t m2_nav_user_prev_sub(m2_nav_p nav) M2_NOINLINE;
 
+#ifdef OBSOLETE
 static uint8_t m2_nav_user_prev_sub(m2_nav_p nav)
 {
   if ( m2_nav_prev(nav) != 0 )
@@ -42,6 +45,48 @@ static uint8_t m2_nav_user_prev_sub(m2_nav_p nav)
     return m2_nav_do_auto_down(nav);
   return 0;  
 }
+#endif
+
+static void m2_nav_user_down_last(m2_nav_p nav)
+{
+  for(;;)
+  {
+    if ( m2_nav_get_list_len(nav) == 0 )
+      break;
+    if ( m2_nav_is_auto_skip(nav) == 0 )
+      break;
+    m2_nav_down(nav, 0);
+    m2_nav_last(nav);
+  }
+}
+
+static uint8_t m2_nav_user_prev_sub(m2_nav_p nav)
+{
+  for(;;)
+  {
+    if ( m2_nav_prev(nav) != 0 )
+    {
+      m2_nav_user_down_last(nav);
+      return 1;
+    }
+    else
+    {
+      if ( m2_nav_up(nav) == 0 )
+      {
+	return 0;
+      }
+    }
+  }
+}
+
+static uint8_t m2_nav_user_last(m2_nav_p nav)
+{
+  m2_nav_user_down_last(nav);
+  if ( m2_nav_is_read_only(nav) != 0 )
+    return m2_nav_user_prev(nav);
+  return 1;
+}
+
 
 uint8_t m2_nav_user_prev(m2_nav_p nav)
 {
@@ -49,7 +94,7 @@ uint8_t m2_nav_user_prev(m2_nav_p nav)
   for(;;)
   {
     if ( m2_nav_user_prev_sub(nav) == 0 )
-      return 0;
+      return m2_nav_user_last(nav);
     if ( m2_nav_is_read_only(nav) == 0 )
       break;
     /* this is an emergency exit. it means that there are only nonselectable fields here */

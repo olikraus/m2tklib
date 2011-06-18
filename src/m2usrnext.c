@@ -30,6 +30,9 @@
 
 #include "m2.h"
 
+static void m2_nav_user_down_first(m2_nav_p nav) M2_NOINLINE;
+static uint8_t m2_nav_user_next_sub(m2_nav_p nav) M2_NOINLINE;
+
 #ifdef OBSOLETE
 static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
 {
@@ -46,9 +49,9 @@ static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
 }
 #endif
 
+
 static void m2_nav_user_down_first(m2_nav_p nav)
 {
-  puts("m2_nav_user_down_first");
   for(;;)
   {
     if ( m2_nav_get_list_len(nav) == 0 )
@@ -61,20 +64,17 @@ static void m2_nav_user_down_first(m2_nav_p nav)
 
 static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
 {
-  puts("m2_nav_user_next_sub");
   for(;;)
   {
     if ( m2_nav_next(nav) != 0 )
     {
       m2_nav_user_down_first(nav);
-      puts("exit m2_nav_user_next_sub 1");
       return 1;
     }
     else
     {
       if ( m2_nav_up(nav) == 0 )
       {
-	puts("exit m2_nav_user_next_sub 0");
 	return 0;
       }
     }

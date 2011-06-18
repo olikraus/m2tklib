@@ -735,7 +735,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 14.06.2011
     * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
     * M2_EL_MSG_DATA_UP/DOWN
-      brauchen wir das pos argument überhaupt. Ich glaube es kann entfernt werden.
+      brauchen man das pos argument überhaupt. Ich glaube es kann entfernt werden.
     * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
     * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
 	oder man nimmt eine eigene funktion
