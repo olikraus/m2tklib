@@ -95,7 +95,7 @@ uint8_t m2_el_listbase_fn(m2_el_fnarg_p fn_arg)
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_IS_AUTO_SKIP:
-      return m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'a'); 
+      return m2_el_fmfmt_opt_get_a_one_default(fn_arg); 
     case M2_EL_MSG_GET_LIST_LEN:
 	return m2_el_list_get_len(fn_arg);
     case M2_EL_MSG_GET_LIST_ELEMENT:

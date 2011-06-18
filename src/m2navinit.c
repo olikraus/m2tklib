@@ -37,6 +37,9 @@ static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
 {
   /*obsolete: m2_nav_do_auto_down(nav); */
   
+  m2_nav_user_first(nav);
+
+  /* obsolete
   if ( m2_nav_get_list_len(nav) >= 1 )
   {
     m2_nav_user_down(nav, 0);
@@ -46,7 +49,7 @@ static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
   
   if ( m2_nav_is_read_only(nav) != 0 )
     m2_nav_user_next(nav);
-  
+  */
 }
 
 /* constructor: init a new cursor into our tree */

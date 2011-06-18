@@ -734,21 +734,29 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> 14.06.2011 ERLEDIGT
 14.06.2011
     * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+	--> unten
     * M2_EL_MSG_DATA_UP/DOWN
       brauchen man das pos argument überhaupt. Ich glaube es kann entfernt werden.
+	--> unten
     * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
+	--> unten
     * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
 	oder man nimmt eine eigene funktion
+	--> unten
     * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+	--> unten
     * high level funktionen: 1. init, 2. high lev fn setzen, 3. m2_Step/Draw (bleibt immer gleich)
         void m2_SetMsgBox(uint8_t *result, char *text, char *button);
 	1) strptr basis element --> ERLEDIGT
 	2) labelptr element--> ERLEDIGT
 	3) buttonptr element --> offen
 	4) zusammenbau in m2msg.c, datei angelegt, nicht in hg
+	--> unten
     * Als Beispiel: XY List mit mehreren ALIGN Elementen und ein paar texten darin
+	--> unten
     * idee: scrollbare liste mit entries: ähnliche implementierung wie elu8
       mit data up und down wird dann navigiert.
+	--> unten
     * einführung von text localen formatier-anweisungen
 	f8 --> center --> erledigt im dogxl160 handler, offen für alle anderen
 	w/h für element --> erledigt für elstr & ellabel und alle abgeleiteten elemente
@@ -757,19 +765,29 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
         w/h beeinflussen erst mal nur den frame (so es einen gibt).
 	f8 würde dann den text zentrieren
 	vorlage: m2elstr.c
+	--> unten
     * READONLY border sollte immer identisch zur NORMAL border sein (dog-graphics handler)    
+	--> unten
     * on key event call procedure wäre u.U. ganz gut. 
+	--> unten
     * Doku für die Graphics Handler schreiben
 	--> m2_manual.txt	
+	--> unten
     * create release für DOGM128 anpassen (examples sind eine ebene tiefer gerutscht)
+	--> unten
     * Tutorial schreiben
+	--> unten
     * 3 (4)-Button Handler mit Select, Next und Data Up (sowie ggf ein Exit Button)
+	--> unten
     * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
+	--> unten
     * M2_COMBO dokumentieren
+	--> unten
     * Warum geht denn das "a1" beim m2_MessageB2...()  nicht?
 	war gar nicht implementiert 
 	--> 15.06.2011 ERLEDIGT, funktioniert aber immer noch nicht korrekt
     * Kann man irgendwie beim VList/Hlist center angeben?
+	--> unten
     * DFS successor neu programmieren, das klappt mit dem a1 nicht so recht.
 	successor:
 	  schleife
@@ -806,5 +824,47 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	  
 	  m2_usr_nav_first() in .h aufnehmen
 	  m2_nav_do_auto_down() und m2_nav_do_auto_up() kann vermutlich ersetzt werden durch...? löschen...?
-	  m2_usr_nav_prev entsprechend ändern
+	  m2_usr_nav_prev entsprechend ändern		--> ERLEDIGT
 	  
+	  Neuer eintrag --> siehe unten
+
+18.06.2011
+    * wenn man das OK field vom grid zweimal selektiert, springt man zum AAA zurück. warum?
+    * M2_EL_MSG_DATA_UP/DOWN
+      brauchen man das pos argument überhaupt. Ich glaube es kann entfernt werden.
+    * M2_EL_MSG_GET_OPT könnte das ergebnis als rückgabewert liefern. Das wäre u.U. code effizienter    
+    * beim m2_Init sollte es erlaubt sein, dass man gar kein top level element setzt.
+	oder man nimmt eine eigene funktion
+    * man könnte mal ein paar standard menüs bauen (ok/cancel nachricht oder testeingabe)
+    * high level funktionen: 1. init, 2. high lev fn setzen, 3. m2_Step/Draw (bleibt immer gleich)
+        void m2_SetMsgBox(uint8_t *result, char *text, char *button);
+	1) strptr basis element --> ERLEDIGT
+	2) labelptr element--> ERLEDIGT
+	3) buttonptr element --> offen
+	4) zusammenbau in m2msg.c, datei angelegt, nicht in hg
+    * Als Beispiel: XY List mit mehreren ALIGN Elementen und ein paar texten darin
+    * idee: scrollbare liste mit entries: ähnliche implementierung wie elu8
+      mit data up und down wird dann navigiert.
+    * einführung von text localen formatier-anweisungen
+	f8 --> center --> erledigt im dogxl160 handler, offen für alle anderen
+	w/h für element --> erledigt für elstr & ellabel und alle abgeleiteten elemente
+	    eventuell auch ein rechts allignment für ellabel
+	    ebenfalls offen für eltext, elu32, elu8
+        w/h beeinflussen erst mal nur den frame (so es einen gibt).
+	f8 würde dann den text zentrieren
+	vorlage: m2elstr.c
+    * READONLY border sollte immer identisch zur NORMAL border sein (dog-graphics handler)    
+    * on key event call procedure wäre u.U. ganz gut. 
+    * Doku für die Graphics Handler schreiben
+	--> m2_manual.txt	
+    * create release für DOGM128 anpassen (examples sind eine ebene tiefer gerutscht)
+    * Tutorial schreiben
+    * 3 (4)-Button Handler mit Select, Next und Data Up (sowie ggf ein Exit Button)
+    * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
+    * M2_COMBO dokumentieren
+    * Kann man irgendwie beim VList/Hlist center angeben?
+    * DFS successor neu programmieren, das klappt mit dem a1 nicht so recht.
+	--> ERLEDIGT 18.06.2011
+    * "a1": wird auf jedenfall beibehalten, sollte aber default für alle listen sein
+	--> ERLEDIGT 18.06.2011
+    

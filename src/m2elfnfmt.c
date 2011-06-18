@@ -46,6 +46,13 @@ uint8_t m2_el_fmfmt_get_font(const m2_el_fnarg_p fn_arg)
   return m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'f');
 }
 
+uint8_t m2_el_fmfmt_opt_get_a_one_default(const m2_el_fnarg_p fn_arg)
+{
+  return m2_opt_get_val_any_default(m2_el_fnfmt_get_fmt(fn_arg), 'a', 1);
+}
+
+
+
 /*
   This is the base procedure of all element procedures.
   It should be called by all other element procedures.

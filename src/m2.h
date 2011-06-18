@@ -763,6 +763,7 @@ char *m2_el_strptr_get_str(m2_el_fnarg_p fn_arg) M2_NOINLINE;									/* m2elstr
 m2_rom_char_p m2_el_fnfmt_get_fmt_by_element(m2_rom_void_p element) M2_NOINLINE;			/* m2elfnfmt.c */
 m2_rom_char_p m2_el_fnfmt_get_fmt(const m2_el_fnarg_p fn_arg) M2_NOINLINE;					/* m2elfnfmt.c */
 uint8_t m2_el_fmfmt_opt_get_val_zero_default(const m2_el_fnarg_p fn_arg, uint8_t c) M2_NOINLINE;		/* m2elfnfmt.c */
+uint8_t m2_el_fmfmt_opt_get_a_one_default(const m2_el_fnarg_p fn_arg) M2_NOINLINE;					/* m2elfnfmt.c */
 uint8_t m2_el_fmfmt_get_font(const m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elfnfmt.c */
 
 uint8_t m2_opt_get_hH(m2_rom_char_p str) M2_NOINLINE;									/* m2elfnfmt.c */
