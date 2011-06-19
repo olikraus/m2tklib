@@ -164,20 +164,38 @@ uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
   {
     case M2_GFX_MSG_DRAW_TEXT:
       {
+	uint8_t x = arg->x;
 	uint8_t y;
+	if ( (arg->font & 8) != 0 )
+	  if ( arg->w != 0 )
+	  {
+	    x = arg->w;
+	    x -= dog_GetStrWidth(m2_dogm_get_font(arg->font), arg->s);
+	    x >>= 1;
+	    x += arg->x;
+	  }
 	y = arg->y;
 	y += dog_GetFontBBXDescent(m2_dogm_get_font(arg->font));
 	y--;			/* Correction: Baseline for DOG fonts is one pixel above */
-	dog_DrawStr(arg->x, y, m2_dogm_get_font(arg->font), arg->s);
+	dog_DrawStr(x, y, m2_dogm_get_font(arg->font), arg->s);
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
       {
+	uint8_t x = arg->x;
 	uint8_t y;
+	if ( (arg->font & 8) != 0 )
+	  if ( arg->w != 0 )
+	  {
+	    x = arg->w;
+	    x -= dog_GetStrWidthP(m2_dogm_get_font(arg->font), arg->s);
+	    x >>= 1;
+	    x += arg->x;
+	  }
 	y = arg->y;
 	y += dog_GetFontBBXDescent(m2_dogm_get_font(arg->font));
 	y--;			/* Correction: Baseline for DOG fonts is one pixel above */
-	dog_DrawStrP(arg->x, y, m2_dogm_get_font(arg->font), arg->s);
+	dog_DrawStrP(x, y, m2_dogm_get_font(arg->font), arg->s);
       }
       break;
     case M2_GFX_MSG_SET_FONT:

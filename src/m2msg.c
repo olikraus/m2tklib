@@ -41,7 +41,7 @@ void m2_fn_message_b2(m2_el_fnarg_p fnarg)
     m2_message_fn2(fnarg);
 }
 
-M2_LABELPTR(m2_message_el_label, "W64f4", &m2_message_text);
+M2_LABELPTR(m2_message_el_label, "W64f8", &m2_message_text);
 M2_BUTTONPTR(m2_message_el_b1, NULL, &m2_message_button1, m2_fn_message_b1);
 M2_LIST(m2_message_list) = {&m2_message_el_label, &m2_message_el_b1 };
 M2_VLIST(m2_message_el_vlist, NULL, m2_message_list);

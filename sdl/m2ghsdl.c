@@ -437,7 +437,18 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
       m2_sdlgfx_box(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      m2_sdlgfx_text(arg->x, arg->y, arg->font, arg->s);
+      {
+      	uint8_t x = arg->x;
+	if ( (arg->font & 8) != 0 )
+	  if ( arg->w != 0 )
+	  {
+	    x = arg->w;
+	    x -= m2_sdlgfx_get_text_width(arg->s, arg->font);
+	    x >>= 1;
+	    x += arg->x;
+	  }
+	m2_sdlgfx_text(x, arg->y, arg->font, arg->s);
+      }
       break;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
       m2_sdlgfx_normal_focus(arg->x, arg->y, arg->w, arg->h);
