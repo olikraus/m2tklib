@@ -1,8 +1,8 @@
 /*
 
-  m2ghlcbase.cpp
+  m2ghlc.cpp
   
-  Incomplete Base Graphics Handler for the LiquidCrystal library from the Arduino Environment
+  Graphics Handler for the LiquidCrystal library from the Arduino Environment
 
   m2tklib = Mini Interative Interface Toolkit Library
   
