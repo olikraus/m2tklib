@@ -52,6 +52,7 @@ static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
 
 static void m2_nav_user_down_first(m2_nav_p nav)
 {
+  m2_nav_first(nav);
   for(;;)
   {
     if ( m2_nav_get_list_len(nav) == 0 )
@@ -84,25 +85,22 @@ static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
 uint8_t m2_nav_user_first(m2_nav_p nav)
 {
   m2_nav_user_down_first(nav);
-  if ( m2_nav_is_read_only(nav) != 0 )
-    return m2_nav_user_next(nav);
+  while ( m2_nav_is_read_only(nav) != 0 )
+  {
+    if ( m2_nav_user_next_sub(nav) == 0 )
+      return 0;
+  }
   return 1;
 }
 
 uint8_t m2_nav_user_next(m2_nav_p nav)
 {
-  uint8_t cnt = 255;
   for(;;)
   {
     if ( m2_nav_user_next_sub(nav) == 0 )
       return m2_nav_user_first(nav);
     if ( m2_nav_is_read_only(nav) == 0 )
       break;
-    /* this is an emergency exit. it means that there are only nonselectable fields here */
-    /* usually this should never happen */
-    if ( cnt == 0 )
-      return 0;
-    cnt--;
   }
   return 1;
 }

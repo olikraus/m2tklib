@@ -870,4 +870,6 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> ERLEDIGT 18.06.2011
     * f8 für SDL handler übernehmen
 	--> ERLEDIGT 19.06.2011
-    
+    * HelloWorld example geht nicht mehr
+	--> ERLEDIGT 22.06.2011
+      

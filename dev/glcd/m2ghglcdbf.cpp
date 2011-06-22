@@ -23,9 +23,13 @@
 
 #include <string.h>
 #include "m2.h"
+
+#ifdef AAA
+
 #include <glcd.h>
 #include "fonts/Arial14.h"         
 #include "fonts/SystemFont5x7.h"
+
 
 uint8_t m2_gh_glcd_y(uint8_t y)
 {
@@ -58,17 +62,18 @@ void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   h--;
   GLCD.InvertRect(x0, y0, w, h);
 }
+#endif
 
 extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
 {
+  return 0;
+#ifdef AAA
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
-      GLCD.Init(NON_INVERTED);   // initialise the library, non inverted writes pixels onto a clear screen
-      GLCD.ClearScreen();  
       break;
     case M2_GFX_MSG_START:
-      GLCD.ClearScreen();  
+      //GLCD.ClearScreen();  
       break;
     case M2_GFX_MSG_END:
       break;
@@ -99,39 +104,72 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       m2_gh_glcd_draw_xorbox(arg->x, arg->y, arg->w, arg->h/2);
       return 0;
     case M2_GFX_MSG_DRAW_ICON:
-      /* todo */
-      m2_gh_lc_set_cursor(arg->x, arg->y);
+      m2_gh_glcd_set_font(arg->font);
+      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y));
       if ( arg->icon == M2_ICON_TOGGLE_ACTIVE || arg->icon == M2_ICON_RADIO_ACTIVE )
-	m2_lc_ptr->print("\001");
+	GLCD.Puts("+");
       else
-	m2_lc_ptr->print("\002");
+	GLCD.Puts("-");
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
-      /* todo */
-      return strlen(arg->s);
+      m2_gh_glcd_set_font(arg->font);
+      return GLCD.StringWidth(arg->s);
     case M2_GFX_MSG_GET_ICON_WIDTH:
-      /* todo */
+      m2_gh_glcd_set_font(arg->font);
+      return GLCD.CharWidth('m');
     case M2_GFX_MSG_GET_ICON_HEIGHT:
-      /* todo */
-    
+      if ( (arg->font & 1) == 0 )
+	return 8;
+      return 16;    
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      return GLCD.CharWidth("m");
+      m2_gh_glcd_set_font(arg->font);
+      return GLCD.CharWidth('m');
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
       if ( (arg->font & 1) == 0 )
-	return 8
+	return 8;
       return 16;
-      
-      
-          /* todo */
-  
+    case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
+      if ( (arg->font & 4) != 0 )
+	return 2;
+      return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      return 2;
+      if ( (arg->font & 4) != 0 )
+	return 2;
+      return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      return 1;
+      if ( (arg->font & 4) != 0 )
+	return 1;
+      return 0;
+    case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
+      if ( (arg->font & 4) != 0 )
+	return 1;
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET:
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET:
+      return 0;
+      
+    case M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT:
+      return 0;
+    case M2_GFX_MSG_GET_READONLY_BORDER_WIDTH:
+      return 0;
+    case M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET:
+      return 0;
+    case M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET:
+      return 0;
+    case M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT:
+      return 0;
+    case M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH:
+      return 0;
     case M2_GFX_MSG_GET_DISPLAY_WIDTH:
-      return m2_lc_cols;
+      return GLCD.Width;
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
-      return m2_lc_rows;
+      return GLCD.Height;
   }
   return m2_gh_dummy(arg);
+#endif 
 }

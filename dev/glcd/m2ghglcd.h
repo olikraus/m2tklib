@@ -24,17 +24,20 @@
 #ifndef _M2GHGLCD_H
 #define _M2GHGLCD_H
 
-#include <glcd.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* specific 16x4 handler with fixed pin setup */
-uint8_t m2_gh_lc_16x4(m2_gfx_arg_p  arg);
-
-/* more flexible handler, but requires a call to m2_SetLiquidCrystal() */
-uint8_t m2_gh_lc(m2_gfx_arg_p  arg);
+/*  
+  a simple glcd graphics handler
+  fonts are fixed and predefined
+    f0: system5x7
+    f1: arial14
+    f4: system5x7 with frame
+    f5: arial14 with frame
+*/
+uint8_t m2_gh_glcd_bf(m2_gfx_arg_p arg);
   
 #ifdef __cplusplus
 }
