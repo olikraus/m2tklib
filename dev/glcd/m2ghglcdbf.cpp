@@ -72,19 +72,13 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       m2_gh_glcd_draw_xorbox(arg->x, arg->y, arg->w, arg->h/2);
       return 0;
     case M2_GFX_MSG_DRAW_ICON:
-      m2_gh_glcd_set_font(arg->font);
-      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y));
-      if ( arg->icon == M2_ICON_TOGGLE_ACTIVE || arg->icon == M2_ICON_RADIO_ACTIVE )
-	GLCD.Puts("+");
-      else
-	GLCD.Puts("-");
+      m2_gh_glcd_draw_icon(arg->x,arg->y+m2_gh_glcd_get_font_corrcetion(arg), 
+	  m2_gh_glcd_get_font_height(arg), m2_gh_glcd_get_font_height(arg), arg->icon);
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
       m2_gh_glcd_set_font(arg->font);
       return GLCD.StringWidth(arg->s);
     case M2_GFX_MSG_GET_ICON_WIDTH:
-      m2_gh_glcd_set_font(arg->font);
-      return GLCD.CharWidth('m');
     case M2_GFX_MSG_GET_ICON_HEIGHT:
       return m2_gh_glcd_get_font_height(arg);
     case M2_GFX_MSG_GET_CHAR_WIDTH:

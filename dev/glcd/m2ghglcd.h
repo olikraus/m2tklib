@@ -38,6 +38,8 @@ void m2_gh_glcd_set_font(uint8_t font);
 void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_gh_glcd_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+void m2_gh_glcd_draw_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon);
+void m2_gh_glcd_draw_big_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon);
 
   
 /*  

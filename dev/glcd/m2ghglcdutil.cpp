@@ -86,3 +86,52 @@ extern "C" void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_
   y0 +=h;
   GLCD.InvertRect(x0, m2_gh_glcd_y(y0), w, h);
 }
+
+/*
+#define M2_ICON_TOGGLE_ACTIVE 1
+#define M2_ICON_TOGGLE_INACTIVE 2 
+#define M2_ICON_RADIO_ACTIVE 3
+#define M2_ICON_RADIO_INACTIVE 4
+struct _m2_gfx_arg
+{
+  uint8_t msg;
+  uint8_t x;
+  uint8_t y;
+  uint8_t w;
+  uint8_t h;
+  uint8_t font;
+  uint8_t icon;
+  const char *s;
+};
+*/
+
+/* y0 is in m2 coordinate system, (x0,y0) = (0,0) = lower left edge  */
+extern "C" void m2_gh_glcd_draw_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon)
+{
+  x0++;
+  y0++;
+  w-=2;
+  h-=2;
+  m2_gh_glcd_draw_frame(x0, y0, w, h);
+  if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_RADIO_ACTIVE )
+  {
+    x0+=2;
+    y0+=2;
+    w-=4;
+    h-=4;
+    m2_gh_glcd_draw_xorbox(x0, y0, w, h);
+  }
+}
+
+extern "C" void m2_gh_glcd_draw_big_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon)
+{
+  m2_gh_glcd_draw_frame(x0, y0, w, h);
+  if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_RADIO_ACTIVE )
+  {
+    x0+=2;
+    y0+=2;
+    w-=4;
+    h-=4;
+    m2_gh_glcd_draw_xorbox(x0, y0, w, h);
+  }
+}
