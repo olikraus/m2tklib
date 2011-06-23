@@ -70,6 +70,14 @@ extern "C" void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t
   GLCD.DrawRect(x0, m2_gh_glcd_y(y0), w, h);
 }
 
+extern "C" void m2_gh_glcd_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
+{  
+  GLCD.DrawHLine(x0+1, m2_gh_glcd_y(y0), w-2);
+  GLCD.DrawVLine(x0+w-1, m2_gh_glcd_y(y0)-h+1, h-1);
+  m2_gh_glcd_draw_frame(x0, y0+1, w-1, h);
+}
+
+
 /* y0 is in m2 coordinate system, (x0,y0) = (0,0) = lower left edge  */
 extern "C" void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {

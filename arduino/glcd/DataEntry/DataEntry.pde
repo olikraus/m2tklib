@@ -47,7 +47,7 @@ M2_LABEL(el_label2, NULL, "U32:");
 M2_U32NUM(el_2, "c5", &u32num);
 
 M2_LABEL(el_label3, NULL, "");
-M2_U32NUM(el_3, "a1c5", &u32num);
+M2_U32NUM(el_3, "a1c5f0", &u32num);
 
 M2_BUTTON(el_zero, "f4", " zero ", fn_zero);
 
@@ -63,7 +63,7 @@ M2_GRIDLIST(el_de_menu, "c2", de_list);
 
 
 
-M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_glcd_bf);
+M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_glcd_ffs);
 
 
 void fn_zero(m2_el_fnarg_p fnarg) {

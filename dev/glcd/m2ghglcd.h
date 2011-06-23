@@ -36,6 +36,7 @@ uint8_t m2_gh_glcd_get_font_height(m2_gfx_arg_p  arg);
 uint8_t m2_gh_glcd_get_font_corrcetion(m2_gfx_arg_p  arg);
 void m2_gh_glcd_set_font(uint8_t font);
 void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+void m2_gh_glcd_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 
   
@@ -48,6 +49,7 @@ void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
     f5: arial14 with frame
 */
 uint8_t m2_gh_glcd_bf(m2_gfx_arg_p arg);
+uint8_t m2_gh_glcd_ffs(m2_gfx_arg_p arg);
   
 #ifdef __cplusplus
 }
