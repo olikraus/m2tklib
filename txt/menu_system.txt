@@ -863,6 +863,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * 3 (4)-Button Handler mit Select, Next und Data Up (sowie ggf ein Exit Button)
     * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
     * M2_COMBO dokumentieren
+	--> ERLEDIGT 22.06.2011
     * Kann man irgendwie beim VList/Hlist center angeben? ... leider nicht, aber man könnte den code von align übernehmen.
     * DFS successor neu programmieren, das klappt mit dem a1 nicht so recht.
 	--> ERLEDIGT 18.06.2011
@@ -872,4 +873,13 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> ERLEDIGT 19.06.2011
     * HelloWorld example geht nicht mehr
 	--> ERLEDIGT 22.06.2011
+    * M2_U8NUM dokumentieren
+	--> ERLEDIGT 22.06.2011
+    * Die neuen nav_user_next routinen funktionieren mit dem data entry nicht mehr korrekt zusammen.
+	nav_user_next() sollte eigentlich innerhalb der ebene cyclen. --> 
+	Wenn M2_EL_MSG_IS_AUTO_SKIP 0 zurück gibt, dann darf man nicht nach oben ausbrechen.
+	Ausprobieren: DataEntry, erstes U32 eingabefeld
+	--> ERLEDIGT 23.06.2011
+    * Noch einen graphic handler für das GLCD schreiben
+    
       

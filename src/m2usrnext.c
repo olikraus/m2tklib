@@ -52,7 +52,6 @@ static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
 
 static void m2_nav_user_down_first(m2_nav_p nav)
 {
-  m2_nav_first(nav);
   for(;;)
   {
     if ( m2_nav_get_list_len(nav) == 0 )
@@ -74,16 +73,17 @@ static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
     }
     else
     {
-      if ( m2_nav_up(nav) == 0 )
-      {
+      if ( m2_nav_is_parent_auto_skip(nav) == 0 )
 	return 0;
-      }
+      if ( m2_nav_up(nav) == 0 )
+	return 0;
     }
   }
 }
 
 uint8_t m2_nav_user_first(m2_nav_p nav)
 {
+  m2_nav_first(nav);
   m2_nav_user_down_first(nav);
   while ( m2_nav_is_read_only(nav) != 0 )
   {

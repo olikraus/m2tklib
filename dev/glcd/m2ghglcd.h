@@ -29,6 +29,16 @@
 extern "C" {
 #endif
 
+extern uint8_t m2_is_glcd_init;
+ 
+uint8_t m2_gh_glcd_y(uint8_t y);
+uint8_t m2_gh_glcd_get_font_height(m2_gfx_arg_p  arg);
+uint8_t m2_gh_glcd_get_font_corrcetion(m2_gfx_arg_p  arg);
+void m2_gh_glcd_set_font(uint8_t font);
+void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+
+  
 /*  
   a simple glcd graphics handler
   fonts are fixed and predefined

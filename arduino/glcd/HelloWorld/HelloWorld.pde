@@ -19,39 +19,22 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-  SCL (SPI Clock)   Pin 13
-  SI (MOSI)         Pin 11
-  CS (Chip Select)  Pin 10
-  MISO (Pin 12) is not used, but can not be reused as generic I/O
-  
 */
 
 #include <glcd.h>
-//#include "M2tk.h"
-#include "m2.h"
+#include "M2tk.h"
 #include "m2ghglcd.h"
 
 
-extern "C" uint8_t m2_gh_glcd_bf_yyy(m2_gfx_arg_p  arg)
-{
-  return 0;
-}
-
-
-M2_LABEL(hello_world_label, NULL, "Hello World");
-//M2tk m2(&hello_world_label, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_bf);
-//M2tk m2(&hello_world_label, NULL, NULL, m2_gh_glcd_bf_yyy);
-
+M2_LABEL(hello_world_label, "f1", "Hello World");
+M2tk m2(&hello_world_label, NULL, NULL, m2_gh_glcd_bf);
 
 void setup() {
-  //m2.draw();
-  m2_Init(&hello_world_label, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_bf);
-      GLCD.Init(NON_INVERTED);   // initialise the library, non inverted writes pixels onto a clear screen
-      GLCD.ClearScreen();  
-      GLCD.FillRect(0, 0, 64, 61, BLACK); // rectangle in left side of screen
 }
 
 void loop() {
+  m2.draw();
+  delay(500);
 }
 
 

@@ -23,63 +23,31 @@
 
 #include <string.h>
 #include "m2.h"
-
-#ifdef AAA
-
 #include <glcd.h>
-#include "fonts/Arial14.h"         
-#include "fonts/SystemFont5x7.h"
+#include "m2ghglcd.h"
 
-
-uint8_t m2_gh_glcd_y(uint8_t y)
-{
-  uint8_t val;
-  val = GLCD.Height;
-  val--;
-  val -= y;
-  return val;
-}
-
-void m2_gh_glcd_set_font(uint8_t font)
-{
-  font &= 1;
-  if ( font == 0 )
-      GLCD.SelectFont(System5x7); 
-  else 
-      GLCD.SelectFont(Arial14); 
-}
-
-void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
-{
-  w--;
-  h--;
-  GLCD.DrawRect(x0, y0, w, h);
-}
-
-void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
-{
-  w--;
-  h--;
-  GLCD.InvertRect(x0, y0, w, h);
-}
-#endif
 
 extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
 {
-  return 0;
-#ifdef AAA
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
+      m2_is_glcd_init=0;
       break;
     case M2_GFX_MSG_START:
-      //GLCD.ClearScreen();  
+      if ( m2_is_glcd_init == 0 )
+      {
+	GLCD.Init(NON_INVERTED);   // initialise the library, non inverted writes pixels onto a clear screen
+	m2_is_glcd_init = 1;
+      }
+      GLCD.ClearScreen();  
+      //GLCD.FillRect(0, 0, 64, 61, BLACK); 
       break;
     case M2_GFX_MSG_END:
       break;
     case M2_GFX_MSG_DRAW_TEXT:
       m2_gh_glcd_set_font(arg->font);
-      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y));
+      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_font_height(arg)+m2_gh_glcd_get_font_corrcetion(arg));
       GLCD.Puts(arg->s);
       return 0;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
@@ -94,10 +62,10 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       break;
     
     case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
-      GLCD.DrawHLine(arg->x, arg->y, arg->w-1);
+      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w-1);
       break;
     case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
-      GLCD.DrawHLine(arg->x, arg->y, arg->w-1);
+      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w-1);
       break;
     
     case M2_GFX_MSG_DRAW_GO_UP:
@@ -118,16 +86,12 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       m2_gh_glcd_set_font(arg->font);
       return GLCD.CharWidth('m');
     case M2_GFX_MSG_GET_ICON_HEIGHT:
-      if ( (arg->font & 1) == 0 )
-	return 8;
-      return 16;    
+      return m2_gh_glcd_get_font_height(arg);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
       m2_gh_glcd_set_font(arg->font);
       return GLCD.CharWidth('m');
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
-      if ( (arg->font & 1) == 0 )
-	return 8;
-      return 16;
+      return m2_gh_glcd_get_font_height(arg);
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
       if ( (arg->font & 4) != 0 )
 	return 2;
@@ -169,7 +133,8 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       return GLCD.Width;
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
       return GLCD.Height;
+    case M2_GFX_MSG_IS_FRAME_DRAW_AT_END:
+      return 1;
   }
   return m2_gh_dummy(arg);
-#endif 
 }

@@ -49,7 +49,6 @@ static uint8_t m2_nav_user_prev_sub(m2_nav_p nav)
 
 static void m2_nav_user_down_last(m2_nav_p nav)
 {
-  m2_nav_last(nav);
   for(;;)
   {
     if ( m2_nav_get_list_len(nav) == 0 )
@@ -72,16 +71,17 @@ static uint8_t m2_nav_user_prev_sub(m2_nav_p nav)
     }
     else
     {
-      if ( m2_nav_up(nav) == 0 )
-      {
+      if ( m2_nav_is_parent_auto_skip(nav) == 0 )
 	return 0;
-      }
+      if ( m2_nav_up(nav) == 0 )
+	return 0;
     }
   }
 }
 
 static uint8_t m2_nav_user_last(m2_nav_p nav)
 {
+  m2_nav_last(nav);
   m2_nav_user_down_last(nav);
   while ( m2_nav_is_read_only(nav) != 0 )
   {
