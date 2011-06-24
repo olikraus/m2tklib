@@ -33,7 +33,6 @@
 #include "m2ghdogm.h"
 
 void fn_zero(m2_el_fnarg_p fnarg);
-M2_EXTERN_VLIST(el_text_menu);
 extern M2tk m2;
 
 #ifdef DOGS102_HW

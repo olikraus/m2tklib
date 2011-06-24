@@ -1,8 +1,8 @@
 /*
 
-  U32.pde
+  DataEntry.pde
   
-  LiquidCrystal 16x2 example
+  LiquidCrystal 16x4 example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -31,21 +31,33 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 uint8_t uiKeySelectPin = 10;
 uint8_t uiKeyNextPin = 9;
 
-uint32_t number = 1234;
+uint8_t u8num = 0;
+uint32_t u32num = 0;
 
-void fn_ok(m2_el_fnarg_p fnarg) {
-  /* do something with the number */
+void fn_zero(m2_el_fnarg_p fnarg) {
+  u8num = 0;
+  u32num = 0;
 }
 
-M2_LABEL(el_label, NULL, "Num: ");
-M2_U32NUM(el_text, "a1c4", &number);
-M2_BUTTON(el_ok, "", "ok", fn_ok);
-M2_LIST(list) = { &el_label, &el_text, &el_ok };
-M2_HLIST(list_element, NULL, list);
-M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_lc);
+
+M2_LABEL(el_label1, NULL, "U8:");
+M2_U8NUM(el_1, NULL, 0, 255, &u8num);
+M2_LABEL(el_label2, NULL, "U32:");
+M2_U32NUM(el_2, "c5", &u32num);
+M2_LABEL(el_label3, NULL, "");
+M2_U32NUM(el_3, "a1c5", &u32num);
+M2_BUTTON(el_zero, "f4", " zero ", fn_zero);
+M2_LIST(de_list) = { 
+    &el_label1, &el_1, 
+    &el_label2, &el_2,  
+    &el_label3, &el_3, 
+    &el_zero, 
+};
+M2_GRIDLIST(el_de_menu, "c2", de_list);
+M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_2bs, m2_gh_lc);
 
 void setup() {
-  m2_SetLiquidCrystal(&lcd, 16, 2);
+  m2_SetLiquidCrystal(&lcd, 16, 4);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
 }
