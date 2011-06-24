@@ -1,6 +1,8 @@
 /*
 
   DataEntry.pde
+  
+  DOGM128 Library Example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -32,7 +34,6 @@
 
 void fn_zero(m2_el_fnarg_p fnarg);
 M2_EXTERN_VLIST(el_text_menu);
-
 extern M2tk m2;
 
 #ifdef DOGS102_HW
@@ -52,23 +53,16 @@ uint8_t uiKeyExitPin = 8; // ????
 int a0Pin = 9;
 Dogm dogm(a0Pin);
 
-
-/*=============================*/
-
 uint8_t u8num = 0;
 uint32_t u32num = 0;
 
 M2_LABEL(el_label1, NULL, "U8:");
 M2_U8NUM(el_1, NULL, 0, 255, &u8num);
-
 M2_LABEL(el_label2, NULL, "U32:");
 M2_U32NUM(el_2, "c5", &u32num);
-
 M2_LABEL(el_label3, NULL, "");
 M2_U32NUM(el_3, "a1c5", &u32num);
-
 M2_BUTTON(el_zero, "f4", " zero ", fn_zero);
-
 M2_LIST(de_list) = { 
     &el_label1, &el_1, 
     &el_label2, &el_2,  
@@ -76,15 +70,7 @@ M2_LIST(de_list) = {
     &el_zero, 
 };
 M2_GRIDLIST(el_de_menu, "c2", de_list);
-
-/*=============================*/
-
-
-
-//M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_dogm_fbs);
-//M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_dogm_ffs);
 M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_dogm_bf);
-
 
 void fn_zero(m2_el_fnarg_p fnarg) {
   u8num = 0;
@@ -96,18 +82,15 @@ void setup() {
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);
-  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);
-  
+  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
 }
 
 void loop() {
-  m2.checkKey();
-  m2.checkKey();
+  m2.checkKey(); 
   if ( m2.handleKey() ) {
     dogm.start();
     do{
-      m2.checkKey();
-      m2.checkKey();
+      m2.checkKey(); 
       m2.draw();
     } while( dogm.next() );
   }

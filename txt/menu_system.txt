@@ -859,8 +859,8 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * Doku für die Graphics Handler schreiben
 	--> m2_manual.txt	
     * create release für DOGM128 anpassen (examples sind eine ebene tiefer gerutscht)
-    * Tutorial schreiben
     * 3 (4)-Button Handler mit Select, Next und Data Up (sowie ggf ein Exit Button)
+      --> zurückgestellt
     * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
     * M2_COMBO dokumentieren
 	--> ERLEDIGT 22.06.2011
@@ -881,5 +881,23 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	Ausprobieren: DataEntry, erstes U32 eingabefeld
 	--> ERLEDIGT 23.06.2011
     * Noch einen graphic handler für das GLCD schreiben
-    
+	--> ERLEDIGT 23.06.2011
+    * processing handler beschreiben
+	--> ERLEDIGT 24.06.2011
+    * U32-Example nach glcd 
+    * DataEntry-Example nach LiquidCrystal 
+    * Tutorial schreiben
+	status: tutorial 1&2 für dogm128 fertig. tutorial 3 ist unterwegs.
+    * Screenshots
+	DataEntry Example 3x HW --> Tutorials
+	  dogm/data_entry.jpg						--> Tutorials
+	  glcd/data_entry.jpg + glcd/data_entry._bf.jpg		--> Tutorials, ghref
+	  lcd/data_entry.jpg							--> Tutorials
+	  glcd/data_entry._ffs.jpg						--> ghref
+	U32 Example
+	  lcd/U32.jpg								--> fnref
+	  dogm/U32.jpg							--> fnref
+	  glcd/U32.jpg								--> fnref
+      
+	  
       
