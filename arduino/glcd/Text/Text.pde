@@ -2,7 +2,7 @@
 
   Text.pde
   
-  DOGM128 Library Example
+  GLCD Example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -21,31 +21,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-  SCL (SPI Clock)   Pin 13
-  SI (MOSI)         Pin 11
-  CS (Chip Select)  Pin 10
-  MISO (Pin 12) is not used, but can not be reused as generic I/O
-  
 */
 
-#include "Dogm.h"
 #include "M2tk.h"
-#include "m2ghdogm.h"
+#include "m2ghglcd.h"
 
-#ifdef DOGS102_HW
-// DOGS102 shield 
-uint8_t uiKeyUpPin = 5;
-uint8_t uiKeyDownPin = 3;
-uint8_t uiKeySelectPin = 4;
-#else
-// DOGM132, DOGM128 and DOGXL160 shield
-uint8_t uiKeyUpPin = 7;
-uint8_t uiKeyDownPin = 3;
-uint8_t uiKeySelectPin = 2;
-#endif
-
-int a0Pin = 9;
-Dogm dogm(a0Pin);
+uint8_t uiKeySelectPin = 3;
+uint8_t uiKeyDownPin = 2;
+uint8_t uiKeyUpPin = 1;
+uint8_t uiKeyExitPin = 0;
 
 #define TEXT_LEN 12
 char text[] = "abcdefghijkl";
@@ -59,26 +43,18 @@ M2_TEXT(el_text, NULL, text, TEXT_LEN);
 M2_BUTTON(el_ok, "", " ok ", fn_text_ok);
 M2_LIST(list) = { &el_label, &el_text, &el_ok };
 M2_VLIST(list_element, NULL, list);
-M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_dogm_fbs);
+M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_ffs);
 
 void setup() {
-  m2.setFont(0, font_6x12);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
+  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
+  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
 }
 
 void loop() {
   m2.checkKey();
   if ( m2.handleKey() ) {
-    dogm.start();
-    do{
-      m2.checkKey();
-      // dog_DrawStr(0, 50, font_4x6, dog_itoa(m2_global_object.debounce_state));
-      // dog_DrawStr(10, 50, font_4x6, dog_itoa(m2_global_object.detected_key_code));
-      // dog_DrawStr(20, 50, font_4x6, dog_itoa(m2_global_object.detected_key_timer));
       m2.draw();
-    } while( dogm.next() );
   }
 }
-
-
