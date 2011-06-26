@@ -909,5 +909,6 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	http://wiki.m2tklib.googlecode.com/hg/pic/dogxl106_example_top_menu.gif
 	--> ERLEDIGT 25.06.2011
     * LABELPTR und BUTTONPTR im wiki dokumentieren
+    * NULL element einführen: m2_null_element (fnfmt), wenn das gesetzt ist, dann die queue nicht leeren.
     
       

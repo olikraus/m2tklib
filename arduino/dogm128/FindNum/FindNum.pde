@@ -120,18 +120,18 @@ void setup() {
 void set_next_state(void) {
   switch(state) {
     case GEN_RAND: r = rand(); state = SETUP_NUM_INPUT; break;
-    case SETUP_NUM_INPUT: m2.SetRoot(&top_el_num_input); state = WAIT_NUM_INPUT; break;
+    case SETUP_NUM_INPUT: m2.setRoot(&top_el_num_input); state = WAIT_NUM_INPUT; break;
     case WAIT_NUM_INPUT: break; 	/* state is changed in the fn_num_input_ok() callback procedure */
     case CHK_NUM:
       if ( u < r ) state = SETUP_LOWER;
-      if ( u > r ) state = SETUP_HIGHER;
-      state = SETUP_SUCCESS;
+      else if ( u > r ) state = SETUP_HIGHER;
+      else state = SETUP_SUCCESS;
       break;
-    case SETUP_LOWER: m2.SetRoot(&top_el_lower); state = WAIT_LOWER; break;
+    case SETUP_LOWER: m2.setRoot(&top_el_lower); state = WAIT_LOWER; break;
     case WAIT_LOWER: break; /* state is changed in the fn_lower_ok() callback procedure */
-    case SETUP_HIGHER: m2.SetRoot(&top_el_higher); state = WAIT_HIGHER; break;
+    case SETUP_HIGHER: m2.setRoot(&top_el_higher); state = WAIT_HIGHER; break;
     case WAIT_HIGHER: break; /* state is changed in the fn_higher_ok() callback procedure */
-    case SETUP_SUCCESS: m2.SetRoot(&top_el_success); state = WAIT_SUCCESS; break;
+    case SETUP_SUCCESS: m2.setRoot(&top_el_success); state = WAIT_SUCCESS; break;
     case WAIT_SUCCESS: break; /* state is changed in the fn_success_ok() callback procedure */
     default: state = GEN_RAND; break;
   }
