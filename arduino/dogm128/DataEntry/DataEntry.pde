@@ -69,7 +69,7 @@ M2_LIST(de_list) = {
     &el_zero, 
 };
 M2_GRIDLIST(el_de_menu, "c2", de_list);
-M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_dogm_bf);
+M2tk m2(&el_de_menu, m2_es_arduino, m2_eh_4bd, m2_gh_dogm_ffs);
 
 void fn_zero(m2_el_fnarg_p fnarg) {
   u8num = 0;

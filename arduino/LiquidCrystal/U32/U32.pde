@@ -38,9 +38,9 @@ void fn_ok(m2_el_fnarg_p fnarg) {
 }
 
 M2_LABEL(el_label, NULL, "Num: ");
-M2_U32NUM(el_text, "a1c4", &number);
+M2_U32NUM(el_num, "a1c4", &number);
 M2_BUTTON(el_ok, "", "ok", fn_ok);
-M2_LIST(list) = { &el_label, &el_text, &el_ok };
+M2_LIST(list) = { &el_label, &el_num, &el_ok };
 M2_HLIST(list_element, NULL, list);
 M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_lc);
 

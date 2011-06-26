@@ -37,9 +37,18 @@
 #	mini			Arduino Mini
 #	lilypad328	LilyPad Arduino w/ ATmega328  
 BOARD:=uno
+
+# additional (comma separated) defines 
+# -DDOGM128_HW		board is connected to DOGM128 display
+# -DDOGM132_HW		board is connected to DOGM132 display
+# -DDOGS102_HW		board is connected to DOGS102 display
+# -DDOG_REVERSE		180 degree rotation
+# -DDOG_DOUBLE_MEMORY
+DEFS=-DDOGS102_HW
   
 M2TKLIB_PATH:=/home/kraus/src/m2/m2tklib/src/
-M2DEV_PATH:=/home/kraus/src/m2/m2tklib/dev/LiquidCrystal/
+M2DEV_PATH:=/home/kraus/src/m2/m2tklib/dev/dogm128/
+#DOGM128_PATH:=/home/kraus/src/arduino/dogm128/hg/libraries/Dogm/utility/
 
 # The location where the avr tools (e.g. avr-gcc) are located. Requires a '/' at the end.
 # Can be empty if all tools are accessable through the search path
@@ -54,12 +63,13 @@ AVRDUDE_PATH:=
 # The unix device where we can reach the arduino board
 # Uno: /dev/ttyACM0
 # Duemilanove: /dev/ttyUSB0
-AVRDUDE_PORT:=/dev/ttyACM1
+AVRDUDE_PORT:=/dev/ttyACM0
 
 # List of all libaries which should be included.
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/LiquidCrystal/
+#EXTRA_DIRS+=$(ARDUINO_PATH)libraries/Dogm/
+EXTRA_DIRS+=/home/kraus/src/arduino/dogm128/hg/libraries/Dogm/
 EXTRA_DIRS+=/home/kraus/src/m2/m2tklib/dev/arduino/
-EXTRA_DIRS+=$(M2DEV_PATH)
 EXTRA_DIRS+=/home/kraus/src/m2/m2tklib/cpp/
 
 #=== fetch parameter from boards.txt processor parameter ===
