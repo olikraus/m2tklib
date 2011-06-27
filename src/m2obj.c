@@ -110,6 +110,9 @@ uint8_t m2_HandleKeyM2(m2_p m2)
   uint8_t is_redraw_required = 0;
   uint8_t key;
   
+  if ( m2_nav_check_and_assign_new_root(m2_get_nav(m2)) != 0 )
+    return 1;	/* break and let redraw */
+  
   if ( m2_GetRootM2(m2) == &m2_null_element )
     return 0;
   

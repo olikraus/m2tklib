@@ -66,7 +66,7 @@ uint8_t u;     	/* the number, which was entered by the user */
 
 void fn_num_input_ok(m2_el_fnarg_p fnarg) {
   state = CHK_NUM;
-  m2.setRoot(&el_num_input_u8);
+  m2.clear();
 }
 
 M2_LABEL(el_num_input_label, NULL, "Num: ");
@@ -79,7 +79,7 @@ M2_HLIST(top_el_num_input, NULL, list_num_input);
 
 void fn_lower_ok(m2_el_fnarg_p fnarg) {
   state = SETUP_NUM_INPUT;
-  m2.setRoot(&el_num_input_u8);
+  m2.clear();
 }
 
 M2_LABEL(el_lower_label, NULL, "Number too low");
@@ -91,7 +91,7 @@ M2_VLIST(top_el_lower, NULL, list_lower);
 
 void fn_higher_ok(m2_el_fnarg_p fnarg) {
   state = SETUP_NUM_INPUT;
-  m2.setRoot(&el_num_input_u8);
+  m2.clear();
 }
 
 M2_LABEL(el_higher_label, NULL, "Number too high");
@@ -103,7 +103,7 @@ M2_VLIST(top_el_higher, NULL, list_higher);
 
 void fn_success_ok(m2_el_fnarg_p fnarg) {
   state = GEN_RAND;
-  m2.setRoot(&el_num_input_u8);
+  m2.clear();
 }
 
 M2_LABEL(el_success_label, NULL, "Number found!");
@@ -147,7 +147,6 @@ void set_next_state(void) {
 /* ===== main loop ===== */
 
 void loop() {
-  
   m2.checkKey();
   if ( m2.handleKey() ) {
     dogm.start();
@@ -157,8 +156,7 @@ void loop() {
     } while( dogm.next() );
   }
   
-  set_next_state();
-  
+  set_next_state();  
 }
 
 
