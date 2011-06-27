@@ -84,6 +84,7 @@ void m2_SetGraphicsHandler(m2_gfx_fnptr gh)
 {
   m2_SetGraphicsHandlerM2(&m2_global_object, gh);
 }
+
 void m2_SetRoot(m2_rom_void_p element)
 {
   m2_SetRootM2(&m2_global_object, element);
@@ -94,3 +95,7 @@ m2_rom_void_p m2_GetRoot(void)
   return m2_GetRootM2(&m2_global_object);
 }
 
+void m2_Clear(void)
+{
+  m2_ClearM2(&m2_global_object);
+}

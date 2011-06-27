@@ -55,6 +55,9 @@ Dogm dogm(a0Pin);
 #define SETUP_SUCCESS 9
 #define WAIT_SUCCESS 10
 
+extern M2tk m2;
+M2_EXTERN_U8NUM(el_num_input_u8);
+
 uint8_t state; 	/* will contain the current state within the control flow diagram */ 
 uint8_t r;     	/* the generated random numer */ 
 uint8_t u;     	/* the number, which was entered by the user */ 
@@ -63,10 +66,11 @@ uint8_t u;     	/* the number, which was entered by the user */
 
 void fn_num_input_ok(m2_el_fnarg_p fnarg) {
   state = CHK_NUM;
+  m2.setRoot(&el_num_input_u8);
 }
 
 M2_LABEL(el_num_input_label, NULL, "Num: ");
-M2_U8NUM(el_num_input_u8, NULL, 0, 255, &u);
+M2_U8NUM(el_num_input_u8, "c2", 0, 15, &u);
 M2_BUTTON(el_num_input_ok, "", "ok", fn_num_input_ok);
 M2_LIST(list_num_input) = { &el_num_input_label, &el_num_input_u8, &el_num_input_ok };
 M2_HLIST(top_el_num_input, NULL, list_num_input);
@@ -75,34 +79,37 @@ M2_HLIST(top_el_num_input, NULL, list_num_input);
 
 void fn_lower_ok(m2_el_fnarg_p fnarg) {
   state = SETUP_NUM_INPUT;
+  m2.setRoot(&el_num_input_u8);
 }
 
 M2_LABEL(el_lower_label, NULL, "Number too low");
 M2_BUTTON(el_lower_ok, "", "ok", fn_lower_ok);
 M2_LIST(list_lower) = { &el_lower_label, &el_lower_ok };
-M2_HLIST(top_el_lower, NULL, list_lower);
+M2_VLIST(top_el_lower, NULL, list_lower);
 
 /* ===== HIGHER ===== */
 
 void fn_higher_ok(m2_el_fnarg_p fnarg) {
   state = SETUP_NUM_INPUT;
+  m2.setRoot(&el_num_input_u8);
 }
 
 M2_LABEL(el_higher_label, NULL, "Number too high");
 M2_BUTTON(el_higher_ok, "", "ok", fn_higher_ok);
 M2_LIST(list_higher) = { &el_higher_label, &el_higher_ok };
-M2_HLIST(top_el_higher, NULL, list_higher);
+M2_VLIST(top_el_higher, NULL, list_higher);
 
 /* ===== SUCCESS ===== */
 
 void fn_success_ok(m2_el_fnarg_p fnarg) {
   state = GEN_RAND;
+  m2.setRoot(&el_num_input_u8);
 }
 
 M2_LABEL(el_success_label, NULL, "Number found!");
 M2_BUTTON(el_success_ok, "", "ok", fn_success_ok);
 M2_LIST(list_success) = { &el_success_label, &el_success_ok };
-M2_HLIST(top_el_success, NULL, list_success);
+M2_VLIST(top_el_success, NULL, list_success);
 
 /* ===== setup m2tklib ===== */
 
@@ -119,7 +126,7 @@ void setup() {
 
 void set_next_state(void) {
   switch(state) {
-    case GEN_RAND: r = rand(); state = SETUP_NUM_INPUT; break;
+    case GEN_RAND: r = rand(); r&=15; state = SETUP_NUM_INPUT; break;
     case SETUP_NUM_INPUT: m2.setRoot(&top_el_num_input); state = WAIT_NUM_INPUT; break;
     case WAIT_NUM_INPUT: break; 	/* state is changed in the fn_num_input_ok() callback procedure */
     case CHK_NUM:

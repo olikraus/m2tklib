@@ -110,10 +110,17 @@ uint8_t m2_HandleKeyM2(m2_p m2)
   uint8_t is_redraw_required = 0;
   uint8_t key;
   
+  if ( m2_GetRootM2(m2) == &m2_null_element )
+    return 0;
+  
   for(;;)
   {
-    key = m2_GetKeyFromQueue(m2);
+    /* check if the root node has been changed */
+    if ( m2_nav_check_and_assign_new_root(m2_get_nav(m2)) != 0 )
+      return 1;	/* break and let redraw */
 
+    key = m2_GetKeyFromQueue(m2);
+    
     /* if there are no more keys, break out of the loop */
     if ( key == M2_KEY_NONE )
       break;
@@ -124,8 +131,6 @@ uint8_t m2_HandleKeyM2(m2_p m2)
     {
       /* handle the key */
       m2->eh(m2, key, 0);
-      /* check if the root node has been changed */
-      m2_nav_check_and_assign_new_root(m2_get_nav(m2));
     }
     
     is_redraw_required = 1;
@@ -150,3 +155,7 @@ m2_rom_void_p m2_GetRootM2(m2_p m2)
   return m2_get_nav(m2)->element_list[0];
 }
 
+void m2_ClearM2(m2_p m2)
+{
+  m2_SetRootM2(m2, NULL);
+}

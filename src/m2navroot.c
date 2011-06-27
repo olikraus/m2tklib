@@ -32,6 +32,8 @@
 
 void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element)
 {
+  if ( element == NULL )
+    element = &m2_null_element;
   nav->new_root_element = element;
 }
 

@@ -58,6 +58,9 @@ static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
 
 void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element)
 {
+  if ( element == NULL )
+    element = &m2_null_element;
+  
   nav->is_data_entry_active = 0;
   nav->element_list[0] = (m2_el_fnfmt_p)element;
   nav->pos[0] = 0;

@@ -862,6 +862,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * 3 (4)-Button Handler mit Select, Next und Data Up (sowie ggf ein Exit Button)
       --> zurückgestellt
     * setRootM2 --> wird danach das LCD refreshed? Wird dann nichts angezeigt. --> das wäre hilfreich
+	--> ERLEDIGT 27.06.2011, refresh erfolgt direkt in HandleKey
     * M2_COMBO dokumentieren
 	--> ERLEDIGT 22.06.2011
     * Kann man irgendwie beim VList/Hlist center angeben? ... leider nicht, aber man könnte den code von align übernehmen.
@@ -905,10 +906,12 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * Beheben:
       /home/kraus/src/m2/m2tklib/src/m2navinit.c: In Funktion »m2_nav_do_down_after_root_assignment«:
       /home/kraus/src/m2/m2tklib/src/m2navinit.c:40: Warnung: Implizite Deklaration der Funktion »m2_nav_user_first«
+	--> ERLEDIGT 27.06.2011
     * Aktuelle Bilder 315x165
 	http://wiki.m2tklib.googlecode.com/hg/pic/dogxl106_example_top_menu.gif
 	--> ERLEDIGT 25.06.2011
     * LABELPTR und BUTTONPTR im wiki dokumentieren
     * NULL element einführen: m2_null_element (fnfmt), wenn das gesetzt ist, dann die queue nicht leeren.
-    
+	--> ERLEDIGT 27.06.2011
+    * Jedes Tutorial sollte auf ein Beispiel verweisen
       

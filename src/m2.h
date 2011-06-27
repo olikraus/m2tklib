@@ -155,6 +155,7 @@ void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;	
 void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
 void m2_SetRootM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;								/* m2obj.c */
 m2_rom_void_p m2_GetRootM2(m2_p m2) M2_NOINLINE;										/* m2obj.c */
+void m2_ClearM2(m2_p m2);
 void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh);
 
 /* simplified interface */
@@ -168,6 +169,7 @@ void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetRoot(m2_rom_void_p element);
 m2_rom_void_p m2_GetRoot(void);
+void m2_Clear(void);
 void m2_SetGraphicsHandler(m2_gfx_fnptr gh);
 
 
@@ -176,7 +178,7 @@ void m2_MessageB2Fn(const char *text, const char *button1, m2_button_fnptr fn1, 
 
 
 extern uint8_t m2_is_frame_draw_at_end;									/* m2draw.c */
-
+extern m2_el_fnfmt_t m2_null_element M2_SECTION_PROGMEM;					/* m2null.c */
 
 /*==============================================================*/
 /* Arguments for m2_Init() */
@@ -715,6 +717,7 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 uint8_t m2_nav_user_up(m2_nav_p nav) M2_NOINLINE;						/* m2usrupdn.c */
 uint8_t m2_nav_user_down(m2_nav_p nav, uint8_t is_msg) M2_NOINLINE;		/* m2usrupdn.c */
 uint8_t m2_nav_user_prev(m2_nav_p nav) M2_NOINLINE;					/* m2usrprev.c */
+uint8_t m2_nav_user_first(m2_nav_p nav) M2_NOINLINE;						/* m2usrsnext.c */
 uint8_t m2_nav_user_next(m2_nav_p nav) M2_NOINLINE;					/* m2usrsnext.c */
 
 
