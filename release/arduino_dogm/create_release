@@ -3,6 +3,10 @@ mkdir libraries
 mkdir libraries/M2tklib
 mkdir libraries/M2tklib/examples
 mkdir libraries/M2tklib/examples/HelloWorld
+mkdir libraries/M2tklib/examples/Combo
+mkdir libraries/M2tklib/examples/DataEntry
+mkdir libraries/M2tklib/examples/FindNum
+mkdir libraries/M2tklib/examples/Radio
 mkdir libraries/M2tklib/utility
 cp ../../cpp/*.cpp ./libraries/M2tklib/.
 cp ../../cpp/*.h ./libraries/M2tklib/.
@@ -13,8 +17,16 @@ cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/dogm128/*.[hc] ./libraries/M2tklib/utility/.
 sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghdogm.h
 sed -i 's|dogm128.h|utility/dogm128.h|g' ./libraries/M2tklib/utility/m2ghdogm.h
-cp ../../arduino/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
+cp ../../arduino/dogm128/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
 sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
+cp ../../arduino/dogm128/Combo/*.pde ./libraries/M2tklib/examples/Combo/.
+sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/Combo/Combo.pde
+cp ../../arduino/dogm128/DataEntry/*.pde ./libraries/M2tklib/examples/DataEntry/.
+sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/DataEntry/DataEntry.pde
+cp ../../arduino/dogm128/FindNum/*.pde ./libraries/M2tklib/examples/FindNum/.
+sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/FindNum/FindNum.pde
+cp ../../arduino/dogm128/Radio/*.pde ./libraries/M2tklib/examples/Radio/.
+sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/Radio/Radio.pde
 cd libraries 
 zip -r ../m2tklib_dogm128.zip *
 cd ..
