@@ -886,6 +886,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * processing handler beschreiben
 	--> ERLEDIGT 24.06.2011
     * U32-Example nach glcd 
+	--> ERLEDIGT 28.06.2011
     * DataEntry-Example nach LiquidCrystal 
       hmm.. da sind noch bugs drin. mal den alten handler probieren?
       geht doch, war nur ein wackelkontakt.
@@ -893,6 +894,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * Tutorial schreiben
 	status: tutorial 1&2 für dogm128 fertig. tutorial 3 ist unterwegs.
     * dogm/DataEntry.pde --> aufräumen, anders strukturieren (ohne extern)
+	--> ERLEDIGT 28.06.2011
     * Screenshots
 	DataEntry Example 3x HW --> Tutorials
 	  dogm/data_entry.jpg						--> Tutorials
