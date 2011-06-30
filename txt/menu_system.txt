@@ -921,4 +921,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * FindNum portieren (GLCD, LiquidCrystal)
     * U32 Code: Namenskonvention beachten. Auch das Tutorial 2 ändern! ggf auf Namenskonvention verweisen.
 	--> ERLEDIGT 28.06.2011
+    * (Mouse) Cursor xy handling
+        Abfangen im graphics handler, koordinaten prüfen und focus verändern
+    * glcd/FindNum testen
 	
