@@ -27,6 +27,7 @@
 */
 
 #include <stdlib.h>
+#include <glcd.h>		// inform Arduino IDE that we will use GLCD library
 #include "M2tk.h"
 #include "m2ghglcd.h"
 

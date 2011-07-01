@@ -1,0 +1,39 @@
+rm -rf libraries
+mkdir libraries
+mkdir libraries/M2tklib
+mkdir libraries/M2tklib/examples
+mkdir libraries/M2tklib/examples/HelloWorld
+mkdir libraries/M2tklib/examples/Combo
+mkdir libraries/M2tklib/examples/DataEntry
+mkdir libraries/M2tklib/examples/FindNum
+mkdir libraries/M2tklib/examples/Radio
+mkdir libraries/M2tklib/examples/Text
+mkdir libraries/M2tklib/examples/U32
+mkdir libraries/M2tklib/utility
+cp ../../cpp/*.cpp ./libraries/M2tklib/.
+cp ../../cpp/*.h ./libraries/M2tklib/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/M2tk.h
+cp ../../src/*.c ./libraries/M2tklib/utility/.
+cp ../../src/*.h ./libraries/M2tklib/utility/.
+cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/glcd/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/glcd/*.cpp ./libraries/M2tklib/utility/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghglcd.h
+sed -i 's|dogm128.h|utility/dogm128.h|g' ./libraries/M2tklib/utility/m2ghglcd.h
+cp ../../arduino/glcd/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
+cp ../../arduino/glcd/Combo/*.pde ./libraries/M2tklib/examples/Combo/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Combo/Combo.pde
+cp ../../arduino/glcd/DataEntry/*.pde ./libraries/M2tklib/examples/DataEntry/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/DataEntry/DataEntry.pde
+cp ../../arduino/glcd/FindNum/*.pde ./libraries/M2tklib/examples/FindNum/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/FindNum/FindNum.pde
+cp ../../arduino/glcd/Radio/*.pde ./libraries/M2tklib/examples/Radio/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Radio/Radio.pde
+cp ../../arduino/glcd/Text/*.pde ./libraries/M2tklib/examples/Text/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Text/Text.pde
+cp ../../arduino/glcd/U32/*.pde ./libraries/M2tklib/examples/U32/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/U32/U32.pde
+cd libraries 
+zip -r ../m2tklib_arduino_glcd.zip *
+cd ..

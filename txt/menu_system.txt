@@ -924,4 +924,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * (Mouse) Cursor xy handling
         Abfangen im graphics handler, koordinaten prüfen und focus verändern
     * glcd/FindNum testen
+	--> ERLEDIGT 30.06.2011
+    * #include <glcd.h> ... in allen glcd beispielen... sonst erkennt die Arduino IDE nicht, dass man da die GLCD lib braucht.
+    * mal merken (ram berechnung): http://jeelabs.org/2011/05/22/atmega-memory-use/
 	
