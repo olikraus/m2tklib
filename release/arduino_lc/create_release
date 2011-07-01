@@ -37,5 +37,5 @@ sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Text/Text.pd
 cp ../../arduino/LiquidCrystal/U32/*.pde ./libraries/M2tklib/examples/U32/.
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/U32/U32.pde
 cd libraries 
-zip -r ../m2tklib_arduino_lc.zip *
+zip -r ../m2tklib_arduino_lc_`../../print_release`.zip *
 cd ..

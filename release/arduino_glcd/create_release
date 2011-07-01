@@ -37,5 +37,5 @@ sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Text/Tex
 cp ../../arduino/glcd/U32/*.pde ./libraries/M2tklib/examples/U32/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/U32/U32.pde
 cd libraries 
-zip -r ../m2tklib_arduino_glcd.zip *
+zip -r ../m2tklib_arduino_glcd_`../../print_release`.zip *
 cd ..

@@ -40,5 +40,5 @@ sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/U32/U32.
 cp ../../arduino/dogm128/U32Plain/*.pde ./libraries/M2tklib/examples/U32Plain/.
 sed -i 's|m2ghdogm.h|utility/m2ghdogm.h|g' ./libraries/M2tklib/examples/U32Plain/U32Plain.pde
 cd libraries 
-zip -r ../m2tklib_arduino_dogm128.zip *
+zip -r ../m2tklib_arduino_dogm128_`../../print_release`.zip *
 cd ..
