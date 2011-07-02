@@ -2,7 +2,7 @@
 
   Radio.pde
 
-  LiquidCrystal example
+  LiquidCrystal (16x4) example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -23,6 +23,7 @@
   
 */
 
+#include <LiquidCrystal.h>
 #include "M2tk.h"
 #include "m2ghlc.h"
 

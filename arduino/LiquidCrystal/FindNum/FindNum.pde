@@ -108,6 +108,7 @@ M2tk m2(&top_el_num_input, m2_es_arduino, m2_eh_2bs, m2_gh_lc);
 
 
 void setup() {
+  m2_SetLiquidCrystal(&lcd, 16, 2);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
   state = GEN_RAND;

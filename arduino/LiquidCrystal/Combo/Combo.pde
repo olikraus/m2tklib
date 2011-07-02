@@ -23,6 +23,7 @@
 
 */
 
+#include <LiquidCrystal.h>
 #include "M2tk.h"
 #include "m2ghlc.h"
 

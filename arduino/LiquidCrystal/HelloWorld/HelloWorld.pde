@@ -2,7 +2,7 @@
 
   HelloWorld.pde
   
-  Character LCD Example
+  LiquidCrystal 16x2 example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -25,48 +25,20 @@
 
 #include <LiquidCrystal.h>
 #include "M2tk.h"
+#include "m2ghlc.h"
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-void setCursor(uint8_t x, uint8_t y)
-{
-  /* translate the x-y position from the m2tklib to the LiquidCrystal lib */
-  /* assume 16x4 display */
-  
-  y = 3-y;
-  
-  if ( y >= 2 )
-  {
-    x+=16;
-    y-=2;
-  }
-  
-  lcd.setCursor(x, y);
-}
-
-uint8_t m2_gh_liquid_crystal(m2_gfx_arg_p  arg)
-{
-  switch(arg->msg)
-  {
-    case M2_GFX_MSG_INIT:		
-      lcd.begin(16, 4);
-      break;
-    case M2_GFX_MSG_DRAW_TEXT:
-      setCursor(arg->x, arg->y);
-      lcd.print(arg->s);
-      break;
-  }
-  return m2_gh_dummy(arg);
-}
-
 M2_LABEL(hello_world_label, NULL, "Hello World!");
-M2tk m2(&hello_world_label, NULL, NULL, m2_gh_liquid_crystal);
+M2tk m2(&hello_world_label, NULL, NULL, m2_gh_lc);
 
 void setup() {
+  m2_SetLiquidCrystal(&lcd, 16, 2);
 }
 
 void loop() {
   m2.draw();
+  delay(500);
 }
 
 
