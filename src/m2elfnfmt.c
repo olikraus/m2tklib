@@ -62,6 +62,8 @@ M2_EL_FN_DEF(m2_el_fnfmt_fn)
 {
   switch(fn_arg->msg)
   {
+    case M2_EL_MSG_IS_READ_ONLY:
+      return m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'r');
     case M2_EL_MSG_GET_OPT:
 	*(uint8_t *)(fn_arg->data) = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, fn_arg->arg);
 	return 1;

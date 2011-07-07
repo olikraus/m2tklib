@@ -25,7 +25,13 @@
   SI (MOSI)         Pin 11
   CS (Chip Select)  Pin 10
   MISO (Pin 12) is not used, but can not be reused as generic I/O
+
+  Pins 5, 6	Timer 0
+  Pins 9, 10	Timer 1
+  Pins 11, 3	Timer 3
   
+  DOGS102 Shield: 
+
 */
 
 #include "Dogm.h"
