@@ -3,3 +3,7 @@ m2tklib ChangeLog
 
 2011-07-04	v1.00	Oliver Kraus <olikraus@gmail.com>
 	* First release
+2011-07-09	v1.01	Oliver Kraus <olikraus@gmail.com>
+	* read-only option
+	* FreqGen Example (GLCD)
+	
