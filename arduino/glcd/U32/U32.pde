@@ -20,6 +20,11 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+  SelectPin = 0;
+  DownPin = 1;
+  UpPin = 2;
+  
 
 */
 
@@ -27,10 +32,10 @@
 #include "M2tk.h"
 #include "m2ghglcd.h"
 
-uint8_t uiKeySelectPin = 3;
-uint8_t uiKeyDownPin = 2;
-uint8_t uiKeyUpPin = 1;
-uint8_t uiKeyExitPin = 0;
+uint8_t uiKeySelectPin = 0;
+uint8_t uiKeyDownPin = 1;
+uint8_t uiKeyUpPin = 2;
+//uint8_t uiKeyExitPin = 0;
 
 uint32_t number = 1234;
 
@@ -49,7 +54,7 @@ void setup() {
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);
-  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
+  //m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
 }
 
 void loop() {
