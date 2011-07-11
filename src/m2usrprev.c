@@ -88,10 +88,8 @@ static uint8_t m2_nav_user_last(m2_nav_p nav)
     if ( m2_nav_user_prev_sub(nav) == 0 )
       return 0;    
   }
-    return m2_nav_user_prev(nav);
   return 1;
 }
-
 
 uint8_t m2_nav_user_prev(m2_nav_p nav)
 {
