@@ -174,6 +174,20 @@ void fn_set_msg(m2_el_fnarg_p fnarg)
   m2_MessageB2Fn("==== Hello World ====", " Ok ", fn_msg_ok, " Cancel ", fn_msg_ok);
 }
 
+/*===================================================================*/
+/* issue 6 */
+
+void issue6__dummy(m2_el_fnarg_p fnarg) 
+{
+  m2_SetRoot(&el_top);
+}
+
+M2_LABEL(issue6__main_title,   "f1", "Title");
+M2_ROOT(issue6__main_dummy,    "f0", "Dummy",     &issue6__dummy);
+M2_LIST(issue6__main_list) = { &issue6__main_title, &issue6__main_dummy };
+M2_VLIST(issue6__main, NULL, issue6__main_list);
+
+
 
   
 /*===================================================================*/
@@ -185,11 +199,12 @@ M2_ROOT(el_to_labellist, base_fmt,"LabelList",&el_label_list);
 M2_ROOT(el_to_hlist, base_fmt, "H-List", &el_hlist);
 M2_ROOT(el_to_single_u32, base_fmt, "U32", &single_u32);
 M2_ROOT(el_to_xy_list, base_fmt, "XY", &el_xy_list);
+M2_ROOT(el_to_issue6, base_fmt, "Issue6", &issue6__main);
 M2_BUTTON(el_set_msg, NULL, "MSG", fn_set_msg);
 
 
 
-void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_set_msg };
+void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_to_issue6, &el_set_msg };
 
 M2_GRIDLIST(_el_top,"c2",top_list);
 
