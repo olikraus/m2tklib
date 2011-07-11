@@ -177,13 +177,8 @@ void fn_set_msg(m2_el_fnarg_p fnarg)
 /*===================================================================*/
 /* issue 6 */
 
-void issue6__dummy(m2_el_fnarg_p fnarg) 
-{
-  m2_SetRoot(&el_top);
-}
-
 M2_LABEL(issue6__main_title,   "f1", "Title");
-M2_ROOT(issue6__main_dummy,    "f0", "Dummy",     &issue6__dummy);
+M2_ROOT(issue6__main_dummy,    "f0", "Dummy",     &el_top);
 M2_LIST(issue6__main_list) = { &issue6__main_title, &issue6__main_dummy };
 M2_VLIST(issue6__main, NULL, issue6__main_list);
 
