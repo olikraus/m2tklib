@@ -183,6 +183,32 @@ M2_LIST(issue6__main_list) = { &issue6__main_title, &issue6__main_dummy };
 M2_VLIST(issue6__main, NULL, issue6__main_list);
 
 
+/*===================================================================*/
+/* issue 8 */
+
+const char *_setup_beep_strings(uint8_t idx)
+{
+  if ( idx == 0 )
+    return "aaa";
+  else if ( idx == 1 )
+    return "bbb";
+  return "ccc";
+}
+
+uint8_t _setup_beep_state = 0;
+
+M2_LABEL(_setup_title, "f1", "Setup");
+
+M2_LABEL(_setup_beep_l, "f0", "Beep");
+M2_COMBO(_setup_beep_c, "f0", &_setup_beep_state, 3, _setup_beep_strings);
+M2_LIST(_setup_beep_list) = { &_setup_beep_l, &_setup_beep_c };
+M2_HLIST(_setup_beep, NULL, _setup_beep_list);
+
+M2_ROOT(_setup_exit, "f0", "exit", &el_top);
+
+M2_LIST(_setup_list) = { &_setup_title, &_setup_beep, &_setup_exit };
+M2_VLIST(issue8_setup, NULL, _setup_list);
+
 
   
 /*===================================================================*/
@@ -195,11 +221,12 @@ M2_ROOT(el_to_hlist, base_fmt, "H-List", &el_hlist);
 M2_ROOT(el_to_single_u32, base_fmt, "U32", &single_u32);
 M2_ROOT(el_to_xy_list, base_fmt, "XY", &el_xy_list);
 M2_ROOT(el_to_issue6, base_fmt, "Issue6", &issue6__main);
+M2_ROOT(el_to_issue8, base_fmt, "Issue8", &issue8_setup);
 M2_BUTTON(el_set_msg, NULL, "MSG", fn_set_msg);
 
 
 
-void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_to_issue6, &el_set_msg };
+void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg };
 
 M2_GRIDLIST(_el_top,"c2",top_list);
 
