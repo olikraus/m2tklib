@@ -73,6 +73,17 @@
 #define M2_NOINLINE
 #endif
 
+/* M2_ATOMIC_BLOCK */ 
+#ifdef __AVR__
+#include <util/atomic.h>
+#define M2_ATOMIC_BLOCK ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+#endif
+
+#ifndef M2_ATOMIC_BLOCK
+#define M2_ATOMIC_BLOCK
+#endif 
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
