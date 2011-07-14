@@ -25,9 +25,14 @@
 #define _M2GHGLCD_H
 
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern void *m2_Arial14;
+extern void *m2_System5x7;
+
 
 extern uint8_t m2_is_glcd_init;
  
@@ -41,6 +46,11 @@ void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_gh_glcd_draw_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon);
 void m2_gh_glcd_draw_big_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon);
 
+uint8_t m2_gh_glcd_get_user_font_height(m2_gfx_arg_p  arg);
+uint8_t m2_gh_glcd_get_user_font_corrcetion(m2_gfx_arg_p  arg);
+void m2_gh_glcd_set_user_font(uint8_t font);
+uint8_t m2_gh_glcd_base(m2_gfx_arg_p  arg);
+
   
 /*  
   a simple glcd graphics handler
@@ -52,6 +62,13 @@ void m2_gh_glcd_draw_big_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint
 */
 uint8_t m2_gh_glcd_bf(m2_gfx_arg_p arg);
 uint8_t m2_gh_glcd_ffs(m2_gfx_arg_p arg);
+  
+/*  
+  a simple glcd graphics handler
+  fonts can be defined with m2_SetFont()
+*/
+uint8_t m2_gh_glcd_ubf(m2_gfx_arg_p arg);
+uint8_t m2_gh_glcd_uffs(m2_gfx_arg_p arg);
   
 #ifdef __cplusplus
 }

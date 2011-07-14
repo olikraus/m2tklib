@@ -31,6 +31,7 @@
 #include <glcd.h>		// inform Arduino IDE that we will use GLCD library
 #include "M2tk.h"
 #include "m2ghglcd.h"
+#include "fonts/Arial14.h"         
 
 uint8_t uiKeySelectPin = 0;
 uint8_t uiKeyDownPin = 1;
@@ -48,9 +49,10 @@ M2_U32NUM(el_num, "a1c4", &number);
 M2_BUTTON(el_ok, "", " ok ", fn_ok);
 M2_LIST(list) = { &el_label, &el_num, &el_ok };
 M2_HLIST(top_el_hlist, NULL, list);
-M2tk m2(&top_el_hlist, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_ffs);
+M2tk m2(&top_el_hlist, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_uffs);
 
 void setup() {
+  m2.setFont(0, m2_Arial14);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);

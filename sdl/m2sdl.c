@@ -138,7 +138,7 @@ void *label_list[] =
   //&label0hs, &label_el_val_hs, 
   &label1, &label_el_text, 
   &label2, &label_el_val32, 
-  &label3, &label_el_toggle_val, 
+  &m2_null_element, &label_el_toggle_val, 
   &label4, &el_hlist2, 
   &el_goto_top };
 M2_GRIDLIST(el_label_list,"c2d0h50w120",label_list);

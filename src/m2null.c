@@ -26,6 +26,16 @@
 
 #include "m2.h"
 
-m2_el_fnfmt_t m2_null_element M2_SECTION_PROGMEM = { m2_el_fnfmt_fn, NULL };
+M2_EL_FN_DEF(m2_el_null_fn)
+{
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_IS_READ_ONLY:
+      return 1;
+  }
+  return m2_el_fnfmt_fn(fn_arg);
+}
+
+m2_el_fnfmt_t m2_null_element M2_SECTION_PROGMEM = { m2_el_null_fn, NULL };
 
 

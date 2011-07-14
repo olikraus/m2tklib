@@ -1,6 +1,6 @@
 /*
 
-  m2ghglcdbf.cpp
+  m2ghglcdffs.cpp
   
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -27,7 +27,7 @@
 #include "m2ghglcd.h"
 
 
-extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
+extern "C" uint8_t m2_gh_glcd_uffs(m2_gfx_arg_p arg)
 {
   switch(arg->msg)
   {
@@ -41,67 +41,63 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
 	m2_is_glcd_init = 1;
       }
       GLCD.ClearScreen();  
-      //GLCD.FillRect(0, 0, 64, 61, BLACK); 
       break;
     case M2_GFX_MSG_END:
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      m2_gh_glcd_set_font(arg->font);
-      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_font_height(arg)+m2_gh_glcd_get_font_corrcetion(arg));
+      m2_gh_glcd_set_user_font(arg->font);
+      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_user_font_height(arg)+m2_gh_glcd_get_user_font_corrcetion(arg));
       GLCD.Puts(arg->s);
       return 0;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
-	m2_gh_glcd_draw_frame(arg->x, arg->y, arg->w, arg->h);
+	m2_gh_glcd_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
-      m2_gh_glcd_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
+    case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
+      if ( (arg->font & 4) != 0 )
+      {
+	m2_gh_glcd_draw_xorbox(arg->x+1, arg->y+1, arg->w-3, arg->h-1);
+      }
+      m2_gh_glcd_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
-      m2_gh_glcd_draw_xorbox(arg->x, arg->y, arg->w, arg->h);
+      m2_gh_glcd_draw_xorbox(arg->x, arg->y, arg->w, arg->h+1);
       break;
     
     case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
-      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w-1);
+      m2_gh_glcd_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
+      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y)-2, arg->w-3);
       break;
     case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
       GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w-1);
       break;
-    
     case M2_GFX_MSG_DRAW_GO_UP:
       m2_gh_glcd_draw_xorbox(arg->x, arg->y, arg->w, arg->h/2);
       return 0;
     case M2_GFX_MSG_DRAW_ICON:
-      m2_gh_glcd_draw_icon(arg->x,arg->y+m2_gh_glcd_get_font_corrcetion(arg), 
-	  m2_gh_glcd_get_font_height(arg), m2_gh_glcd_get_font_height(arg), arg->icon);
+      m2_gh_glcd_draw_big_icon(arg->x,arg->y+m2_gh_glcd_get_user_font_corrcetion(arg), 
+	  m2_gh_glcd_get_user_font_height(arg), m2_gh_glcd_get_user_font_height(arg), arg->icon);
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
-      m2_gh_glcd_set_font(arg->font);
+      m2_gh_glcd_set_user_font(arg->font);
       return GLCD.StringWidth(arg->s);
     case M2_GFX_MSG_GET_ICON_WIDTH:
     case M2_GFX_MSG_GET_ICON_HEIGHT:
-      return m2_gh_glcd_get_font_height(arg);
+      return m2_gh_glcd_get_user_font_height(arg);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      m2_gh_glcd_set_font(arg->font);
+      m2_gh_glcd_set_user_font(arg->font);
       return GLCD.CharWidth('m');
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
-      return m2_gh_glcd_get_font_height(arg);
+      return m2_gh_glcd_get_user_font_height(arg);
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
-      if ( (arg->font & 4) != 0 )
-	return 2;
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      if ( (arg->font & 4) != 0 )
-	return 2;
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      if ( (arg->font & 4) != 0 )
-	return 1;
-      return 0;
+      return 1;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
-      if ( (arg->font & 4) != 0 )
-	return 1;
-      return 0;
+      return 2;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:
@@ -112,13 +108,13 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       return 0;
       
     case M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT:
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_READONLY_BORDER_WIDTH:
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET:
-      return 0;
+      return 1;
     case M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET:
-      return 0;
+      return 2;
     case M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH:
@@ -130,6 +126,5 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_IS_FRAME_DRAW_AT_END:
       return 1;
   }
-  return m2_gh_dummy(arg);
+  return m2_gh_glcd_base(arg);
 }
-

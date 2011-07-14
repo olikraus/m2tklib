@@ -27,6 +27,9 @@
 #include "fonts/Arial14.h"         
 #include "fonts/SystemFont5x7.h"
 
+void *m2_Arial14 = Arial14;
+void *m2_System5x7 = System5x7;
+
 uint8_t m2_is_glcd_init = 0;
 
 extern "C" uint8_t m2_gh_glcd_y(uint8_t y)
@@ -60,6 +63,7 @@ extern "C" void m2_gh_glcd_set_font(uint8_t font)
   else 
       GLCD.SelectFont(Arial14); 
 }
+
 
 /* y0 is in m2 coordinate system, (x0,y0) = (0,0) = lower left edge  */
 extern "C" void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -134,4 +138,48 @@ extern "C" void m2_gh_glcd_draw_big_icon(uint8_t x0, uint8_t y0, uint8_t w, uint
     h-=4;
     m2_gh_glcd_draw_xorbox(x0, y0, w, h);
   }
+}
+
+/* selectable user font */
+
+const void *m2_gh_glcd_fonts[4];
+
+extern "C" uint8_t m2_gh_glcd_get_user_font_height(m2_gfx_arg_p  arg)
+{
+  uint8_t idx = arg->font;
+  PGM_P font;
+  
+  idx &= 3;
+  font = (PGM_P)m2_gh_glcd_fonts[idx];
+  font += FONT_HEIGHT;
+  return pgm_read_byte(font); 
+}
+
+extern "C" uint8_t m2_gh_glcd_get_user_font_corrcetion(m2_gfx_arg_p  arg)
+{
+  if (m2_gh_glcd_get_user_font_height(arg) > 8)
+    return 2;
+  return 1;
+}
+
+extern "C" void m2_gh_glcd_set_user_font(uint8_t font)
+{
+  font &= 3;
+  GLCD.SelectFont((const uint8_t *)m2_gh_glcd_fonts[font]);
+}
+
+extern "C" uint8_t m2_gh_glcd_base(m2_gfx_arg_p  arg)
+{
+  switch(arg->msg)
+  {
+    case M2_GFX_MSG_SET_FONT:
+      {
+	uint8_t idx;
+	idx = arg->font;
+	idx &=3;
+	m2_gh_glcd_fonts[idx] = arg->s;
+      }
+      return 0;
+  }
+  return m2_gh_dummy(arg);
 }
