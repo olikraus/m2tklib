@@ -58,9 +58,9 @@ uint32_t u32num = 0;
 M2_LABEL(el_label1, NULL, "U8:");
 M2_U8NUM(el_1, NULL, 0, 255, &u8num);
 M2_LABEL(el_label2, NULL, "U32:");
-M2_U32NUM(el_2, "c5", &u32num);
+M2_U32NUM(el_2, "c5.2", &u32num);
 M2_LABEL(el_label3, NULL, "");
-M2_U32NUM(el_3, "a1c5", &u32num);
+M2_U32NUM(el_3, "a1c5.2", &u32num);
 M2_BUTTON(el_zero, "f4", " zero ", fn_zero);
 M2_LIST(de_list) = { 
     &el_label1, &el_1, 
