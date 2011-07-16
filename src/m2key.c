@@ -32,12 +32,17 @@ uint8_t m2_GetKeyFromQueue(m2_p m2)
   uint8_t key;
   if ( m2->key_queue_len == 0 )
     return M2_KEY_NONE;
-  M2_ATOMIC_BLOCK
-  {
+  
+  {  
+    uint8_t status_reg = SREG;
+    cli();
+
     key = m2->key_queue_array[m2->key_queue_pos];
     m2->key_queue_pos++;
     m2->key_queue_pos &= (M2_KEY_QUEUE_LEN-1);
     m2->key_queue_len--;
+    
+    SREG = status_reg;
   }
   return key;
 }
@@ -49,8 +54,10 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
   if ( key_code == M2_KEY_NONE )
     return;
 
-  M2_ATOMIC_BLOCK
-  {
+  {  
+    uint8_t status_reg = SREG;
+    cli();
+
     pos = m2->key_queue_pos;
     pos += m2->key_queue_len;
     pos &= (M2_KEY_QUEUE_LEN-1);
@@ -60,6 +67,8 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
       m2->key_queue_pos++;
     else
       m2->key_queue_len++;
+    
+    SREG = status_reg;
   }
 }
 
