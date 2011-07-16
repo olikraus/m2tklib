@@ -6,4 +6,9 @@ m2tklib ChangeLog
 2011-07-09	v1.01	Oliver Kraus <olikraus@gmail.com>
 	* read-only option
 	* FreqGen Example (GLCD)
+2011-07-15	v1.02	Oliver Kraus <olikraus@gmail.com>
+	* setKey() can be called inside interrupts
+	* setFont() support for GLCD (added two more graphics handler)
+	* Bugfix for KEY_PREV
+	* "." fixpoint option for M2_U32NUM
 	

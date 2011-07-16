@@ -196,7 +196,7 @@ void test004(void)
   uint8_t val8 = 78;
   M2_LABEL(label,"","Number: ");
   M2_U8NUM(u8,"c3",0, 100, &val8);
-  void *list[] = { &label, &u8 };
+  M2_LIST(list) = { &label, &u8 };
   M2_VLIST(top,"",list);
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
   test_exec_1_key(M2_KEY_SELECT);
@@ -208,7 +208,7 @@ void test005(void)
   uint8_t val8 = 78;
   M2_LABEL(label,"","Number: ");
   M2_U8NUM(u8,"c3",0, 100, &val8);
-  void *list[] = { &label, &u8 };
+  M2_LIST(list) = { &label, &u8 };
   M2_VLIST(top,"",list);
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
   test_exec_1_key(M2_KEY_SELECT);
@@ -220,7 +220,7 @@ void test006(void)
   uint32_t val32 = 1111UL;
   M2_LABEL(label,"","Number: ");
   M2_U32NUM(u32,"c4a0",&val32);
-  void *list[] = { &label, &u32 };
+  M2_LIST(list) = { &label, &u32 };
   M2_VLIST(top,"",list);
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
   test_exec_1_key(M2_KEY_SELECT);
@@ -232,7 +232,7 @@ void test007(void)
   uint32_t val32 = 1111UL;
   M2_LABEL(label,"","Number: ");
   M2_U32NUM(u32,"c4a0",&val32);
-  void *list[] = { &label, &u32 };
+  M2_LIST(list) = { &label, &u32 };
   M2_VLIST(top,"",list);
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
   test_exec_2_key(M2_KEY_SELECT, M2_KEY_SELECT);
@@ -244,7 +244,7 @@ void test008(void)
   uint32_t val32 = 771111UL;
   M2_LABEL(label,"","Number: ");
   M2_U32NUM(u32,"c4a0",&val32);
-  void *list[] = { &label, &u32 };
+  M2_LIST(list) = { &label, &u32 };
   M2_VLIST(top,"",list);
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
   test_exec_3_key(M2_KEY_SELECT, M2_KEY_NEXT, M2_KEY_SELECT);
@@ -256,7 +256,7 @@ void test009(void)
   uint32_t val32 = 771111UL;
   M2_LABEL(label,"","Number: ");
   M2_U32NUM(u32,"c1a0",&val32);
-  void *list[] = { &label, &u32 };
+  M2_LIST(list) = { &label, &u32 };
   M2_VLIST(top,"",list);
 
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
@@ -269,12 +269,38 @@ void test010(void)
   uint32_t val32 = 771111UL;
   M2_LABEL(label,"","Number: ");
   M2_U32NUM(u32,"c4a1",&val32);
-  void *list[] = { &label, &u32 };
+  M2_LIST(list) = { &label, &u32 };
   M2_VLIST(top,"",list);
 
   m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
   test_exec_3_key(M2_KEY_SELECT, M2_KEY_NEXT, M2_KEY_SELECT);
   test_assert("010 (u32 a1 mode)", val32 == 772211UL );
+}
+
+void test011(void)
+{
+  uint32_t val32 = 22UL;
+  M2_LABEL(label,"","Number: ");
+  M2_U32NUM(u32,"c2.1a1",&val32);
+  M2_LIST(list) = { &label, &u32 };
+  M2_VLIST(top,"",list);
+
+  m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
+  test_exec_3_key(M2_KEY_SELECT, M2_KEY_NEXT, M2_KEY_SELECT);
+  test_assert("010 (u32 a1 mode, dot)", val32 == 33UL );
+}
+
+void test012(void)
+{
+  uint32_t val32 = 22UL;
+  M2_LABEL(label,"","Number: ");
+  M2_U32NUM(u32,"c2.2a1",&val32);
+  M2_LIST(list) = { &label, &u32 };
+  M2_VLIST(top,"",list);
+
+  m2_InitM2(&ep, &top, m2_es_test, m2_eh_2bs, m2_gh_dummy);
+  test_exec_3_key(M2_KEY_SELECT, M2_KEY_NEXT, M2_KEY_SELECT);
+  test_assert("010 (u32 a1 mode, dot)", val32 == 33UL );
 }
 
 int main(void)
@@ -289,6 +315,8 @@ int main(void)
   test008();
   test009();
   test010();
+  test011();
+  test012();
   
   printf("%d/%d failed\n", failed_tests, total_tests);
 }
