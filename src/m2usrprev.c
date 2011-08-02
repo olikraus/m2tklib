@@ -88,6 +88,7 @@ static uint8_t m2_nav_user_last(m2_nav_p nav)
     if ( m2_nav_user_prev_sub(nav) == 0 )
       return 0;    
   }
+  m2_nav_send_new_focus(nav);
   return 1;
 }
 
@@ -100,6 +101,7 @@ uint8_t m2_nav_user_prev(m2_nav_p nav)
     if ( m2_nav_is_read_only(nav) == 0 )
       break;
   }
+  m2_nav_send_new_focus(nav);
   return 1;
 }
 

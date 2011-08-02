@@ -41,9 +41,25 @@ uint8_t m2_el_fmfmt_opt_get_val_zero_default(const m2_el_fnarg_p fn_arg, uint8_t
   return m2_opt_get_val_zero_default(m2_el_fnfmt_get_fmt(fn_arg), c);
 }
 
+uint8_t m2_el_fmfmt_opt_get_val_any_default(const m2_el_fnarg_p fn_arg, uint8_t c, uint8_t default_value)
+{
+  return m2_opt_get_val_any_default(m2_el_fnfmt_get_fmt(fn_arg), c, default_value);
+}
+
+uint8_t m2_el_fmfmt_opt_get_val_any_by_element(m2_rom_void_p element, uint8_t c, uint8_t default_value)
+{
+  return m2_opt_get_val_any_default(m2_el_fnfmt_get_fmt_by_element(element), c, default_value);
+  
+}
+
 uint8_t m2_el_fmfmt_get_font(const m2_el_fnarg_p fn_arg)
 {
   return m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'f');
+}
+
+uint8_t m2_el_fmfmt_get_font_by_element(m2_rom_void_p element)
+{
+  return m2_opt_get_val_zero_default(m2_el_fnfmt_get_fmt_by_element(element), 'f');
 }
 
 uint8_t m2_el_fmfmt_opt_get_a_one_default(const m2_el_fnarg_p fn_arg)
@@ -74,8 +90,8 @@ M2_EL_FN_DEF(m2_el_fnfmt_fn)
 	font = m2_el_fmfmt_get_font(fn_arg);
       
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	uint8_t w = m2_fn_get_width((fn_arg->element));
-	uint8_t h = m2_fn_get_height((fn_arg->element));
+	uint8_t w = m2_fn_get_width(fn_arg->element);
+	uint8_t h = m2_fn_get_height(fn_arg->element);
 	if ( fn_arg->arg < 2 )
 	  m2_gfx_normal_no_focus(b->x, b->y, w, h, font);      
 	else if ( fn_arg->arg == 2 )

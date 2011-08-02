@@ -273,6 +273,19 @@ M2_EL_MSG_GET_OPT
   return value:
     1, if the message has been processed sucessfully
 
+M2_EL_MSG_NEW_FOCUS
+  Description:
+    Informs the element, that it had become focus.
+  arg:
+    -
+  data:
+    -
+  return value:
+    -
+  Note:
+    It is possible, that the same element might receive this message multiple times. This means,
+    that an element, which already has focus, might receive this message.
+
 
 M2_EL_MSG_IS_DATA_ENTRY
   Description:

@@ -209,8 +209,25 @@ M2_ROOT(_setup_exit, "f0", "exit", &el_top);
 M2_LIST(_setup_list) = { &_setup_title, &_setup_beep, &_setup_exit };
 M2_VLIST(issue8_setup, NULL, _setup_list);
 
+/*===================================================================*/
 
-  
+const char *getstr(uint8_t idx)
+{
+  if  ( idx == 0 )
+    return "aaaa";
+  else if ( idx == 1 )
+    return "bbbb";
+  else if ( idx == 2 )
+    return "cccc";
+  return "dddd";
+}
+
+uint8_t pos = 0;
+uint8_t first = 0;
+M2_COMBO(el_combo_top, NULL, &pos, 4, getstr);
+
+M2_STRLIST(el_strlist_top, "l2w100", &pos ,&first,4,getstr);
+
 /*===================================================================*/
 /* top menu */
 
@@ -223,10 +240,12 @@ M2_ROOT(el_to_xy_list, base_fmt, "XY", &el_xy_list);
 M2_ROOT(el_to_issue6, base_fmt, "Issue6", &issue6__main);
 M2_ROOT(el_to_issue8, base_fmt, "Issue8", &issue8_setup);
 M2_BUTTON(el_set_msg, NULL, "MSG", fn_set_msg);
+M2_ROOT(el_to_combo, base_fmt, "combo", &el_combo_top);
+M2_ROOT(el_to_strlist, base_fmt, "strlist", &el_strlist_top);
 
 
 
-void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg };
+void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist };
 
 M2_GRIDLIST(_el_top,"c2",top_list);
 

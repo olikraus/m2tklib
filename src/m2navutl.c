@@ -66,7 +66,16 @@ void m2_nav_prepare_fn_arg_parent_element(m2_nav_p nav)
 }
 
 /*
-  check for auto down (design element)
+  send NEW_FOCUS message to the current element
+*/
+void m2_nav_send_new_focus(m2_nav_p nav)
+{
+  m2_nav_prepare_fn_arg_current_element(nav);
+  m2_fn_arg_call(M2_EL_MSG_NEW_FOCUS);
+}
+
+/*
+  check for read only element
 */
 uint8_t m2_nav_is_read_only(m2_nav_p nav)
 {

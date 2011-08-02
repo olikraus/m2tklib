@@ -37,7 +37,7 @@
   Note: Calls to this function can be nested
 */
 
-static uint8_t m2_calc_vlist_height_overlap_correction(uint8_t height, uint8_t cnt)
+uint8_t m2_calc_vlist_height_overlap_correction(uint8_t height, uint8_t cnt)
 {
   cnt--;
   if ( cnt > 0 )

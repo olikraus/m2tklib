@@ -34,15 +34,19 @@ uint8_t m2_GetKeyFromQueue(m2_p m2)
     return M2_KEY_NONE;
   
   {  
+#ifdef __AVR__
     uint8_t status_reg = SREG;
     cli();
+#endif
 
     key = m2->key_queue_array[m2->key_queue_pos];
     m2->key_queue_pos++;
     m2->key_queue_pos &= (M2_KEY_QUEUE_LEN-1);
     m2->key_queue_len--;
     
+#ifdef __AVR__
     SREG = status_reg;
+#endif
   }
   return key;
 }
@@ -55,8 +59,10 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
     return;
 
   {  
+#ifdef __AVR__
     uint8_t status_reg = SREG;
     cli();
+#endif
 
     pos = m2->key_queue_pos;
     pos += m2->key_queue_len;
@@ -68,7 +74,9 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
     else
       m2->key_queue_len++;
     
+#ifdef __AVR__
     SREG = status_reg;
+#endif
   }
 }
 

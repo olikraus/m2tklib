@@ -1,6 +1,6 @@
 /*
 
-  m2ehupdn.c
+  m2usrupdn.c
   
   navigation procedure for the event handler: up and down
 
@@ -48,6 +48,7 @@ uint8_t m2_nav_user_up(m2_nav_p nav)
     return 0;
   }
 
+  m2_nav_send_new_focus(nav);
   return 1;
 }
 
@@ -70,6 +71,7 @@ uint8_t m2_nav_user_down(m2_nav_p nav, uint8_t is_msg)
     if ( m2_nav_user_next(nav) == 0 )
       return m2_nav_do_auto_up(nav), 0;
     
+  m2_nav_send_new_focus(nav);
   return 1;
 }
 

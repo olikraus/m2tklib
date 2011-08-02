@@ -145,17 +145,6 @@ typedef const char *m2_opt_p;
 /*==============================================================*/
 /* m2tklib Toplevel API */
 
-/*
-  Main loop is constructed like this:
-
-  m2_t m2;
-  m2_Init(&m2, ...);
-  m2_Draw(&m2);
-  for(;;)
-    if ( m2_Step(&m2) != 0 )
-      m2_Draw(&m2);
-
-*/
 
 /* object interface */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
@@ -252,6 +241,7 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_EL_MSG_DATA_DOWN 22
 #define M2_EL_MSG_DATA_SET_U8 23
 #define M2_EL_MSG_SELECT 30
+#define M2_EL_MSG_NEW_FOCUS 31
 #define M2_EL_MSG_SHOW 40
 #if defined(M2_USE_DBG_SHOW)
 #define M2_EL_MSG_DBG_SHOW 41
@@ -495,6 +485,7 @@ M2_EL_FN_DEF(m2_el_xylist_fn);
 #define M2_EXTERN_GRIDLIST(el) extern m2_el_list_t el
 #define M2_EXTERN_XYLIST(el) extern m2_el_list_t el
 
+uint8_t m2_calc_vlist_height_overlap_correction(uint8_t height, uint8_t cnt) M2_NOINLINE; /* m2ellistv.c */
 
 
 struct _m2_el_text_struct
@@ -566,6 +557,25 @@ M2_EL_FN_DEF(m2_el_combo_fn);
 #define M2_COMBO(el,fmt,variable,cnt,fnptr) m2_el_combo_t el M2_SECTION_PROGMEM = { { { m2_el_combo_fn, (fmt) }, (variable) }, (cnt), (fnptr) }
 #define M2_EXTERN_COMBO(el) extern m2_el_combo_t el
 
+uint8_t m2_el_combo_get_len(m2_el_fnarg_p fn_arg) M2_NOINLINE;
+m2_get_str_fnptr m2_el_combo_get_str_fnptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;
+const char *m2_el_combo_get_str(m2_el_fnarg_p fn_arg, uint8_t idx) M2_NOINLINE;
+uint8_t m2_el_combo_get_max_len_idx(m2_el_fnarg_p fn_arg) M2_NOINLINE;
+
+
+struct _m2_el_strlist_struct
+{
+  m2_el_combo_t combo;
+  uint8_t *top_element;
+};
+typedef struct _m2_el_strlist_struct m2_el_strlist_t;
+typedef m2_el_strlist_t *m2_el_strlist_p;
+
+M2_EL_FN_DEF(m2_el_strlist_fn);
+#define M2_STRLIST(el,fmt,variable,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { { m2_el_strlist_fn, (fmt) }, (variable) }, (cnt), (fnptr) }, (first) }
+#define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
+
+
 
 /*==============================================================*/
 /* m2nav....c */
@@ -612,9 +622,10 @@ m2_rom_void_p m2_nav_get_parent_element(m2_nav_p nav) M2_NOINLINE;	/* m2navutl.c
 void m2_nav_prepare_fn_arg_current_element(m2_nav_p nav) M2_NOINLINE; /* m2navutl.c */
 void m2_nav_prepare_fn_arg_parent_element(m2_nav_p nav) M2_NOINLINE;  /* m2navutl.c */
 
+void m2_nav_send_new_focus(m2_nav_p nav) M2_NOINLINE;			/* m2navutl.c */
 uint8_t m2_nav_is_read_only(m2_nav_p nav) M2_NOINLINE;			/* m2navutl.c */
 uint8_t m2_nav_is_auto_skip(m2_nav_p nav) M2_NOINLINE;			/* m2navutl.c */
-uint8_t m2_nav_is_parent_auto_skip(m2_nav_p nav) M2_NOINLINE;	/* m2navutl.c */
+uint8_t m2_nav_is_parent_auto_skip(m2_nav_p nav) M2_NOINLINE;		/* m2navutl.c */
 uint8_t m2_nav_get_list_len(m2_nav_p nav) M2_NOINLINE;			/* m2navutl.c */
 uint8_t m2_nav_get_parent_list_len(m2_nav_p nav) M2_NOINLINE;			/* m2navutl.c */
 void m2_nav_load_child(m2_nav_p nav, uint8_t pos) M2_NOINLINE;	/* m2navutl.c */
@@ -777,8 +788,11 @@ char *m2_el_strptr_get_str(m2_el_fnarg_p fn_arg) M2_NOINLINE;									/* m2elstr
 m2_rom_char_p m2_el_fnfmt_get_fmt_by_element(m2_rom_void_p element) M2_NOINLINE;			/* m2elfnfmt.c */
 m2_rom_char_p m2_el_fnfmt_get_fmt(const m2_el_fnarg_p fn_arg) M2_NOINLINE;					/* m2elfnfmt.c */
 uint8_t m2_el_fmfmt_opt_get_val_zero_default(const m2_el_fnarg_p fn_arg, uint8_t c) M2_NOINLINE;		/* m2elfnfmt.c */
+uint8_t m2_el_fmfmt_opt_get_val_any_default(const m2_el_fnarg_p fn_arg, uint8_t c, uint8_t default_value);	/* m2elfnfmt.c */
+uint8_t m2_el_fmfmt_opt_get_val_any_by_element(m2_rom_void_p element, uint8_t c, uint8_t default_value); /* m2elfnfmt.c */
 uint8_t m2_el_fmfmt_opt_get_a_one_default(const m2_el_fnarg_p fn_arg) M2_NOINLINE;					/* m2elfnfmt.c */
 uint8_t m2_el_fmfmt_get_font(const m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elfnfmt.c */
+uint8_t m2_el_fmfmt_get_font_by_element(m2_rom_void_p element) M2_NOINLINE;						/* m2elfnfmt.c */
 
 uint8_t m2_opt_get_hH(m2_rom_char_p str) M2_NOINLINE;									/* m2elfnfmt.c */
 uint8_t m2_el_fnfmt_get_hH(const m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elfnfmt.c */

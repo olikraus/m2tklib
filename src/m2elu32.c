@@ -302,7 +302,8 @@ M2_EL_FN_DEF(m2_el_digit_fn)
     case M2_EL_MSG_GET_LIST_LEN:
       return 0;  /* not a list, return 0 */
     case M2_EL_MSG_SELECT:
-	m2_nav_user_up((m2_nav_p)(fn_arg->data));      
+	m2_nav_user_up((m2_nav_p)(fn_arg->data));
+	return 1;
     case M2_EL_MSG_IS_READ_ONLY:
       if ( m2_el_u32_is_dot(fn_arg->nav) )
 	return 1;

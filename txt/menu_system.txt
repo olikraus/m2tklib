@@ -893,6 +893,7 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	--> ERLEDIGT 24.06.2011
     * Tutorial schreiben
 	status: tutorial 1&2 für dogm128 fertig. tutorial 3 ist unterwegs.
+	--> ERLEDIGT
     * dogm/DataEntry.pde --> aufräumen, anders strukturieren (ohne extern)
 	--> ERLEDIGT 28.06.2011
     * Screenshots
@@ -931,4 +932,10 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
     * HelloWorld Beispiel für LiquidCrystal neu machen und auch im wiki eintragen
 	--> ERLEDIGT
     
-    
+2.8.2011
+  * fn_arg enthält das nav object (normalerweise), deshalb sollte das dann eigentlich auch benutzt werden.
+	  m2elstrup.c:	m2_nav_user_up((m2_nav_p)(fn_arg->data));
+	  m2eltext.c:	m2_nav_user_up((m2_nav_p)(fn_arg->data));      
+	  m2elu32.c:	m2_nav_user_up((m2_nav_p)(fn_arg->data));
+	  
+      

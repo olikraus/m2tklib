@@ -104,6 +104,7 @@ M2_EL_FN_DEF(m2_el_char_fn)
       return 0;  /* not a list, return 0 */
     case M2_EL_MSG_SELECT:
 	m2_nav_user_up((m2_nav_p)(fn_arg->data));      
+	return 1;
     case M2_EL_MSG_IS_DATA_ENTRY:
       /* if this is the exit char, do not enter data entry mode */
       if ( m2_is_exit_char(fn_arg->nav) != 0 )
@@ -142,7 +143,6 @@ M2_EL_FN_DEF(m2_el_char_fn)
 	char s[2] = "1";
 	uint8_t pos = m2_nav_get_child_pos(fn_arg->nav);
       	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-
       
 	if ( m2_is_exit_char(fn_arg->nav) != 0 )
 	{
@@ -180,7 +180,6 @@ M2_EL_FN_DEF(m2_el_char_fn)
 	  if ( m2_is_frame_draw_at_end == 0 )
 	    m2_gfx_draw_text_add_small_border_offset(b->x, b->y, 0, 0, m2_el_parent_get_font(fn_arg->nav), s);
 	}
-
       }
       return 1;
   }
@@ -199,12 +198,6 @@ uint8_t m2_el_text_get_len(m2_el_fnarg_p fn_arg)
 /*==============================================================*/
 /* text function */
 
-/*
-m2_el_char_t m2_el_virtual_char M2_SECTION_PROGMEM = 
-{
-  m2_el_char_fn
-};
-*/
 
 m2_el_fnfmt_t m2_el_virtual_char M2_SECTION_PROGMEM = 
 {
