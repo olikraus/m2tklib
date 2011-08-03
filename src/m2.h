@@ -341,6 +341,13 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code);												/* m2key.c */
 /* combo box (callback procedure) */
 typedef const char *(*m2_get_str_fnptr)(uint8_t idx);
 
+/*==============================================================*/
+
+/* strlist element (callback procedure) */
+typedef const char *(*m2_strlist_cb_fnptr)(uint8_t idx, uint8_t msg);
+
+#define M2_STRLIST_MSG_GET_STR 101
+#define M2_STRLIST_MSG_SELECT 102
 
 /*==============================================================*/
 /* list of elements */
@@ -562,6 +569,7 @@ m2_get_str_fnptr m2_el_combo_get_str_fnptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 const char *m2_el_combo_get_str(m2_el_fnarg_p fn_arg, uint8_t idx) M2_NOINLINE;
 uint8_t m2_el_combo_get_max_len_idx(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 
+#ifdef OBSOLETE
 
 struct _m2_el_strlist_struct
 {
@@ -575,6 +583,21 @@ M2_EL_FN_DEF(m2_el_strlist_fn);
 #define M2_STRLIST(el,fmt,variable,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { { m2_el_strlist_fn, (fmt) }, (variable) }, (cnt), (fnptr) }, (first) }
 #define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
 
+#endif /* OBSOLETE */
+
+struct _m2_el_strlist_struct
+{
+  m2_el_fnfmt_t ff;
+  uint8_t *top_element;
+  m2_strlist_cb_fnptr strlist_cb_fnptr;
+  uint8_t *cnt;
+};
+typedef struct _m2_el_strlist_struct m2_el_strlist_t;
+typedef m2_el_strlist_t *m2_el_strlist_p;
+
+M2_EL_FN_DEF(m2_el_strlist_fn);
+#define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { m2_el_strlist_fn, (fmt) }, (first), (fnptr), (cnt) }
+#define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
 
 
 /*==============================================================*/

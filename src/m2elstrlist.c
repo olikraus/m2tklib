@@ -31,13 +31,53 @@
     option 'a' is NOT SUPPORTED and is always enabled
 
   TODO
-    - change args to element --> ERLEDIGT
-    - combo procedures, change to element
+    - change args to element --> Implemented
+    - combo procedures, change to element --> not required any more, strlist does not use combo element any more
 
 */
 
+#ifdef M2_EL_MSG_DBG_SHOW
+#include <stdio.h>
+#endif
 
 #include "m2.h"
+
+/*==============================================================*/
+/* strlist structure access */
+
+/* argument must be of type m2_el_strlist_p */ 
+uint8_t *m2_el_strlist_get_cnt_ptr(m2_rom_void_p element)
+{
+  return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_strlist_t, cnt));
+}
+
+uint8_t m2_el_strlist_get_cnt(m2_rom_void_p element)
+{
+  return *m2_el_strlist_get_cnt_ptr(element);
+  /*return m2_rom_get_u8(element, offsetof(m2_el_strlist_t, cnt));*/
+}
+
+m2_strlist_cb_fnptr m2_el_strlist_cb_fnptr(m2_rom_void_p element)
+{
+  return (m2_strlist_cb_fnptr)m2_rom_get_fnptr(element, offsetof(m2_el_strlist_t, strlist_cb_fnptr));
+}
+
+const char *m2_el_strlist_get_str(m2_rom_void_p element, uint8_t idx)
+{
+  return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_GET_STR);
+}
+
+/* argument must be of type m2_el_strlist_p */ 
+uint8_t *m2_el_strlist_get_top_ptr(m2_rom_void_p element)
+{
+  return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_strlist_t, top_element));
+}
+
+/* argument must be of type m2_el_strlist_p */ 
+uint8_t m2_el_strlist_get_top_val(m2_rom_void_p element)
+{
+  return *m2_el_strlist_get_top_ptr(element);
+}
 
 /*==============================================================*/
 /* strlist utility procedures */
@@ -58,36 +98,14 @@
     not visible
   if ( curr_line >= top_line + visible_lines )
     not_visible
-  vis_pos = curr_line - top_line
-  
+  vis_pos = curr_line - top_line  
 */
 
-m2_get_str_fnptr m2_el_strlist_get_str_fnptr(m2_rom_void_p element)
-{
-  return (m2_get_str_fnptr)m2_rom_get_fnptr(element, offsetof(m2_el_combo_t, get_str_fnptr));
-}
-
-const char *m2_el_strlist_get_str(m2_rom_void_p element, uint8_t idx)
-{
-  return m2_el_strlist_get_str_fnptr(element)(idx);
-}
 
 /* argument must be of type m2_el_strlist_p */ 
 uint8_t m2_el_strlist_get_visible_lines(m2_rom_void_p element)
 {
   return m2_el_fmfmt_opt_get_val_any_by_element(element, 'l', 1);
-}
-
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t *m2_el_strlist_get_top_ptr(m2_rom_void_p element)
-{
-  return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_strlist_t, top_element));
-}
-
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t m2_el_strlist_get_top_val(m2_rom_void_p element)
-{
-  return *m2_el_strlist_get_top_ptr(element);
 }
 
 /*
@@ -144,7 +162,7 @@ void m2_el_strlist_calc_box(m2_rom_void_p el_strlist, uint8_t idx, m2_pcbox_p da
   data->c.y += y;
 }
 
-void m2_el_strlist_adjust_top(m2_rom_void_p el_strlist, uint8_t pos)
+void m2_el_strlist_adjust_top_to_focus(m2_rom_void_p el_strlist, uint8_t pos)
 {
   uint8_t top = m2_el_strlist_get_top_val(el_strlist);
   uint8_t lines;
@@ -165,6 +183,17 @@ void m2_el_strlist_adjust_top(m2_rom_void_p el_strlist, uint8_t pos)
   *m2_el_strlist_get_top_ptr(el_strlist) = top;
 }
 
+void m2_el_strlist_adjust_top_to_cnt(m2_rom_void_p el_strlist)
+{
+  uint8_t cnt = m2_el_strlist_get_cnt(el_strlist);
+  uint8_t *top = m2_el_strlist_get_top_ptr(el_strlist);
+  if ( *top >= cnt )
+  {
+    if ( cnt > 0 )
+      cnt--;
+    *top = cnt;
+  }
+}
 
 /*==============================================================*/
 /* strline */
@@ -188,7 +217,7 @@ M2_EL_FN_DEF(m2_el_strline_fn)
       return m2_el_strlist_calc_width(m2_nav_get_parent_element(fn_arg->nav));
     case M2_EL_MSG_NEW_FOCUS:
       /* printf("STRLINE M2_EL_MSG_NEW_FOCUS pos = %d\n", pos); */
-      m2_el_strlist_adjust_top(m2_nav_get_parent_element(fn_arg->nav), pos);
+      m2_el_strlist_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
       return 1;
     case M2_EL_MSG_SHOW:
     {
@@ -241,8 +270,8 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_LIST_LEN:
-      /* printf("STRLIST: M2_EL_MSG_GET_LIST_LEN %d\n", m2_el_combo_get_len(fn_arg)); */
-      return m2_el_combo_get_len(fn_arg);
+      /* printf("STRLIST: M2_EL_MSG_GET_LIST_LEN %d\n", m2_el_strlist_get_cnt(fn_arg->element)); */
+      return m2_el_strlist_get_cnt(fn_arg->element);
     case M2_EL_MSG_GET_LIST_ELEMENT:
       *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_strline;
       return 1;
@@ -271,10 +300,16 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
 	width = m2_el_strlist_calc_width((fn_arg->element));
 	height = m2_el_strlist_calc_height((fn_arg->element));
 	printf("strlist w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
-	    (fn_arg->arg), b->x, b->y, m2_el_combo_get_len(fn_arg));
+	    (fn_arg->arg), b->x, b->y, m2_el_strlist_get_cnt(fn_arg->element));
       }
       return 0;
 #endif
+      case M2_EL_MSG_SHOW:
+	/* MSG_SHOW: parent is drawn before the sub elements */
+	/* adjust top element to total size, if required */
+	m2_el_strlist_adjust_top_to_cnt(fn_arg->element);
+	break;
+
   }
   return m2_el_fnfmt_fn(fn_arg);
 }

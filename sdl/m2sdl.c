@@ -211,23 +211,32 @@ M2_VLIST(issue8_setup, NULL, _setup_list);
 
 /*===================================================================*/
 
-const char *getstr(uint8_t idx)
+const char *getstr(uint8_t idx, uint8_t msg)
 {
-  if  ( idx == 0 )
-    return "aaaa";
-  else if ( idx == 1 )
-    return "bbbb";
-  else if ( idx == 2 )
-    return "cccc";
-  return "dddd";
+  if ( msg == M2_STRLIST_MSG_GET_STR )
+  {
+    if  ( idx == 0 )
+      return "aaaa";
+    else if ( idx == 1 )
+      return "bbbb";
+    else if ( idx == 2 )
+      return "cccc";
+    return "dddd";
+  }
+  else
+  {
+    return "";
+  }
 }
 
 uint8_t pos = 0;
-uint8_t first = 0;
+uint8_t el_strlist_first = 0;
+uint8_t el_strlist_cnt = 4;
 M2_COMBO(el_combo_top, NULL, &pos, 4, getstr);
 
-M2_STRLIST(el_strlist, "l2w100", &pos ,&first,4,getstr);
-M2_LIST(el_strlist_list) = { &el_strlist, &el_goto_top };
+M2_STRLIST(el_strlist, "l2w100", &el_strlist_first, &el_strlist_cnt, getstr);
+M2_U8NUM(el_strlist_el_cnt,"c3",0, 10, &el_strlist_cnt);
+M2_LIST(el_strlist_list) = { &el_strlist, &el_strlist_el_cnt, &el_goto_top };
 M2_VLIST(el_strlist_top, NULL, el_strlist_list);
 
 /*===================================================================*/
