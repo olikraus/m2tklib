@@ -226,7 +226,9 @@ uint8_t pos = 0;
 uint8_t first = 0;
 M2_COMBO(el_combo_top, NULL, &pos, 4, getstr);
 
-M2_STRLIST(el_strlist_top, "l2w100", &pos ,&first,4,getstr);
+M2_STRLIST(el_strlist, "l2w100", &pos ,&first,4,getstr);
+M2_LIST(el_strlist_list) = { &el_strlist, &el_goto_top };
+M2_VLIST(el_strlist_top, NULL, el_strlist_list);
 
 /*===================================================================*/
 /* top menu */

@@ -23,11 +23,12 @@
   
   
   strlist specific options:
-    w:		Width of the strlist box
-    l:			Number of lines 
+    w:		Width of the strlist box (required!)
+    l:			Number of lines (defaults to 1)
   
-  Note:
+  Notes:
     option 'h' is not supported, instead height is calculated by fontheight * number of lines
+    option 'a' is NOT SUPPORTED and is always enabled
 
   TODO
     - change args to element --> ERLEDIGT
@@ -246,7 +247,15 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
       *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_strline;
       return 1;
     case M2_EL_MSG_IS_AUTO_SKIP:
-      return 0;
+      return 1;
+    case M2_EL_MSG_GET_OPT:
+	if ( fn_arg->arg == 'd' )
+	{
+	  *(uint8_t *)(fn_arg->data) = 1;
+	  return 1;
+	}
+	/* else... break out of the switch and let the base class do the rest of the work */
+	break;
     case M2_EL_MSG_GET_LIST_BOX:
       m2_el_strlist_calc_box(fn_arg->element, fn_arg->arg, ((m2_pcbox_p)(fn_arg->data)));
       return 1;
@@ -267,7 +276,7 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
       return 0;
 #endif
   }
-  return 0;
+  return m2_el_fnfmt_fn(fn_arg);
 }
 
 
