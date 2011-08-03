@@ -589,14 +589,14 @@ struct _m2_el_strlist_struct
 {
   m2_el_fnfmt_t ff;
   uint8_t *top_element;
-  m2_strlist_cb_fnptr strlist_cb_fnptr;
   uint8_t *cnt;
+  m2_strlist_cb_fnptr strlist_cb_fnptr;
 };
 typedef struct _m2_el_strlist_struct m2_el_strlist_t;
 typedef m2_el_strlist_t *m2_el_strlist_p;
 
 M2_EL_FN_DEF(m2_el_strlist_fn);
-#define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { m2_el_strlist_fn, (fmt) }, (first), (fnptr), (cnt) }
+#define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { m2_el_strlist_fn, (fmt) }, (first), (cnt), (fnptr) }
 #define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
 
 

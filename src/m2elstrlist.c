@@ -309,10 +309,11 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
 	/* adjust top element to total size, if required */
 	m2_el_strlist_adjust_top_to_cnt(fn_arg->element);
 	break;
-
   }
   return m2_el_fnfmt_fn(fn_arg);
 }
 
 
 
+/*==============================================================*/
+/*  */
