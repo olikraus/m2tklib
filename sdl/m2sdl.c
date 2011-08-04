@@ -235,8 +235,13 @@ uint8_t el_strlist_cnt = 4;
 M2_COMBO(el_combo_top, NULL, &pos, 4, getstr);
 
 M2_STRLIST(el_strlist, "l2w100", &el_strlist_first, &el_strlist_cnt, getstr);
+M2_VSB(el_strlist_vsb, "l2w10", &el_strlist_first, &el_strlist_cnt);
+
+M2_LIST(el_strlist_sblist) = { &el_strlist, &el_strlist_vsb };
+M2_HLIST(el_strlist_hlist, NULL, el_strlist_sblist);
+
 M2_U8NUM(el_strlist_el_cnt,"c3",0, 10, &el_strlist_cnt);
-M2_LIST(el_strlist_list) = { &el_strlist, &el_strlist_el_cnt, &el_goto_top };
+M2_LIST(el_strlist_list) = { &el_strlist_hlist, &el_strlist_el_cnt, &el_goto_top };
 M2_VLIST(el_strlist_top, NULL, el_strlist_list);
 
 /*===================================================================*/

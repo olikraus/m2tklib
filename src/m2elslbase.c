@@ -1,6 +1,6 @@
 /*
 
-  m2slbase.c
+  m2elslbase.c
 
   base library for "strlist"
 

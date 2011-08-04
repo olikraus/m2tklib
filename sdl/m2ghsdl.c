@@ -504,6 +504,21 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
       return m2_sdlgfx_get_icon_width(arg->font, arg->icon);
     case M2_GFX_MSG_GET_ICON_HEIGHT:
       return m2_sdlgfx_get_icon_height(arg->font, arg->icon);
+    case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
+      m2_sdlgfx_box(arg->x, arg->y, arg->w, arg->h);
+      {
+	uint16_t h, y;
+	h = arg->h;
+	h-=2;
+	h *= arg->visible;
+	h /= arg->total;
+	y = arg->h;
+	y-=2;
+	y *= arg->top;
+	y /= arg->total;
+	m2_sdlgfx_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
+      }
+      return 1;
     case M2_GFX_MSG_GET_DISPLAY_WIDTH:
       return WIDTH;
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:

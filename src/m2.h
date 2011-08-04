@@ -267,30 +267,31 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY 			13
 #define M2_GFX_MSG_DRAW_GO_UP 					14
 #define M2_GFX_MSG_DRAW_ICON 						15
-#define M2_GFX_MSG_GET_TEXT_WIDTH 					16
-#define M2_GFX_MSG_GET_TEXT_WIDTH_P 				17
-#define M2_GFX_MSG_GET_CHAR_WIDTH 					18	
-#define M2_GFX_MSG_GET_CHAR_HEIGHT 				19
-#define M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT 		20
-#define M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH 		21
-#define M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET 		22
-#define M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET 		23
-#define M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT 		24
-#define M2_GFX_MSG_GET_SMALL_BORDER_WIDTH 			25
-#define M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET 		26
-#define M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET 		27
-#define M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT 		28
-#define M2_GFX_MSG_GET_READONLY_BORDER_WIDTH 		29
-#define M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET 	30
-#define M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET 	31
-#define M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT 			32
-#define M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH 			33
-#define M2_GFX_MSG_GET_ICON_HEIGHT 				34
-#define M2_GFX_MSG_GET_ICON_WIDTH 					35
-#define M2_GFX_MSG_IS_FRAME_DRAW_AT_END			36
-#define M2_GFX_MSG_SET_FONT						37
-#define M2_GFX_MSG_GET_DISPLAY_WIDTH				38
-#define M2_GFX_MSG_GET_DISPLAY_HEIGHT				39
+#define M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR		16
+#define M2_GFX_MSG_GET_TEXT_WIDTH 					17
+#define M2_GFX_MSG_GET_TEXT_WIDTH_P 				18
+#define M2_GFX_MSG_GET_CHAR_WIDTH 					19	
+#define M2_GFX_MSG_GET_CHAR_HEIGHT 				20
+#define M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT 		21
+#define M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH 		22
+#define M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET 		23
+#define M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET 		24
+#define M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT 		25
+#define M2_GFX_MSG_GET_SMALL_BORDER_WIDTH 			26
+#define M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET 		27
+#define M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET 		28
+#define M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT 		29
+#define M2_GFX_MSG_GET_READONLY_BORDER_WIDTH 		30
+#define M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET 	31
+#define M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET 	32
+#define M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT 			33
+#define M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH 			34
+#define M2_GFX_MSG_GET_ICON_HEIGHT 				35
+#define M2_GFX_MSG_GET_ICON_WIDTH 					36
+#define M2_GFX_MSG_IS_FRAME_DRAW_AT_END			37
+#define M2_GFX_MSG_SET_FONT						38
+#define M2_GFX_MSG_GET_DISPLAY_WIDTH				39
+#define M2_GFX_MSG_GET_DISPLAY_HEIGHT				40
 
 /*==============================================================*/
 /* object function */
@@ -596,6 +597,10 @@ struct _m2_el_slbase_struct
 typedef struct _m2_el_slbase_struct m2_el_slbase_t;
 typedef m2_el_slbase_t *m2_el_slbase_p;
 
+M2_EL_FN_DEF(m2_el_vsb_fn);
+#define M2_VSB(el,fmt,first,cnt) m2_el_slbase_t el M2_SECTION_PROGMEM = { { m2_el_vsb_fn, (fmt) }, (first), (cnt) }
+#define M2_EXTERN_VSB(el) extern m2_el_slbase_t el
+
 struct _m2_el_strlist_struct
 {
   m2_el_slbase_t slbase;
@@ -863,6 +868,9 @@ struct _m2_gfx_arg
   uint8_t h;
   uint8_t font;
   uint8_t icon;
+  uint8_t total;		/* scroll bar */
+  uint8_t top;		/* scroll bar */
+  uint8_t visible;	/* scroll bar */
   const char *s;
 };
 
@@ -935,6 +943,8 @@ void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w
 void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+
+void m2_gfx_draw_vertical_scroll_bar(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t total, uint8_t top, uint8_t visible);
 
 
 void m2_gfx_draw_icon_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t font, uint8_t icon_number) M2_NOINLINE;	/* m2gfxutl.c */

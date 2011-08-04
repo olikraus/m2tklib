@@ -321,6 +321,18 @@ uint8_t m2_gfx_get_icon_width(uint8_t font, uint8_t icon_number)
   return m2_gfx_call_handler(M2_GFX_MSG_GET_ICON_WIDTH);
 }
 
+void m2_gfx_draw_vertical_scroll_bar(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t total, uint8_t top, uint8_t visible)
+{
+  m2_gfx_arg_object.x = x0;
+  m2_gfx_arg_object.y = y0;
+  m2_gfx_arg_object.w = w;
+  m2_gfx_arg_object.h = h;
+  m2_gfx_arg_object.total = total;
+  m2_gfx_arg_object.top = top;
+  m2_gfx_arg_object.visible = visible;
+  m2_gfx_call_handler(M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR);
+}
+
 uint8_t m2_gfx_is_frame_draw_at_end(void)
 {
   return m2_gfx_call_handler(M2_GFX_MSG_IS_FRAME_DRAW_AT_END);
