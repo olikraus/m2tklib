@@ -45,18 +45,6 @@
 /*==============================================================*/
 /* strlist structure access */
 
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t *m2_el_strlist_get_cnt_ptr(m2_rom_void_p element)
-{
-  return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_strlist_t, cnt));
-}
-
-uint8_t m2_el_strlist_get_cnt(m2_rom_void_p element)
-{
-  return *m2_el_strlist_get_cnt_ptr(element);
-  /*return m2_rom_get_u8(element, offsetof(m2_el_strlist_t, cnt));*/
-}
-
 m2_strlist_cb_fnptr m2_el_strlist_cb_fnptr(m2_rom_void_p element)
 {
   return (m2_strlist_cb_fnptr)m2_rom_get_fnptr(element, offsetof(m2_el_strlist_t, strlist_cb_fnptr));
@@ -67,93 +55,18 @@ const char *m2_el_strlist_get_str(m2_rom_void_p element, uint8_t idx)
   return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_GET_STR);
 }
 
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t *m2_el_strlist_get_top_ptr(m2_rom_void_p element)
-{
-  return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_strlist_t, top_element));
-}
-
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t m2_el_strlist_get_top_val(m2_rom_void_p element)
-{
-  return *m2_el_strlist_get_top_ptr(element);
-}
-
 /*==============================================================*/
 /* strlist utility procedures */
 
-#define M2_STRLIST_ILLEGAL 255
-
-/*
-  return value from 0 .. cX-1 if the 
-  based on the number of visible lines, the top visible element and the total number of lines, calculate if the 
-  current (fn->arg) is visible. Also calc the position
-
-  visible_lines  0...
-  total_lines 0...
-  top_line	0...total_lines-1
-  curr_line (fn_arg->arg) 0...total_lines-1
-
-  if ( curr_line < top_line )
-    not visible
-  if ( curr_line >= top_line + visible_lines )
-    not_visible
-  vis_pos = curr_line - top_line  
-*/
-
-
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t m2_el_strlist_get_visible_lines(m2_rom_void_p element)
-{
-  return m2_el_fmfmt_opt_get_val_any_by_element(element, 'l', 1);
-}
-
-/*
-  calculate the visible position, based on the internal index
-  position order of the result is inverted, 0 is botton element
-  return M2_STRLIST_ILLEGAL if the value is not visible 
-*/
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t m2_el_strlist_get_visible_pos(m2_rom_void_p el_strlist, uint8_t idx)
-{
-  uint8_t top = m2_el_strlist_get_top_val(el_strlist);
-  uint8_t lines;
-  if ( idx < top )
-    return M2_STRLIST_ILLEGAL;
-  idx -= top;
-  lines = m2_el_strlist_get_visible_lines(el_strlist);
-  if ( idx >= lines )
-    return M2_STRLIST_ILLEGAL;
-  lines--;
-  lines -= idx;
-  return lines;
-}
-
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t m2_el_strlist_calc_height(m2_rom_void_p el_strlist)
-{
-  uint8_t h;
-  uint8_t visible_lines = m2_el_strlist_get_visible_lines(el_strlist);
-  h = m2_gfx_get_char_height_with_normal_border(m2_el_fmfmt_get_font_by_element(el_strlist));
-  h *= visible_lines;
-  h = m2_calc_vlist_height_overlap_correction(h, visible_lines);
-  return h;
-}
-
-/* argument must be of type m2_el_strlist_p */ 
-uint8_t m2_el_strlist_calc_width(m2_rom_void_p el_strlist)
-{
-  return m2_gfx_add_normal_border_width(m2_el_fmfmt_get_font_by_element(el_strlist), m2_el_fnfmt_get_wW_by_element(el_strlist));
-}
 
 void m2_el_strlist_calc_box(m2_rom_void_p el_strlist, uint8_t idx, m2_pcbox_p data)
 {
-  uint8_t visible_pos = m2_el_strlist_get_visible_pos(el_strlist, idx);
+  uint8_t visible_pos = m2_el_slbase_get_visible_pos(el_strlist, idx);
   uint8_t y;
   data->c.y = data->p.y;
   data->c.x = data->p.x;
   
-  if ( visible_pos == M2_STRLIST_ILLEGAL )
+  if ( visible_pos == M2_EL_SLBASE_ILLEGAL )
     return;
   
   y = m2_gfx_get_char_height_with_normal_border(m2_el_fmfmt_get_font_by_element(el_strlist));
@@ -162,38 +75,6 @@ void m2_el_strlist_calc_box(m2_rom_void_p el_strlist, uint8_t idx, m2_pcbox_p da
   data->c.y += y;
 }
 
-void m2_el_strlist_adjust_top_to_focus(m2_rom_void_p el_strlist, uint8_t pos)
-{
-  uint8_t top = m2_el_strlist_get_top_val(el_strlist);
-  uint8_t lines;
-  if ( pos < top )
-  {
-    top = pos;
-  }
-  else 
-  {
-    lines = m2_el_strlist_get_visible_lines(el_strlist);
-    if ( pos >= top+lines )
-    {
-      top = pos;
-      top -= lines;
-      top++;
-    }
-  }
-  *m2_el_strlist_get_top_ptr(el_strlist) = top;
-}
-
-void m2_el_strlist_adjust_top_to_cnt(m2_rom_void_p el_strlist)
-{
-  uint8_t cnt = m2_el_strlist_get_cnt(el_strlist);
-  uint8_t *top = m2_el_strlist_get_top_ptr(el_strlist);
-  if ( *top >= cnt )
-  {
-    if ( cnt > 0 )
-      cnt--;
-    *top = cnt;
-  }
-}
 
 /*==============================================================*/
 /* strline */
@@ -214,24 +95,24 @@ M2_EL_FN_DEF(m2_el_strline_fn)
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_get_char_height_with_normal_border(font);
     case M2_EL_MSG_GET_WIDTH:
-      return m2_el_strlist_calc_width(m2_nav_get_parent_element(fn_arg->nav));
+      return m2_el_slbase_calc_width(m2_nav_get_parent_element(fn_arg->nav));
     case M2_EL_MSG_NEW_FOCUS:
       /* printf("STRLINE M2_EL_MSG_NEW_FOCUS pos = %d\n", pos); */
-      m2_el_strlist_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
+      m2_el_slbase_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
       return 1;
     case M2_EL_MSG_SHOW:
     {
       m2_pos_p b = (m2_pos_p)(fn_arg->data);
       const char *s = m2_el_strlist_get_str(m2_nav_get_parent_element(fn_arg->nav), pos);
       uint8_t font = m2_el_parent_get_font(fn_arg->nav);
-      uint8_t visible_pos = m2_el_strlist_get_visible_pos(m2_nav_get_parent_element(fn_arg->nav), pos);
+      uint8_t visible_pos = m2_el_slbase_get_visible_pos(m2_nav_get_parent_element(fn_arg->nav), pos);
       
       /* printf("STRLINE M2_EL_MSG_SHOW arg = %d, visible_pos = %d\n", fn_arg->arg, visible_pos); */
       
-      if ( visible_pos != M2_STRLIST_ILLEGAL )
+      if ( visible_pos != M2_EL_SLBASE_ILLEGAL )
       {
 	uint8_t w, h;
-	w = m2_el_strlist_calc_width(m2_nav_get_parent_element(fn_arg->nav));
+	w = m2_el_slbase_calc_width(m2_nav_get_parent_element(fn_arg->nav));
 	h = m2_gfx_get_char_height_with_normal_border(font);
 	
 	/*
@@ -271,7 +152,7 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
   {
     case M2_EL_MSG_GET_LIST_LEN:
       /* printf("STRLIST: M2_EL_MSG_GET_LIST_LEN %d\n", m2_el_strlist_get_cnt(fn_arg->element)); */
-      return m2_el_strlist_get_cnt(fn_arg->element);
+      return m2_el_slbase_get_len(fn_arg->element);
     case M2_EL_MSG_GET_LIST_ELEMENT:
       *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_strline;
       return 1;
@@ -289,25 +170,25 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
       m2_el_strlist_calc_box(fn_arg->element, fn_arg->arg, ((m2_pcbox_p)(fn_arg->data)));
       return 1;
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_el_strlist_calc_height((fn_arg->element));
+      return m2_el_slbase_calc_height((fn_arg->element));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_el_strlist_calc_width((fn_arg->element));
+      return m2_el_slbase_calc_width((fn_arg->element));
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
 	uint8_t width, height;
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	width = m2_el_strlist_calc_width((fn_arg->element));
-	height = m2_el_strlist_calc_height((fn_arg->element));
+	width = m2_el_slbase_calc_width((fn_arg->element));
+	height = m2_el_slbase_calc_height((fn_arg->element));
 	printf("strlist w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
-	    (fn_arg->arg), b->x, b->y, m2_el_strlist_get_cnt(fn_arg->element));
+	    (fn_arg->arg), b->x, b->y, m2_el_slbase_get_len(fn_arg->element));
       }
       return 0;
 #endif
       case M2_EL_MSG_SHOW:
 	/* MSG_SHOW: parent is drawn before the sub elements */
 	/* adjust top element to total size, if required */
-	m2_el_strlist_adjust_top_to_cnt(fn_arg->element);
+	m2_el_slbase_adjust_top_to_cnt(fn_arg->element);
 	break;
   }
   return m2_el_fnfmt_fn(fn_arg);
@@ -315,5 +196,3 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
 
 
 
-/*==============================================================*/
-/*  */
