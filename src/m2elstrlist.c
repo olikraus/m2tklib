@@ -71,8 +71,12 @@ void m2_el_strlist_calc_box(m2_rom_void_p el_strlist, uint8_t idx, m2_pcbox_p da
   
   y = m2_gfx_get_char_height_with_normal_border(m2_el_fmfmt_get_font_by_element(el_strlist));
   y *= visible_pos;
+  visible_pos++;  /* for the overlap correction */
   y = m2_calc_vlist_height_overlap_correction(y, visible_pos);
   data->c.y += y;
+#ifdef M2_EL_MSG_DBG_SHOW
+  printf("- strlist calc box: idx:%d pos:%d cx:%d cy:%d px:%d py:%d\n", idx, visible_pos, data->c.x, data->c.y, data->p.x, data->p.y);
+#endif
 }
 
 
@@ -100,6 +104,18 @@ M2_EL_FN_DEF(m2_el_strline_fn)
       /* printf("STRLINE M2_EL_MSG_NEW_FOCUS pos = %d\n", pos); */
       m2_el_slbase_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
       return 1;
+#ifdef M2_EL_MSG_DBG_SHOW
+    case M2_EL_MSG_DBG_SHOW:
+      {
+	uint8_t width, height;
+	m2_pos_p b = (m2_pos_p)(fn_arg->data);
+	width = m2_el_slbase_calc_width((fn_arg->element));
+	height = m2_el_slbase_calc_height((fn_arg->element));
+	printf("strline w:%d h:%d arg:%d x:%d y:%d\n", width, height, 
+	    (fn_arg->arg), b->x, b->y);
+      }
+      return 0;
+#endif
     case M2_EL_MSG_SHOW:
     {
       m2_pos_p b = (m2_pos_p)(fn_arg->data);

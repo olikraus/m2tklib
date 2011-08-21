@@ -23,6 +23,7 @@
 
 #include "m2.h"
 #ifdef M2_EL_MSG_DBG_SHOW
+#include <assert.h>
 #include <stdio.h>
 #endif
 
@@ -35,12 +36,11 @@
   Note: Calls to this function can be nested
 */
 
-
 static uint8_t m2_calc_hlist_width_overlap_correction(uint8_t width, uint8_t cnt)
 {
-  cnt--;
-  if ( cnt > 0 )
+  if ( cnt >= 2 )
   {
+    cnt--;
     cnt *= m2_gfx_get_list_overlap_width();
     width -= cnt;
   }
@@ -81,6 +81,10 @@ void m2_calc_hlist_box(m2_rom_void_p element, uint8_t arg, m2_pcbox_p data)
   data->c.x += m2_calc_hlist_width_overlap_correction(m2_el_calc_child_fn(element, 0, arg, 0, 1), arg);
   data->c.x += data->p.x;
   data->c.y = data->p.y;  
+#ifdef M2_EL_MSG_DBG_SHOW
+  printf("- hlist calc box: idx:%d cx:%d cy:%d px:%d py:%d (delta:%d, argoverlapcorr:%d)\n", arg, data->c.x, data->c.y, data->p.x, data->p.y, delta,
+    m2_calc_hlist_width_overlap_correction(m2_el_calc_child_fn(element, 0, arg, 0, 1), arg));
+#endif
 }
 
 uint8_t m2_el_hlist_fn(m2_el_fnarg_p fn_arg)
@@ -112,7 +116,7 @@ uint8_t m2_el_hlist_fn(m2_el_fnarg_p fn_arg)
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
 	width = m2_calc_hlist_width((fn_arg->element));
 	height = m2_calc_hlist_height((fn_arg->element));
-	printf("lst w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
+	printf("hlst w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
 	      (fn_arg->arg), b->x, b->y, m2_el_list_get_len_by_element(fn_arg->element));
       }
       return 0;

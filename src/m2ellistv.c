@@ -26,6 +26,7 @@
 #include "m2.h"
 #ifdef M2_EL_MSG_DBG_SHOW
 #include <stdio.h>
+#include <assert.h>
 #endif
 
 /*
@@ -39,9 +40,9 @@
 
 uint8_t m2_calc_vlist_height_overlap_correction(uint8_t height, uint8_t cnt)
 {
-  cnt--;
-  if ( cnt > 0 )
+  if ( cnt >= 2 )
   {
+    cnt--;
     cnt *= m2_gfx_get_list_overlap_height();
     height -= cnt;
   }
