@@ -505,6 +505,10 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_GET_ICON_HEIGHT:
       return m2_sdlgfx_get_icon_height(arg->font, arg->icon);
     case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
+      /* scroll bar: "total" total number of items */
+      /* scroll bar: "top" topmost item (first visible item) 0 .. total-visible*/
+      /* scroll bar: "visible" number of visible items 0 .. total-1 */
+
       m2_sdlgfx_box(arg->x, arg->y, arg->w, arg->h);
       {
 	uint16_t h, y;

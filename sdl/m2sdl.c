@@ -238,7 +238,9 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
       return "bbbb";
     else if ( idx == 2 )
       return "cccc";
-    return "dddd";
+    else if ( idx == 3 )
+      return "dddd";
+    return "zzzz";
   }
   else
   {
@@ -248,7 +250,7 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
 
 
 uint8_t el_strlist_first = 0;
-uint8_t el_strlist_cnt = 4;
+uint8_t el_strlist_cnt = 5;
 
 M2_STRLIST(el_strlist, "l2w100", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
 M2_VSB(el_strlist_vsb, "l2w10r1", &el_strlist_first, &el_strlist_cnt);
