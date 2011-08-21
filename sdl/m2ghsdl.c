@@ -512,6 +512,8 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
       m2_sdlgfx_box(arg->x, arg->y, arg->w, arg->h);
       {
 	uint16_t h, y;
+	
+#ifdef OBSOLETE
 	/* h = visible * arg->h / total */
 	h = arg->h;
 	h-=2;
@@ -524,6 +526,11 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
 	y -= h;
 	y *= arg->top;
 	y /= arg->total-arg->visible;
+#endif
+	h = m2_utl_sb_get_slider_height(arg->h-2, arg->total, arg->visible);
+	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 
+
+	
 	m2_sdlgfx_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;

@@ -856,6 +856,12 @@ void m2_el_slbase_adjust_top_to_cnt(m2_rom_void_p element) M2_NOINLINE;						/* 
 /*==============================================================*/
 uint8_t *m2_el_setval_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elsetval.c */
 
+
+/*==============================================================*/
+/* helper procedures for the graphics handler */
+uint8_t m2_utl_sb_get_slider_height(uint8_t height, uint8_t total, uint8_t visible);					/* m2elsb.c */
+uint8_t m2_utl_sb_get_slider_position(uint8_t height, uint8_t slider, uint8_t total, uint8_t visible, uint8_t top); /* m2elsb.c */
+
 /*==============================================================*/
 /* m2gfx.c */
 

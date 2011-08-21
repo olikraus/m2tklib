@@ -66,3 +66,59 @@ M2_EL_FN_DEF(m2_el_vsb_fn)
   }
   return m2_el_fnfmt_fn(fn_arg);
 }
+
+/*
+  calculate pixel height of the slider.
+  visible = number of visible lines
+  height = total height of the scroll bar in pixel
+  total = total number of lines
+  
+  h = visible * height / total
+
+  this is a support procedure for the graphics handler
+*/
+uint8_t m2_utl_sb_get_slider_height(uint8_t height, uint8_t total, uint8_t visible)
+{
+  uint16_t tmp;
+  uint8_t slider;
+  if ( total <= visible )
+    return height;
+  tmp = height;
+  tmp *= visible;
+  tmp /= total;
+  slider = tmp;
+  if ( slider == 0 )
+    slider++;
+  /*
+  if ( visible < total )
+    if ( sbh == height )
+      sbh--;
+  */
+  return slider;
+}
+
+/*
+  calculate the slider pixel position
+
+  height = total height of the scroll bar in pixel
+  slider = slider height, returned from m2_utl_sb_get_slider_height()
+  visible = number of visible lines
+  total = total number of lines
+  top = topmost visible line
+
+  position = top*(height-slider)/(total-visible)
+
+  this is a support procedure for the graphics handler
+*/
+uint8_t m2_utl_sb_get_slider_position(uint8_t height, uint8_t slider, uint8_t total, uint8_t visible, uint8_t top)
+{
+  uint16_t pos;
+  if ( total <= visible )
+    return 0;
+  height -= slider;
+  total -= visible;
+  pos = top;
+  pos *= height;
+  pos /= total;
+  return pos;
+}
