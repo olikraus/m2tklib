@@ -868,9 +868,9 @@ struct _m2_gfx_arg
   uint8_t h;
   uint8_t font;
   uint8_t icon;
-  uint8_t total;		/* scroll bar */
-  uint8_t top;		/* scroll bar */
-  uint8_t visible;	/* scroll bar */
+  uint8_t total;		/* scroll bar: total number of items */
+  uint8_t top;		/* scroll bar: topmost item (first visible item) */
+  uint8_t visible;	/* scroll bar: number of visible items */
   const char *s;
 };
 

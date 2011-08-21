@@ -513,9 +513,18 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p  arg)
 	h *= arg->visible;
 	h /= arg->total;
 	y = arg->h;
-	y-=2;
-	y *= arg->top;
-	y /= arg->total;
+	y -= 2;
+	if ( arg->top + arg->visible >= arg->total )
+	{
+	  /* treat this as special case to avoid rounding errors on the lowest position */
+	  y -= h;
+	}
+	else
+	{
+	  /* general case */
+	  y *= arg->top;
+	  y /= arg->total;
+	}
 	m2_sdlgfx_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;
