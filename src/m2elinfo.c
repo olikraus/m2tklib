@@ -25,14 +25,18 @@
 
 #include "m2.h"
 
+uint8_t m2_el_info_goto_next_line_break(void) M2_NOINLINE;
+void m2_el_info_ptr_inc(void) M2_NOINLINE;
+
+
 /* number of chars in the RAM buffer, must include the terminating '\0' character */
 #define M2_INFO_LINE_LEN 40
-void *m2_el_info_ptr;
+uint8_t *m2_el_info_ptr;
 char m2_el_info_line[M2_INFO_LINE_LEN];
 
 void m2_el_info_ptr_inc(void)
 {
-  ((uint8_t *)m2_el_info_str_ptr)++;
+  m2_el_info_ptr++;
 }
 
 /* move m2_el_info_str_ptr to the next line break */
@@ -40,15 +44,17 @@ void m2_el_info_ptr_inc(void)
 uint8_t m2_el_info_goto_next_line_break(void)
 {
   uint8_t c;
+  uint8_t *ptr = m2_el_info_ptr;
   for(;;)
   {
-    c = *(uint8_t *)m2_el_info_str_ptr;
+    c = *ptr;
     if ( c == '\n' )
       break;
     if ( c == '\0' )
       break;
-    m2_el_info_ptr_inc();
+    ptr++;
   }
+  m2_el_info_ptr = ptr;
   return c;
 }
 
