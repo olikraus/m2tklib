@@ -151,3 +151,23 @@ void m2_el_slbase_adjust_top_to_cnt(m2_rom_void_p element)
   }
 }
  
+void m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p data)
+{
+  uint8_t visible_pos = m2_el_slbase_get_visible_pos(el_slbase, idx);
+  uint8_t y;
+  data->c.y = data->p.y;
+  data->c.x = data->p.x;
+  
+  if ( visible_pos == M2_EL_SLBASE_ILLEGAL )
+    return;
+  
+  y = m2_gfx_get_char_height_with_normal_border(m2_el_fmfmt_get_font_by_element(el_slbase));
+  y *= visible_pos;
+  visible_pos++;  /* for the overlap correction */
+  y = m2_calc_vlist_height_overlap_correction(y, visible_pos);
+  data->c.y += y;
+#ifdef M2_EL_MSG_DBG_SHOW
+  printf("- slbase calc box: idx:%d pos:%d cx:%d cy:%d px:%d py:%d\n", idx, visible_pos, data->c.x, data->c.y, data->p.x, data->p.y);
+#endif
+}
+

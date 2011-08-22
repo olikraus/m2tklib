@@ -363,7 +363,7 @@ typedef const char *(*m2_strlist_cb_fnptr)(uint8_t idx, uint8_t msg);
 struct _m2_el_fnfmt_struct
 {
   m2_el_fnptr fn;		/* fn must be the first member of the struct */
-  m2_rom_char_p fmt; 
+  m2_rom_char_p fmt; 	/* hmmm.... format options are located in ram */
 };
 /* see above 
 typedef struct _m2_el_fnfmt_struct m2_el_fnfmt_t;
@@ -570,22 +570,6 @@ m2_get_str_fnptr m2_el_combo_get_str_fnptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 const char *m2_el_combo_get_str(m2_el_fnarg_p fn_arg, uint8_t idx) M2_NOINLINE;
 uint8_t m2_el_combo_get_max_len_idx(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 
-#ifdef OBSOLETE
-
-struct _m2_el_strlist_struct
-{
-  m2_el_combo_t combo;
-  uint8_t *top_element;
-};
-typedef struct _m2_el_strlist_struct m2_el_strlist_t;
-typedef m2_el_strlist_t *m2_el_strlist_p;
-
-M2_EL_FN_DEF(m2_el_strlist_fn);
-#define M2_STRLIST(el,fmt,variable,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { { m2_el_strlist_fn, (fmt) }, (variable) }, (cnt), (fnptr) }, (first) }
-#define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
-
-#endif /* OBSOLETE */
-
 /* slbase.c */
 
 struct _m2_el_slbase_struct
@@ -613,6 +597,17 @@ M2_EL_FN_DEF(m2_el_strlist_fn);
 #define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
 #define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
 
+struct _m2_el_info_struct
+{
+  m2_el_slbase_t slbase;
+  m2_rom_char_p info_str;
+};
+typedef struct _m2_el_info_struct m2_el_info_t;
+typedef m2_el_info_t *m2_el_info_p;
+
+M2_EL_FN_DEF(m2_el_info_fn);
+#define M2_INFO(el,fmt,first,cnt,str) m2_el_info_t el M2_SECTION_PROGMEM = { { { m2_el_info_fn, (fmt) }, (first), (cnt) }, (str) }
+#define M2_EXTERN_INFO(el) extern m2_el_info_t el
 
 /*==============================================================*/
 /* m2nav....c */
@@ -852,6 +847,7 @@ uint8_t m2_el_slbase_calc_height(m2_rom_void_p element) M2_NOINLINE;						/* m2e
 uint8_t m2_el_slbase_calc_width(m2_rom_void_p element) M2_NOINLINE;						/* m2elslbase.c */
 void m2_el_slbase_adjust_top_to_focus(m2_rom_void_p element, uint8_t pos) M2_NOINLINE;			/* m2elslbase.c */
 void m2_el_slbase_adjust_top_to_cnt(m2_rom_void_p element) M2_NOINLINE;						/* m2elslbase.c */
+void m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p data);				/* m2elslbase.c */
 
 /*==============================================================*/
 uint8_t *m2_el_setval_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elsetval.c */
