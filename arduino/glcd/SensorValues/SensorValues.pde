@@ -278,11 +278,38 @@ M2tk m2(&el_options, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_ffs);
 /* Sensor process */
 /*==========================================================================*/
 
+/* sensor1 process assignes state of a flashing LED */
+
+uint8_t led_state = 0;
+uint32_t next_change = 0;
+uint8_t is_flashing = 0;
+uint8_t flash_delay = 7;
+
 void sensor1_process(void) {
+  // wait until timer as expired
+  if ( next_change < millis() ) {
+    if ( led_state == 0 ) {
+      digitalWrite(13, HIGH);  // set the LED on    
+      led_state = 1;
+    } else {
+      digitalWrite(13, LOW);   // set the LED off
+      led_state = 0;
+    }
+    // wait for x*50ms, were x is between 0 and 9
+    next_change = millis() + (flash_delay*50L);
+  } 
+  if ( led_state != value1 ) {
+    value1 = led_state;
+    is_value_changed = 1;
+  }
 }
+
+/* sensor1 process does nothing */
 
 void sensor2_process(void) {
 }
+
+/* sensor3 process assignes a 1/10 seconds since reset */
 
 void sensor3_process(void) {
   uint32_t tmp;
