@@ -94,7 +94,7 @@ void m2_el_info_goto_line(uint8_t line)
   }
 }
 
-/* copy the line to the RAM buffer */
+/* copy the line to the RAM buffer and add '\0' */
 /* m2_el_info_ptr must be set to the start of the line, before calling this procedure */
 void m2_el_info_copy_line(void)
 {
