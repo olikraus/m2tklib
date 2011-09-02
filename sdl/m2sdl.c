@@ -263,11 +263,29 @@ M2_LIST(el_strlist_list) = { &el_strlist_hlist, &el_strlist_el_cnt, &el_goto_top
 M2_VLIST(el_strlist_top, NULL, el_strlist_list);
 
 /*===================================================================*/
+/* infolist */
+
+uint8_t el_infolist_first = 0;
+uint8_t el_infolist_cnt = 5;
+
+M2_INFO(el_infolist, "l2w100", &el_infolist_first, &el_infolist_cnt, "1\n2\n3\n4\n5\n6\n7\n8\n9");
+M2_VSB(el_infolist_vsb, "l2w10r1", &el_infolist_first, &el_infolist_cnt);
+
+M2_LIST(el_infolist_sblist) = { &el_infolist, &el_infolist_vsb };
+M2_HLIST(el_infolist_hlist, NULL, el_infolist_sblist);
+
+M2_U8NUM(el_infolist_el_cnt,"c3",0, 10, &el_infolist_cnt);
+M2_U8NUM(el_infolist_el_first,"c3",0, 10, &el_infolist_first);
+M2_LIST(el_infolist_list) = { &el_infolist_hlist, &el_infolist_el_cnt, &el_infolist_el_first, &el_goto_top };
+M2_VLIST(el_infolist_top, NULL, el_infolist_list);
+
+
+/*===================================================================*/
 /* top menu */
 
 M2_ROOT(el_to_gridlist, base_fmt,"Grid",&el_gridlist);
-M2_ROOT(el_to_alignlist, base_fmt,"AlignList",&el_alignlist);
-M2_ROOT(el_to_labellist, base_fmt,"LabelList",&el_label_list);
+M2_ROOT(el_to_alignlist, base_fmt,"AlignLst",&el_alignlist);
+M2_ROOT(el_to_labellist, base_fmt,"LabelLst",&el_label_list);
 M2_ROOT(el_to_hlist, base_fmt, "H-List", &el_hlist);
 M2_ROOT(el_to_single_u32, base_fmt, "U32", &single_u32);
 M2_ROOT(el_to_xy_list, base_fmt, "XY", &el_xy_list);
@@ -275,13 +293,15 @@ M2_ROOT(el_to_issue6, base_fmt, "Issue6", &issue6__main);
 M2_ROOT(el_to_issue8, base_fmt, "Issue8", &issue8_setup);
 M2_BUTTON(el_set_msg, NULL, "MSG", fn_set_msg);
 M2_ROOT(el_to_combo, base_fmt, "combo", &el_combo_top);
-M2_ROOT(el_to_strlist, base_fmt, "strlist", &el_strlist_top);
+M2_ROOT(el_to_strlist, base_fmt, "strlst", &el_strlist_top);
+M2_ROOT(el_to_infolist, base_fmt, "info", &el_infolist_top);
 
 
 
-void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist };
+void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, 
+  &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist, &el_to_infolist };
 
-M2_GRIDLIST(_el_top,"c2",top_list);
+M2_GRIDLIST(_el_top,"c3",top_list);
 
 /*m2_el_list_t _el_top = { { m2_el_vlist_fn, "" } , sizeof(top_list)/sizeof(*top_list), top_list };*/
 M2_ALIGN(el_top, "w128h64", &_el_top);

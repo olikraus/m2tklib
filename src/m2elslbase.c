@@ -171,3 +171,38 @@ void m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p data
 #endif
 }
 
+/*
+  show the string on the display
+*/
+void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *s)
+{
+  m2_pos_p b = (m2_pos_p)(fn_arg->data);
+  uint8_t pos = m2_nav_get_child_pos(fn_arg->nav);
+  uint8_t font = m2_el_parent_get_font(fn_arg->nav);
+  uint8_t visible_pos = m2_el_slbase_get_visible_pos(m2_nav_get_parent_element(fn_arg->nav), pos);
+  
+  /* printf("STRLINE M2_EL_MSG_SHOW arg = %d, visible_pos = %d\n", fn_arg->arg, visible_pos); */
+  
+  if ( visible_pos != M2_EL_SLBASE_ILLEGAL )
+  {
+    uint8_t w, h;
+    w = m2_el_slbase_calc_width(m2_nav_get_parent_element(fn_arg->nav));
+    h = m2_gfx_get_char_height_with_normal_border(font);
+    
+    /*
+      there is a sw architecture problem here: m2_el_fnfmt_fn() can not be called to create
+      the focus/border, because the width of the element depends on the parent
+    */
+    if ( m2_is_frame_draw_at_end != 0 )
+      m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, s);
+      
+    if ( fn_arg->arg < 2 )
+      m2_gfx_normal_no_focus(b->x, b->y, w, h, font);      
+    else if ( fn_arg->arg == 2 )
+      m2_gfx_normal_focus(b->x, b->y, w, h, font);
+    
+    if ( m2_is_frame_draw_at_end == 0 )
+      m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, s);
+  }
+}
+

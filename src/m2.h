@@ -848,6 +848,7 @@ uint8_t m2_el_slbase_calc_width(m2_rom_void_p element) M2_NOINLINE;						/* m2el
 void m2_el_slbase_adjust_top_to_focus(m2_rom_void_p element, uint8_t pos) M2_NOINLINE;			/* m2elslbase.c */
 void m2_el_slbase_adjust_top_to_cnt(m2_rom_void_p element) M2_NOINLINE;						/* m2elslbase.c */
 void m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p data);				/* m2elslbase.c */
+void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *s);								/* m2elslbase.c */
 
 /*==============================================================*/
 uint8_t *m2_el_setval_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elsetval.c */

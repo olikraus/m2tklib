@@ -24,6 +24,9 @@
 */
 
 #include "m2.h"
+#ifdef M2_EL_MSG_DBG_SHOW
+#include <stdio.h>
+#endif
 
 uint8_t m2_el_info_goto_next_line_break(void) M2_NOINLINE;
 void m2_el_info_ptr_inc(void) M2_NOINLINE;
@@ -112,6 +115,7 @@ void m2_el_info_copy_line(void)
       break;
     if ( pos >= M2_INFO_LINE_LEN-1 )
       break;
+    pos++;
     ptr++;
   }
   m2_el_info_line[pos] = '\0';
@@ -138,18 +142,70 @@ uint8_t *m2_el_info_get_ptr(m2_rom_void_p element)
 /*==============================================================*/
 /* info function */
 
-#ifdef NOT_YET_FINISHED
+M2_EL_FN_DEF(m2_el_infoline_fn)
+{
+  uint8_t font;
+  uint8_t pos;
+
+  font = m2_el_parent_get_font(fn_arg->nav);
+  pos = m2_nav_get_child_pos(fn_arg->nav);
+  
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_GET_LIST_LEN:
+        return 0;  /* not a list, return 0 */
+    case M2_EL_MSG_GET_HEIGHT:
+      return m2_gfx_get_char_height_with_normal_border(font);
+    case M2_EL_MSG_GET_WIDTH:
+      return m2_el_slbase_calc_width(m2_nav_get_parent_element(fn_arg->nav));
+    case M2_EL_MSG_NEW_FOCUS:
+      m2_el_slbase_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
+      return 1;
+#ifdef M2_EL_MSG_DBG_SHOW
+    case M2_EL_MSG_DBG_SHOW:
+      {
+	uint8_t width, height;
+	m2_pos_p b = (m2_pos_p)(fn_arg->data);
+	width = m2_el_slbase_calc_width((fn_arg->element));
+	height = m2_el_slbase_calc_height((fn_arg->element));
+	m2_el_info_ptr = m2_el_info_get_ptr(m2_nav_get_parent_element(fn_arg->nav));
+	m2_el_info_get_line(pos);
+	printf("infoline w:%d h:%d arg:%d x:%d y:%d '%s'\n", width, height, 
+	    (fn_arg->arg), b->x, b->y, m2_el_info_line);
+      }
+      return 0;
+#endif
+    case M2_EL_MSG_SHOW:
+      m2_el_info_ptr = m2_el_info_get_ptr(m2_nav_get_parent_element(fn_arg->nav));
+      m2_el_info_get_line(pos);
+      m2_el_slbase_show(fn_arg, m2_el_info_line);
+      return 1;
+  }
+  return 0;
+  
+}
+
+
+m2_el_fnfmt_t m2_el_virtual_infoline M2_SECTION_PROGMEM = 
+{
+  m2_el_infoline_fn, NULL
+};
+
 
 M2_EL_FN_DEF(m2_el_info_fn)
 {
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_LIST_LEN:
-      m2_el_info_ptr = m2_el_info_get_ptr(fn_arg->element);
-      return m2_el_info_get_lines();
-      //return m2_el_slbase_get_len(fn_arg->element);
+      {
+	uint8_t cnt;
+	m2_el_info_ptr = m2_el_info_get_ptr(fn_arg->element);
+	cnt = m2_el_info_get_lines();
+	*m2_el_slbase_get_len_ptr(fn_arg->element) = cnt;
+	return cnt;
+      }
     case M2_EL_MSG_GET_LIST_ELEMENT:
-      *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_strline;
+      *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_infoline;
       return 1;
     case M2_EL_MSG_IS_AUTO_SKIP:
       return 1;
@@ -189,4 +245,3 @@ M2_EL_FN_DEF(m2_el_info_fn)
   return m2_el_fnfmt_fn(fn_arg);
 }
 
-#endif
