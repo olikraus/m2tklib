@@ -116,6 +116,7 @@ uint8_t m2_el_align_fn(m2_el_fnarg_p fn_arg)
       ((m2_pcbox_p)(fn_arg->data))->c.x = m2_align_get_pos(fn_arg, 0, m2_opt_get_val(m2_el_fnfmt_get_fmt(fn_arg), '-'));
       ((m2_pcbox_p)(fn_arg->data))->c.y += ((m2_pcbox_p)(fn_arg->data))->p.y; 
       ((m2_pcbox_p)(fn_arg->data))->c.x += ((m2_pcbox_p)(fn_arg->data))->p.x; 
+      return 1; /* element is always visible */
     case M2_EL_MSG_GET_HEIGHT:
       return m2_align_get_new_size(fn_arg, 1);
     case M2_EL_MSG_GET_WIDTH:

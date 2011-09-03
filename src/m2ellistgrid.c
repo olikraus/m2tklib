@@ -223,7 +223,7 @@ uint8_t m2_el_gridlist_fn(m2_el_fnarg_p fn_arg)
   {
     case M2_EL_MSG_GET_LIST_BOX:
       m2_calc_gridlist_box((fn_arg->element), fn_arg->arg, (m2_pcbox_p)(fn_arg->data));
-      return 1;
+      return 1; /* element is always visible */
     case M2_EL_MSG_GET_HEIGHT:
       return m2_calc_gridlist_height(fn_arg->element);
     case M2_EL_MSG_GET_WIDTH:

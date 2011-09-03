@@ -600,14 +600,26 @@ M2_EL_FN_DEF(m2_el_strlist_fn);
 struct _m2_el_info_struct
 {
   m2_el_slbase_t slbase;
-  m2_rom_char_p info_str;
+  const char *info_str;
 };
 typedef struct _m2_el_info_struct m2_el_info_t;
 typedef m2_el_info_t *m2_el_info_p;
 
+struct _m2_el_infop_struct
+{
+  m2_el_slbase_t slbase;
+  m2_rom_char_p info_str;
+};
+typedef struct _m2_el_infop_struct m2_el_infop_t;
+typedef m2_el_infop_t *m2_el_infop_p;
+
 M2_EL_FN_DEF(m2_el_info_fn);
 #define M2_INFO(el,fmt,first,cnt,str) m2_el_info_t el M2_SECTION_PROGMEM = { { { m2_el_info_fn, (fmt) }, (first), (cnt) }, (str) }
 #define M2_EXTERN_INFO(el) extern m2_el_info_t el
+
+M2_EL_FN_DEF(m2_el_infop_fn);
+#define M2_INFOP(el,fmt,first,cnt,str) m2_el_infop_t el M2_SECTION_PROGMEM = { { { m2_el_infop_fn, (fmt) }, (first), (cnt) }, (str) }
+#define M2_EXTERN_INFOP(el) extern m2_el_infop_t el
 
 /*==============================================================*/
 /* m2nav....c */
@@ -847,7 +859,7 @@ uint8_t m2_el_slbase_calc_height(m2_rom_void_p element) M2_NOINLINE;						/* m2e
 uint8_t m2_el_slbase_calc_width(m2_rom_void_p element) M2_NOINLINE;						/* m2elslbase.c */
 void m2_el_slbase_adjust_top_to_focus(m2_rom_void_p element, uint8_t pos) M2_NOINLINE;			/* m2elslbase.c */
 void m2_el_slbase_adjust_top_to_cnt(m2_rom_void_p element) M2_NOINLINE;						/* m2elslbase.c */
-void m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p data);				/* m2elslbase.c */
+uint8_t m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p data);			/* m2elslbase.c */
 void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *s);								/* m2elslbase.c */
 
 /*==============================================================*/

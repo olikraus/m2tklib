@@ -125,35 +125,36 @@ void m2_draw_sub(m2_pos_p box)
 	/* request child position from the parent */
 	m2_nav_prepare_fn_arg_parent_element(&m2_draw_current);
 	m2_fn_arg_set_arg_data(m2_draw_current.pos[m2_draw_current.depth-2], &pcbox);
-	m2_fn_arg_call(M2_EL_MSG_GET_LIST_BOX);
-	/* request down flag from the child */
-	m2_fn_arg_set_element(m2_nav_get_current_element(&m2_draw_current));
-	m2_fn_arg_set_arg_data('d', &draw_without_focus);
-	m2_fn_arg_call(M2_EL_MSG_GET_OPT);
-
-	/* request auto down from child */
-	is_auto_skip = m2_fn_arg_call(M2_EL_MSG_IS_AUTO_SKIP);
-	
-	is_focus = 0;
-	if ( m2_draw_current.depth <= m2_draw_focus->depth )
-	  if ( m2_draw_current.pos[m2_draw_current.depth-2]  == m2_draw_focus->pos[m2_draw_current.depth-2] )
-	    is_focus = 1;
-	
-	  
-	/* draw the child */
-	
-	if ( m2_is_frame_draw_at_end == 0 )
-	  m2_draw_visit_node(&(pcbox.c), M2_EL_MSG_SHOW);
-	  
-	/* if ( (draw_without_focus == 1) || (m2_draw_current.pos[m2_draw_current.depth-2]  == m2_draw_focus->pos[m2_draw_current.depth-2]) ) */
-	if ( (draw_without_focus == 1) || is_focus != 0 || is_auto_skip != 0 )
+	if ( m2_fn_arg_call(M2_EL_MSG_GET_LIST_BOX) )
 	{
-	  m2_draw_sub(&(pcbox.c));
-	}
-	
-	if ( m2_is_frame_draw_at_end != 0 )
-	  m2_draw_visit_node(&(pcbox.c), M2_EL_MSG_SHOW);
-	
+	  /* request down flag from the child */
+	  m2_fn_arg_set_element(m2_nav_get_current_element(&m2_draw_current));
+	  m2_fn_arg_set_arg_data('d', &draw_without_focus);
+	  m2_fn_arg_call(M2_EL_MSG_GET_OPT);
+
+	  /* request auto down from child */
+	  is_auto_skip = m2_fn_arg_call(M2_EL_MSG_IS_AUTO_SKIP);
+	  
+	  is_focus = 0;
+	  if ( m2_draw_current.depth <= m2_draw_focus->depth )
+	    if ( m2_draw_current.pos[m2_draw_current.depth-2]  == m2_draw_focus->pos[m2_draw_current.depth-2] )
+	      is_focus = 1;
+	  
+	    
+	  /* draw the child */
+	  
+	  if ( m2_is_frame_draw_at_end == 0 )
+	    m2_draw_visit_node(&(pcbox.c), M2_EL_MSG_SHOW);
+	    
+	  /* if ( (draw_without_focus == 1) || (m2_draw_current.pos[m2_draw_current.depth-2]  == m2_draw_focus->pos[m2_draw_current.depth-2]) ) */
+	  if ( (draw_without_focus == 1) || is_focus != 0 || is_auto_skip != 0 )
+	  {
+	    m2_draw_sub(&(pcbox.c));
+	  }
+	  
+	  if ( m2_is_frame_draw_at_end != 0 )
+	    m2_draw_visit_node(&(pcbox.c), M2_EL_MSG_SHOW);
+	} /* M2_EL_MSG_GET_LIST_BOX successfull */
       } while( m2_nav_next(&m2_draw_current) != 0 );
       
       

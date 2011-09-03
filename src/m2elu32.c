@@ -420,7 +420,7 @@ M2_EL_FN_DEF(m2_el_u32_fn)
     case M2_EL_MSG_GET_LIST_BOX:
       ((m2_pcbox_p)(fn_arg->data))->c.x=m2_gfx_add_normal_border_x(font, ((m2_pcbox_p)(fn_arg->data))->p.x + fn_arg->arg*m2_gfx_get_char_width_with_small_border(font));
       ((m2_pcbox_p)(fn_arg->data))->c.y=m2_gfx_add_normal_border_y(font, ((m2_pcbox_p)(fn_arg->data))->p.y);
-      return 1;
+      return 1;  /* element is always visible */
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_add_normal_border_height(font, m2_gfx_get_char_height_with_small_border(font));
     case M2_EL_MSG_GET_WIDTH:

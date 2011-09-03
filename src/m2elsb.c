@@ -50,6 +50,7 @@ M2_EL_FN_DEF(m2_el_vsb_fn)
       return 0;
 #endif
       case M2_EL_MSG_SHOW:
+
 	/* MSG_SHOW: parent is drawn before the sub elements */
 	/* adjust top element to total size, if required */
 	m2_el_slbase_adjust_top_to_cnt(fn_arg->element);

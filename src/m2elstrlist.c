@@ -131,8 +131,7 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
 	/* else... break out of the switch and let the base class do the rest of the work */
 	break;
     case M2_EL_MSG_GET_LIST_BOX:
-      m2_el_slbase_calc_box(fn_arg->element, fn_arg->arg, ((m2_pcbox_p)(fn_arg->data)));
-      return 1;
+      return m2_el_slbase_calc_box(fn_arg->element, fn_arg->arg, ((m2_pcbox_p)(fn_arg->data)));
     case M2_EL_MSG_GET_HEIGHT:
       return m2_el_slbase_calc_height((fn_arg->element));
     case M2_EL_MSG_GET_WIDTH:
