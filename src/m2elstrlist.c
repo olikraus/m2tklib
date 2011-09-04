@@ -56,6 +56,11 @@ const char *m2_el_strlist_get_str(m2_rom_void_p element, uint8_t idx)
   return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_GET_STR);
 }
 
+const char *m2_el_strlist_select(m2_rom_void_p element, uint8_t idx)
+{
+  return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_SELECT);
+}
+
 /*==============================================================*/
 /* strlist utility procedures */
 
@@ -82,6 +87,9 @@ M2_EL_FN_DEF(m2_el_strline_fn)
       return m2_el_slbase_calc_width(m2_nav_get_parent_element(fn_arg->nav));
     case M2_EL_MSG_NEW_FOCUS:
       m2_el_slbase_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
+      return 1;
+    case M2_EL_MSG_SELECT:
+      m2_el_strlist_select(m2_nav_get_parent_element(fn_arg->nav), pos);
       return 1;
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:

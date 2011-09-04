@@ -197,6 +197,11 @@ uint8_t *m2_el_info_get_ptr(m2_rom_void_p element)
   return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_info_t, info_str));
 }
 
+m2_button_fnptr m2_el_info_get_callback(m2_rom_void_p element)
+{
+  return (m2_button_fnptr)m2_rom_get_ram_ptr(element, offsetof(m2_el_infobase_t, select_callback));
+}
+
 
 /*==============================================================*/
 /* info function */
@@ -220,6 +225,20 @@ M2_EL_FN_DEF(m2_el_infoline_base_fn)
     case M2_EL_MSG_NEW_FOCUS:
       m2_el_slbase_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
       return 1;
+    case M2_EL_MSG_SELECT:
+    {
+      m2_button_fnptr fn;
+      fn = m2_el_info_get_callback(m2_nav_get_parent_element(fn_arg->nav));
+      if ( fn != NULL )
+	fn(fn_arg);
+      /*
+	the current line (starts at 0) can be calculated within fn by using
+	  m2_nav_get_child_pos(fn_arg->nav);
+	the total number of lines is returned by
+	  m2_el_slbase_get_len(m2_nav_get_parent_element(fn_arg->nav))
+      */
+      return 1;
+    }
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {

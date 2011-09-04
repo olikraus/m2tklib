@@ -223,7 +223,7 @@ uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
 	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 
 
 	
-	m2_dogm_draw_frame(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
+	m2_dogm_draw_xorbox(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;
   }

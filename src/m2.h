@@ -125,7 +125,7 @@ typedef uint8_t (*m2_gfx_fnptr)(m2_gfx_arg_p arg);
 /* element callback procedure */
 typedef uint8_t (*m2_el_fnptr)(m2_el_fnarg_p fn_arg);
 
-/* button callback procedure */
+/* button, elinfo callback procedure */
 typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 
 /* generic rom pointers */
@@ -597,9 +597,19 @@ M2_EL_FN_DEF(m2_el_strlist_fn);
 #define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
 #define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
 
-struct _m2_el_info_struct
+
+struct _m2_el_infobase_struct
 {
   m2_el_slbase_t slbase;
+  m2_button_fnptr select_callback;
+};
+typedef struct _m2_el_infobase_struct m2_el_infobase_t;
+typedef m2_el_infobase_t *m2_el_infobase_p;
+
+
+struct _m2_el_info_struct
+{
+  m2_el_infobase_t infobase;
   const char *info_str;
 };
 typedef struct _m2_el_info_struct m2_el_info_t;
@@ -607,18 +617,18 @@ typedef m2_el_info_t *m2_el_info_p;
 
 struct _m2_el_infop_struct
 {
-  m2_el_slbase_t slbase;
+  m2_el_infobase_t infobase;
   m2_rom_char_p info_str;
 };
 typedef struct _m2_el_infop_struct m2_el_infop_t;
 typedef m2_el_infop_t *m2_el_infop_p;
 
 M2_EL_FN_DEF(m2_el_info_fn);
-#define M2_INFO(el,fmt,first,cnt,str) m2_el_info_t el M2_SECTION_PROGMEM = { { { m2_el_info_fn, (fmt) }, (first), (cnt) }, (str) }
+#define M2_INFO(el,fmt,first,cnt,str,cb) m2_el_info_t el M2_SECTION_PROGMEM = { { { { m2_el_info_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
 #define M2_EXTERN_INFO(el) extern m2_el_info_t el
 
 M2_EL_FN_DEF(m2_el_infop_fn);
-#define M2_INFOP(el,fmt,first,cnt,str) m2_el_infop_t el M2_SECTION_PROGMEM = { { { m2_el_infop_fn, (fmt) }, (first), (cnt) }, (str) }
+#define M2_INFOP(el,fmt,first,cnt,str,cb) m2_el_infop_t el M2_SECTION_PROGMEM = { { { { m2_el_infop_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
 #define M2_EXTERN_INFOP(el) extern m2_el_infop_t el
 
 /*==============================================================*/
