@@ -32,8 +32,9 @@ extern "C" {
 
 extern void *m2_Arial14;
 extern void *m2_System5x7;
-
-
+extern void *m2_fixednums7x15;
+extern void *m2_fixednums15x31;
+  
 extern uint8_t m2_is_glcd_init;
  
 uint8_t m2_gh_glcd_y(uint8_t y);
