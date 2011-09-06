@@ -184,6 +184,22 @@ extern "C" uint8_t m2_gh_glcd_base(m2_gfx_arg_p  arg)
 	m2_gh_glcd_fonts[idx] = arg->s;
       }
       return 0;
+    case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
+      /* scroll bar: "total" total number of items */
+      /* scroll bar: "top" topmost item (first visible item) 0 .. total-visible*/
+      /* scroll bar: "visible" number of visible items 0 .. total-1 */
+
+      m2_gh_glcd_draw_frame(arg->x, arg->y, arg->w, arg->h);
+      {
+	uint16_t h, y;
+	
+	h = m2_utl_sb_get_slider_height(arg->h-2, arg->total, arg->visible);
+	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 
+
+	
+	m2_gh_glcd_draw_xorbox(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
+      }
+      return 1;
   }
   return m2_gh_dummy(arg);
 }
