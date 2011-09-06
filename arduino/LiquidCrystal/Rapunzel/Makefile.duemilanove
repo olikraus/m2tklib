@@ -36,7 +36,7 @@
 #	mega		Arduino Mega
 #	mini			Arduino Mini
 #	lilypad328	LilyPad Arduino w/ ATmega328  
-BOARD:=uno
+BOARD:=atmega328
   
 M2TKLIB_PATH:=/home/kraus/src/m2/m2tklib/src/
 M2DEV_PATH:=/home/kraus/src/m2/m2tklib/dev/LiquidCrystal/
@@ -54,12 +54,11 @@ AVRDUDE_PATH:=
 # The unix device where we can reach the arduino board
 # Uno: /dev/ttyACM0
 # Duemilanove: /dev/ttyUSB0
-AVRDUDE_PORT:=/dev/ttyACM0
+AVRDUDE_PORT:=/dev/ttyUSB0
 
 # List of all libaries which should be included.
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/LiquidCrystal/
 EXTRA_DIRS+=/home/kraus/src/m2/m2tklib/dev/arduino/
-EXTRA_DIRS+=$(M2DEV_PATH)
 EXTRA_DIRS+=/home/kraus/src/m2/m2tklib/cpp/
 
 #=== fetch parameter from boards.txt processor parameter ===

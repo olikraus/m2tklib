@@ -68,6 +68,34 @@ static void m2_gh_lc_set_cursor(uint8_t x, uint8_t y)
   m2_lc_ptr->setCursor(x, y);
 }
 
+/*
+  t: total height, 16 for two line display, 32 for 4 line display
+  b: border from top
+  y: distance from top where the slider starts (true start is y+b)
+  h: height of the slider
+*/
+void m2_gh_lc_set_vsb_char(uint8_t t, uint8_t b, uint8_t y, uint8_t h, uint8_t byte_index)
+{
+  uint8_t i;
+  uint8_t d;
+  uint8_t m2_gh_lc_vsb_char[8]; 
+  for( i = 0; i < t; i++ )
+  {
+    d = 0x11;
+    if ( i == 0 || i+1 == t )
+      d = 0x01f;
+    else if ( i >= y+b && i < y+b+h )
+      d = 0x01f;
+    if ( (i >> 3) == byte_index )
+    {
+      m2_gh_lc_vsb_char[i&7] = d;
+    }
+  }
+  
+  m2_lc_ptr->createChar(3+byte_index, m2_gh_lc_vsb_char);
+  
+}
+
 extern "C" uint8_t m2_gh_lc(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
@@ -131,6 +159,26 @@ extern "C" uint8_t m2_gh_lc(m2_gfx_arg_p  arg)
       return m2_lc_cols;
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
       return m2_lc_rows;
+    case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
+      /* scroll bar: "total" total number of items */
+      /* scroll bar: "top" topmost item (first visible item) 0 .. total-visible*/
+      /* scroll bar: "visible" number of visible items 0 .. total-1 */
+
+      {
+	uint16_t h, y, byte_index;
+	char c;
+	h = m2_utl_sb_get_slider_height(arg->h*8-2, arg->total, arg->visible);
+	y = m2_utl_sb_get_slider_position(arg->h*8-2, h, arg->total, arg->visible, arg->top); 
+	for( byte_index = 0; byte_index < arg->h; byte_index++ )
+	{
+	  m2_gh_lc_set_vsb_char(arg->h*8, 1, y, h, byte_index);
+	  m2_gh_lc_set_cursor(arg->x, arg->y+arg->h-1-byte_index);
+	  c = 3;
+	  c += byte_index;
+	  m2_lc_ptr->print(c);
+	}
+      }
+      return 1;
   }
   return m2_gh_dummy(arg);
 }
