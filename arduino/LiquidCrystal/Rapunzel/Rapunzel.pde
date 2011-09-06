@@ -2,6 +2,10 @@
 
   Rapunzel.pde
   
+  Short story Rapunzel, taken from gutenberg.org
+  Copyright expired at least for US and Germany.
+  See www.gutenberg.org for more information.
+  
   LiquidCrystal 16x4 example
 
   m2tklib = Mini Interative Interface Toolkit Library
