@@ -252,6 +252,7 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
 uint8_t el_strlist_first = 0;
 uint8_t el_strlist_cnt = 5;
 
+/*
 M2_STRLIST(el_strlist, "l2w100", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
 M2_VSB(el_strlist_vsb, "l2w10r1", &el_strlist_first, &el_strlist_cnt);
 
@@ -261,6 +262,24 @@ M2_HLIST(el_strlist_hlist, NULL, el_strlist_sblist);
 M2_U8NUM(el_strlist_el_cnt,"c3",0, 10, &el_strlist_cnt);
 M2_LIST(el_strlist_list) = { &el_strlist_hlist, &el_strlist_el_cnt, &el_goto_top };
 M2_VLIST(el_strlist_top, NULL, el_strlist_list);
+*/
+
+const char *selected = "Nothing";
+
+M2_STRLIST(el_strlist, "l2w90", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
+M2_VSB(el_strlist_vsb, "l2w5r1", &el_strlist_first, &el_strlist_cnt);
+M2_LIST(list_strlist) = { &el_strlist, &el_strlist_vsb };
+M2_HLIST(el_strlist_hlist, NULL, list_strlist);
+
+M2_LABEL(el_label,NULL, "Selected:");
+M2_LABELPTR(el_labelptr,NULL, &selected);
+M2_LIST(list_label) = { &el_label, &el_labelptr };
+M2_HLIST(el_label_hlist, NULL, list_label);
+
+M2_LIST(list) = { &el_strlist_hlist, &el_label_hlist };
+M2_VLIST(el_vlist, NULL, list);
+M2_ALIGN(el_strlist_top, "W64H64-1|1", &el_vlist);
+
 
 /*===================================================================*/
 /* infolist */
@@ -268,7 +287,7 @@ M2_VLIST(el_strlist_top, NULL, el_strlist_list);
 uint8_t el_infolist_first = 0;
 uint8_t el_infolist_cnt = 5;
 
-M2_INFO(el_infolist, "l2w100", &el_infolist_first, &el_infolist_cnt, "1\n2\n3\n4\n5\n6\n7\n8\n9");
+M2_INFO(el_infolist, "l2w100", &el_infolist_first, &el_infolist_cnt, "1\n2\n3\n4\n5\n6\n7\n8\n9", NULL);
 M2_VSB(el_infolist_vsb, "l2w10r1", &el_infolist_first, &el_infolist_cnt);
 
 M2_LIST(el_infolist_sblist) = { &el_infolist, &el_infolist_vsb };
