@@ -71,9 +71,11 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
 uint8_t el_strlist_first = 0;
 uint8_t el_strlist_cnt = 5;
 
+
 M2_STRLIST(el_strlist, "l2w90", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
+M2_SPACE(el_space, "w1h1");
 M2_VSB(el_strlist_vsb, "l2w5r1", &el_strlist_first, &el_strlist_cnt);
-M2_LIST(list_strlist) = { &el_strlist, &el_strlist_vsb };
+M2_LIST(list_strlist) = { &el_strlist, &el_space, &el_strlist_vsb };
 M2_HLIST(el_strlist_hlist, NULL, list_strlist);
 
 M2_LABEL(el_label,NULL, "Selected:");

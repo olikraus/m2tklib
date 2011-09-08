@@ -375,6 +375,20 @@ typedef m2_el_fnfmt_t *m2_el_fnfmt_p;
 M2_EL_FN_DEF(m2_el_fnfmt_fn);
 
 
+struct _m2_el_space_struct
+{
+  m2_el_fnfmt_t ff;
+};
+typedef struct _m2_el_space_struct m2_el_space_t;
+typedef m2_el_space_t *m2_el_space_p;
+
+M2_EL_FN_DEF(m2_el_space_fn);
+
+#define M2_SPACE(el,fmt) m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_space_fn, (fmt) } }
+#define M2_EXTERN_SPACE(el) extern m2_el_space_t el
+
+
+
 struct _m2_el_strptr_struct
 {
   m2_el_fnfmt_t ff;
