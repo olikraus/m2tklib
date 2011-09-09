@@ -5,6 +5,8 @@
   m2tklib = Mini Interative Interface Toolkit Library
   
   Copyright (C) 2011  olikraus@gmail.com
+  
+  LiquidCrystal 16x4 example
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,14 +23,14 @@
 
 */
 
-#include <glcd.h>		// inform Arduino IDE that we will use GLCD library
+#include <LiquidCrystal.h>
 #include "M2tk.h"
-#include "m2ghglcd.h"
+#include "m2ghlc.h"
 
-uint8_t uiKeySelectPin = 3;
-uint8_t uiKeyDownPin = 2;
-uint8_t uiKeyUpPin = 1;
-uint8_t uiKeyExitPin = 0;
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+uint8_t uiKeySelectPin = 10;
+uint8_t uiKeyNextPin = 9;
 
 const char *selected = "Nothing";
 const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
@@ -54,9 +56,9 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
 uint8_t el_strlist_first = 0;
 uint8_t el_strlist_cnt = 5;
 
-M2_STRLIST(el_strlist, "l2w90", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
+M2_STRLIST(el_strlist, "l2w15", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
 M2_SPACE(el_space, "w1h1");
-M2_VSB(el_strlist_vsb, "l2w5r1", &el_strlist_first, &el_strlist_cnt);
+M2_VSB(el_strlist_vsb, "l2w1r1", &el_strlist_first, &el_strlist_cnt);
 M2_LIST(list_strlist) = { &el_strlist, &el_space, &el_strlist_vsb };
 M2_HLIST(el_strlist_hlist, NULL, list_strlist);
 
@@ -69,20 +71,20 @@ M2_LIST(list) = { &el_strlist_hlist, &el_label_hlist };
 M2_VLIST(el_vlist, NULL, list);
 M2_ALIGN(top_el, "-1|1W64H64", &el_vlist);
 
-M2tk m2(&top_el, m2_es_arduino, m2_eh_4bs, m2_gh_glcd_ffs);
+M2tk m2(&top_el, m2_es_arduino, m2_eh_4bs, m2_gh_lc);
 
 void setup() {
+  m2_SetLiquidCrystal(&lcd, 16, 4);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
-  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
-  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
-  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
+  m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
 }
 
 void loop() {
   m2.checkKey();
-  if ( m2.handleKey() ) {
-      m2.draw();
-  }
+  m2.checkKey();
+  if ( m2.handleKey() )
+    m2.draw();
+  m2.checkKey();
 }
 
 

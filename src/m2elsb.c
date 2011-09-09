@@ -33,6 +33,8 @@ M2_EL_FN_DEF(m2_el_vsb_fn)
 {
   switch(fn_arg->msg)
   {
+    case M2_EL_MSG_IS_READ_ONLY:
+      return 1; /* if this is ever replaced, then it should default to r1 */
     case M2_EL_MSG_GET_HEIGHT:
       return m2_el_slbase_calc_height(fn_arg->element);
     case M2_EL_MSG_GET_WIDTH:
