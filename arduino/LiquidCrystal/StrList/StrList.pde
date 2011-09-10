@@ -56,18 +56,20 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
 uint8_t el_strlist_first = 0;
 uint8_t el_strlist_cnt = 5;
 
-M2_STRLIST(el_strlist, "l3w12", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
+M2_STRLIST(el_strlist, "l2w12", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
 M2_SPACE(el_space, "w1h1");
-M2_VSB(el_strlist_vsb, "l3w1r1", &el_strlist_first, &el_strlist_cnt);
+M2_VSB(el_strlist_vsb, "l2w1r1", &el_strlist_first, &el_strlist_cnt);
 M2_LIST(list_strlist) = { &el_strlist, &el_space, &el_strlist_vsb };
 M2_HLIST(el_strlist_hlist, NULL, list_strlist);
+
+M2_SPACE(el_vspace, "w1h1");
 
 M2_LABEL(el_label,NULL, "Selected:");
 M2_LABELPTR(el_labelptr,NULL, &selected);
 M2_LIST(list_label) = { &el_label, &el_labelptr };
 M2_HLIST(el_label_hlist, NULL, list_label);
 
-M2_LIST(list) = { &el_strlist_hlist, &el_label_hlist };
+M2_LIST(list) = { &el_strlist_hlist, &el_vspace, &el_label_hlist };
 M2_VLIST(el_vlist, NULL, list);
 M2_ALIGN(top_el, "-1|1W64H64", &el_vlist);
 

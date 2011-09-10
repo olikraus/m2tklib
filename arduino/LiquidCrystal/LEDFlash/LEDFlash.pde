@@ -2,17 +2,10 @@
 
   LEDFlash.pde
   
-  Control flashing of a LED (Pin 13 of the Arduino Board)
+  Control flashing of a LED
   See also: http://arduino.cc/forum/index.php/topic,69580.15.html
-  Please note, that the CLK line for the display is shared with pin 13, so expect
-  some flashing from the display data transfer.
   
-  DOGM128 Example
-  
-  ==============================================================
-  1. Requires DOGM128 Library v1.12 or above.
-  2. This example will only work with SW SPI: Goto dogm128.h and enable DOG_SPI_SW_ARDUINO
-  ==============================================================
+  LiquidCrystal 16x2 example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -33,29 +26,20 @@
 
 */
 
-#include "Dogm.h"
+#include <LiquidCrystal.h>
 #include "M2tk.h"
-#include "m2ghdogm.h"
+#include "m2ghlc.h"
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+
 
 //=================================================
 // Variables for Menu Process
 
-#ifdef DOGS102_HW
-// DOGS102 shield 
-uint8_t uiKeyUpPin = 5;
-uint8_t uiKeyDownPin = 3;
-uint8_t uiKeySelectPin = 4;
-uint8_t uiKeyExitPin = 0;
-#else
-// DOGM132, DOGM128 and DOGXL160 shield
-uint8_t uiKeyUpPin = 7;
-uint8_t uiKeyDownPin = 3;
-uint8_t uiKeySelectPin = 2;
-uint8_t uiKeyExitPin = 0;
-#endif
+uint8_t uiKeySelectPin = 10;
+uint8_t uiKeyNextPin = 9;
 
-int a0Pin = 9;
-Dogm dogm(a0Pin);
 
 //=================================================
 // Variables for Flashing Process
@@ -135,17 +119,17 @@ M2_LIST(list) = {
 };
 M2_GRIDLIST(list_element, "c2",list);
 M2_ALIGN(el_align, "W64H64", &list_element);
-M2tk m2(&el_align, m2_es_arduino, m2_eh_4bs, m2_gh_dogm_fbs);
+M2tk m2(&el_align, m2_es_arduino, m2_eh_2bs, m2_gh_lc);
+
+
 
 //=================================================
 // Arduino Setup & Loop
 
 void setup() {
-  m2.setFont(0, font_6x10);
+  m2_SetLiquidCrystal(&lcd, 16, 4);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
-  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
-  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
-  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
+  m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
   pinMode(13, OUTPUT);
 }
 
@@ -153,11 +137,7 @@ void loop() {
   // menu management
   m2.checkKey();
   if ( m2.handleKey() ) {
-    dogm.start();
-    do{
-      m2.checkKey();
       m2.draw();
-    } while( dogm.next() );
   }
   // flashing process
   led_process();

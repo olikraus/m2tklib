@@ -38,13 +38,57 @@ uint8_t uiKeyDownPin = 2;
 uint8_t uiKeyUpPin = 1;
 uint8_t uiKeyExitPin = 0;
 
+
 //=================================================
 // Variables for Flashing Process
 
 uint8_t led_state = 0;
 uint32_t next_change = 0;
 uint8_t is_flashing = 0;
-uint8_t flash_delay = 5;
+uint8_t led_on_time = 5;
+uint8_t led_off_time = 5;
+
+//=================================================
+// Flashing Process
+
+#define STATE_STOP 0
+#define STATE_SETUP_ON 1
+#define STATE_WAIT_ON 2
+#define STATE_SETUP_OFF 3
+#define STATE_WAIT_OFF 4
+
+void led_process(void)
+{
+  switch(led_state) {
+    case STATE_STOP:
+      if ( is_flashing )
+	led_state = STATE_SETUP_ON;
+      break;
+    case STATE_SETUP_ON:
+      next_change = millis() + (led_on_time*50L);
+      led_state = STATE_WAIT_ON;
+      digitalWrite(13, HIGH);  // set the LED on    
+      break;
+    case STATE_WAIT_ON:
+      if ( is_flashing == 0 )
+	led_state = STATE_STOP;
+      else if ( next_change < millis() )
+	led_state = STATE_SETUP_OFF;
+      break;
+    case STATE_SETUP_OFF:
+      next_change = millis() + (led_off_time*50L);
+      led_state = STATE_WAIT_OFF;
+      digitalWrite(13, LOW);   // set the LED off
+      break;
+    case STATE_WAIT_OFF:
+      if ( is_flashing == 0 )
+	led_state = STATE_STOP;
+      else if ( next_change < millis() )
+	led_state = STATE_SETUP_ON;
+      break;
+  }
+}
+
 
 //=================================================
 // Menu Process
@@ -57,36 +101,25 @@ void fn_stop(m2_el_fnarg_p fnarg) {
   is_flashing = 0;
 }
 
-M2_LABEL(el_label, NULL, "Time:");
-M2_U8NUM(el_u8, "c1", 1, 9, &flash_delay);
+M2_LABEL(el_label_on, NULL, "On Time:");
+M2_U8NUM(el_u8_on, "c1", 1, 9, &led_on_time);
+
+M2_LABEL(el_label_off, NULL, "Off Time:");
+M2_U8NUM(el_u8_off, "c1", 1, 9, &led_off_time);
 
 M2_BUTTON(el_stop, NULL, "Stop", fn_stop);
 M2_BUTTON(el_start, NULL, "Start", fn_start);
 
 M2_LIST(list) = { 
-    &el_label, &el_u8, 
+    &el_label_on, &el_u8_on, 
+    &el_label_off, &el_u8_off, 
     &el_stop, &el_start 
 };
 M2_GRIDLIST(list_element, "c2",list);
-M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_ffs);
+M2_ALIGN(el_align, "W64H64", &list_element);
+M2tk m2(&el_align, m2_es_arduino, m2_eh_2bs, m2_gh_glcd_ffs);
 
-//=================================================
-// Flashing Process
 
-void flashing_process(void) {
-  // wait until timer as expired
-  if ( next_change < millis() ) {
-    if ( led_state == 0 ) {
-      digitalWrite(13, HIGH);  // set the LED on    
-      led_state = 1;
-    } else {
-      digitalWrite(13, LOW);   // set the LED off
-      led_state = 0;
-    }
-    // wait for x*50ms, were x is between 0 and 9
-    next_change = millis() + (flash_delay*50L);
-  } 
-}
 
 //=================================================
 // Arduino Setup & Loop
@@ -106,6 +139,5 @@ void loop() {
       m2.draw();
   }
   // flashing process
-  if ( is_flashing ) 
-    flashing_process();
+  led_process();
 }
