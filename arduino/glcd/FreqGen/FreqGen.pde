@@ -1,6 +1,6 @@
 /*
 
-  U32.pde
+  FreqGen.pde
   
   GLCD Example
 
