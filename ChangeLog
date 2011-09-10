@@ -11,4 +11,7 @@ m2tklib ChangeLog
 	* setFont() support for GLCD (added two more graphics handler)
 	* Bugfix for KEY_PREV
 	* "." fixpoint option for M2_U32NUM
+2011-09-10	v1.03	Oliver Kraus <olikraus@gmail.com>
+	* New elements: STRLIST, INFO, VSB, SPACE
+	
 	
