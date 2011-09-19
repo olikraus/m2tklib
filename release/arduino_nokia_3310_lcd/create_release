@@ -1,0 +1,59 @@
+# arduino_lc
+#
+rm -rf libraries
+mkdir libraries
+mkdir libraries/M2tklib
+mkdir libraries/M2tklib/examples
+#mkdir libraries/M2tklib/examples/HelloWorld
+#mkdir libraries/M2tklib/examples/Combo
+#mkdir libraries/M2tklib/examples/DataEntry
+#mkdir libraries/M2tklib/examples/FindNum
+#mkdir libraries/M2tklib/examples/Radio
+#mkdir libraries/M2tklib/examples/Text
+#mkdir libraries/M2tklib/examples/U32
+#mkdir libraries/M2tklib/examples/U32Plain
+#mkdir libraries/M2tklib/examples/LEDFlash
+#mkdir libraries/M2tklib/examples/Rapunzel
+mkdir libraries/M2tklib/examples/StrList
+mkdir libraries/M2tklib/utility
+cp ../../ChangeLog ./libraries/M2tklib/.
+cp ../../gpl-3.0.txt ./libraries/M2tklib/.
+cp ../INSTALL_ARDUINO.TXT ./libraries/M2tklib/INSTALL.TXT
+cp ../../cpp/*.cpp ./libraries/M2tklib/.
+cp ../../cpp/*.h ./libraries/M2tklib/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/M2tk.h
+cp ../../src/*.c ./libraries/M2tklib/utility/.
+cp ../../src/*.h ./libraries/M2tklib/utility/.
+cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/nokia_3310_lcd/*.[hc] ./libraries/M2tklib/utility/.
+#cp ../../dev/nokia_3310_lcd/*.cpp ./libraries/M2tklib/utility/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2gh3310lcd.h
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/utility/m2ghlc.h
+#cp ../../arduino/LiquidCrystal/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
+#cp ../../arduino/LiquidCrystal/Combo/*.pde ./libraries/M2tklib/examples/Combo/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Combo/Combo.pde
+#cp ../../arduino/LiquidCrystal/DataEntry/*.pde ./libraries/M2tklib/examples/DataEntry/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/DataEntry/DataEntry.pde
+#cp ../../arduino/LiquidCrystal/FindNum/*.pde ./libraries/M2tklib/examples/FindNum/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/FindNum/FindNum.pde
+#cp ../../arduino/LiquidCrystal/Radio/*.pde ./libraries/M2tklib/examples/Radio/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Radio/Radio.pde
+#cp ../../arduino/LiquidCrystal/Text/*.pde ./libraries/M2tklib/examples/Text/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Text/Text.pde
+#cp ../../arduino/LiquidCrystal/U32/*.pde ./libraries/M2tklib/examples/U32/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/U32/U32.pde
+#cp ../../arduino/LiquidCrystal/U32Plain/*.pde ./libraries/M2tklib/examples/U32Plain/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/U32Plain/U32Plain.pde
+
+#cp ../../arduino/LiquidCrystal/LEDFlash/*.pde ./libraries/M2tklib/examples/LEDFlash/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/LEDFlash/LEDFlash.pde
+#cp ../../arduino/LiquidCrystal/Rapunzel/*.pde ./libraries/M2tklib/examples/Rapunzel/.
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Rapunzel/Rapunzel.pde
+cp ../../arduino/nokia_3310_lcd/StrList/*.pde ./libraries/M2tklib/examples/StrList/.
+sed -i 's|m2gh3310lcd.h|utility/m2gh3310lcd.h|g' ./libraries/M2tklib/examples/StrList/StrList.pde
+
+
+cd libraries 
+zip -r ../m2tklib_arduino_n3310_lcd_`../../print_release`.zip *
+cd ..
