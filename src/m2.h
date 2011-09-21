@@ -326,6 +326,8 @@ m2_rom_void_p m2_rom_get_ptr_list_rom_ptr(m2_rom_void_p base, uint8_t idx) M2_NO
 /*==============================================================*/
 /* option string */
 #define M2_OPT_NOT_FOUND 255
+uint8_t m2_get_cmd_cnt(m2_rom_char_p str) M2_NOINLINE;							                		/* m2opt.c */
+char m2_get_nth_cmd(m2_rom_char_p str, uint8_t n) M2_NOINLINE;									/* m2opt.c */
 uint8_t m2_opt_get_val(m2_rom_char_p str, char cmd) M2_NOINLINE;									/* m2opt.c */
 uint8_t m2_opt_get_val_zero_default(m2_rom_char_p str, char cmd) M2_NOINLINE;						/* m2opt.c */
 uint8_t m2_opt_get_val_any_default(m2_rom_char_p str, char cmd, uint8_t default_value) M2_NOINLINE;		/* m2opt.c */

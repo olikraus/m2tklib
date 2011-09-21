@@ -130,6 +130,44 @@ static uint8_t m2_parser_find_cmd(char cmd)
 
 /*==============================================================*/
 
+/* only used for m2tklab */
+static uint8_t m2_calc_cmd_cnt(void)
+{
+  register char c;
+  uint8_t cnt = 0;
+  m2_parser_skip_space();  
+  for(;;)
+  {
+    c = m2_parser_get_c();
+    if ( c == '\0' )
+      break;
+    cnt++;
+    m2_parser_skip_cmd();
+  }
+  return cnt;
+}
+
+/* only used for m2tklab */
+static char m2_calc_nth_cmd(uint8_t n)
+{
+  register char c;
+  uint8_t cnt = 0;
+  m2_parser_skip_space();  
+  for(;;)
+  {
+    c = m2_parser_get_c();
+    if ( c == '\0' )
+      break;
+    if ( cnt == n )
+      return c;
+    cnt++;    
+    m2_parser_skip_cmd();
+  }
+  return '\0';
+}
+
+/*==============================================================*/
+
 void m2_parser_set_str(m2_rom_void_p str)
 {
   m2_parser_str = str;
@@ -145,6 +183,21 @@ uint8_t m2_parser_get_cmd_val(char cmd, uint8_t not_found_val)
   }
   return not_found_val;
 }
+
+/*==============================================================*/
+
+uint8_t m2_get_cmd_cnt(m2_rom_char_p str)
+{
+  m2_parser_set_str(str);
+  return m2_calc_cmd_cnt();
+}
+
+char m2_get_nth_cmd(m2_rom_char_p str, uint8_t n)
+{
+  m2_parser_set_str(str);
+  return m2_calc_nth_cmd(n);
+}
+
 
 /*==============================================================*/
 
