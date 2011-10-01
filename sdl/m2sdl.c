@@ -298,6 +298,19 @@ M2_U8NUM(el_infolist_el_first,"c3",0, 10, &el_infolist_first);
 M2_LIST(el_infolist_list) = { &el_infolist_hlist, &el_infolist_el_cnt, &el_infolist_el_first, &el_goto_top };
 M2_VLIST(el_infolist_top, NULL, el_infolist_list);
 
+/*===================================================================*/
+/* time */
+
+uint32_t time_h, time_m, time_s;
+M2_U32NUM(el_h, "c2a1", &time_h);
+M2_TEXT(el_l1, "r1", ":", 1);
+M2_U32NUM(el_m, "c2a1", &time_m);
+M2_TEXT(el_l2, "r1", ":", 1);
+M2_U32NUM(el_s, "c2a1", &time_s);
+M2_LABEL(el_l3, NULL, " ");
+M2_LIST(list_time) = { &el_h, &el_l1, &el_m, &el_l2, &el_s, &el_l3, &el_goto_top };
+M2_HLIST(el_timelist_top, NULL, list_time);
+
 
 /*===================================================================*/
 /* top menu */
@@ -314,11 +327,12 @@ M2_BUTTON(el_set_msg, NULL, "MSG", fn_set_msg);
 M2_ROOT(el_to_combo, base_fmt, "combo", &el_combo_top);
 M2_ROOT(el_to_strlist, base_fmt, "strlst", &el_strlist_top);
 M2_ROOT(el_to_infolist, base_fmt, "info", &el_infolist_top);
+M2_ROOT(el_to_timelist, base_fmt, "time", &el_timelist_top);
 
 
 
 void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, 
-  &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist, &el_to_infolist };
+  &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist, &el_to_infolist, &el_to_timelist };
 
 M2_GRIDLIST(_el_top,"c3",top_list);
 
