@@ -186,6 +186,7 @@ extern m2_el_fnfmt_t m2_null_element M2_SECTION_PROGMEM;					/* m2null.c */
 /* event sources */
 uint8_t m2_es_sdl(m2_p ep, uint8_t msg);		/* m2ghsdl.c: SDL Event Source */
 uint8_t m2_es_arduino(m2_p ep, uint8_t msg);			/* m2esarduino.c */
+uint8_t m2_es_arduino_ir(m2_p ep, uint8_t msg);                 /* contributed code: m2esarduinoir.c, not part of the m2tklib core files */
 
 /* event handler */
 uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh2bd.c 2 Button Handler with data entry mode SELECT, NEXT */

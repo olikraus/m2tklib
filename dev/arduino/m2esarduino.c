@@ -1,9 +1,8 @@
 /*
 
-  mm2esarduino.c
+  m2esarduino.c
   
   event source handler for arduino environment
-
   
   m2tklib = Mini Interative Interface Toolkit Library
   
