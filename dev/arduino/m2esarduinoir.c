@@ -11,6 +11,7 @@
   
 */
 
+#include "m2.h"
 #include <IRremote.h>
 
 int RECV_PIN = 11;
