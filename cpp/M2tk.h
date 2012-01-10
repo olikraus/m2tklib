@@ -31,6 +31,7 @@ class M2tk
     uint8_t handleKey(void) { return m2_HandleKey(); }
     void draw(void) { m2_Draw(); }
     void setKey(uint8_t key) { m2_SetKey(key); }
+    uint8_t getKey(void) { return m2_GetKey(); }
     void setFont(uint8_t font_idx, const void *font_ptr) { m2_SetFont(font_idx, font_ptr); }
     void setPin(uint8_t key, uint8_t pin) { m2_SetPin(key, pin); }
     void setRoot(m2_rom_void_p element) { m2_SetRoot(element); }

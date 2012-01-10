@@ -14,5 +14,6 @@ m2tklib ChangeLog
 2011-09-10	v1.03	Oliver Kraus <olikraus@gmail.com>
 	* New elements: STRLIST, INFO, VSB, SPACE
 	* ChipKIT: All ok
-	
-	
+2012-xx-xx      v1.03	Oliver Kraus <olikraus@gmail.com>
+	* getKey procedure
+        * Combine menu and graphics example

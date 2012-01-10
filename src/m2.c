@@ -75,6 +75,13 @@ void m2_SetKey(uint8_t key)
   m2_PutKeyIntoQueue(&m2_global_object, key);
 }
 
+// Get a key and bypass all other m2 procedures. 
+// Usually you do not want to call this, use m2_HandleKey() instead 
+uint8_t m2_GetKey(void)
+{
+  return m2_GetKeyFromQueue(&m2_global_object);
+}
+
 void m2_InitEventSource(void)
 {
   m2_SetEventSourceHandlerM2(&m2_global_object, m2_global_object.es);  

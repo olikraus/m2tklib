@@ -22,7 +22,14 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+  
+  Two methods:
+    - mix/combine menu and graphics
+    - switch between menu and graphcs
+    
+   Graphic procedure should be build in parallel
+   Graphic procedure should work depending on the top level element
+   
 */
 
 #include <glcd.h>		// inform Arduino IDE that we will use GLCD library
@@ -34,8 +41,7 @@ uint8_t uiKeyDownPin = 2;
 uint8_t uiKeyUpPin = 1;
 uint8_t uiKeyExitPin = 0;
 
-uint8_t x = 0;
-uint8_t y = 0;                   // upper left corner of the low level graphics
+uint8_t y = 0;                   // position of the low level graphics
 
 extern M2tk m2;
 M2_EXTERN_ALIGN(el_top);
@@ -70,26 +76,24 @@ void rectangle(uint8_t x, uint8_t y) {
 
 
 void fn_inc(m2_el_fnarg_p fnarg) {
-  y += 1;
+  if ( y < 63-10 )
+    y += 1;
 }
 
 void fn_dec(m2_el_fnarg_p fnarg) {
-  y -= 1;
+  if ( y > 0 )
+    y -= 1;
 }
-
 
 M2_BUTTON(el_plus, "x30y41", "-1", fn_dec);
 M2_BUTTON(el_minus, "x30y21", "+1", fn_inc);
 M2_ROOT(el_leave_combine, "x30y1", "Back", &el_top);
 M2_LIST(el_btn_list) = { &el_plus, &el_minus, &el_leave_combine};
-
-
 M2_XYLIST(el_combine, NULL, el_btn_list);
-
 
 M2_LABEL(el_goto_title, NULL, "Graphics and M2tk");
 M2_ROOT(el_goto_combine, NULL, "Combine", &el_combine);
-M2_ROOT(el_goto_switch, NULL, "Switch", &el_top);
+M2_ROOT(el_goto_switch, NULL, "Switch", &m2_null_element);             // selectin this, will remove all menues
 M2_LIST(list_menu) = {&el_goto_title, &el_goto_combine, &el_goto_switch};
 M2_VLIST(el_menu_vlist, NULL, list_menu);
 M2_ALIGN(el_top, "W64H64", &el_menu_vlist);
@@ -103,6 +107,24 @@ void setup(void) {
 }
 
 
+void graphics(void) {
+  // show the graphics depending on the current toplevel element
+  
+  if ( m2.getRoot() == &el_combine ) {
+      // combine is active, do add the rectangle
+      // menu is on the right, put the rectangle to the left
+      rectangle(0,y);
+  }
+
+  if ( m2.getRoot() == &m2_null_element ) {
+      // all menus are gone, show the rectangle
+      rectangle(10,10);
+      // now check for any keys and assign a suitable menu again
+      if ( m2.getKey() != M2_KEY_NONE )
+        m2.setRoot(&el_top);
+  }
+}
+
 void menu(void) {
   m2.checkKey();
   if ( m2.handleKey() ) {
@@ -111,7 +133,7 @@ void menu(void) {
 }
 
 void loop(void) {
-  rectangle(0, 0);
+  graphics();
   menu();
 }
 
