@@ -17,3 +17,6 @@ m2tklib ChangeLog
 2012-xx-xx      v1.03	Oliver Kraus <olikraus@gmail.com>
 	* getKey procedure
         * Combine menu and graphics example
+        * GLCD: Changed GotoXY to CursorToXY
+        
+        

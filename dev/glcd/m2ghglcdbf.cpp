@@ -47,7 +47,8 @@ extern "C" uint8_t m2_gh_glcd_bf(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_DRAW_TEXT:
       m2_gh_glcd_set_font(arg->font);
-      GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_font_height(arg)+m2_gh_glcd_get_font_corrcetion(arg));
+      //GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_font_height(arg)+m2_gh_glcd_get_font_corrcetion(arg));
+      GLCD.CursorToXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_font_height(arg)+m2_gh_glcd_get_font_corrcetion(arg));
       GLCD.Puts(arg->s);
       return 0;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:

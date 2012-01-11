@@ -93,7 +93,7 @@ M2_XYLIST(el_combine, NULL, el_btn_list);
 
 M2_LABEL(el_goto_title, NULL, "Graphics and M2tk");
 M2_ROOT(el_goto_combine, NULL, "Combine", &el_combine);
-M2_ROOT(el_goto_switch, NULL, "Switch", &m2_null_element);             // selectin this, will remove all menues
+M2_ROOT(el_goto_switch, NULL, "Switch", &m2_null_element);             // selecting this, will remove all menues
 M2_LIST(list_menu) = {&el_goto_title, &el_goto_combine, &el_goto_switch};
 M2_VLIST(el_menu_vlist, NULL, list_menu);
 M2_ALIGN(el_top, "W64H64", &el_menu_vlist);
