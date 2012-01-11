@@ -23,7 +23,13 @@
 
 */
 
+#if ARDUINO < 100 
 #include "wiring.h"
+//#include <WProgram.h> 
+#else 
+#include <Arduino.h> 
+#endif
+
 #include "m2.h"
 
 static void m2_arduino_setup_key(uint8_t key) M2_NOINLINE;
