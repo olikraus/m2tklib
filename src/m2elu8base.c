@@ -20,6 +20,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+  fn_arg->el_data:    Contains pointer to uint8_t value
+  
 
 */
 
@@ -43,14 +45,20 @@ uint8_t m2_el_u8_get_min(m2_el_fnarg_p fn_arg)
 
 uint8_t *m2_el_u8_get_val_ptr(m2_el_fnarg_p fn_arg)
 {
-  return (uint8_t *)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_u8_t, val));
+  return (uint8_t *)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_u8_ptr_t, val));
 }
+
+m2_u8fn_fnptr m2_el_u8_get_callback(m2_el_fnarg_p fn_arg)
+{
+  return (m2_u8fn_fnptr)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_u8_fn_t, u8_callback));
+}
+
 
 
 M2_EL_FN_DEF(m2_el_u8base_fn)
 {
   uint8_t *val_ptr;
-  val_ptr = m2_el_u8_get_val_ptr(fn_arg);
+  val_ptr = (uint8_t *)(fn_arg->el_data);
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_LIST_LEN:

@@ -313,6 +313,26 @@ M2_HLIST(el_timelist_top, NULL, list_time);
 
 
 /*===================================================================*/
+/* v-list */
+
+uint8_t u8_x = 2;
+
+uint8_t u8_cb(m2_el_fnarg_p fnarg, uint8_t msg, uint8_t val)
+{
+  printf("u8_cb: msg=%d\n", msg);
+  if ( msg == M2_U8_MSG_SET_VALUE )
+    u8_x = val;
+  return u8_x;
+}
+
+
+M2_U8NUM(el_u8_ptr, NULL, 0, 10, &u8_x);
+M2_U8NUMFN(el_u8_fn, NULL, 0, 10, u8_cb);
+M2_LIST(list_vlist) = { &el_u8_ptr, &el_u8_fn, &el_goto_top };
+M2_VLIST(el_vlist_top, NULL, list_vlist);
+
+
+/*===================================================================*/
 /* top menu */
 
 M2_ROOT(el_to_gridlist, base_fmt,"Grid",&el_gridlist);
@@ -328,11 +348,12 @@ M2_ROOT(el_to_combo, base_fmt, "combo", &el_combo_top);
 M2_ROOT(el_to_strlist, base_fmt, "strlst", &el_strlist_top);
 M2_ROOT(el_to_infolist, base_fmt, "info", &el_infolist_top);
 M2_ROOT(el_to_timelist, base_fmt, "time", &el_timelist_top);
+M2_ROOT(el_to_vlist, base_fmt, "V-List", &el_vlist_top);
 
 
 
 void *top_list[] = { &t0, &el_to_hlist, &el_to_gridlist, &el_to_alignlist, &el_to_labellist, &el_to_single_u32, 
-  &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist, &el_to_infolist, &el_to_timelist };
+  &el_to_xy_list, &el_to_issue6, &el_to_issue8, &el_set_msg, &el_to_combo, &el_to_strlist, &el_to_infolist, &el_to_timelist, &el_to_vlist };
 
 M2_GRIDLIST(_el_top,"c3",top_list);
 

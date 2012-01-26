@@ -128,6 +128,13 @@ typedef uint8_t (*m2_el_fnptr)(m2_el_fnarg_p fn_arg);
 /* button, elinfo callback procedure */
 typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 
+/* u8fn procedure */
+typedef uint8_t (*m2_u8fn_fnptr)(m2_el_fnarg_p fnarg, uint8_t msg, uint8_t val);
+#define M2_U8_MSG_GET_VALUE 0
+#define M2_U8_MSG_SET_VALUE 1
+
+
+
 /* generic rom pointers */
 typedef void m2_rom_void M2_PROGMEM;
 typedef char m2_rom_char M2_PROGMEM;
@@ -306,6 +313,7 @@ struct _m2_el_fnarg
   uint8_t arg;				/* depends on message */
   void *data;  				/* depends on message */
   m2_nav_p nav;			/* reference to navigation object */
+  void *el_data;                        /* element specific data, usually the same for all messages */
 };
 #define M2_EL_FN_DEF(name) uint8_t name(m2_el_fnarg_p fn_arg)
 
@@ -472,18 +480,39 @@ struct _m2_el_u8_struct
   m2_el_fnfmt_t ff;
   uint8_t min;
   uint8_t max;
-  uint8_t *val;		/* data, which should be modified */
 };
 typedef struct _m2_el_u8_struct m2_el_u8_t;
 typedef m2_el_u8_t *m2_el_u8_p;
 
+struct _m2_el_u8_ptr_struct
+{
+  m2_el_u8_t u8;
+  uint8_t *val;		/* data, which should be modified */
+};
+typedef struct _m2_el_u8_ptr_struct m2_el_u8_ptr_t;
+typedef m2_el_u8_ptr_t *m2_el_u8_ptr_p;
+
+struct _m2_el_u8_fn_struct
+{
+  m2_el_u8_t u8;
+  m2_u8fn_fnptr u8_callback;		/* callback procedure */
+};
+typedef struct _m2_el_u8_fn_struct m2_el_u8_fn_t;
+typedef m2_el_u8_fn_t *m2_el_u8_fn_p;
+
+
+
 M2_EL_FN_DEF(m2_el_u8base_fn);												/* m2elu8base.c */
 M2_EL_FN_DEF(m2_el_u8num_fn);
-#define M2_U8NUM(el,fmt,min,max,variable) m2_el_u8_t el M2_SECTION_PROGMEM = { { m2_el_u8num_fn, (fmt) }, (min), (max), (variable) }
-#define M2_EXTERN_U8NUM(el) extern m2_el_u8_t el
+#define M2_U8NUM(el,fmt,min,max,variable) m2_el_u8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_u8num_fn, (fmt) }, (min), (max) }, (variable) }
+#define M2_EXTERN_U8NUM(el) extern m2_el_u8_ptr_t el
 M2_EL_FN_DEF(m2_el_u8hs_fn);
-#define M2_U8HS(el,fmt,min,max,variable) m2_el_u8_t el M2_SECTION_PROGMEM = { { m2_el_u8hs_fn, (fmt) }, (min), (max), (variable) }
-#define M2_EXTERN_U8HS(el) extern m2_el_u8_t el
+#define M2_U8HS(el,fmt,min,max,variable) m2_el_u8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_u8hs_fn, (fmt) }, (min), (max) }, (variable) }
+#define M2_EXTERN_U8HS(el) extern m2_el_u8_ptr_t el
+
+M2_EL_FN_DEF(m2_el_u8numfn_fn);
+#define M2_U8NUMFN(el,fmt,min,max,cb) m2_el_u8_fn_t el M2_SECTION_PROGMEM = { { { m2_el_u8numfn_fn, (fmt) }, (min), (max) }, (cb) }
+#define M2_EXTERN_U8NUMFN(el) extern m2_el_u8_fn_t el
 
 
 
@@ -846,6 +875,7 @@ uint8_t m2_expand_direction(m2_rom_void_p element, uint8_t in, uint8_t optchar) 
 uint8_t m2_el_u8_get_max(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2elu8base.c */
 uint8_t m2_el_u8_get_min(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2elu8base.c */
 uint8_t *m2_el_u8_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elu8base.c */
+m2_u8fn_fnptr m2_el_u8_get_callback(m2_el_fnarg_p fn_arg) M2_NOINLINE;						/* m2elu8base.c */
 
 
 /*==============================================================*/

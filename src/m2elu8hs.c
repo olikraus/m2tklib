@@ -19,6 +19,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+  fn_arg->el_data:    Contains pointer to uint8_t value
+  
 
 */
 
@@ -43,7 +45,7 @@ uint8_t m2_el_u8_get_minmax(m2_el_fnarg_p fn_arg)
   slide of size max-min+1
   has a one pixel border left and right
 */
-M2_EL_FN_DEF(m2_el_u8hs_fn)
+M2_EL_FN_DEF(m2_el_u8hs_sub_fn)
 {
   uint8_t font;
 
@@ -60,7 +62,7 @@ M2_EL_FN_DEF(m2_el_u8hs_fn)
 	  m2_el_u8base_fn(fn_arg);
 
 	  m2_gfx_hline(m2_gfx_add_normal_border_x(font, b->x+1), m2_gfx_add_normal_border_y(font, b->y+2), m2_el_u8_get_minmax(fn_arg));
-	  m2_gfx_vline(m2_gfx_add_normal_border_x(font, b->x+(*m2_el_u8_get_val_ptr(fn_arg))-m2_el_u8_get_min(fn_arg)+1), m2_gfx_add_normal_border_y(font, b->y), 5);
+	  m2_gfx_vline(m2_gfx_add_normal_border_x(font, b->x+(*(uint8_t *)(fn_arg->el_data))-m2_el_u8_get_min(fn_arg)+1), m2_gfx_add_normal_border_y(font, b->y), 5);
       }
       return 1;
   }
@@ -68,3 +70,8 @@ M2_EL_FN_DEF(m2_el_u8hs_fn)
 }
 
 
+M2_EL_FN_DEF(m2_el_u8hs_fn)
+{
+  fn_arg->el_data = m2_el_u8_get_val_ptr(fn_arg);
+  return m2_el_u8hs_sub_fn(fn_arg);  
+}

@@ -42,6 +42,7 @@ static void _m2_el_fnarg_zero(m2_el_fnarg_t *arg)
   arg->arg = 0;
   arg->data = NULL;  
   arg->nav = NULL;
+  arg->el_data = NULL;
 }
 
 
