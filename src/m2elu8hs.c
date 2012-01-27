@@ -62,7 +62,7 @@ M2_EL_FN_DEF(m2_el_u8hs_sub_fn)
 	  m2_el_u8base_fn(fn_arg);
 
 	  m2_gfx_hline(m2_gfx_add_normal_border_x(font, b->x+1), m2_gfx_add_normal_border_y(font, b->y+2), m2_el_u8_get_minmax(fn_arg));
-	  m2_gfx_vline(m2_gfx_add_normal_border_x(font, b->x+(*(uint8_t *)(fn_arg->el_data))-m2_el_u8_get_min(fn_arg)+1), m2_gfx_add_normal_border_y(font, b->y), 5);
+	  m2_gfx_vline(m2_gfx_add_normal_border_x(font, b->x+(m2_el_u8_get_val(fn_arg))-m2_el_u8_get_min(fn_arg)+1), m2_gfx_add_normal_border_y(font, b->y), 5);
       }
       return 1;
   }
@@ -72,6 +72,5 @@ M2_EL_FN_DEF(m2_el_u8hs_sub_fn)
 
 M2_EL_FN_DEF(m2_el_u8hs_fn)
 {
-  fn_arg->el_data = m2_el_u8_get_val_ptr(fn_arg);
   return m2_el_u8hs_sub_fn(fn_arg);  
 }

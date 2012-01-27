@@ -318,7 +318,6 @@ struct _m2_el_fnarg
   uint8_t arg;				/* depends on message */
   void *data;  				/* depends on message */
   m2_nav_p nav;			/* reference to navigation object */
-  void *el_data;                        /* element specific data, usually the same for all messages */
 };
 #define M2_EL_FN_DEF(name) uint8_t name(m2_el_fnarg_p fn_arg)
 

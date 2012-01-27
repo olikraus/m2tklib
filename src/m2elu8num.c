@@ -36,13 +36,11 @@
 
 M2_EL_FN_DEF(m2_el_u8num_sub_fn)
 {
-  uint8_t *val_ptr;
   uint8_t digits;
   uint8_t width;
   uint8_t font;
 
   font = m2_el_fmfmt_get_font(fn_arg);
-  val_ptr = (uint8_t *)(fn_arg->el_data);
 
   /* maybe the width is needed, precalculate the pxiel width */
   
@@ -65,7 +63,7 @@ M2_EL_FN_DEF(m2_el_u8num_sub_fn)
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
 	printf("u8  w:%d arg:%d x:%d y:%d %u\n", 
 	  width, 
-	  (fn_arg->arg), b->x, b->y, (unsigned)*val_ptr);
+	  (fn_arg->arg), b->x, b->y, (unsigned)m2_el_u8_get_val(fn_arg));
       }
       return 0;
 #endif
@@ -76,7 +74,7 @@ M2_EL_FN_DEF(m2_el_u8num_sub_fn)
 	if ( m2_is_frame_draw_at_end == 0 )
 	  m2_el_u8base_fn(fn_arg);
 	
-	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, m2_utl_u8d(*val_ptr, digits));
+	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, m2_utl_u8d(m2_el_u8_get_val(fn_arg), digits));
 	
 	if ( m2_is_frame_draw_at_end != 0 )
 	  m2_el_u8base_fn(fn_arg);
@@ -88,21 +86,11 @@ M2_EL_FN_DEF(m2_el_u8num_sub_fn)
 
 M2_EL_FN_DEF(m2_el_u8num_fn)
 {
-  fn_arg->el_data = m2_el_u8_get_val_ptr(fn_arg);
   return m2_el_u8num_sub_fn(fn_arg);
 }
 
 
 M2_EL_FN_DEF(m2_el_u8numfn_fn)
 {
-  uint8_t ret;
-  uint8_t val;
-  m2_u8fn_fnptr fn;
-  fn = m2_el_u8_get_callback(fn_arg);
-  fn_arg->el_data = &val;
-  val = fn(fn_arg->element, M2_U8_MSG_GET_VALUE, 0);
-  ret = m2_el_u8num_sub_fn(fn_arg);
-  if ( val != fn(fn_arg->element, M2_U8_MSG_GET_VALUE, 0) )
-    fn(fn_arg, M2_U8_MSG_SET_VALUE, val);
-  return ret;
+  return m2_el_u8num_sub_fn(fn_arg);
 }

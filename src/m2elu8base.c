@@ -84,8 +84,6 @@ void m2_el_u8_set_val(m2_el_fnarg_p fn_arg, uint8_t val)
 M2_EL_FN_DEF(m2_el_u8base_fn)
 {
   uint8_t val;
-  uint8_t *val_ptr;
-  val_ptr = (uint8_t *)(fn_arg->el_data);
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_LIST_LEN:
@@ -93,16 +91,20 @@ M2_EL_FN_DEF(m2_el_u8base_fn)
     case M2_EL_MSG_IS_DATA_ENTRY:
       return 1;
     case M2_EL_MSG_DATA_UP:
-      if ( *val_ptr >= m2_el_u8_get_max(fn_arg) )
-	*val_ptr = m2_el_u8_get_min(fn_arg);
+      val = m2_el_u8_get_val(fn_arg);
+      if ( val >= m2_el_u8_get_max(fn_arg) )
+	val = m2_el_u8_get_min(fn_arg);
       else
-	(*val_ptr)++;
+	val++;
+      m2_el_u8_set_val(fn_arg, val);
       return 1;
     case M2_EL_MSG_DATA_DOWN:
-      if ( *val_ptr <= m2_el_u8_get_min(fn_arg) )
-	*val_ptr = m2_el_u8_get_max(fn_arg);
+      val = m2_el_u8_get_val(fn_arg);
+      if ( val <= m2_el_u8_get_min(fn_arg) )
+	val = m2_el_u8_get_max(fn_arg);
       else
-	(*val_ptr)--;
+	val--;
+      m2_el_u8_set_val(fn_arg, val);
       return 1;
   }
   return m2_el_fnfmt_fn(fn_arg);
