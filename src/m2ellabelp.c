@@ -1,6 +1,6 @@
 /*
   
-  m2ellable.c
+  m2ellabelp.c
   
   a read-only string
   
