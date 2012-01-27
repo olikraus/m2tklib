@@ -895,6 +895,8 @@ uint8_t m2_el_u8_get_max(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2elu8base
 uint8_t m2_el_u8_get_min(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2elu8base.c */
 uint8_t *m2_el_u8_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elu8base.c */
 m2_u8fn_fnptr m2_el_u8_get_callback(m2_el_fnarg_p fn_arg) M2_NOINLINE;						/* m2elu8base.c */
+uint8_t m2_el_u8_get_val(m2_el_fnarg_p fn_arg) M2_NOINLINE;				                		/* m2elu8base.c */
+void m2_el_u8_set_val(m2_el_fnarg_p fn_arg, uint8_t val) M2_NOINLINE;					        	/* m2elu8base.c */
 
 
 /*==============================================================*/

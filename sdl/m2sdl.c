@@ -316,8 +316,9 @@ M2_HLIST(el_timelist_top, NULL, list_time);
 /* v-list */
 
 uint8_t u8_x = 2;
+uint32_t u32_x = 112233;
 
-uint8_t u8_cb(m2_el_fnarg_p fnarg, uint8_t msg, uint8_t val)
+uint8_t u8_cb(m2_rom_void_p element, uint8_t msg, uint8_t val)
 {
   printf("u8_cb: msg=%d\n", msg);
   if ( msg == M2_U8_MSG_SET_VALUE )
@@ -325,10 +326,21 @@ uint8_t u8_cb(m2_el_fnarg_p fnarg, uint8_t msg, uint8_t val)
   return u8_x;
 }
 
+uint32_t u32_cb(m2_rom_void_p element, uint8_t msg, uint32_t val)
+{
+  printf("u32_cb: msg=%d\n", msg);
+  if ( msg == M2_U32_MSG_SET_VALUE )
+    u32_x = val;
+  return u32_x;
+}
+
+
 
 M2_U8NUM(el_u8_ptr, NULL, 0, 10, &u8_x);
 M2_U8NUMFN(el_u8_fn, NULL, 0, 10, u8_cb);
-M2_LIST(list_vlist) = { &el_u8_ptr, &el_u8_fn, &el_goto_top };
+M2_U32NUM(el_u32_ptr, "c6", &u32_x);
+M2_U32NUMFN(el_u32_fn, "c6", u32_cb);
+M2_LIST(list_vlist) = { &el_u8_ptr, &el_u8_fn, &el_u32_ptr, &el_u32_fn, &el_goto_top };
 M2_VLIST(el_vlist_top, NULL, list_vlist);
 
 

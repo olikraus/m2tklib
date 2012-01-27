@@ -142,8 +142,8 @@ static void m2_el_u32_set_accumulator_by_parent(m2_nav_p nav)
   m2_rom_void_p element = m2_nav_get_parent_element(nav);
   if ( m2_rom_get_el_fnptr(element) == m2_el_u32fn_fn )
   {
-    m2_u32fn_fnptr fn = *(m2_u32fn_fnptr *)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32fn_t, u32_callback));
-    m2_el_u32_accumulator = fn(element, M2_U8_MSG_GET_VALUE, 0);
+    m2_u32fn_fnptr fn = (m2_u32fn_fnptr)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32fn_t, u32_callback));
+    m2_el_u32_accumulator = fn(element, M2_U32_MSG_GET_VALUE, 0);
   }
   else
   {
@@ -156,9 +156,9 @@ static void m2_el_u32_put_accumulator_to_parent(m2_nav_p nav)
   m2_rom_void_p element = m2_nav_get_parent_element(nav);
   if ( m2_rom_get_el_fnptr(element) == m2_el_u32fn_fn )
   {
-    m2_u32fn_fnptr fn = *(m2_u32fn_fnptr *)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32fn_t, u32_callback));
-    if ( m2_el_u32_accumulator != fn(element, M2_U8_MSG_GET_VALUE, 0) )
-      fn(element, M2_U8_MSG_SET_VALUE, m2_el_u32_accumulator);
+    m2_u32fn_fnptr fn = (m2_u32fn_fnptr)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32fn_t, u32_callback));
+    if ( m2_el_u32_accumulator != fn(element, M2_U32_MSG_GET_VALUE, 0) )
+      fn(element, M2_U32_MSG_SET_VALUE, m2_el_u32_accumulator);
   }
   else
   {

@@ -53,10 +53,37 @@ m2_u8fn_fnptr m2_el_u8_get_callback(m2_el_fnarg_p fn_arg)
   return (m2_u8fn_fnptr)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_u8_fn_t, u8_callback));
 }
 
+uint8_t m2_el_u8_get_val(m2_el_fnarg_p fn_arg)
+{
+  if ( m2_rom_get_el_fnptr(fn_arg->element) == m2_el_u8numfn_fn )
+  {
+    m2_u8fn_fnptr fn = m2_el_u8_get_callback(fn_arg);
+    return fn(fn_arg->element, M2_U8_MSG_GET_VALUE, 0);
+  }
+  else
+  {
+    return *m2_el_u8_get_val_ptr(fn_arg);
+  }
+}
+
+void m2_el_u8_set_val(m2_el_fnarg_p fn_arg, uint8_t val)
+{
+  if ( m2_rom_get_el_fnptr(fn_arg->element) == m2_el_u8numfn_fn )
+  {
+    m2_u8fn_fnptr fn = m2_el_u8_get_callback(fn_arg);
+    if ( val != fn(fn_arg->element, M2_U8_MSG_GET_VALUE, 0) )
+      fn(fn_arg->element, M2_U8_MSG_SET_VALUE, val);
+  }
+  else
+  {
+    *m2_el_u8_get_val_ptr(fn_arg) =  val;
+  }
+}
 
 
 M2_EL_FN_DEF(m2_el_u8base_fn)
 {
+  uint8_t val;
   uint8_t *val_ptr;
   val_ptr = (uint8_t *)(fn_arg->el_data);
   switch(fn_arg->msg)
