@@ -27,7 +27,7 @@
     
   Code size status: 
     Proccedure attributes: Optimization completed
-    Arithmetic optimication: Mostly
+    Arithmetic optimization: Mostly
   
   
 */
@@ -39,15 +39,6 @@
 #include <stdio.h>
 #endif
 
-/* obsolete, replaced by fnfmt */
-/*
-struct _m2_el_digit_struct
-{
-  m2_el_fnptr fn;		
-};
-typedef struct _m2_el_digit_struct m2_el_digit_t;
-typedef struct _m2_el_digit_struct *m2_el_digit_p;
-*/
 
 M2_EL_FN_DEF(m2_el_digit_fn);
 
@@ -148,12 +139,31 @@ static uint8_t m2_el_u32_get_digit_pos(m2_nav_p nav)
 
 static void m2_el_u32_set_accumulator_by_parent(m2_nav_p nav)
 {
-  m2_el_u32_accumulator = *(uint32_t *)m2_rom_get_ram_ptr(m2_nav_get_parent_element(nav), offsetof(m2_el_u32_t, val));
+  m2_rom_void_p element = m2_nav_get_parent_element(nav);
+  if ( m2_rom_get_el_fnptr(element) == m2_el_u32fn_fn )
+  {
+    m2_u32fn_fnptr fn = *(m2_u32fn_fnptr *)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32fn_t, u32_callback));
+    m2_el_u32_accumulator = fn(element, M2_U8_MSG_GET_VALUE, 0);
+  }
+  else
+  {
+    m2_el_u32_accumulator = *(uint32_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32_t, val));
+  }
 }
 
 static void m2_el_u32_put_accumulator_to_parent(m2_nav_p nav)
 {
-  *(uint32_t *)m2_rom_get_ram_ptr(m2_nav_get_parent_element(nav), offsetof(m2_el_u32_t, val)) = m2_el_u32_accumulator;
+  m2_rom_void_p element = m2_nav_get_parent_element(nav);
+  if ( m2_rom_get_el_fnptr(element) == m2_el_u32fn_fn )
+  {
+    m2_u32fn_fnptr fn = *(m2_u32fn_fnptr *)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32fn_t, u32_callback));
+    if ( m2_el_u32_accumulator != fn(element, M2_U8_MSG_GET_VALUE, 0) )
+      fn(element, M2_U8_MSG_SET_VALUE, m2_el_u32_accumulator);
+  }
+  else
+  {
+    *(uint32_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_u32_t, val)) = m2_el_u32_accumulator;
+  }
 }
 
 
@@ -461,3 +471,8 @@ M2_EL_FN_DEF(m2_el_u32_fn)
   return m2_el_fnfmt_fn(fn_arg);
 }
 
+M2_EL_FN_DEF(m2_el_u32fn_fn)
+{
+  /* inside digit procedures, it is checked for the function address */
+  return m2_el_u32_fn(fn_arg);
+}

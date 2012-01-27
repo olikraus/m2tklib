@@ -100,9 +100,9 @@ M2_EL_FN_DEF(m2_el_u8numfn_fn)
   m2_u8fn_fnptr fn;
   fn = m2_el_u8_get_callback(fn_arg);
   fn_arg->el_data = &val;
-  val = fn(fn_arg, M2_U8_MSG_GET_VALUE, 0);
+  val = fn(fn_arg->element, M2_U8_MSG_GET_VALUE, 0);
   ret = m2_el_u8num_sub_fn(fn_arg);
-  if ( val != fn(fn_arg, M2_U8_MSG_GET_VALUE, 0) )
+  if ( val != fn(fn_arg->element, M2_U8_MSG_GET_VALUE, 0) )
     fn(fn_arg, M2_U8_MSG_SET_VALUE, val);
   return ret;
 }

@@ -92,6 +92,21 @@ extern "C" {
 /*==============================================================*/
 /* Forward declarations */
 
+/* generic rom pointers */
+typedef void m2_rom_void M2_PROGMEM;
+typedef char m2_rom_char M2_PROGMEM;
+
+typedef const m2_rom_void *m2_rom_void_p;
+typedef const m2_rom_char *m2_rom_char_p;
+typedef const m2_rom_char m2_rom_char_t;
+
+#if defined(M2_AVR_OPT_ROM)
+typedef const m2_rom_char *m2_opt_p;
+#else
+typedef const char *m2_opt_p;
+#endif
+
+
 /* generic element pointer */
 typedef struct _m2_el_fnfmt_struct m2_el_fnfmt_t;
 typedef m2_el_fnfmt_t *m2_el_fnfmt_p;
@@ -122,32 +137,22 @@ typedef uint8_t (*m2_es_fnptr)(m2_p ep, uint8_t msg);
 /* graphics handler (callback procedure) */
 typedef uint8_t (*m2_gfx_fnptr)(m2_gfx_arg_p arg);
 
-/* element callback procedure */
+/* element callback procedure, returned by m2_rom_get_el_fnptr() */
 typedef uint8_t (*m2_el_fnptr)(m2_el_fnarg_p fn_arg);
 
 /* button, elinfo callback procedure */
 typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 
 /* u8fn procedure */
-typedef uint8_t (*m2_u8fn_fnptr)(m2_el_fnarg_p fnarg, uint8_t msg, uint8_t val);
+typedef uint8_t (*m2_u8fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint8_t val);
 #define M2_U8_MSG_GET_VALUE 0
 #define M2_U8_MSG_SET_VALUE 1
 
+/* u32fn procedure */
+typedef uint32_t (*m2_u32fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint32_t val);
+#define M2_U32_MSG_GET_VALUE 0
+#define M2_U32_MSG_SET_VALUE 1
 
-
-/* generic rom pointers */
-typedef void m2_rom_void M2_PROGMEM;
-typedef char m2_rom_char M2_PROGMEM;
-
-typedef const m2_rom_void *m2_rom_void_p;
-typedef const m2_rom_char *m2_rom_char_p;
-typedef const m2_rom_char m2_rom_char_t;
-
-#if defined(M2_AVR_OPT_ROM)
-typedef const m2_rom_char *m2_opt_p;
-#else
-typedef const char *m2_opt_p;
-#endif
 
 /*==============================================================*/
 /* m2tklib Toplevel API */
@@ -567,6 +572,20 @@ typedef m2_el_u32_t *m2_el_u32_p;
 M2_EL_FN_DEF(m2_el_u32_fn);
 #define M2_U32NUM(el,fmt,variable) m2_el_u32_t el M2_SECTION_PROGMEM = { { m2_el_u32_fn, (fmt) }, (variable) }
 #define M2_EXTERN_U32NUM(el) extern m2_el_u32_t el
+
+struct _m2_el_u32fn_struct
+{
+  m2_el_fnfmt_t ff;
+  m2_u32fn_fnptr u32_callback;
+};
+typedef struct _m2_el_u32fn_struct m2_el_u32fn_t;
+typedef m2_el_u32fn_t *m2_el_u32fn_p;
+
+M2_EL_FN_DEF(m2_el_u32fn_fn);
+#define M2_U32NUMFN(el,fmt,cb) m2_el_u32fn_t el M2_SECTION_PROGMEM = { { m2_el_u32fn_fn, (fmt) }, (cb) }
+#define M2_EXTERN_U32NUMFN(el) extern m2_el_u32fn_t el
+
+
 
 struct _m2_el_align_struct
 {
