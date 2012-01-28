@@ -460,7 +460,7 @@ M2_EL_FN_DEF(m2_el_labelp_fn);
 struct _m2_el_labelfn_struct
 {
   m2_el_fnfmt_t ff;
-  m2_labelfn_fnptr *label_callback;
+  m2_labelfn_fnptr label_callback;
 };
 typedef struct _m2_el_labelfn_struct m2_el_labelfn_t;
 typedef m2_el_labelfn_t *m2_el_labelfn_p;

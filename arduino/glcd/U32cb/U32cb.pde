@@ -2,7 +2,7 @@
 
   U32cb.pde
   
-  GLCD Example
+  GLCD Example, demonstrates U32NUMFN and LABELFN
 
   m2tklib = Mini Interative Interface Toolkit Library
   
