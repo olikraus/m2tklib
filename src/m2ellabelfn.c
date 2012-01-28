@@ -39,7 +39,7 @@ static m2_labelfn_fnptr m2_el_labelfn_get_callback(m2_el_fnarg_p fn_arg)
 
 static const char *m2_el_labelfn_get_str(m2_el_fnarg_p fn_arg)
 {
-  return m2_el_labelfn_get_callback(fn_arg)(fnarg->element);
+  return m2_el_labelfn_get_callback(fn_arg)(fn_arg->element);
 }
 
 

@@ -464,6 +464,8 @@ struct _m2_el_labelfn_struct
 };
 typedef struct _m2_el_labelfn_struct m2_el_labelfn_t;
 typedef m2_el_labelfn_t *m2_el_labelfn_p;
+
+M2_EL_FN_DEF(m2_el_labelfn_fn);
 #define M2_LABELFN(el,fmt,cb) m2_el_labelfn_t el M2_SECTION_PROGMEM = { { m2_el_labelfn_fn, (fmt) }, (cb) }
 #define M2_EXTERN_LABELFN(el) extern m2_el_str_t el
 
