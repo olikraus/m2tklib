@@ -1,12 +1,12 @@
 /*
 
-  m2elstr.c
+  m2ellabelfn.c
   
   base class for any string elements
 
   m2tklib = Mini Interative Interface Toolkit Library
   
-  Copyright (C) 2011  olikraus@gmail.com
+  Copyright (C) 2012  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,13 +32,18 @@
 #endif
 
 
-char *m2_el_str_get_str(m2_el_fnarg_p fn_arg)
+static m2_labelfn_fnptr m2_el_labelfn_get_callback(m2_el_fnarg_p fn_arg)
 {
-  return (char *)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_str_t, str));
+  return (m2_labelfn_fnptr)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_labelfn_t, label_callback));
+}
+
+static const char *m2_el_labelfn_get_str(m2_el_fnarg_p fn_arg)
+{
+  return m2_el_labelfn_get_callback(fn_arg)(fnarg->element);
 }
 
 
-M2_EL_FN_DEF(m2_el_str_fn)
+M2_EL_FN_DEF(m2_el_labelfn_fn)
 {
   uint8_t font;
 
@@ -48,35 +53,38 @@ M2_EL_FN_DEF(m2_el_str_fn)
   {
     case M2_EL_MSG_GET_LIST_LEN:
       return 0;  /* not a list, return 0 */
+    case M2_EL_MSG_IS_READ_ONLY:
+      return 1;
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_gfx_add_normal_border_height(font, m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)));
+      return m2_gfx_add_readonly_border_height(font, m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_normal_border_width(font, m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg))));
+      return m2_gfx_add_readonly_border_width(font, m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_labelfn_get_str(fn_arg))));
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	printf("str w:%d h:%d arg:%d x:%d y:%d %s\n", 
+	printf("labelfn w:%d h:%d arg:%d x:%d y:%d %s\n", 
 	    m2_fn_get_width((fn_arg->element)), 
 	    m2_fn_get_height((fn_arg->element)), 
-	    fn_arg->arg, b->x, b->y, m2_el_str_get_str(fn_arg));
+	    fn_arg->arg, b->x, b->y, m2_el_labelfn_get_str(fn_arg));
       }
       return 0;
 #endif
     case M2_EL_MSG_SHOW:
       {
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	
+
 	if ( m2_is_frame_draw_at_end == 0 )
 	  m2_el_fnfmt_fn(fn_arg);
-	
-	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 
-	      m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_str_get_str(fn_arg))),
-	      m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)),
-	      font, m2_el_str_get_str(fn_arg));
+	  
+	m2_gfx_draw_text_add_readonly_border_offset(b->x, b->y, 
+	  m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_labelfn_get_str(fn_arg))), 
+	  m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)), 
+	  font, m2_el_labelfn_get_str(fn_arg));
 	
 	if ( m2_is_frame_draw_at_end != 0 )
 	  m2_el_fnfmt_fn(fn_arg);
+	
       }
       return 1;    
   }

@@ -143,6 +143,10 @@ typedef uint8_t (*m2_el_fnptr)(m2_el_fnarg_p fn_arg);
 /* button, elinfo callback procedure */
 typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 
+/* labelfn procedure */
+typedef const char *(*m2_labelfn_fnptr)(m2_rom_void_p element);
+
+
 /* u8fn procedure */
 typedef uint8_t (*m2_u8fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint8_t val);
 #define M2_U8_MSG_GET_VALUE 0
@@ -452,6 +456,16 @@ M2_EL_FN_DEF(m2_el_label_fn);
 M2_EL_FN_DEF(m2_el_labelp_fn);
 #define M2_LABELP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_labelp_fn, (fmt) }, (str) }
 #define M2_EXTERN_LABELP(el) extern m2_el_str_t el
+
+struct _m2_el_labelfn_struct
+{
+  m2_el_fnfmt_t ff;
+  m2_labelfn_fnptr *label_callback;
+};
+typedef struct _m2_el_labelfn_struct m2_el_labelfn_t;
+typedef m2_el_labelfn_t *m2_el_labelfn_p;
+#define M2_LABELFN(el,fmt,cb) m2_el_labelfn_t el M2_SECTION_PROGMEM = { { m2_el_labelfn_fn, (fmt) }, (cb) }
+#define M2_EXTERN_LABELFN(el) extern m2_el_str_t el
 
 
 struct _m2_el_root_struct
