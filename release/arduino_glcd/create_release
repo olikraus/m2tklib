@@ -11,6 +11,7 @@ mkdir libraries/M2tklib/examples/FindNum
 mkdir libraries/M2tklib/examples/Radio
 mkdir libraries/M2tklib/examples/Text
 mkdir libraries/M2tklib/examples/U32
+mkdir libraries/M2tklib/examples/U32Fn
 mkdir libraries/M2tklib/examples/U32Plain
 mkdir libraries/M2tklib/examples/FreqGen
 mkdir libraries/M2tklib/examples/LEDFlash
@@ -45,6 +46,8 @@ cp ../../arduino/glcd/Text/*.pde ./libraries/M2tklib/examples/Text/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Text/Text.pde
 cp ../../arduino/glcd/U32/*.pde ./libraries/M2tklib/examples/U32/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/U32/U32.pde
+cp ../../arduino/glcd/U32Fn/*.pde ./libraries/M2tklib/examples/U32Fn/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/U32Fn/U32Fn.pde
 cp ../../arduino/glcd/U32Plain/*.pde ./libraries/M2tklib/examples/U32Plain/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/U32Plain/U32Plain.pde
 cp ../../arduino/glcd/FreqGen/*.pde ./libraries/M2tklib/examples/FreqGen/.

@@ -19,4 +19,5 @@ m2tklib ChangeLog
         * Combine menu and graphics example
         * GLCD: Changed GotoXY to CursorToXY
         * Ported to Arduino 1.0
-        
+2012-01-28      v1.05	Oliver Kraus <olikraus@gmail.com>
+        * Added LABELFN, U8NUMFN, U32NUMFN
