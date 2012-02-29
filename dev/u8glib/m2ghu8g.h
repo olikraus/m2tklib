@@ -33,6 +33,9 @@
 extern "C" {
 #endif
 
+extern u8g_t *m2_u8g;
+extern u8g_uint_t height_minus_one;
+
 
 /* graphics handler for the dogm128 lib */
 /*
@@ -46,17 +49,15 @@ uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg);
   
 /* utility procedures */
 
-/*
-void m2_dogm_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
-void m2_dogm_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
-void m2_dogm_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
-void m2_dogm_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon);
-uint8_t m2_dogm_get_icon_height(uint8_t font, uint8_t icon);
-uint8_t m2_dogm_get_icon_width(uint8_t font, uint8_t icon);
-
-uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg);
-DOG_PGM_P m2_dogm_get_font(uint8_t font);
-*/ 
+void m2_SetU8g(u8g_t *u8g);
+void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
+void m2_u8g_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon);
+uint8_t m2_u8g_get_icon_height(uint8_t font, uint8_t icon);
+uint8_t m2_u8g_get_icon_width(uint8_t font, uint8_t icon);
+const u8g_fntpgm_uint8_t *m2_u8g_get_font(uint8_t font);
+uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg);
  
 #ifdef __cplusplus
 }

@@ -34,6 +34,9 @@ void m2_SetU8g(u8g_t *u8g)
   m2_u8g = u8g;
   height_minus_one = u8g_GetHeight(u8g);
   height_minus_one--;
+  
+  /* force lower left edge of a text as reference */
+  m2_SetFontPosBottom(m2_u8g);
 }
 
 void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -51,19 +54,11 @@ void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   u8g_DrawVLine(m2_u8g, x0+1+w, height_minus_one - y0 + 1, h);  
 }
 
-
-void m2_dogm_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
+void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  uint8_t x1; 
-  uint8_t y1;
-  x1 = x0;
-  y1 = y0;
-  w--;
-  h--;
-  x1 += w;
-  y1 += h;
-  dog_XorBox(x0, y0, x1, y1);
+  u8g_DrawBox(m2_u8g, x0, height_minus_one - y0, w, h);
 }
+
 
 
 /*
@@ -109,8 +104,8 @@ dog_pgm_uint8_t m2_dogm_icon1[8] = {0x00, 0x7f, 0x043, 0x066, 0x07e, 0x05a, 0x07
 
 */
 
-dog_pgm_uint8_t m2_dogm_icon0[8] = {0x0ff, 0x081, 0x081, 0x081, 0x081, 0x081, 0x081, 0x0ff};
-dog_pgm_uint8_t m2_dogm_icon1[8] = {0x0ff, 0x081, 0x0bd, 0x0bd, 0x0bd, 0x0bd, 0x081, 0x0ff};
+u8g_pgm_uint8_t m2_u8g_icon0[8] = {0x0ff, 0x081, 0x081, 0x081, 0x081, 0x081, 0x081, 0x0ff};
+u8g_pgm_uint8_t m2_u8g_icon1[8] = {0x0ff, 0x081, 0x0bd, 0x0bd, 0x0bd, 0x0bd, 0x081, 0x0ff};
 
 /*
 #define M2_ICON_TOGGLE_ACTIVE 1
@@ -119,66 +114,99 @@ dog_pgm_uint8_t m2_dogm_icon1[8] = {0x0ff, 0x081, 0x0bd, 0x0bd, 0x0bd, 0x0bd, 0x
 #define M2_ICON_RADIO_INACTIVE 4
 */
 
-void m2_dogm_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
+void m2_u8g_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
 {
-  dog_pgm_uint8_t *ptr = m2_dogm_icon0;
+  const u8g_pgm_uint8_t *ptr = m2_u8g_icon0;
   if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_RADIO_ACTIVE )
-    ptr = m2_dogm_icon1;
-  dog_SetBitmapP(x,y+7,ptr,8,8);
+    ptr = m2_u8g_icon1;
+  //dog_SetBitmapP(x,y+7,ptr,8,8);
+
+  u8g_DrawBitmapP(m2_u8g, x, height_minus_one - (y+7), 1, 8, ptr);
 }
 
-uint8_t m2_dogm_get_icon_height(uint8_t font, uint8_t icon)
+uint8_t m2_u8g_get_icon_height(uint8_t font, uint8_t icon)
 {
   return 8;
 }
 
-uint8_t m2_dogm_get_icon_width(uint8_t font, uint8_t icon)
+uint8_t m2_u8g_get_icon_width(uint8_t font, uint8_t icon)
 {
   return 8;
 }
 
 
-DOG_PGM_P m2_gh_dogm_fonts[4];
+const u8g_fntpgm_uint8_t *m2_gh_u8g_fonts[4];
+
+const u8g_fntpgm_uint8_t *m2_u8g_get_font(uint8_t font)
+{
+  font &= 3;
+  return m2_gh_u8g_fonts[font];
+}
 
 
-uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
+uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
   {
+    case M2_GFX_MSG_INIT:		
+      break;
+    case M2_GFX_MSG_START:
+      break;
+    case M2_GFX_MSG_END:
+      break;
+    case M2_GFX_MSG_DRAW_HLINE:
+      u8g_DrawHLine(m2_u8g, arg->x, height_minus_one - arg->y, arg->w);
+      break;
+    case M2_GFX_MSG_DRAW_VLINE:
+      u8g_DrawVLine(m2_u8g, arg->x, height_minus_one - arg->y, arg->h);  
+      break;
+    case M2_GFX_MSG_DRAW_BOX:
+      m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
+      break;
     case M2_GFX_MSG_DRAW_TEXT:
       {
-	uint8_t x = arg->x;
-	uint8_t y;
+	u8g_uint_t x = arg->x;
+	u8g_uint_t y;
+        
+        u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+        
 	if ( (arg->font & 8) != 0 )
+        {
 	  if ( arg->w != 0 )
 	  {
 	    x = arg->w;
-	    x -= dog_GetStrWidth(m2_dogm_get_font(arg->font), arg->s);
+	    x -= u8g_GetStrWidth(m2_u8g, arg->s);
 	    x >>= 1;
 	    x += arg->x;
 	  }
-	y = arg->y;
-	y += dog_GetFontBBXDescent(m2_dogm_get_font(arg->font));
-	y--;			/* Correction: Baseline for DOG fonts is one pixel above */
-	dog_DrawStr(x, y, m2_dogm_get_font(arg->font), arg->s);
+        }
+        y = height_minus_one;
+	y -= arg->y;
+        y++;
+	u8g_DrawStr(m2_u8g, x, y, arg->s);
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
       {
-	uint8_t x = arg->x;
-	uint8_t y;
+	u8g_uint_t x = arg->x;
+	u8g_uint_t y;
+        
+        u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+        
 	if ( (arg->font & 8) != 0 )
+        {
 	  if ( arg->w != 0 )
 	  {
 	    x = arg->w;
-	    x -= dog_GetStrWidthP(m2_dogm_get_font(arg->font), arg->s);
+	    x -= u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
 	    x >>= 1;
 	    x += arg->x;
 	  }
-	y = arg->y;
-	y += dog_GetFontBBXDescent(m2_dogm_get_font(arg->font));
-	y--;			/* Correction: Baseline for DOG fonts is one pixel above */
-	dog_DrawStrP(x, y, m2_dogm_get_font(arg->font), arg->s);
+        }
+        y = height_minus_one;
+	y -= arg->y;
+        y++;
+	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
     case M2_GFX_MSG_SET_FONT:
@@ -186,19 +214,33 @@ uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
 	uint8_t idx;
 	idx = arg->font;
 	idx &=3;
-	m2_gh_dogm_fonts[idx] = (DOG_PGM_P)(arg->s);
+	m2_gh_u8g_fonts[idx] = (const u8g_fntpgm_uint8_t *)(arg->s);
       }
       return 0;
+    case M2_GFX_MSG_GET_TEXT_WIDTH:
+      u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+      return u8g_GetStrWidth(m2_u8g, arg->s);
+    case M2_GFX_MSG_GET_TEXT_WIDTH_P:
+      u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+      return u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s)
+    case M2_GFX_MSG_GET_CHAR_WIDTH:
+      return dog_GetFontBBXWidth(m2_dogm_get_font(arg->font));
+      u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+      return u8g_GetFontBBXWidth(m2_u8g);               /* might be too large, better choose something else here */
+    case M2_GFX_MSG_GET_CHAR_HEIGHT:
+      u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+      return u8g_GetFontLineSpacing(m2_u8g);
+      
     case M2_GFX_MSG_GET_DISPLAY_WIDTH:
-      return DOG_WIDTH;
+      return u8g_GetWidth(m2_u8g);
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
-      return DOG_HEIGHT;
+      return u8g_GetHeight(m2_u8g);
     case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
       /* scroll bar: "total" total number of items */
       /* scroll bar: "top" topmost item (first visible item) 0 .. total-visible*/
       /* scroll bar: "visible" number of visible items 0 .. total-1 */
 
-      m2_dogm_draw_frame(arg->x, arg->y, arg->w, arg->h);
+      m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       {
 	uint16_t h, y;
 	
@@ -206,16 +248,11 @@ uint8_t m2_gh_dogm_base(m2_gfx_arg_p  arg)
 	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 
 
 	
-	m2_dogm_draw_xorbox(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
+	m2_u8g_draw_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;
   }
   return m2_gh_dummy(arg);
 }
 
-DOG_PGM_P m2_dogm_get_font(uint8_t font)
-{
-  font &= 3;
-  return m2_gh_dogm_fonts[font];
-}
 
