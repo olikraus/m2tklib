@@ -26,7 +26,7 @@
 #include "m2.h"
 #include "m2ghu8g.h"
 
-u8g_t *m2_u8g;
+u8g_t *m2_u8g = NULL;
 u8g_uint_t height_minus_one;
 
 void m2_SetU8g(u8g_t *u8g)
@@ -146,6 +146,11 @@ const u8g_fntpgm_uint8_t *m2_u8g_get_font(uint8_t font)
 
 uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 {
+  /* Do a safety check here: Abort if m2_SetU8g has not been called */
+  if ( m2_u8g == NULL )
+    return 0;
+
+  /* Proceed with normal message processing */
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:		
@@ -165,56 +170,56 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_DRAW_TEXT:
       {
-	u8g_uint_t x = arg->x;
-	u8g_uint_t y;
-        
+	      u8g_uint_t x = arg->x;
+	      u8g_uint_t y;
+              
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-        
-	if ( (arg->font & 8) != 0 )
+              
+	      if ( (arg->font & 8) != 0 )
         {
-	  if ( arg->w != 0 )
-	  {
-	    x = arg->w;
-	    x -= u8g_GetStrWidth(m2_u8g, arg->s);
-	    x >>= 1;
-	    x += arg->x;
-	  }
+	        if ( arg->w != 0 )
+	        {
+	          x = arg->w;
+	          x -= u8g_GetStrWidth(m2_u8g, arg->s);
+	          x >>= 1;
+	          x += arg->x;
+	        }
         }
         y = height_minus_one;
-	y -= arg->y;
+	      y -= arg->y;
         y++;
-	u8g_DrawStr(m2_u8g, x, y, arg->s);
+	      u8g_DrawStr(m2_u8g, x, y, arg->s);
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
       {
-	u8g_uint_t x = arg->x;
-	u8g_uint_t y;
+	      u8g_uint_t x = arg->x;
+	      u8g_uint_t y;
         
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
         
-	if ( (arg->font & 8) != 0 )
+	      if ( (arg->font & 8) != 0 )
         {
-	  if ( arg->w != 0 )
-	  {
-	    x = arg->w;
-	    x -= u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
-	    x >>= 1;
-	    x += arg->x;
-	  }
+	        if ( arg->w != 0 )
+	        {
+	          x = arg->w;
+	          x -= u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
+	          x >>= 1;
+	          x += arg->x;
+	        }
         }
         y = height_minus_one;
-	y -= arg->y;
+      	y -= arg->y;
         y++;
-	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
+      	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
     case M2_GFX_MSG_SET_FONT:
       {
-	uint8_t idx;
-	idx = arg->font;
-	idx &=3;
-	m2_gh_u8g_fonts[idx] = (const u8g_fntpgm_uint8_t *)(arg->s);
+	      uint8_t idx;
+	      idx = arg->font;
+	      idx &=3;
+	      m2_gh_u8g_fonts[idx] = (const u8g_fntpgm_uint8_t *)(arg->s);
       }
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:

@@ -181,7 +181,7 @@ void m2_CheckKey(void);
 uint8_t m2_HandleKey(void);
 void m2_Draw(void);
 void m2_SetKey(uint8_t key);
-uint8_t m2_GetKey(void);                // usually you do not want to use this function, use m2_HandleKey() instead */
+uint8_t m2_GetKey(void);                /* usually you do not want to use this function, use m2_HandleKey() instead, see the tutorials */
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetRoot(m2_rom_void_p element);
