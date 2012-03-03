@@ -46,7 +46,10 @@ uint8_t m2_gh_dogm_fbs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_ffs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg);
 */
-  
+/* graphics handler for the u8glib */
+uint8_t m2_gh_u8g_fb(m2_gfx_arg_p arg);
+
+
 /* utility procedures */
 
 void m2_SetU8g(u8g_t *u8g);
@@ -63,3 +66,5 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg);
 }
 #endif
 #endif
+
+

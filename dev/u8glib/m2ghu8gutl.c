@@ -36,7 +36,7 @@ void m2_SetU8g(u8g_t *u8g)
   height_minus_one--;
   
   /* force lower left edge of a text as reference */
-  m2_SetFontPosBottom(m2_u8g);
+  u8g_SetFontPosBottom(m2_u8g);
 }
 
 void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -222,11 +222,11 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       return u8g_GetStrWidth(m2_u8g, arg->s);
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s)
+      return u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      return dog_GetFontBBXWidth(m2_dogm_get_font(arg->font));
+      return u8g_GetFontBBXWidth(m2_u8g_get_font(arg->font));
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetFontBBXWidth(m2_u8g);               /* might be too large, better choose something else here */
+      return u8g_GetFontBBXWidth(m2_u8g); /* might be too large, better choose something else here */
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
       return u8g_GetFontLineSpacing(m2_u8g);
@@ -242,13 +242,11 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 
       m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       {
-	uint16_t h, y;
+      	uint16_t h, y;
 	
-	h = m2_utl_sb_get_slider_height(arg->h-2, arg->total, arg->visible);
-	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 
-
-	
-	m2_u8g_draw_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
+       	h = m2_utl_sb_get_slider_height(arg->h-2, arg->total, arg->visible);
+      	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 	
+      	m2_u8g_draw_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;
   }
