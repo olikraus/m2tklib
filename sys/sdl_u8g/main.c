@@ -136,7 +136,7 @@ int main(void)
   m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_unifont);
+  m2_SetFont(0, (const void *)u8g_font_6x13);
 
   /*
   u8g_FirstPage(&u8g);
