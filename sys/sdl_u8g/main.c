@@ -150,7 +150,7 @@ uint8_t el_tlsm_cnt = 5;
 
 M2_STRLIST(el_tlsm_strlist, "l3W55", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
-M2_VSB(el_tlsm_vsb, "l3W8r1", &el_tlsm_first, &el_tlsm_cnt);
+M2_VSB(el_tlsm_vsb, "l3W6r1", &el_tlsm_first, &el_tlsm_cnt);
 M2_LIST(list_tlsm_strlist) = { &el_tlsm_strlist, &el_tlsm_space, &el_tlsm_vsb };
 M2_HLIST(el_tlsm_hlist, NULL, list_tlsm_strlist);
 

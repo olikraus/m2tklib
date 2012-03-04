@@ -46,8 +46,9 @@ void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   y -= y0;
   y -= h;
   u8g_DrawFrame(m2_u8g, x0, y, w, h);
+  /*
   printf("draw_frame: x=%d y=%d w=%d h=%d\n", x0, y, w, h);
-
+  */
 }
 
 void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -62,7 +63,11 @@ void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 
 void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  u8g_DrawBox(m2_u8g, x0, height_minus_one - y0, w, h);
+  u8g_uint_t y;
+  y = height_minus_one;
+  y -= y0;
+  y -= h;
+  u8g_DrawBox(m2_u8g, x0, y, w, h);
 }
 
 
@@ -197,7 +202,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	      y -= arg->y;
         y++;
 	      u8g_DrawStr(m2_u8g, x, y, arg->s);
-        printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s);
+        /* printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s); */
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
