@@ -120,6 +120,45 @@ M2_LIST(list) = {
 M2_GRIDLIST(list_element, "c2",list);
 
 
+/*======================================================================*/
+/* top level sdl menu: tlsm */
+
+
+const char *selected = "Nothing";
+const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
+  const char *s = "";
+  if  ( idx == 0 )
+    s = "Apple";
+  else if ( idx == 1 )
+    s = "Banana";
+  else if ( idx == 2 )
+    s = "Peach";
+  else if ( idx == 3 )
+    s = "Pumpkin";
+  else if ( idx == 4 )
+    s = "Corn";
+  if (msg == M2_STRLIST_MSG_GET_STR) {
+    /* nothing else todo, return the correct string */
+  } else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    selected = s;
+  }
+  return s;
+}
+
+uint8_t el_tlsm_first = 0;
+uint8_t el_tlsm_cnt = 5;
+
+M2_STRLIST(el_tlsm_strlist, "l3W55", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
+M2_SPACE(el_tlsm_space, "W1h1");
+M2_VSB(el_tlsm_vsb, "l3W8r1", &el_tlsm_first, &el_tlsm_cnt);
+M2_LIST(list_tlsm_strlist) = { &el_tlsm_strlist, &el_tlsm_space, &el_tlsm_vsb };
+M2_HLIST(el_tlsm_hlist, NULL, list_tlsm_strlist);
+
+M2_ALIGN(top_el_tlsm, "-1|1W64H64", &el_tlsm_hlist);
+
+
+/*======================================================================*/
+
 int main(void)
 {  
   u8g_t u8g;
@@ -133,22 +172,13 @@ int main(void)
   m2_SetU8g(&u8g);
 
   /* 3. Now, setup m2 */ 
-  m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
+
+  m2_Init(&el_tlsm_hlist, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
+  // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_6x13);
 
-  /*
-  u8g_FirstPage(&u8g);
-  
-  do
-  {
-    u8g_SetFont(&u8g, u8g_font_unifont);
-    //u8g_SetFont(&u8g, u8g_font_osb18r);
-    
-    u8g_DrawStr(&u8g, 0, 20, "Hello World!");
-  } while( u8g_NextPage(&u8g) );
-*/
 
   for(;;)
   {
