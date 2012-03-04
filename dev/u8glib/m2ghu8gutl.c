@@ -41,7 +41,13 @@ void m2_SetU8g(u8g_t *u8g)
 
 void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  u8g_DrawFrame(m2_u8g, x0, height_minus_one - y0, w, h);
+  u8g_uint_t y;
+  y = height_minus_one;
+  y -= y0;
+  y -= h;
+  u8g_DrawFrame(m2_u8g, x0, y, w, h);
+  printf("draw_frame: x=%d y=%d w=%d h=%d\n", x0, y, w, h);
+
 }
 
 void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -150,6 +156,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
   if ( m2_u8g == NULL )
     return 0;
 
+
   /* Proceed with normal message processing */
   switch(arg->msg)
   {
@@ -174,6 +181,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	      u8g_uint_t y;
               
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+        u8g_SetFontPosBottom(m2_u8g);
               
 	      if ( (arg->font & 8) != 0 )
         {
@@ -189,6 +197,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	      y -= arg->y;
         y++;
 	      u8g_DrawStr(m2_u8g, x, y, arg->s);
+        printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s);
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
@@ -197,6 +206,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	      u8g_uint_t y;
         
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
+        u8g_SetFontPosBottom(m2_u8g);
         
 	      if ( (arg->font & 8) != 0 )
         {
@@ -229,9 +239,10 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
       return u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      return u8g_GetFontBBXWidth(m2_u8g_get_font(arg->font));
+      //return u8g_GetFontBBXWidth(m2_u8g_get_font(arg->font));
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetFontBBXWidth(m2_u8g); /* might be too large, better choose something else here */
+      return u8g_GetFontLineSpacing(m2_u8g);
+      //return u8g_GetFontBBXWidth(m2_u8g); /* might be too large, better choose something else here */
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
       return u8g_GetFontLineSpacing(m2_u8g);
