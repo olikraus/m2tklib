@@ -27,24 +27,34 @@
 #include "m2ghu8g.h"
 
 u8g_t *m2_u8g = NULL;
-u8g_uint_t height_minus_one;
+u8g_uint_t m2_u8g_height_minus_one;
+uint8_t m2_u8g_fg_text_color;
+uint8_t m2_u8g_bg_text_color;
+uint8_t m2_u8g_current_text_color;
+uint8_t m2_u8g_draw_color;
 
 void m2_SetU8g(u8g_t *u8g)
 {
   m2_u8g = u8g;
-  height_minus_one = u8g_GetHeight(u8g);
-  height_minus_one--;
+  m2_u8g_height_minus_one = u8g_GetHeight(u8g);
+  m2_u8g_height_minus_one--;
   
   /* force lower left edge of a text as reference */
   u8g_SetFontPosBottom(m2_u8g);
+
+  m2_u8g_fg_text_color = u8g_GetDefaultForegroundColor(m2_u8g);
+  m2_u8g_bg_text_color = u8g_GetDefaultBackgroundColor(m2_u8g);
+  m2_u8g_current_text_color = m2_u8g_fg_text_color;
+  m2_u8g_draw_color = u8g_GetDefaultForegroundColor(m2_u8g);
 }
 
 void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
   u8g_uint_t y;
-  y = height_minus_one;
+  y = m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
+  u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
   u8g_DrawFrame(m2_u8g, x0, y, w, h);
   /*
   printf("draw_frame: x=%d y=%d w=%d h=%d\n", x0, y, w, h);
@@ -55,18 +65,20 @@ void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
   w--;
   h--;
-  u8g_DrawFrame(m2_u8g, x0, height_minus_one - y0, w, h);
+  u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
+  u8g_DrawFrame(m2_u8g, x0, m2_u8g_height_minus_one - y0, w, h);
   
-  u8g_DrawHLine(m2_u8g, x0+1, height_minus_one - y0 + h, w);
-  u8g_DrawVLine(m2_u8g, x0+1+w, height_minus_one - y0 + 1, h);  
+  u8g_DrawHLine(m2_u8g, x0+1, m2_u8g_height_minus_one - y0 + h, w);
+  u8g_DrawVLine(m2_u8g, x0+1+w, m2_u8g_height_minus_one - y0 + 1, h);  
 }
 
 void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
   u8g_uint_t y;
-  y = height_minus_one;
+  y = m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
+  u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
   u8g_DrawBox(m2_u8g, x0, y, w, h);
 }
 
@@ -132,7 +144,8 @@ void m2_u8g_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
     ptr = m2_u8g_icon1;
   //dog_SetBitmapP(x,y+7,ptr,8,8);
 
-  u8g_DrawBitmapP(m2_u8g, x, height_minus_one - (y+7), 1, 8, ptr);
+  u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
+  u8g_DrawBitmapP(m2_u8g, x, m2_u8g_height_minus_one - (y+7), 1, 8, ptr);
 }
 
 uint8_t m2_u8g_get_icon_height(uint8_t font, uint8_t icon)
@@ -172,10 +185,10 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_END:
       break;
     case M2_GFX_MSG_DRAW_HLINE:
-      u8g_DrawHLine(m2_u8g, arg->x, height_minus_one - arg->y, arg->w);
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y, arg->w);
       break;
     case M2_GFX_MSG_DRAW_VLINE:
-      u8g_DrawVLine(m2_u8g, arg->x, height_minus_one - arg->y, arg->h);  
+      u8g_DrawVLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y, arg->h);  
       break;
     case M2_GFX_MSG_DRAW_BOX:
       m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
@@ -184,7 +197,8 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       {
 	      u8g_uint_t x = arg->x;
 	      u8g_uint_t y;
-              
+
+        u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
         u8g_SetFontPosBottom(m2_u8g);
               
@@ -198,7 +212,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	          x += arg->x;
 	        }
         }
-        y = height_minus_one;
+        y = m2_u8g_height_minus_one;
 	      y -= arg->y;
         y++;
 	      u8g_DrawStr(m2_u8g, x, y, arg->s);
@@ -210,6 +224,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	      u8g_uint_t x = arg->x;
 	      u8g_uint_t y;
         
+        u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
         u8g_SetFontPosBottom(m2_u8g);
         
@@ -223,7 +238,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	          x += arg->x;
 	        }
         }
-        y = height_minus_one;
+        y = m2_u8g_height_minus_one;
       	y -= arg->y;
         y++;
       	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
@@ -253,8 +268,10 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       return u8g_GetFontLineSpacing(m2_u8g);
       
     case M2_GFX_MSG_GET_DISPLAY_WIDTH:
+      /* printf("display width = %d\n", (int)u8g_GetWidth(m2_u8g)); */
       return u8g_GetWidth(m2_u8g);
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
+      /* printf("display height = %d\n", (int)u8g_GetHeight(m2_u8g)); */
       return u8g_GetHeight(m2_u8g);
     case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
       /* scroll bar: "total" total number of items */

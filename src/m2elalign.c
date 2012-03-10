@@ -124,10 +124,10 @@ uint8_t m2_el_align_fn(m2_el_fnarg_p fn_arg)
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
-	uint8_t h, w;
-	h = m2_align_get_new_size(fn_arg, 1);
-	w = m2_align_get_new_size(fn_arg, 0);
-	printf("align w:%d h:%d arg:%d \n", w, h, fn_arg->arg);
+        uint8_t h, w;
+	      h = m2_align_get_new_size(fn_arg, 1);
+	      w = m2_align_get_new_size(fn_arg, 0);
+	      printf("align w:%d h:%d arg:%d \n", w, h, fn_arg->arg);
       }
       break;
 #endif

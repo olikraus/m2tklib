@@ -68,6 +68,36 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
   return 0;
 }
 
+/*======================================================================*/
+/* extern ref to top element */
+M2_EXTERN_ALIGN(top_el_tlsm);
+
+/* dummy button callback */
+void fn_dummy(m2_el_fnarg_p fnarg) {
+  /* accept selection */
+}
+
+/*======================================================================*/
+/* button examples */
+
+
+M2_BUTTON(el_btn_highlight, "W63f4", "highlight", fn_dummy);
+M2_BUTTON(el_btn_normal, "W63f0", "normal", fn_dummy);
+
+M2_ROOT(el_btn_goto_top, "W63", "top menu", &top_el_tlsm);
+
+M2_LIST(list_btn) = { 
+    &el_btn_highlight, 
+    &el_btn_normal, 
+    &el_btn_goto_top
+};
+
+M2_VLIST(el_top_btn, NULL, list_btn);
+
+
+
+/*======================================================================*/
+/* combo examples */
 
 uint8_t select_color = 0;
 uint8_t select_priority = 0;
@@ -78,6 +108,7 @@ void fn_ok(m2_el_fnarg_p fnarg) {
 
 void fn_cancel(m2_el_fnarg_p fnarg) {
   /* discard selection */
+  m2_SetRoot(&top_el_tlsm);
 }
 
 const char *fn_idx_to_color(uint8_t idx)
@@ -112,12 +143,12 @@ M2_COMBO(el_combo2, "v1", &select_priority, 5, fn_idx_to_priority);
 M2_BUTTON(el_cancel, NULL, "cancel", fn_cancel);
 M2_BUTTON(el_ok, NULL, " ok ", fn_ok);
 
-M2_LIST(list) = { 
+M2_LIST(list_combo) = { 
     &el_label1, &el_combo1, 
     &el_label2, &el_combo2,  
     &el_cancel, &el_ok 
 };
-M2_GRIDLIST(list_element, "c2",list);
+M2_GRIDLIST(el_top_combo, "c2",list_combo);
 
 
 /*======================================================================*/
@@ -128,19 +159,27 @@ const char *selected = "Nothing";
 const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
   const char *s = "";
   if  ( idx == 0 )
-    s = "Apple";
+    s = "Combo";
   else if ( idx == 1 )
-    s = "Banana";
+    s = "Buttons";
   else if ( idx == 2 )
-    s = "Peach";
+    s = "Empty3";
   else if ( idx == 3 )
-    s = "Pumpkin";
+    s = "Empty4";
   else if ( idx == 4 )
-    s = "Corn";
+    s = "Empty5";
+
   if (msg == M2_STRLIST_MSG_GET_STR) {
     /* nothing else todo, return the correct string */
-  } else if ( msg == M2_STRLIST_MSG_SELECT ) {
+  } 
+  else if ( msg == M2_STRLIST_MSG_SELECT ) {
     selected = s;
+    if ( idx == 0 ) {
+      m2_SetRoot(&el_top_combo);
+    }
+    else if ( idx == 1 ) {
+      m2_SetRoot(&el_top_btn);
+    }
   }
   return s;
 }
@@ -167,13 +206,11 @@ int main(void)
   
   /* 1. Setup and create device access */
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
-
   /* 2. Connect the u8g display to m2. Note: M2 is setup later */
   m2_SetU8g(&u8g);
 
-  /* 3. Now, setup m2 */ 
-
-  m2_Init(&el_tlsm_hlist, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
+  /* 3. Now, setup m2 */
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */

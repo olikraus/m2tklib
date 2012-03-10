@@ -34,7 +34,10 @@ extern "C" {
 #endif
 
 extern u8g_t *m2_u8g;
-extern u8g_uint_t height_minus_one;
+extern u8g_uint_t m2_u8g_height_minus_one;
+extern uint8_t m2_u8g_fg_text_color;
+extern uint8_t m2_u8g_bg_text_color;
+extern uint8_t m2_u8g_current_text_color;
 
 
 /* graphics handler for the dogm128 lib */

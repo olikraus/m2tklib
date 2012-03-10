@@ -35,20 +35,39 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
   {
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
+      {
+        m2_u8g_current_text_color = m2_u8g_bg_text_color;
       	m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
+      }
+      else
+      {
+        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      }
       break;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
+      if ( (arg->font & 4) != 0 )
+      {
+        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      	//m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
+      }
+      else
+      {
+        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      }
       m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
+      m2_u8g_current_text_color = m2_u8g_fg_text_color;
       m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
-      u8g_DrawHLine(m2_u8g, arg->x, height_minus_one - arg->y, arg->w);
+      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y, arg->w);
       break;
     case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
-      u8g_DrawHLine(m2_u8g, arg->x, height_minus_one - arg->y, arg->w);
+      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y, arg->w);
       break;      
     case M2_GFX_MSG_DRAW_GO_UP:
       m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
@@ -91,7 +110,8 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_GET_ICON_HEIGHT:
       return m2_u8g_get_icon_height(arg->font, arg->icon);
     case M2_GFX_MSG_IS_FRAME_DRAW_AT_END:
-      return 1;
+      return 0; /* focus (highlight) is drawn first, then the text string */
   }
+
   return m2_gh_u8g_base(arg);
 }

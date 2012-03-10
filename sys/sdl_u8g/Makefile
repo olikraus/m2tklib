@@ -2,7 +2,9 @@
 U8GPATH = ../../../../u8g/u8glib/
 M2TKPATH = ../../
 
-CFLAGS = -g -Wall -I$(U8GPATH)csrc/.  -I$(M2TKPATH)src/. -I$(M2TKPATH)dev/u8glib/. -DU8G_16BIT `sdl-config --cflags`
+CFLAGS = -g -Wall -I$(U8GPATH)csrc/.  -I$(M2TKPATH)src/. -I$(M2TKPATH)dev/u8glib/. -DU8G_16BIT `sdl-config --cflags` 
+
+# CFLAGS += -DM2_EL_MSG_DBG_SHOW
 
 SRC = $(shell ls $(U8GPATH)csrc/*.c) $(shell ls $(U8GPATH)sfntsrc/*.c ) 
 SRC += $(U8GPATH)sys/sdl/dev/u8g_dev_sdl.c

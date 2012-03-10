@@ -85,21 +85,21 @@ M2_EL_FN_DEF(m2_el_fnfmt_fn)
 	return 1;
     case M2_EL_MSG_SHOW:
     {
-	uint8_t font;
+    	uint8_t font;
 
-	font = m2_el_fmfmt_get_font(fn_arg);
+    	font = m2_el_fmfmt_get_font(fn_arg);
       
-	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	uint8_t w = m2_fn_get_width(fn_arg->element);
-	uint8_t h = m2_fn_get_height(fn_arg->element);
-	if ( fn_arg->arg < 2 )
-	  m2_gfx_normal_no_focus(b->x, b->y, w, h, font);      
-	else if ( fn_arg->arg == 2 )
-	  m2_gfx_normal_focus(b->x, b->y, w, h, font);
-	else if ( fn_arg->arg == 3 )
-	  m2_gfx_normal_data_entry(b->x, b->y, w, h, font);
-      }
-      return 1;
+    	m2_pos_p b = (m2_pos_p)(fn_arg->data);
+    	uint8_t w = m2_fn_get_width(fn_arg->element);
+    	uint8_t h = m2_fn_get_height(fn_arg->element);
+	    if ( fn_arg->arg < 2 )
+	      m2_gfx_normal_no_focus(b->x, b->y, w, h, font);      
+	    else if ( fn_arg->arg == 2 )
+	      m2_gfx_normal_focus(b->x, b->y, w, h, font);
+	    else if ( fn_arg->arg == 3 )
+	      m2_gfx_normal_data_entry(b->x, b->y, w, h, font);
+    }
+    return 1;
   }
   return 0;
 }
