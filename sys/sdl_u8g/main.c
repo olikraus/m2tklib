@@ -78,6 +78,25 @@ void fn_dummy(m2_el_fnarg_p fnarg) {
 }
 
 /*======================================================================*/
+/* text entry */
+char text_str[5] = "(AgI";
+
+M2_LABEL(el_te_l1, NULL, "TE a0:");
+M2_TEXT(el_te1, "a0", text_str, 4);
+M2_LABEL(el_te_l2, NULL, "TE a1:");
+M2_TEXT(el_te2, "a1", text_str, 4);
+M2_ROOT(el_te_goto_top, NULL, " top menu ", &top_el_tlsm);
+
+M2_LIST(list_te) = { 
+    &el_te_l1, &el_te1, 
+    &el_te_l2, &el_te2,  
+    &el_te_goto_top 
+};
+M2_GRIDLIST(el_top_te, "c2", list_te);
+
+
+
+/*======================================================================*/
 /* button examples */
 
 
@@ -93,7 +112,6 @@ M2_LIST(list_btn) = {
 };
 
 M2_VLIST(el_top_btn, NULL, list_btn);
-
 
 
 /*======================================================================*/
@@ -148,7 +166,7 @@ M2_LIST(list_combo) = {
     &el_label2, &el_combo2,  
     &el_cancel, &el_ok 
 };
-M2_GRIDLIST(el_top_combo, "c2",list_combo);
+M2_GRIDLIST(el_top_combo, "c2", list_combo);
 
 
 /*======================================================================*/
@@ -163,7 +181,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
   else if ( idx == 1 )
     s = "Buttons";
   else if ( idx == 2 )
-    s = "Empty3";
+    s = "Text Entry";
   else if ( idx == 3 )
     s = "Empty4";
   else if ( idx == 4 )
@@ -180,6 +198,10 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     else if ( idx == 1 ) {
       m2_SetRoot(&el_top_btn);
     }
+    else if ( idx == 2 ) {
+      m2_SetRoot(&el_top_te);
+    }
+
   }
   return s;
 }

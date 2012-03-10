@@ -160,11 +160,18 @@ uint8_t m2_u8g_get_icon_width(uint8_t font, uint8_t icon)
 
 
 const u8g_fntpgm_uint8_t *m2_gh_u8g_fonts[4];
+const int8_t m2_gh_u8g_ref_dx[4];
 
 const u8g_fntpgm_uint8_t *m2_u8g_get_font(uint8_t font)
 {
   font &= 3;
   return m2_gh_u8g_fonts[font];
+}
+
+int8_t m2_u8g_get_reference_delta_x(uint8_t font)
+{
+  font &= 3;
+  return m2_gh_u8g_ref_dx[font];
 }
 
 
@@ -250,6 +257,8 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	      idx = arg->font;
 	      idx &=3;
 	      m2_gh_u8g_fonts[idx] = (const u8g_fntpgm_uint8_t *)(arg->s);
+        u8g_SetFont(m2_u8g, m2_gh_u8g_fonts[idx]);
+        u8g_GetGlyphDeltaX(m2_u8g, 'm');
       }
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
