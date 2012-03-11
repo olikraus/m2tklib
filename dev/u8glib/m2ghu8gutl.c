@@ -221,7 +221,6 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         }
         y = m2_u8g_height_minus_one;
 	      y -= arg->y;
-        y++;
 	      u8g_DrawStr(m2_u8g, x, y, arg->s);
         /* printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s); */
       }
@@ -247,7 +246,6 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         }
         y = m2_u8g_height_minus_one;
       	y -= arg->y;
-        y++;
       	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
