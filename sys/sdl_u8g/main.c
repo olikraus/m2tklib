@@ -78,6 +78,33 @@ void fn_dummy(m2_el_fnarg_p fnarg) {
 }
 
 /*======================================================================*/
+/* radio buttons */
+
+uint8_t rb_select_color = 0;
+
+
+M2_LABEL(el_rb_label1, NULL, "red");
+M2_RADIO(el_rb_radio1, "v0", &rb_select_color);
+
+M2_LABEL(el_rb_label2, NULL, "green");
+M2_RADIO(el_rb_radio2, "v1", &rb_select_color);
+
+M2_LABEL(el_rb_label3, NULL, "blue");
+M2_RADIO(el_rb_radio3, "v2", &rb_select_color);
+
+M2_ROOT(el_rb_goto_top, NULL, " top menu ", &top_el_tlsm);
+
+
+M2_LIST(list_rb) = { 
+    &el_rb_label1, &el_rb_radio1, 
+    &el_rb_label2, &el_rb_radio2,  
+    &el_rb_label3, &el_rb_radio3, 
+    &el_rb_goto_top
+};
+M2_GRIDLIST(el_top_rb, "c2",list_rb);
+
+
+/*======================================================================*/
 /* text entry */
 char text_str[5] = "(AgI";
 
@@ -183,7 +210,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
   else if ( idx == 2 )
     s = "Text Entry";
   else if ( idx == 3 )
-    s = "Empty4";
+    s = "Radio";
   else if ( idx == 4 )
     s = "Empty5";
 
@@ -201,6 +228,10 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     else if ( idx == 2 ) {
       m2_SetRoot(&el_top_te);
     }
+    else if ( idx == 3 ) {
+      m2_SetRoot(&el_top_rb);
+    }
+
 
   }
   return s;

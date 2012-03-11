@@ -145,7 +145,7 @@ void m2_u8g_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
   //dog_SetBitmapP(x,y+7,ptr,8,8);
 
   u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
-  u8g_DrawBitmapP(m2_u8g, x, m2_u8g_height_minus_one - (y+7), 1, 8, ptr);
+  u8g_DrawBitmapP(m2_u8g, x, m2_u8g_height_minus_one - (y+8), 1, 8, ptr);
 }
 
 uint8_t m2_u8g_get_icon_height(uint8_t font, uint8_t icon)
