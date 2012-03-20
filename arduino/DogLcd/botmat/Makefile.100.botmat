@@ -48,6 +48,7 @@ DEFS:=-DARDUINO=100
 
 M2TKLIB_PATH:=$(shell cd ../../.. && pwd)/src/
 M2DEV_PATH:=$(shell cd ../../.. && pwd)/dev/DogLcd/
+M2ARDUINO_PATH:=$(shell cd ../../.. && pwd)/dev/arduino/
 M2CPP_PATH:=$(shell cd ../../.. && pwd)/cpp/
 
 
@@ -67,10 +68,13 @@ AVRDUDE_PATH:=$(ARDUINO_PATH)hardware/tools/
 AVRDUDE_PORT:=/dev/ttyUSB0
 
 # List of all libaries which should be included.
-EXTRA_DIRS=$(ARDUINO_PATH)libraries/LiquidCrystal/
-EXTRA_DIRS=$(ARDUINO_PATH)libraries/DogLcd/
+EXTRA_DIRS=$(ARDUINO_PATH)libraries/Wire/
+EXTRA_DIRS+=$(ARDUINO_PATH)libraries/LiquidCrystal/
+EXTRA_DIRS+=$(ARDUINO_PATH)libraries/DogLcd/
+EXTRA_DIRS+=$(ARDUINO_PATH)libraries/DS1307new/
 EXTRA_DIRS+=$(M2TKLIB_PATH)
 EXTRA_DIRS+=$(M2DEV_PATH)
+EXTRA_DIRS+=$(M2ARDUINO_PATH)
 EXTRA_DIRS+=$(M2CPP_PATH)
 
 #=== fetch parameter from boards.txt processor parameter ===
@@ -161,6 +165,9 @@ COMMON_FLAGS += -Os
 COMMON_FLAGS += -Wall -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 COMMON_FLAGS += -I. 
 COMMON_FLAGS += -I$(ARDUINO_PATH)hardware/arduino/cores/arduino
+COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/Wire
+COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/Wire/utility
+COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/DogLcd
 COMMON_FLAGS += -I$(VARIANT_INC)
 COMMON_FLAGS += -I. -I$(M2TKLIB_PATH) -I$(M2CPP_PATH)
 COMMON_FLAGS += $(addprefix -I,$(EXTRA_DIRS))

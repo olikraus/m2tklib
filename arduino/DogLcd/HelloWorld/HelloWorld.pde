@@ -33,7 +33,10 @@ M2_LABEL(hello_world_label, NULL, "Hello World!");
 M2tk m2(&hello_world_label, NULL, NULL, m2_gh_doglcd);
 
 void setup() {
+  // 1. Assign the DogLcd object to m2tklib
   m2_SetDogLcd(&lcd, DOG_LCD_M162,0x25,DOG_LCD_VCC_3V3);
+  // 2. Set the backlight (sequence is important!) 
+  lcd.setBacklight(1, 0);
 }
 
 void loop() {

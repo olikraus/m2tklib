@@ -29,7 +29,7 @@
 #include "m2.h"
 
 
-LiquidCrystal *m2_gh_doglcd_ptr;
+DogLcd *m2_gh_doglcd_ptr;
 uint8_t m2_gh_doglcd_rows;
 uint8_t m2_gh_doglcd_cols;
 
@@ -39,7 +39,7 @@ uint8_t m2_gh_doglcd_icon_active[] = { 0x00, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
 uint8_t m2_gh_doglcd_cursor_x;
 uint8_t m2_gh_doglcd_cursor_y = 255;
 
-void m2_SetDogLcd(DogLcd *doglcd_ptr, int model, int contrast=0x28, int vcc=DOG_LCD_VCC_5V);
+void m2_SetDogLcd(DogLcd *doglcd_ptr, int model, int contrast=0x28, int vcc=DOG_LCD_VCC_5V)
 {
   m2_gh_doglcd_rows = 2;
   m2_gh_doglcd_cols = 16;
@@ -60,8 +60,6 @@ void m2_SetDogLcd(DogLcd *doglcd_ptr, int model, int contrast=0x28, int vcc=DOG_
   }
   
   m2_gh_doglcd_ptr = doglcd_ptr;
-  m2_gh_doglcd_rows = rows;
-  m2_gh_doglcd_cols = cols;
   m2_gh_doglcd_ptr->begin(model, contrast, vcc);
   //m2_gh_doglcd_ptr->print("xyz");
   m2_gh_doglcd_ptr->createChar(1, m2_gh_doglcd_icon_active);
@@ -106,7 +104,7 @@ void m2_gh_doglcd_set_vsb_char(uint8_t t, uint8_t b, uint8_t y, uint8_t h, uint8
     }
   }
   
-  m2_gh_doglcd_ptr->createChar(3+byte_index, m2_gh_lc_vsb_char);
+  m2_gh_doglcd_ptr->createChar(3+byte_index, m2_gh_vsb_char);
   
 }
 
@@ -115,7 +113,7 @@ extern "C" uint8_t m2_gh_doglcd(m2_gfx_arg_p  arg)
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
-      /* should already be done in m2_SetLiquidCrystal */
+      /* should already be done in m2_SetDogLcd */
       break;
     case M2_GFX_MSG_START:
       m2_gh_doglcd_cursor_y = 255;
