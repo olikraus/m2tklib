@@ -54,6 +54,8 @@ static void m2_arduino_setup(void)
   m2_arduino_setup_key(M2_KEY_EXIT);
   m2_arduino_setup_key(M2_KEY_NEXT);
   m2_arduino_setup_key(M2_KEY_PREV);  
+  m2_arduino_setup_key(M2_KEY_DATA_UP);  
+  m2_arduino_setup_key(M2_KEY_DATA_DOWN);  
 }
 
 static uint8_t m2_arduino_check_key(uint8_t key)
@@ -74,6 +76,8 @@ static uint8_t m2_arduino_get_key(void)
   if ( m2_arduino_check_key(M2_KEY_EXIT) ) return M2_KEY_EXIT;
   if ( m2_arduino_check_key(M2_KEY_NEXT) ) return M2_KEY_NEXT;
   if ( m2_arduino_check_key(M2_KEY_PREV) ) return M2_KEY_PREV;
+  if ( m2_arduino_check_key(M2_KEY_DATA_UP) ) return M2_KEY_DATA_UP;
+  if ( m2_arduino_check_key(M2_KEY_DATA_DOWN) ) return M2_KEY_DATA_DOWN;
   return M2_KEY_NONE;
 }
 

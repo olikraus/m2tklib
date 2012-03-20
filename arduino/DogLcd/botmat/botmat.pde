@@ -38,8 +38,10 @@ DogLcd lcd(5, 7, 29, 1, -1, 3);
 /* pin numbers of the keypad */
 
 uint8_t uiKeySelectPin = 18;
-uint8_t uiKeyPrevPin = 22;
-uint8_t uiKeyNextPin = 19;
+uint8_t uiKeyUpPin = 22;
+uint8_t uiKeyDownPin = 19;
+uint8_t uiKeyLeftPin = 20;
+uint8_t uiKeyRightPin = 21;
 
 /*=========================================================================*/
 /* forward declarations */
@@ -90,6 +92,13 @@ void info_screen_display(void)
     lcd.print(m2_utl_u8d(RTC.minute,2));
     lcd.print(":");
     lcd.print(m2_utl_u8d(RTC.second,2));
+    lcd.setCursor(0,1);
+    lcd.print(m2_utl_u8d(RTC.day,2));
+    lcd.print(".");
+    lcd.print(m2_utl_u8d(RTC.month,2));
+    lcd.print(".");
+    lcd.print(m2_utl_u8d(RTC.year-2000,2));
+    
     delay(50);
   }
 
@@ -97,8 +106,22 @@ void info_screen_display(void)
 
 
 /*=========================================================================*/
+uint8_t td_hour;
+uint8_t td_min;
+uint8_t td_sec;
 
-const char *selected = "Nothing";
+M2_U8NUM(el_td_hour, "c2", 0,23,&td_hour);
+M2_LABEL(el_td_sep1, NULL, ":");
+M2_U8NUM(el_td_min, "c2", 0,59,&td_min);
+M2_LABEL(el_td_sep2, NULL, ":");
+M2_U8NUM(el_td_sec, "c2", 0,59,&td_sec);
+
+M2_LIST(list_time) = { &el_td_hour, &el_td_sep1, &el_td_min, &el_td_sep2, &el_td_sec };
+M2_HLIST(el_top_td, NULL, list_time);
+
+
+/*=========================================================================*/
+
 const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
   const char *s = "";
   if  ( idx == 0 )
@@ -108,7 +131,7 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
   else if ( idx == 2 )
     s = "show time";
   else if ( idx == 3 )
-    s = "Pumpkin";
+    s = "set time";
   else if ( idx == 4 )
     s = "Corn";
   if (msg == M2_STRLIST_MSG_GET_STR) 
@@ -118,12 +141,15 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
   else 
   if ( msg == M2_STRLIST_MSG_SELECT ) 
   {
-    if ( idx <= 1 )
+    if ( idx <= 2 )
     {
       info_screen_state = idx;   
       m2.setRoot(&m2_null_element);      
     }
-    selected = s;
+    if ( idx == 3 )
+    {
+      m2.setRoot(&el_top_td);      
+    }
   }
   return s;
 }
@@ -139,7 +165,7 @@ M2_HLIST(el_top, NULL, list_strlist);
 
 
 M2_LABEL(hello_world_label, NULL, "Hello World!");
-M2tk m2(&el_top, m2_es_arduino, m2_eh_4bs, m2_gh_doglcd);
+M2tk m2(&el_top, m2_es_arduino, m2_eh_6bs, m2_gh_doglcd);
 
 
 
@@ -154,8 +180,10 @@ void setup()
   lcd.setBacklight(1, 0);
   // 3. finish setup for m2tk
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
-  m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
-  m2.setPin(M2_KEY_PREV, uiKeyPrevPin);
+  m2.setPin(M2_KEY_NEXT, uiKeyRightPin);
+  m2.setPin(M2_KEY_PREV, uiKeyLeftPin);
+  m2.setPin(M2_KEY_DATA_UP, uiKeyUpPin);
+  m2.setPin(M2_KEY_DATA_DOWN, uiKeyDownPin);
 
 }
 
