@@ -47,6 +47,7 @@ uint8_t uiKeyRightPin = 21;
 /* forward declarations */
 
 extern M2tk m2;
+M2_EXTERN_HLIST(el_top);
 
 /*=========================================================================*/
 /* 
@@ -117,8 +118,11 @@ M2_LABEL(el_td_sep2, NULL, ":");
 M2_U8NUM(el_td_sec, "c2", 0,59,&td_sec);
 
 M2_LIST(list_time) = { &el_td_hour, &el_td_sep1, &el_td_min, &el_td_sep2, &el_td_sec };
-M2_HLIST(el_top_td, NULL, list_time);
+M2_HLIST(el_time, NULL, list_time);
 
+M2_ROOT(el_td_cancel, NULL, "cancel", &el_top);
+M2_LIST(list_td) = {&el_time, &el_td_cancel };
+M2_VLIST(el_top_td, NULL, list_td);
 
 /*=========================================================================*/
 
