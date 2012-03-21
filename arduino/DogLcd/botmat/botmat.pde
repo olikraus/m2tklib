@@ -107,6 +107,8 @@ void info_screen_display(void)
 
 
 /*=========================================================================*/
+/* edit time dialog */
+
 uint8_t td_hour;
 uint8_t td_min;
 uint8_t td_sec;
@@ -149,6 +151,52 @@ M2_HLIST(el_td_buttons, NULL, list_td_buttons);
 
 M2_LIST(list_td) = {&el_time, &el_td_buttons };
 M2_VLIST(el_top_td, NULL, list_td);
+
+/*=========================================================================*/
+/* edit date dialog */
+
+uint8_t dt_day;
+uint8_t dt_month;
+uint8_t dt_year;
+
+void dt_get_from_RTC(void)
+{
+  RTC.getTime();
+  dt_day = RTC.day;
+  dt_month = RTC.month;
+  dt_year = RTC.year;
+}
+
+void dt_put_to_RTC(void)
+{
+  RTC.getTime();
+  RTC.fillByYMD(dt_year, dt_month, dt_day);
+  RTC.setTime();
+  RTC.startClock();  
+}
+
+void dt_ok_fn(m2_el_fnarg_p fnarg) 
+{
+  dt_put_to_RTC();
+  m2.setRoot(&el_top);
+}
+
+M2_U8NUM(el_dt_day, "c2", 1,31,&dt_day);
+M2_LABEL(el_dt_sep1, NULL, ".");
+M2_U8NUM(el_dt_month, "c2", 1,12,&dt_month);
+M2_LABEL(el_dt_sep2, NULL, ".");
+M2_U8NUM(el_dt_year, "c2", 0,99,&dt_year);
+
+M2_LIST(list_date) = { &el_dt_day, &el_dt_sep1, &el_dt_month, &el_dt_sep2, &el_dt_year };
+M2_HLIST(el_date, NULL, list_date);
+
+M2_ROOT(el_dt_cancel, NULL, "cancel", &el_top);
+M2_BUTTON(el_dt_ok, NULL, "ok", dt_ok_fn);
+M2_LIST(list_dt_buttons) = {&el_dt_cancel, &el_dt_ok };
+M2_HLIST(el_dt_buttons, NULL, list_dt_buttons);
+
+M2_LIST(list_dt) = {&el_date, &el_dt_buttons };
+M2_VLIST(el_top_dt, NULL, list_dt);
 
 
 
