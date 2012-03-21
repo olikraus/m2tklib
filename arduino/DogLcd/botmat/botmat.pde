@@ -1,12 +1,10 @@
 /*
 
-  HelloWorld.pde
+  botmat.pde
   
-  DogLcd 16x2 example
+  botmat example program
 
-  m2tklib = Mini Interative Interface Toolkit Library
-  
-  Copyright (C) 2011  olikraus@gmail.com
+  Copyright (C) 2012  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,7 +23,7 @@
 
 #include <DogLcd.h>
 #include <DS1307new.h>
-#include <SD.h>
+#include <SdFat.h>
 #include "M2tk.h"
 #include "m2utl.h"
 #include "m2ghdoglcd.h"
@@ -35,6 +33,10 @@
 /* dog lcd object definition for botmat */
 
 DogLcd lcd(5, 7, 29, 1, -1, 3);
+
+/* object for the SdFat library */
+SdFat sd;
+SdFile file;
 
 /*=========================================================================*/
 /* pin numbers of the keypad */
@@ -111,14 +113,18 @@ void info_screen_display(void)
 /* file selection dialog */
 /* limitation: not more than 250 elements per directory allowed */
 
-/* current folder */
-#define FS_DIR_LEN 64
-char fs_current_dir[FS_DIR_LEN+1] = "/";
-File fs_root;
+#define FS_EXTRA_MENUES 1
 
 /* buffer for one file name */
 char fs_name[2+12+1];   /* 2 chars for the prefix, 12 chars for the name, 1 for the terminating '\0' */
 uint8_t fs_is_dir = 0;
+
+/* cache */
+#define FS_CACHE_SIZE 2
+char fs_c_name[FS_CACHE_SIZE][2+12+1];
+uint8_t fs_c_is_dir[FS_CACHE_SIZE];
+uint8_t fs_c_idx[FS_CACHE_SIZE] = { 255, 255 };
+uint8_t fs_rr = 0;
 
 /* number of files in the current folder, 255 forces recalculation */
 uint8_t fs_file_cnt = 255;
@@ -132,71 +138,82 @@ void fs_update_file_cnt(void)
   if ( fs_file_cnt == 255 )
   {
     fs_file_cnt = 0;
-    File entry;
-    //dir = SD.open(fs_current_dir);
-    fs_root.rewindDirectory();
-    for(;;)
+    sd.vwd()->rewind();
+    while (file.openNext(sd.vwd(), O_READ)) 
     {
-      entry =  fs_root.openNextFile();
-      if ( !entry )
-        break;
       fs_file_cnt++;
       if ( fs_file_cnt == 250 )
         break;
+      file.close();
     }
+    /*
     if  ( fs_file_cnt > 10 )
       fs_file_cnt = 10;
+    */
     /* update m2 variable */
     fs_m2tk_cnt = fs_file_cnt;
   }  
 }
 
+uint8_t fs_get_cache_entry(uint8_t n)
+{
+  uint8_t i;
+  for( i = 0 ; i < FS_CACHE_SIZE; i++ )
+    if ( fs_c_idx[i] == n )
+    {
+      strcpy(fs_name, fs_c_name[i]);
+      fs_is_dir = fs_c_is_dir[i];
+      return i;
+    }
+  return 255;
+}
+
+void fs_put_into_cache(uint8_t n)
+{
+  strcpy(fs_c_name[fs_rr], fs_name);
+  fs_c_is_dir[fs_rr] = fs_is_dir;
+  fs_rr++;
+  if ( fs_rr >= FS_CACHE_SIZE )
+    fs_rr = 0;
+}
+
+
+
 /* get the n'th file an store it into the intermediate buffers fs_is_dir and fs_name */
 void fs_get_nth_file(uint8_t n)
 {
-  File entry;
+  uint8_t c = 0;
+  if ( fs_get_cache_entry(n) != 255 )
+    return;
   
   fs_name[0] = '-';
   fs_name[1] = '-';
   fs_name[2] = '\0';
   fs_is_dir = 0;
   
-  //dir = SD.open(fs_current_dir);
-  fs_root.rewindDirectory();
-  for(;;)
+  sd.vwd()->rewind();
+  while (file.openNext(sd.vwd(), O_READ)) 
   {
-    entry =  fs_root.openNextFile();
-    if ( !entry )
-    {
-      fs_name[0] = '.';
-      break;
-    }
-    if ( n == 0 )
+    if ( n == c )
     {
       fs_name[0] = ' ';
       fs_name[1] = ' ';
-      strncpy(fs_name+2, entry.name(), 12);
+      file.getFilename(fs_name+2);
       fs_name[12+2] = '\0';
-      fs_is_dir = entry.isDirectory();
+      fs_is_dir = file.isDir();
       if ( fs_is_dir )
         fs_name[0] = '+';
+      file.close();
+      fs_put_into_cache(n);
       break;
     }
-    n--;
+    c++;
+    file.close();
   }
 }
 
 const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
 {
-  uint8_t backup_SPCR = SPCR;
-  SPCR = 0;  
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print(msg); 
-  lcd.print(" ");
-  lcd.print(idx);
-  delay(100);
-  SPCR = backup_SPCR;
   
   /* update files, if required */
   fs_update_file_cnt();
@@ -204,15 +221,23 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   /* process message */
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
-    fs_get_nth_file(idx);
-    fs_name[1] = ((idx & 0x0f) + 'a');
+    if ( idx == 0 )
+      return "-- Back --";
+    fs_get_nth_file(idx-FS_EXTRA_MENUES);
     return fs_name;
   } 
   else if ( msg == M2_STRLIST_MSG_SELECT ) 
   {
-    fs_get_nth_file(idx);
-    if ( fs_is_dir )
+    if ( idx == 0 )
     {
+      m2.setRoot(&el_top);      
+    }
+    else
+    {
+      fs_get_nth_file(idx);
+      if ( fs_is_dir )
+      {
+      }
     }
   } 
   return fs_name;
@@ -365,19 +390,8 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
       pinMode(6, INPUT);
       pinMode(7, OUTPUT);
       pinMode(23, OUTPUT);
-      if (!SD.begin(23)) 
+      if (sd.init(SPI_HALF_SPEED, 23))
       {
-        /*
-        uint8_t backup_SPCR = SPCR;
-        SPCR = 0;
-        lcd.clear();
-        lcd.print("Hallo");
-        delay(500);
-        lcd.clear();
-        SPCR = backup_SPCR;
-        */
-        
-        fs_root = SD.open("/");
         fs_file_cnt = 255;
         fs_update_file_cnt();
         m2.setRoot(&el_top_fs);
@@ -422,8 +436,6 @@ void setup()
 
 void loop() 
 {
-  uint8_t backup_SPCR;
-  
   if ( m2.getRoot() == &m2_null_element ) 
   {
     info_screen_display();
@@ -431,13 +443,11 @@ void loop()
       m2.setRoot(&el_top);
   } 
  
-  backup_SPCR = SPCR;
-  SPCR = 0;
+  m2.checkKey();
   m2.checkKey();
   if ( m2.handleKey() )
     m2.draw();
   m2.checkKey();
-  SPCR = backup_SPCR;
 }
 
 

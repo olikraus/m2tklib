@@ -1,0 +1,30 @@
+# arduino_lc
+#
+rm -rf libraries
+mkdir libraries
+mkdir libraries/M2tklib
+mkdir libraries/M2tklib/examples
+mkdir libraries/M2tklib/examples/HelloWorld
+mkdir libraries/M2tklib/examples/botmat
+mkdir libraries/M2tklib/utility
+cp ../../ChangeLog ./libraries/M2tklib/.
+cp ../../gpl-3.0.txt ./libraries/M2tklib/.
+#cp ../INSTALL_ARDUINO.TXT ./libraries/M2tklib/INSTALL.TXT
+cp ../../cpp/*.cpp ./libraries/M2tklib/.
+cp ../../cpp/*.h ./libraries/M2tklib/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/M2tk.h
+cp ../../src/*.c ./libraries/M2tklib/utility/.
+cp ../../src/*.h ./libraries/M2tklib/utility/.
+cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/DogLcd/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/DogLcd/*.cpp ./libraries/M2tklib/utility/.
+sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghlc.h
+#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/utility/m2ghlc.h
+cp ../../arduino/DogLcd/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
+sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
+cp ../../arduino/DogLcd/botmat/*.pde ./libraries/M2tklib/examples/botmat/.
+sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Combo/botmat.pde
+
+cd libraries 
+zip -r ../m2tklib_arduino_doglcd_`../../print_release`.zip *
+cd ..

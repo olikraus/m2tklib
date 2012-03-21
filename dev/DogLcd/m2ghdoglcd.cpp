@@ -110,6 +110,8 @@ void m2_gh_doglcd_set_vsb_char(uint8_t t, uint8_t b, uint8_t y, uint8_t h, uint8
 
 extern "C" uint8_t m2_gh_doglcd(m2_gfx_arg_p  arg)
 {
+  uint8_t backup_SPCR = SPCR;
+  SPCR = 0;
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
@@ -131,6 +133,7 @@ extern "C" uint8_t m2_gh_doglcd(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_DRAW_TEXT:
       m2_gh_doglcd_set_cursor(arg->x, arg->y);
       m2_gh_doglcd_ptr->print(arg->s);
+      SPCR = backup_SPCR;
       return 0;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
@@ -138,16 +141,19 @@ extern "C" uint8_t m2_gh_doglcd(m2_gfx_arg_p  arg)
       m2_gh_doglcd_ptr->print('[');
       m2_gh_doglcd_set_cursor(arg->x+arg->w-1, arg->y);
       m2_gh_doglcd_ptr->print(']');
+      SPCR = backup_SPCR;
       return 0;
     case M2_GFX_MSG_DRAW_GO_UP:
       m2_gh_doglcd_set_cursor(arg->x-1, arg->y);
       m2_gh_doglcd_ptr->print('<');
       m2_gh_doglcd_set_cursor(arg->x+arg->w, arg->y);
       m2_gh_doglcd_ptr->print('>');
+      SPCR = backup_SPCR;
       return 0;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_gh_doglcd_cursor_x = arg->x;
       m2_gh_doglcd_cursor_y = arg->y;
+      SPCR = backup_SPCR;
       return 0;
     case M2_GFX_MSG_DRAW_ICON:
       m2_gh_doglcd_set_cursor(arg->x, arg->y);
@@ -155,21 +161,28 @@ extern "C" uint8_t m2_gh_doglcd(m2_gfx_arg_p  arg)
 	m2_gh_doglcd_ptr->print("\001");
       else
 	m2_gh_doglcd_ptr->print("\002");
+      SPCR = backup_SPCR;
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
+      SPCR = backup_SPCR;
       return strlen(arg->s);
     case M2_GFX_MSG_GET_ICON_WIDTH:
     case M2_GFX_MSG_GET_ICON_HEIGHT:
     case M2_GFX_MSG_GET_CHAR_WIDTH:
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
+      SPCR = backup_SPCR;
       return 1;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
+      SPCR = backup_SPCR;
       return 2;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
+      SPCR = backup_SPCR;
       return 1;
     case M2_GFX_MSG_GET_DISPLAY_WIDTH:
+      SPCR = backup_SPCR;
       return m2_gh_doglcd_cols;
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
+      SPCR = backup_SPCR;
       return m2_gh_doglcd_rows;
     case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
       /* scroll bar: "total" total number of items */
@@ -190,7 +203,9 @@ extern "C" uint8_t m2_gh_doglcd(m2_gfx_arg_p  arg)
 	  m2_gh_doglcd_ptr->print(c);
 	}
       }
+      SPCR = backup_SPCR;
       return 1;
   }
+  SPCR = backup_SPCR;
   return m2_gh_dummy(arg);
 }
