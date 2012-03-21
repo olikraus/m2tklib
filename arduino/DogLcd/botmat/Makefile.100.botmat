@@ -65,13 +65,14 @@ AVRDUDE_PATH:=$(ARDUINO_PATH)hardware/tools/
 # The unix device where we can reach the arduino board
 # Uno: /dev/ttyACM0
 # Duemilanove: /dev/ttyUSB0
-AVRDUDE_PORT:=/dev/ttyUSB0
+AVRDUDE_PORT:=/dev/ttyUSB1
 
 # List of all libaries which should be included.
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/Wire/
 EXTRA_DIRS+=$(ARDUINO_PATH)libraries/LiquidCrystal/
 EXTRA_DIRS+=$(ARDUINO_PATH)libraries/DogLcd/
 EXTRA_DIRS+=$(ARDUINO_PATH)libraries/DS1307new/
+EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SD/
 EXTRA_DIRS+=$(M2TKLIB_PATH)
 EXTRA_DIRS+=$(M2DEV_PATH)
 EXTRA_DIRS+=$(M2ARDUINO_PATH)
@@ -168,6 +169,8 @@ COMMON_FLAGS += -I$(ARDUINO_PATH)hardware/arduino/cores/arduino
 COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/Wire
 COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/Wire/utility
 COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/DogLcd
+COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/SD
+COMMON_FLAGS += -I$(ARDUINO_PATH)libraries/SD/utility
 COMMON_FLAGS += -I$(VARIANT_INC)
 COMMON_FLAGS += -I. -I$(M2TKLIB_PATH) -I$(M2CPP_PATH)
 COMMON_FLAGS += $(addprefix -I,$(EXTRA_DIRS))

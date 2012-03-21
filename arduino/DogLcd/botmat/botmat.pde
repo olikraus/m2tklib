@@ -25,9 +25,11 @@
 
 #include <DogLcd.h>
 #include <DS1307new.h>
+#include <SD.h>
 #include "M2tk.h"
 #include "m2utl.h"
 #include "m2ghdoglcd.h"
+#include <string.h>
 
 /*=========================================================================*/
 /* dog lcd object definition for botmat */
@@ -104,6 +106,123 @@ void info_screen_display(void)
   }
 
 }
+
+/*=========================================================================*/
+/* file selection dialog */
+/* limitation: not more than 250 elements per directory allowed */
+
+/* current folder */
+#define FS_DIR_LEN 64
+char fs_current_dir[FS_DIR_LEN+1] = "/";
+File fs_root;
+
+/* buffer for one file name */
+char fs_name[2+12+1];   /* 2 chars for the prefix, 12 chars for the name, 1 for the terminating '\0' */
+uint8_t fs_is_dir = 0;
+
+/* number of files in the current folder, 255 forces recalculation */
+uint8_t fs_file_cnt = 255;
+
+/* helper variables for the strlist element */
+uint8_t fs_m2tk_first = 0;
+uint8_t fs_m2tk_cnt = 0;
+
+void fs_update_file_cnt(void)
+{
+  if ( fs_file_cnt == 255 )
+  {
+    fs_file_cnt = 0;
+    File entry;
+    //dir = SD.open(fs_current_dir);
+    fs_root.rewindDirectory();
+    for(;;)
+    {
+      entry =  fs_root.openNextFile();
+      if ( !entry )
+        break;
+      fs_file_cnt++;
+      if ( fs_file_cnt == 250 )
+        break;
+    }
+    if  ( fs_file_cnt > 10 )
+      fs_file_cnt = 10;
+    /* update m2 variable */
+    fs_m2tk_cnt = fs_file_cnt;
+  }  
+}
+
+/* get the n'th file an store it into the intermediate buffers fs_is_dir and fs_name */
+void fs_get_nth_file(uint8_t n)
+{
+  File entry;
+  
+  fs_name[0] = '-';
+  fs_name[1] = '-';
+  fs_name[2] = '\0';
+  fs_is_dir = 0;
+  
+  //dir = SD.open(fs_current_dir);
+  fs_root.rewindDirectory();
+  for(;;)
+  {
+    entry =  fs_root.openNextFile();
+    if ( !entry )
+    {
+      fs_name[0] = '.';
+      break;
+    }
+    if ( n == 0 )
+    {
+      fs_name[0] = ' ';
+      fs_name[1] = ' ';
+      strncpy(fs_name+2, entry.name(), 12);
+      fs_name[12+2] = '\0';
+      fs_is_dir = entry.isDirectory();
+      if ( fs_is_dir )
+        fs_name[0] = '+';
+      break;
+    }
+    n--;
+  }
+}
+
+const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
+{
+  uint8_t backup_SPCR = SPCR;
+  SPCR = 0;  
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(msg); 
+  lcd.print(" ");
+  lcd.print(idx);
+  delay(100);
+  SPCR = backup_SPCR;
+  
+  /* update files, if required */
+  fs_update_file_cnt();
+
+  /* process message */
+  if (msg == M2_STRLIST_MSG_GET_STR) 
+  {
+    fs_get_nth_file(idx);
+    fs_name[1] = ((idx & 0x0f) + 'a');
+    return fs_name;
+  } 
+  else if ( msg == M2_STRLIST_MSG_SELECT ) 
+  {
+    fs_get_nth_file(idx);
+    if ( fs_is_dir )
+    {
+    }
+  } 
+  return fs_name;
+}
+
+M2_STRLIST(el_fs_strlist, "l2w13", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+//M2_SPACE(el_fs_space, "w1h1");
+M2_VSB(el_fs_strlist_vsb, "l2w1r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
+M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
 
 /*=========================================================================*/
@@ -203,7 +322,8 @@ M2_VLIST(el_top_dt, NULL, list_dt);
 
 /*=========================================================================*/
 
-const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
+const char *el_strlist_getstr(uint8_t idx, uint8_t msg) 
+{
   const char *s = "";
   if  ( idx == 0 )
     s = "show millis";
@@ -215,12 +335,13 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
     s = "set time";
   else if ( idx == 4 )
     s = "set date";
+  else if ( idx == 5 )
+    s = "file select";
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
     /* nothing else todo, return the correct string */
   } 
-  else 
-  if ( msg == M2_STRLIST_MSG_SELECT ) 
+  else if ( msg == M2_STRLIST_MSG_SELECT ) 
   {
     if ( idx <= 2 )
     {
@@ -235,14 +356,39 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
     if ( idx == 4 )
     {
       dt_get_from_RTC();
-      m2.setRoot(&el_top_dt);      
+      m2.setRoot(&el_top_dt);
+    }
+    if ( idx == 5 )
+    {
+      pinMode(4, OUTPUT);
+      pinMode(5, OUTPUT);
+      pinMode(6, INPUT);
+      pinMode(7, OUTPUT);
+      pinMode(23, OUTPUT);
+      if (!SD.begin(23)) 
+      {
+        /*
+        uint8_t backup_SPCR = SPCR;
+        SPCR = 0;
+        lcd.clear();
+        lcd.print("Hallo");
+        delay(500);
+        lcd.clear();
+        SPCR = backup_SPCR;
+        */
+        
+        fs_root = SD.open("/");
+        fs_file_cnt = 255;
+        fs_update_file_cnt();
+        m2.setRoot(&el_top_fs);
+      }
     }
   }
   return s;
 }
 
 uint8_t el_strlist_first = 0;
-uint8_t el_strlist_cnt = 5;
+uint8_t el_strlist_cnt = 6;
 
 M2_STRLIST(el_strlist, "l2w13", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
 //M2_SPACE(el_space, "w1h1");
@@ -274,7 +420,10 @@ void setup()
 
 }
 
-void loop() {
+void loop() 
+{
+  uint8_t backup_SPCR;
+  
   if ( m2.getRoot() == &m2_null_element ) 
   {
     info_screen_display();
@@ -282,10 +431,13 @@ void loop() {
       m2.setRoot(&el_top);
   } 
  
+  backup_SPCR = SPCR;
+  SPCR = 0;
   m2.checkKey();
   if ( m2.handleKey() )
     m2.draw();
   m2.checkKey();
+  SPCR = backup_SPCR;
 }
 
 
