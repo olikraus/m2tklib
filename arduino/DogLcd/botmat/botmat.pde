@@ -164,13 +164,13 @@ void dt_get_from_RTC(void)
   RTC.getTime();
   dt_day = RTC.day;
   dt_month = RTC.month;
-  dt_year = RTC.year;
+  dt_year = (RTC.year-2000);
 }
 
 void dt_put_to_RTC(void)
 {
   RTC.getTime();
-  RTC.fillByYMD(dt_year, dt_month, dt_day);
+  RTC.fillByYMD(dt_year+2000, dt_month, dt_day);
   RTC.setTime();
   RTC.startClock();  
 }
@@ -214,7 +214,7 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
   else if ( idx == 3 )
     s = "set time";
   else if ( idx == 4 )
-    s = "Corn";
+    s = "set date";
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
     /* nothing else todo, return the correct string */
@@ -231,6 +231,11 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
     {
       td_get_from_RTC();
       m2.setRoot(&el_top_td);      
+    }
+    if ( idx == 4 )
+    {
+      dt_get_from_RTC();
+      m2.setRoot(&el_top_dt);      
     }
   }
   return s;
