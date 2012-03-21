@@ -111,6 +111,28 @@ uint8_t td_hour;
 uint8_t td_min;
 uint8_t td_sec;
 
+void td_get_from_RTC(void)
+{
+  RTC.getTime();
+  td_hour = RTC.hour;
+  td_min = RTC.minute;
+  td_sec = RTC.second;
+}
+
+void td_put_to_RTC(void)
+{
+  RTC.getTime();
+  RTC.fillByHMS(td_hour, td_min, td_sec);
+  RTC.setTime();
+  RTC.startClock();  
+}
+
+void td_ok_fn(m2_el_fnarg_p fnarg) 
+{
+  td_put_to_RTC();
+  m2.setRoot(&el_top);
+}
+
 M2_U8NUM(el_td_hour, "c2", 0,23,&td_hour);
 M2_LABEL(el_td_sep1, NULL, ":");
 M2_U8NUM(el_td_min, "c2", 0,59,&td_min);
@@ -121,8 +143,15 @@ M2_LIST(list_time) = { &el_td_hour, &el_td_sep1, &el_td_min, &el_td_sep2, &el_td
 M2_HLIST(el_time, NULL, list_time);
 
 M2_ROOT(el_td_cancel, NULL, "cancel", &el_top);
-M2_LIST(list_td) = {&el_time, &el_td_cancel };
+M2_BUTTON(el_td_ok, NULL, "ok", td_ok_fn);
+M2_LIST(list_td_buttons) = {&el_td_cancel, &el_td_ok };
+M2_HLIST(el_td_buttons, NULL, list_td_buttons);
+
+M2_LIST(list_td) = {&el_time, &el_td_buttons };
 M2_VLIST(el_top_td, NULL, list_td);
+
+
+
 
 /*=========================================================================*/
 
@@ -152,6 +181,7 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
     }
     if ( idx == 3 )
     {
+      td_get_from_RTC();
       m2.setRoot(&el_top_td);      
     }
   }

@@ -73,10 +73,13 @@ uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg)
       return m2_nav_user_prev(m2_get_nav(ep));
     
     case M2_EP_MSG_DATA_DOWN:
-	return m2_nav_data_down(m2_get_nav(ep));
-      
+	if ( m2_nav_data_down(nav) == 0 )
+          return m2_nav_user_next(nav);
+        return 1;
     case M2_EP_MSG_DATA_UP:
-	return m2_nav_data_up(m2_get_nav(ep));
+	if ( m2_nav_data_up(nav) == 0 )
+          return m2_nav_user_prev(nav);
+        return 1;
 
   }
   return 0;
