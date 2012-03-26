@@ -23,9 +23,9 @@
 
 #include <DogLcd.h>
 #include <DS1307new.h>
+#include <Wire.h>                       // required for DS1307new.h
 #include <SdFat.h>
 #include "M2tk.h"
-#include "m2utl.h"
 #include "m2ghdoglcd.h"
 #include <string.h>
 
@@ -66,6 +66,8 @@ uint8_t info_screen_state = 0;
 
 void info_screen_display(void)
 {
+  uint8_t backup_SPCR = SPCR;
+  SPCR = 0;
   if ( info_screen_state == 0 )
   {
     lcd.clear();
@@ -106,6 +108,7 @@ void info_screen_display(void)
     
     delay(50);
   }
+  SPCR = backup_SPCR;
 
 }
 

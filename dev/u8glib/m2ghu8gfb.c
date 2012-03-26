@@ -54,6 +54,7 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
       {
         m2_u8g_current_text_color = m2_u8g_fg_text_color;
       }
+      printf("Frame: %d %d %d %d\n", arg->x, arg->y, arg->w, arg->h);
       m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:

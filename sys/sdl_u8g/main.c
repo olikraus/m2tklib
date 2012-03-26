@@ -9,6 +9,7 @@
 
 
 int u8g_sdl_get_key(void);
+void screenshot(void);
 
 /* 
   event source for SDL
@@ -51,6 +52,10 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		          case SDLK_d:
 		            puts("SDLK_d");
 		            return M2_KEY_EVENT(M2_KEY_DATA_DOWN);
+		          case SDLK_o:                  // screenshot
+		            puts("SDLK_o (screenshOt)");
+                            screenshot();
+                            break;
 		          case SDLK_q:
 		            exit(0);
 		            break;
@@ -250,10 +255,42 @@ M2_ALIGN(top_el_tlsm, "-1|1W64H64", &el_tlsm_hlist);
 
 
 /*======================================================================*/
+/* master u8g object */
+
+u8g_t u8g;
+
+/*======================================================================*/
+
+void screenshot(void)
+{
+  u8g_t screenshot_u8g;
+  /* 1. Setup and create device access */
+  u8g_Init(&screenshot_u8g, &u8g_dev_pbm);
+  /* 2. Connect the u8g display to m2. Note: M2 is setup later */
+  m2_SetU8g(&screenshot_u8g);
+
+  u8g_FirstPage(&screenshot_u8g);
+  do{
+    m2_Draw();
+  } while( u8g_NextPage(&screenshot_u8g) );
+
+  m2_SetU8g(&u8g);
+
+  {
+    char cmd[256];
+    sprintf(cmd, "convert u8g.pbm -trim -scale '200%%' %s.png", "u8g" );
+    sprintf(cmd, "convert u8g.pbm -crop '128x64+0+704' -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '200%%' %s.png", "u8g" );
+    sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '200%%' %s.png", "u8g" );
+    system(cmd);
+  }
+  
+}
+
+
+/*======================================================================*/
 
 int main(void)
 {  
-  u8g_t u8g;
 
   /* this is the setup sequence, steps 1..4 should be in this order */
   
@@ -276,8 +313,8 @@ int main(void)
     if ( m2_HandleKey() ) {
       u8g_FirstPage(&u8g);
       do{
-        u8g_SetFont(&u8g, u8g_font_unifont);
-        u8g_DrawStr(&u8g, 0, 20, "Hello World!");
+        //u8g_SetFont(&u8g, u8g_font_unifont);
+        //u8g_DrawStr(&u8g, 0, 20, "Hello World!");
         m2_CheckKey();
         m2_Draw();
       } while( u8g_NextPage(&u8g) );

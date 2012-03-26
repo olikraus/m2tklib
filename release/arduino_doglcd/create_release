@@ -19,11 +19,11 @@ cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/DogLcd/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/DogLcd/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghlc.h
-#sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/utility/m2ghlc.h
+#sed -i 's|m2ghdoglcd.h|utility/m2ghdoglcd.h|g' ./libraries/M2tklib/utility/m2ghlc.h
 cp ../../arduino/DogLcd/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
-sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
+sed -i 's|m2ghdoglcd.h|utility/m2ghdoglcd.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
 cp ../../arduino/DogLcd/botmat/*.pde ./libraries/M2tklib/examples/botmat/.
-sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Combo/botmat.pde
+sed -i 's|m2ghdoglcd.h|utility/m2ghdoglcd.h|g' ./libraries/M2tklib/examples/botmat/botmat.pde
 
 cd libraries 
 zip -r ../m2tklib_arduino_doglcd_`../../print_release`.zip *

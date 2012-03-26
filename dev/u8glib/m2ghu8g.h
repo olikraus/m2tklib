@@ -40,8 +40,17 @@ extern uint8_t m2_u8g_bg_text_color;
 extern uint8_t m2_u8g_current_text_color;
 
 
-/* graphics handler for the dogm128 lib */
+/* graphics handler for the u8glib */
 /*
+
+logic:
+  1. Part: Focus 
+  2. Part: Highlight
+  Parts:
+    b = Box
+    f = Frame
+    fs = Shadow Frame
+
 uint8_t m2_gh_dogm_bf(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg);
