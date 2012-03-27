@@ -51,6 +51,11 @@ logic:
     f = Frame
     fs = Shadow Frame
 
+    ffs: 
+      focus: shadow frame
+      highlight: shadow frame
+      highlight+focus: shadow frame with invertet content
+
 uint8_t m2_gh_dogm_bf(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_fb(m2_gfx_arg_p  arg);
@@ -59,7 +64,21 @@ uint8_t m2_gh_dogm_ffs(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg);
 */
 /* graphics handler for the u8glib */
+
+/* 
+  focus: frame
+  highlight: box
+  highlight+focus: frame+box
+*/
+
 uint8_t m2_gh_u8g_fb(m2_gfx_arg_p arg);
+
+/* 
+  focus: box
+  highlight: frame
+  highlight+focus: frame+box
+*/
+uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg);
 
 
 /* utility procedures */

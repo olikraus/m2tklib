@@ -277,10 +277,10 @@ void screenshot(void)
   m2_SetU8g(&u8g);
 
   {
-    char cmd[256];
+    char cmd[256*4];
     sprintf(cmd, "convert u8g.pbm -trim -scale '200%%' %s.png", "u8g" );
     sprintf(cmd, "convert u8g.pbm -crop '128x64+0+704' -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '200%%' %s.png", "u8g" );
-    sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '200%%' %s.png", "u8g" );
+    sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 3 0' -draw 'line 126 0 129 0' -draw 'line 0 65 3 65' -draw 'line 126 65 129 65'  -draw 'line 0 0 0 3' -draw 'line 129 0 129 3'  -draw 'line 0 62 0 65' -draw 'line 129 62 129 65' -scale '200%%' %s.png", "u8g" );
     system(cmd);
   }
   
@@ -300,7 +300,7 @@ int main(void)
   m2_SetU8g(&u8g);
 
   /* 3. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bf);
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */

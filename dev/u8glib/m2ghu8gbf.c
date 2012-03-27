@@ -19,42 +19,49 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+  problem:
+      text entry with select (no auto down):
+      text field has NORMAL_FOCUS, child char receive NORMAL_NO_FOCUS
+      one solution would be to apply the level information
+
 */
 
 #include "m2.h"
 #include "m2ghu8g.h"
 
 /*
-  focus cursor: frame
-  buttom style: filled (xor) box
+  focus cursor: box
+  buttom style: frame
 */
 
-uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
+uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
   {
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
       {
-        m2_u8g_current_text_color = m2_u8g_bg_text_color;
-      	m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
+        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      	m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       }
       else
       {
         m2_u8g_current_text_color = m2_u8g_fg_text_color;
       }
       break;
-    case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
+      break;
+    case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
       if ( (arg->font & 4) != 0 )
       {
-        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+        m2_u8g_current_text_color = m2_u8g_bg_text_color;
       }
       else
       {
-        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+        m2_u8g_current_text_color = m2_u8g_bg_text_color;
       }
-      m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
+      m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_u8g_current_text_color = m2_u8g_bg_text_color;
@@ -78,13 +85,21 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
       m2_u8g_draw_icon(arg->x, arg->y, arg->font, arg->icon);
       break;
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
-      return 2;
+      if ( (arg->font & 4) != 0 )
+	return 2;
+      return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      return 2;
+      if ( (arg->font & 4) != 0 )
+	return 2;
+      return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      return 1;
+      if ( (arg->font & 4) != 0 )
+	return 1;
+      return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
-      return 1;
+      if ( (arg->font & 4) != 0 )
+	return 1;
+      return 0;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:

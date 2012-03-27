@@ -174,7 +174,8 @@ M2_EL_FN_DEF(m2_el_char_fn)
 	        }
 	        else
 	        {
-	          m2_el_fnfmt_fn(fn_arg);
+                  m2_gfx_normal_no_focus(b->x, b->y, m2_gfx_get_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
+	          //changed 27 mar 2012: m2_el_fnfmt_fn(fn_arg);
 	        }
 	        
 	        if ( m2_is_frame_draw_at_end == 0 )
