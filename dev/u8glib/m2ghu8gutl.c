@@ -33,6 +33,11 @@ uint8_t m2_u8g_bg_text_color;
 uint8_t m2_u8g_current_text_color;
 uint8_t m2_u8g_draw_color;
 
+uint8_t m2_gh_u8g_current_depth;
+uint8_t m2_gh_u8g_invert_at_depth = 255;
+
+
+
 void m2_SetU8g(u8g_t *u8g)
 {
   m2_u8g = u8g;
@@ -63,13 +68,17 @@ void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 
 void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
+  u8g_uint_t y;
+  y = m2_u8g_height_minus_one;
+  y -= y0;
+  y -= h;
   w--;
   h--;
   u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
-  u8g_DrawFrame(m2_u8g, x0, m2_u8g_height_minus_one - y0, w, h);
+  u8g_DrawFrame(m2_u8g, x0, y, w, h);
+  u8g_DrawVLine(m2_u8g, x0+w, y+1, h);
+  u8g_DrawHLine(m2_u8g, x0+1, y+h, w);
   
-  u8g_DrawHLine(m2_u8g, x0+1, m2_u8g_height_minus_one - y0 + h, w);
-  u8g_DrawVLine(m2_u8g, x0+1+w, m2_u8g_height_minus_one - y0 + 1, h);  
 }
 
 void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -221,8 +230,9 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         }
         y = m2_u8g_height_minus_one;
 	      y -= arg->y;
+          x -= u8g_GetStrX(m2_u8g, arg->s);
 	      u8g_DrawStr(m2_u8g, x, y, arg->s);
-        /* printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s); */
+        // printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s);
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
@@ -246,6 +256,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         }
         y = m2_u8g_height_minus_one;
       	y -= arg->y;
+        x -= u8g_GetStrXP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
       	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
@@ -261,10 +272,10 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetStrWidth(m2_u8g, arg->s);
+      return u8g_GetStrPixelWidth(m2_u8g, arg->s);
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetStrWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
+      return u8g_GetStrPixelWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
       return m2_u8g_get_reference_delta_x(arg->font);
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
@@ -291,6 +302,26 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       	m2_u8g_draw_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;
+    case M2_GFX_MSG_DRAW_ICON:
+      m2_u8g_draw_icon(arg->x, arg->y, arg->font, arg->icon);
+      break;
+    case M2_GFX_MSG_GET_ICON_WIDTH:
+      return m2_u8g_get_icon_width(arg->font, arg->icon);
+    case M2_GFX_MSG_GET_ICON_HEIGHT:
+      return m2_u8g_get_icon_height(arg->font, arg->icon);
+    case M2_GFX_MSG_LEVEL_DOWN:
+      //printf("down %d\n", arg->top);
+      m2_gh_u8g_current_depth = arg->top;
+      break;
+    case M2_GFX_MSG_LEVEL_UP:
+      // printf("up %d\n", arg->top);
+      m2_gh_u8g_current_depth = arg->top;
+      if ( m2_gh_u8g_invert_at_depth+1 >= m2_gh_u8g_current_depth )
+      {
+        // printf("invert remove %d\n", m2_gh_u8g_invert_at_depth);
+        m2_gh_u8g_invert_at_depth = 255;
+      }
+      break;
   }
   return m2_gh_dummy(arg);
 }

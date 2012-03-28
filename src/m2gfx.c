@@ -343,6 +343,7 @@ void m2_gfx_end(void)
   m2_gfx_call_handler(M2_GFX_MSG_END);
 }
 
+/* gfx handler is required here, because this is called outside the draw algorithm to assign the font */
 void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr)
 {
   m2_curr_gfx_fnptr = fnptr;
@@ -359,4 +360,16 @@ uint8_t m2_gfx_get_display_width(void)
 uint8_t m2_gfx_get_display_height(void)
 {
   return m2_gfx_call_handler(M2_GFX_MSG_GET_DISPLAY_HEIGHT);
+}
+
+void m2_gfx_level_down(uint8_t depth)
+{
+  m2_gfx_arg_object.top = depth;
+  m2_gfx_call_handler(M2_GFX_MSG_LEVEL_DOWN);
+}
+
+void m2_gfx_level_up(uint8_t depth)
+{
+  m2_gfx_arg_object.top = depth;
+  m2_gfx_call_handler(M2_GFX_MSG_LEVEL_UP);
 }

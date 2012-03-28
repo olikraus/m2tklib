@@ -117,7 +117,7 @@ M2_LABEL(el_te_l1, NULL, "TE a0:");
 M2_TEXT(el_te1, "a0", text_str, 4);
 M2_LABEL(el_te_l2, NULL, "TE a1:");
 M2_TEXT(el_te2, "a1", text_str, 4);
-M2_ROOT(el_te_goto_top, NULL, " top menu ", &top_el_tlsm);
+M2_ROOT(el_te_goto_top, NULL, "top menu", &top_el_tlsm);
 
 M2_LIST(list_te) = { 
     &el_te_l1, &el_te1, 
@@ -132,10 +132,10 @@ M2_GRIDLIST(el_top_te, "c2", list_te);
 /* button examples */
 
 
-M2_BUTTON(el_btn_highlight, "W63f4", "highlight", fn_dummy);
-M2_BUTTON(el_btn_normal, "W63f0", "normal", fn_dummy);
+M2_BUTTON(el_btn_highlight, "w125f4", "highlight", fn_dummy);
+M2_BUTTON(el_btn_normal, "w128f0", "normal", fn_dummy);
 
-M2_ROOT(el_btn_goto_top, "W63", "top menu", &top_el_tlsm);
+M2_ROOT(el_btn_goto_top, "w128", "top menu", &top_el_tlsm);
 
 M2_LIST(list_btn) = { 
     &el_btn_highlight, 
@@ -190,8 +190,8 @@ M2_COMBO(el_combo1, NULL, &select_color, 3, fn_idx_to_color);
 M2_LABEL(el_label2, NULL, "Priority: ");
 M2_COMBO(el_combo2, "v1", &select_priority, 5, fn_idx_to_priority);
 
-M2_BUTTON(el_cancel, NULL, "cancel", fn_cancel);
-M2_BUTTON(el_ok, NULL, " ok ", fn_ok);
+M2_BUTTON(el_cancel, "f4", "cancel", fn_cancel);
+M2_BUTTON(el_ok, "f4", " ok ", fn_ok);
 
 M2_LIST(list_combo) = { 
     &el_label1, &el_combo1, 
@@ -300,11 +300,11 @@ int main(void)
   m2_SetU8g(&u8g);
 
   /* 3. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bf);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_6x13);
+  m2_SetFont(0, (const void *)u8g_font_7x13);
 
 
   for(;;)

@@ -119,6 +119,10 @@ void m2_draw_sub(m2_pos_p box)
     /* try to go down, if there are children */
     if ( m2_nav_down(&m2_draw_current, 0) != 0 )
     {
+      
+      /* inform the graphics handler about the new depth */
+      m2_gfx_level_down(m2_draw_current.depth);
+      
       do
       {
 
@@ -161,6 +165,10 @@ void m2_draw_sub(m2_pos_p box)
 #ifdef M2_EL_MSG_POST_SHOW
       m2_draw_visit_node(&(pcbox.c), M2_EL_MSG_POST_SHOW);
 #endif
+      /* inform the graphics handler about leaving the current depth */
+      m2_gfx_level_up(m2_draw_current.depth);
+            
+      /* go up one level */
       m2_nav_up(&m2_draw_current);
     }
   }

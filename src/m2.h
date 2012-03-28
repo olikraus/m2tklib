@@ -310,6 +310,8 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_GFX_MSG_SET_FONT						38
 #define M2_GFX_MSG_GET_DISPLAY_WIDTH				39
 #define M2_GFX_MSG_GET_DISPLAY_HEIGHT				40
+#define M2_GFX_MSG_LEVEL_DOWN           				41
+#define M2_GFX_MSG_LEVEL_UP                   				42
 
 /*==============================================================*/
 /* object function */
@@ -978,7 +980,7 @@ struct _m2_gfx_arg
   uint8_t font;
   uint8_t icon;
   uint8_t total;		/* scroll bar: total number of items */
-  uint8_t top;		/* scroll bar: topmost item (first visible item) 0 .. total-visible*/
+  uint8_t top;		/* scroll bar: topmost item (first visible item) 0 .. total-visible, also used as depth value for LEVEL_UP/DOWN */
   uint8_t visible;	/* scroll bar: number of visible items 0 .. total-1 */
   const char *s;
 };
@@ -1044,6 +1046,9 @@ void m2_gfx_set_font(m2_gfx_fnptr fnptr, uint8_t font_idx, const void *font_ptr)
 
 uint8_t m2_gfx_get_display_width(void);
 uint8_t m2_gfx_get_display_height(void);
+
+void m2_gfx_level_down(uint8_t depth);
+void m2_gfx_level_up(uint8_t depth);
 
 
 /*==============================================================*/

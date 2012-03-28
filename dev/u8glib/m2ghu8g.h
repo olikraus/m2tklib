@@ -39,6 +39,9 @@ extern uint8_t m2_u8g_fg_text_color;
 extern uint8_t m2_u8g_bg_text_color;
 extern uint8_t m2_u8g_current_text_color;
 
+extern uint8_t m2_gh_u8g_current_depth;
+extern uint8_t m2_gh_u8g_invert_at_depth;
+
 
 /* graphics handler for the u8glib */
 /*
@@ -54,7 +57,7 @@ logic:
     ffs: 
       focus: shadow frame
       highlight: shadow frame
-      highlight+focus: shadow frame with invertet content
+      highlight+focus: shadow frame with inverted content
 
 uint8_t m2_gh_dogm_bf(m2_gfx_arg_p  arg);
 uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg);
@@ -79,6 +82,13 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p arg);
   highlight+focus: frame+box
 */
 uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg);
+
+/* 
+  focus: box
+  highlight: frame with shadow
+  highlight+focus: frame with shadow+box
+*/
+uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg);
 
 
 /* utility procedures */
