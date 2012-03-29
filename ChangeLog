@@ -21,6 +21,6 @@ m2tklib ChangeLog
         * Ported to Arduino 1.0
 2012-01-28      v1.05	Oliver Kraus <olikraus@gmail.com>
         * Added LABELFN, U8NUMFN, U32NUMFN
-2012-03-xx      v1.06	Oliver Kraus <olikraus@gmail.com>
+2012-03-29      v1.06	Oliver Kraus <olikraus@gmail.com>
         * fixed arduino event-source to support DATA_UP and _DOWN
         
