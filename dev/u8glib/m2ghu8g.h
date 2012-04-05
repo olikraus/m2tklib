@@ -69,6 +69,7 @@ uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg);
 /* graphics handler for the u8glib */
 
 /* 
+  fb
   focus: frame
   highlight: box
   highlight+focus: frame+box
@@ -77,6 +78,7 @@ uint8_t m2_gh_dogxl160(m2_gfx_arg_p arg);
 uint8_t m2_gh_u8g_fb(m2_gfx_arg_p arg);
 
 /* 
+  bf
   focus: box
   highlight: frame
   highlight+focus: frame+box
@@ -84,11 +86,21 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p arg);
 uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg);
 
 /* 
+  bfs   --> my favorit style
   focus: box
   highlight: frame with shadow
   highlight+focus: frame with shadow+box
 */
 uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg);
+
+
+/* 
+  ffs
+  focus: frame with shadow
+  highlight: frame with shadow
+  highlight+focus: frame with shadow+box
+*/
+uint8_t m2_gh_u8g_ffs(m2_gfx_arg_p  arg);
 
 
 /* utility procedures */

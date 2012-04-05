@@ -1,6 +1,6 @@
 /*
 
-  m2ghu8gbf.c
+  m2ghu8gffs.c
   
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -20,10 +20,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-  problem:
-      text entry with select (no auto down):
-      text field has NORMAL_FOCUS, child char receive NORMAL_NO_FOCUS
-      one solution would be to apply the level information
 
 */
 
@@ -31,18 +27,20 @@
 #include "m2ghu8g.h"
 
 /*
-  focus cursor: box
-  buttom style: frame
+  focus cursor: frame with shadow
+  highlight (buttom) style: frame with shadow
+  highlight + focus style: box + frame with shadow
 */
 
-uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
+uint8_t m2_gh_u8g_ffs(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
   {
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
       {
-      	m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
+        /* highlight flag is set, draw frame with shadow */
+      	m2_u8g_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
       }
 
       m2_u8g_current_text_color = m2_u8g_fg_text_color;
@@ -56,14 +54,24 @@ uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
       if ( (arg->font & 4) != 0 )
       {
+        /* 
+            highlight version
+            draw frame with shadow together with a filled box 
+        */
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        m2_u8g_draw_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2);
+      	m2_u8g_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
+        m2_gh_u8g_invert_at_depth = m2_gh_u8g_current_depth;
       }
       else
       {
-        m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        /* 
+            normal version
+            draw only the frame with shadow
+        */
+        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      	m2_u8g_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
       }
-      m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
-      m2_gh_u8g_invert_at_depth = m2_gh_u8g_current_depth;
       // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
@@ -85,21 +93,13 @@ uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
       m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h/2);
       break;
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
-      if ( (arg->font & 4) != 0 )
-	return 2;
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      if ( (arg->font & 4) != 0 )
-	return 2;
-      return 0;
+      return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      if ( (arg->font & 4) != 0 )
-	return 1;
-      return 0;
+      return 1;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
-      if ( (arg->font & 4) != 0 )
-	return 1;
-      return 0;
+      return 2;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:

@@ -309,6 +309,13 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       return m2_u8g_get_icon_width(arg->font, arg->icon);
     case M2_GFX_MSG_GET_ICON_HEIGHT:
       return m2_u8g_get_icon_height(arg->font, arg->icon);
+    
+    /*
+      The following two messages are used to track the current depth within the gfx driver.
+      As soon as the depth changes, the current depth is assigned to the variable m2_gh_u8g_current_depth
+      At any depth the gfx drive can decide to invert the font, marked by m2_gh_u8g_invert_at_depth.
+      m2_gh_u8g_invert_at_depth must be set in the driver, however it is reset by LEVEL_UP
+    */
     case M2_GFX_MSG_LEVEL_DOWN:
       //printf("down %d\n", arg->top);
       m2_gh_u8g_current_depth = arg->top;

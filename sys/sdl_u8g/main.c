@@ -202,10 +202,56 @@ M2_GRIDLIST(el_top_combo, "c2", list_combo);
 
 
 /*======================================================================*/
+/* gfx handler selection: gfx */
+
+const char *el_gfx_strlist_cb(uint8_t idx, uint8_t msg) {
+  const char *s = "";
+  if  ( idx == 0 )
+    s = "fb";
+  else if ( idx == 1 )
+    s = "bf";
+  else if ( idx == 2 )
+    s = "bfs";
+  else if ( idx == 3 )
+    s = "ffs";
+
+  if (msg == M2_STRLIST_MSG_GET_STR) {
+    /* nothing else todo, return the correct string */
+  } 
+  else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    if ( idx == 0 ) {
+      m2_SetGraphicsHandler(m2_gh_u8g_fb);
+    }
+    else if ( idx == 1 ) {
+      m2_SetGraphicsHandler(m2_gh_u8g_bf);
+    }
+    else if ( idx == 2 ) {
+      m2_SetGraphicsHandler(m2_gh_u8g_bfs);
+    }
+    else if ( idx == 3 ) {
+      m2_SetGraphicsHandler(m2_gh_u8g_ffs);
+    }
+    m2_SetRoot(&top_el_tlsm);
+  }
+  return s;
+}
+
+uint8_t el_gfx_first = 0;
+uint8_t el_gfx_cnt = 5;
+
+M2_STRLIST(el_gfx_strlist, "l3W57", &el_gfx_first, &el_gfx_cnt, el_gfx_strlist_cb);
+M2_SPACE(el_gfx_space, "W1h1");
+M2_VSB(el_gfx_vsb, "l3W4r1", &el_gfx_first, &el_gfx_cnt);
+M2_LIST(list_gfx_strlist) = { &el_gfx_strlist, &el_gfx_space, &el_gfx_vsb };
+M2_HLIST(el_gfx_hlist, NULL, list_gfx_strlist);
+
+M2_ALIGN(top_el_gfx, "-1|1W64H64", &el_gfx_hlist);
+
+
+/*======================================================================*/
 /* top level sdl menu: tlsm */
 
 
-const char *selected = "Nothing";
 const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
   const char *s = "";
   if  ( idx == 0 )
@@ -217,13 +263,12 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
   else if ( idx == 3 )
     s = "Radio";
   else if ( idx == 4 )
-    s = "Empty5";
+    s = "Select GFX";
 
   if (msg == M2_STRLIST_MSG_GET_STR) {
     /* nothing else todo, return the correct string */
   } 
   else if ( msg == M2_STRLIST_MSG_SELECT ) {
-    selected = s;
     if ( idx == 0 ) {
       m2_SetRoot(&el_top_combo);
     }
@@ -236,8 +281,10 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     else if ( idx == 3 ) {
       m2_SetRoot(&el_top_rb);
     }
-
-
+    else if ( idx == 4 ) {
+      m2_SetRoot(&top_el_gfx);
+      
+    }
   }
   return s;
 }
@@ -300,7 +347,7 @@ int main(void)
   m2_SetU8g(&u8g);
 
   /* 3. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_ffs);
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */

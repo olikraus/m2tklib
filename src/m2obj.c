@@ -45,6 +45,7 @@ void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh)
   if ( gh != NULL )
   {
     m2->gh = gh;
+    m2_gfx_init(gh);
     m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
   }
 }
