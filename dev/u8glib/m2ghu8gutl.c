@@ -27,7 +27,7 @@
 #include "m2ghu8g.h"
 
 u8g_t *m2_u8g = NULL;
-u8g_uint_t m2_u8g_height_minus_one;
+u8g_uint_t m2_u8g_height_minus_one = 0;
 uint8_t m2_u8g_fg_text_color;
 uint8_t m2_u8g_bg_text_color;
 uint8_t m2_u8g_current_text_color;
@@ -36,12 +36,10 @@ uint8_t m2_u8g_draw_color;
 uint8_t m2_gh_u8g_current_depth;
 uint8_t m2_gh_u8g_invert_at_depth = 255;
 
-
-
-void m2_SetU8g(u8g_t *u8g)
+/* update local information */
+static void m2_u8g_update(void)
 {
-  m2_u8g = u8g;
-  m2_u8g_height_minus_one = u8g_GetHeight(u8g);
+  m2_u8g_height_minus_one = u8g_GetHeight(m2_u8g);
   m2_u8g_height_minus_one--;
   
   /* force lower left edge of a text as reference */
@@ -51,6 +49,13 @@ void m2_SetU8g(u8g_t *u8g)
   m2_u8g_bg_text_color = u8g_GetDefaultBackgroundColor(m2_u8g);
   m2_u8g_current_text_color = m2_u8g_fg_text_color;
   m2_u8g_draw_color = u8g_GetDefaultForegroundColor(m2_u8g);
+}
+
+
+void m2_SetU8g(u8g_t *u8g)
+{
+  m2_u8g = u8g;
+  m2_u8g_update();
 }
 
 void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
@@ -197,6 +202,8 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_INIT:		
       break;
     case M2_GFX_MSG_START:
+      /* check for proper setup */
+      
       break;
     case M2_GFX_MSG_END:
       break;

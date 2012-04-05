@@ -343,12 +343,13 @@ int main(void)
   
   /* 1. Setup and create device access */
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
-  /* 2. Connect the u8g display to m2. Note: M2 is setup later */
-  m2_SetU8g(&u8g);
-
-  /* 3. Now, setup m2 */
+  
+  /* 2. Now, setup m2 */
   m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_ffs);
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
+
+  /* 3. Connect the u8g display to m2.  */
+  m2_SetU8g(&u8g);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_7x13);
