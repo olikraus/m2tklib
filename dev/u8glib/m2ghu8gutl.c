@@ -36,6 +36,8 @@ uint8_t m2_u8g_draw_color;
 uint8_t m2_gh_u8g_current_depth;
 uint8_t m2_gh_u8g_invert_at_depth = 255;
 
+uint8_t m2_gh_u8g_invisible_frame_border_x_size = 1;
+
 uint8_t (*m2_gh_u8g_icon_draw)(m2_gfx_arg_p  arg) = m2_gh_dummy;
 
 
@@ -147,27 +149,27 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_DRAW_TEXT:
       {
-	      u8g_uint_t x = arg->x;
-	      u8g_uint_t y;
+        u8g_uint_t x = arg->x;
+        u8g_uint_t y;
 
         u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
         u8g_SetFontPosBottom(m2_u8g);
               
-	      if ( (arg->font & 8) != 0 )
+        if ( (arg->font & 8) != 0 )
         {
-	        if ( arg->w != 0 )
-	        {
-	          x = arg->w;
-	          x -= u8g_GetStrWidth(m2_u8g, arg->s);
-	          x >>= 1;
-	          x += arg->x;
-	        }
+          if ( arg->w != 0 )
+          {
+            x = arg->w;
+            x -= u8g_GetStrWidth(m2_u8g, arg->s);
+            x >>= 1;
+            x += arg->x;
+          }
         }
         y = m2_u8g_height_minus_one;
-	      y -= arg->y;
-          x -= u8g_GetStrX(m2_u8g, arg->s);
-	      u8g_DrawStr(m2_u8g, x, y, arg->s);
+        y -= arg->y;
+        x -= u8g_GetStrX(m2_u8g, arg->s);
+        u8g_DrawStr(m2_u8g, x, y, arg->s);
         // printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s);
       }
       break;
@@ -246,16 +248,19 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       m2_gh_u8g_invert_at_depth must be set in the driver, however it is reset by LEVEL_UP
     */
     case M2_GFX_MSG_LEVEL_DOWN:
-      //printf("down %d\n", arg->top);
+      // printf("down %d\n", arg->top);
       m2_gh_u8g_current_depth = arg->top;
       break;
+    case M2_GFX_MSG_LEVEL_NEXT:
+      // printf("next %d ", arg->top);
     case M2_GFX_MSG_LEVEL_UP:
       // printf("up %d\n", arg->top);
       m2_gh_u8g_current_depth = arg->top;
-      if ( m2_gh_u8g_invert_at_depth+1 >= m2_gh_u8g_current_depth )
+      if ( m2_gh_u8g_invert_at_depth >= m2_gh_u8g_current_depth )
       {
         // printf("invert remove %d\n", m2_gh_u8g_invert_at_depth);
         m2_gh_u8g_invert_at_depth = 255;
+        //m2_u8g_current_text_color = m2_u8g_fg_text_color;
       }
       break;
   }

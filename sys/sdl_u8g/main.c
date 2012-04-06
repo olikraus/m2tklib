@@ -506,7 +506,7 @@ int main(void)
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
   
   /* 2. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_ffs);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 3. Connect the u8g display to m2.  */

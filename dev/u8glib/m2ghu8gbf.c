@@ -42,13 +42,14 @@ uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
       {
-      	m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
+      	m2_u8g_draw_frame(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
 
       m2_u8g_current_text_color = m2_u8g_fg_text_color;
       if ( m2_gh_u8g_invert_at_depth < m2_gh_u8g_current_depth )
       {
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        // printf("DRAW_NORMAL_NO_FOCUS: invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       }
       break;
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
@@ -57,14 +58,17 @@ uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
       if ( (arg->font & 4) != 0 )
       {
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        m2_u8g_draw_box(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
+
       }
       else
       {
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
       }
-      m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
+      
       m2_gh_u8g_invert_at_depth = m2_gh_u8g_current_depth;
-      // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
+      // printf("DRAW_NORMAL_FOCUS: invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_u8g_current_text_color = m2_u8g_bg_text_color;
@@ -90,11 +94,11 @@ uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
       if ( (arg->font & 4) != 0 )
-	return 2;
+	return 2+2*m2_gh_u8g_invisible_frame_border_x_size;
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
       if ( (arg->font & 4) != 0 )
-	return 1;
+	return 1+m2_gh_u8g_invisible_frame_border_x_size;
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       if ( (arg->font & 4) != 0 )

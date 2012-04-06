@@ -123,7 +123,7 @@ void m2_draw_sub(m2_pos_p box)
       /* inform the graphics handler about the new depth */
       m2_gfx_level_down(m2_draw_current.depth);
       
-      do
+      for(;;)
       {
 
 	/* request child position from the parent */
@@ -159,7 +159,12 @@ void m2_draw_sub(m2_pos_p box)
 	  if ( m2_is_frame_draw_at_end != 0 )
 	    m2_draw_visit_node(&(pcbox.c), M2_EL_MSG_SHOW);
 	} /* M2_EL_MSG_GET_LIST_BOX successfull */
-      } while( m2_nav_next(&m2_draw_current) != 0 );
+        if ( m2_nav_next(&m2_draw_current) == 0 )
+          break;
+        /* inform the graphics handler about next element on same level */
+        m2_gfx_level_next(m2_draw_current.depth);
+        
+      } /* for(;;) */
       
       
 #ifdef M2_EL_MSG_POST_SHOW

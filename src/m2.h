@@ -312,6 +312,7 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_GFX_MSG_GET_DISPLAY_HEIGHT				40
 #define M2_GFX_MSG_LEVEL_DOWN           				41
 #define M2_GFX_MSG_LEVEL_UP                   				42
+#define M2_GFX_MSG_LEVEL_NEXT                 				43
 
 /*==============================================================*/
 /* object function */
@@ -1049,6 +1050,7 @@ uint8_t m2_gfx_get_display_height(void);
 
 void m2_gfx_level_down(uint8_t depth);
 void m2_gfx_level_up(uint8_t depth);
+void m2_gfx_level_next(uint8_t depth);
 
 
 /*==============================================================*/

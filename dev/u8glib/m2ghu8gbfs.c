@@ -35,6 +35,7 @@
   highlight (buttom) style: frame with shadow
 */
 
+
 uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
@@ -43,13 +44,14 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
       if ( (arg->font & 4) != 0 )
       {
         /* highlight flag is set, draw frame with shadow */
-      	m2_u8g_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
+      	m2_u8g_draw_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
 
       m2_u8g_current_text_color = m2_u8g_fg_text_color;
       if ( m2_gh_u8g_invert_at_depth < m2_gh_u8g_current_depth )
       {
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       }
       break;
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
@@ -63,7 +65,7 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
         */
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
         m2_u8g_draw_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2);
-      	m2_u8g_draw_frame_shadow(arg->x, arg->y, arg->w, arg->h);
+      	m2_u8g_draw_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
       else
       {
@@ -102,11 +104,11 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
       if ( (arg->font & 4) != 0 )
-	return 3;
+	return 3+2*m2_gh_u8g_invisible_frame_border_x_size;
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
       if ( (arg->font & 4) != 0 )
-	return 1;
+	return 1+m2_gh_u8g_invisible_frame_border_x_size;
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       if ( (arg->font & 4) != 0 )
