@@ -215,6 +215,33 @@ M2_LIST(list_combo) = {
 };
 M2_GRIDLIST(el_top_combo, "c2", list_combo);
 
+/*======================================================================*/
+/* number entry */
+
+uint8_t u8num = 0;
+uint32_t u32num = 0;
+
+void fn_num_zero(m2_el_fnarg_p fnarg) {
+  u8num = 0;
+  u32num = 0;
+}
+
+M2_LABEL(el_num_label1, NULL, "U8:");
+M2_U8NUM(el_num_1, NULL, 0, 255, &u8num);
+
+M2_LABEL(el_num_label2, NULL, "U32:");
+M2_U32NUM(el_num_2, "c5", &u32num);
+
+M2_BUTTON(el_num_zero, "f4", " zero ", fn_num_zero);
+M2_ROOT(el_num_goto_top, "f4", " back ", &top_el_tlsm);
+
+M2_LIST(num_list) = { 
+    &el_num_label1, &el_num_1, 
+    &el_num_label2, &el_num_2,  
+    &el_num_zero, &el_num_goto_top
+};
+M2_GRIDLIST(el_num_menu, "c2", num_list);
+
 
 /*======================================================================*/
 /* gfx handler selection: gfx */
@@ -413,11 +440,18 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_top_combo);
   }
+  else if ( idx == 6 ) {
+    s = "Number Entry";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&el_num_menu);
+  }
+  
+  
   return s;
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 6;
+uint8_t el_tlsm_cnt = 7;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -476,22 +510,13 @@ int main(void)
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 3. Connect the u8g display to m2.  */
-  m2_SetU8g(&u8g, m2_u8g_font_icon);
+  m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_7x13);
 
-  /* box */
-  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, 35, 33);
-  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, 35, 33);
-
-  /* circle */
-  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, 73, 75);
-  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, 73, 75);
-
-  /* diamond */
-  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, 72, 71);
-  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, 72, 71);
+  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
 
 
   for(;;)

@@ -146,8 +146,11 @@ uint8_t m2_u8g_font_icon(m2_gfx_arg_p  arg)
   return m2_gh_dummy(arg);
 }
 
+
+#ifdef OBSOLETE_BITMAP_ICON
+
 /*========================================================================*/
-/* Bitmap Icon */
+/* Bitmap Icon, fixed size */
 
 /*
   00000000 0x00
@@ -242,4 +245,56 @@ uint8_t m2_u8g_bitmap_icon(m2_gfx_arg_p  arg)
   }
   return m2_gh_dummy(arg);
 }
+#endif /* OBSOLETE_BITMAP_ICON */
 
+
+/*========================================================================*/
+/* Manually drawn box icon, dynamic size */
+
+uint8_t m2_u8g_get_box_icon_size(uint8_t font)
+{
+    int8_t x;
+    u8g_SetFont(m2_u8g, m2_u8g_get_font(font));
+    x = u8g_GetFontAscent(m2_u8g)-u8g_GetFontDescent(m2_u8g);
+    x*=5;
+    x >>=3;
+    if ( x < 6 )
+      x = 6;
+    return x;
+}
+
+void m2_u8g_draw_box_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
+{
+  uint8_t h;
+  h = m2_u8g_get_box_icon_size(font);
+  y = m2_u8g_height_minus_one - y;
+  
+  u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
+  u8g_DrawFrame(m2_u8g, x, y - h, h, h);
+  
+  if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_RADIO_ACTIVE )
+  {
+    h -= 4;
+    u8g_DrawBox(m2_u8g, x + 2, y - h - 2, h, h);
+  }
+}
+
+uint8_t m2_u8g_box_icon(m2_gfx_arg_p  arg)
+{
+  /* Do a safety check here: Abort if m2_SetU8g has not been called */
+  if ( m2_u8g == NULL )
+    return 0;
+
+  /* Proceed with normal message processing */
+  switch(arg->msg)
+  {
+    case M2_GFX_MSG_DRAW_ICON:
+      m2_u8g_draw_box_icon(arg->x, arg->y, arg->font, arg->icon);
+      break;
+    case M2_GFX_MSG_GET_ICON_WIDTH:
+      return m2_u8g_get_box_icon_size(arg->font);
+    case M2_GFX_MSG_GET_ICON_HEIGHT:
+      return m2_u8g_get_box_icon_size(arg->font);
+  }
+  return m2_gh_dummy(arg);
+}

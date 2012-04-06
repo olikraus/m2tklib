@@ -105,24 +105,28 @@ uint8_t m2_gh_u8g_ffs(m2_gfx_arg_p  arg);
 
 /* icon procedures */
 
-uint8_t m2_u8g_font_icon(m2_gfx_arg_p  arg);
-uint8_t m2_u8g_bitmap_icon(m2_gfx_arg_p  arg);
+uint8_t m2_u8g_font_icon(m2_gfx_arg_p arg);
+// uint8_t m2_u8g_bitmap_icon(m2_gfx_arg_p  arg); /* obsolete, can be replaced by m2_u8g_box_icon */
+uint8_t m2_u8g_box_icon(m2_gfx_arg_p arg);
 
 /* icon font setup procedures */
 
 void m2_SetU8gToggleFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint8_t inactive);
 void m2_SetU8gRadioFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint8_t inactive);
 
+/* connect U8glib and M2tklib */
 
-/* utility procedures */
+void m2_SetU8g(u8g_t *u8g, m2_gfx_fnptr gh_icon_draw);          /* expects icon procedure as second argument */
 
-void m2_SetU8g(u8g_t *u8g, uint8_t (*gh_icon_draw)(m2_gfx_arg_p arg));
+
+/* utility procedures for the graphics handler */
+
 void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
-void m2_u8g_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon);
-uint8_t m2_u8g_get_icon_height(uint8_t font, uint8_t icon);
-uint8_t m2_u8g_get_icon_width(uint8_t font, uint8_t icon);
+//void m2_u8g_draw_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon);
+//uint8_t m2_u8g_get_icon_height(uint8_t font, uint8_t icon);
+//uint8_t m2_u8g_get_icon_width(uint8_t font, uint8_t icon);
 const u8g_fntpgm_uint8_t *m2_u8g_get_font(uint8_t font);
 uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg);
  
