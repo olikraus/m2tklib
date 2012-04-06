@@ -1,6 +1,6 @@
 /*
 
-  HelloWorld.pde
+  U32Plain.pde
   
   U8glib Example
 
@@ -8,7 +8,7 @@
 
   >>> Before compiling: Please remove comment from the constructor of the 
   >>> connected graphics display (see below).
-  
+
   Copyright (C) 2012  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
@@ -59,27 +59,48 @@ U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI
 //U8GLIB_KS0108_128 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 14, 15, 17, 16); // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, cs1=14, cs2=15,di=17,rw=16
 //U8GLIB_LC7981_160X80 u8g(8, 9, 10, 11, 4, 5, 6, 7,  18, 14, 15, 17, 16); // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, cs=14 ,di=15,rw=17, reset = 16
 
+// DOGS102 shield 
+// uint8_t uiKeyUpPin = 5;
+// uint8_t uiKeyDownPin = 3;
+// uint8_t uiKeySelectPin = 4;
 
-M2_LABEL(hello_world_label, NULL, "Hello World");
-M2tk m2(&hello_world_label, NULL, NULL, m2_gh_u8g_bfs);
+// DOGM132, DOGM128 and DOGXL160 shield
+uint8_t uiKeyUpPin = 7;         
+uint8_t uiKeyDownPin = 3;
+uint8_t uiKeySelectPin = 2;
 
+// Edit a long int number
+uint32_t number = 1234;
+M2_U32NUM(el_num, "a1c4", &number);
+M2tk m2(&el_num, m2_es_arduino, m2_eh_2bs, m2_gh_u8g_bfs);
+
+// U8glib draw procedure: Just call the M2tklib draw procedure
 void draw(void) {
     m2.draw();
 }
 
+// Arduino setup procedure (called only once)
 void setup() {
-  /* connect u8glib with m2tklib */
+  // Connect u8glib with m2tklib
   m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
 
-  /* assign u8g font to index 0 */
+  // Assign u8g font to index 0
   m2.setFont(0, u8g_font_7x13);
+
+  // Setup keys
+  m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
+  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
 }
 
+// Arduino loop procedure
 void loop() {
-  u8g.firstPage();  
-  do {
-    draw();
-  } while( u8g.nextPage() );
+  m2.checkKey();
+  if ( m2.handleKey() ) {
+    u8g.firstPage();  
+    do {
+      draw();
+    } while( u8g.nextPage() );
+  }
 }
 
 

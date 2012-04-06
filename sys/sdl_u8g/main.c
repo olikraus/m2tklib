@@ -400,8 +400,14 @@ M2_HLIST(el_fsel_hlist, NULL, list_fsel_strlist);
 
 M2_ALIGN(top_el_fsel, "-1|1W64H64", &el_fsel_hlist);
 
+/*======================================================================*/
+/* hello world label */
+M2_LABEL(hello_world_label, NULL, "Hello World");
 
-
+/*======================================================================*/
+/* Edit a long int number */
+uint32_t number = 1234;
+M2_U32NUM(el_u32num, "a1c4", &number);
 
 /*======================================================================*/
 /* top level sdl menu: tlsm */
@@ -445,13 +451,23 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_num_menu);
   }
+  else if ( idx == 7 ) {
+    s = "Hello World";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&hello_world_label);
+  }
+  else if ( idx == 8 ) {
+    s = "U32Plain";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&el_u32num);
+  }
   
   
   return s;
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 7;
+uint8_t el_tlsm_cnt = 9;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -487,8 +503,12 @@ void screenshot(void)
   {
     char cmd[256*4];
     sprintf(cmd, "convert u8g.pbm -trim -scale '200%%' %s.png", "u8g" );
+
     sprintf(cmd, "convert u8g.pbm -crop '128x64+0+704' -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '200%%' %s.png", "u8g" );
     sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 3 0' -draw 'line 126 0 129 0' -draw 'line 0 65 3 65' -draw 'line 126 65 129 65'  -draw 'line 0 0 0 3' -draw 'line 129 0 129 3'  -draw 'line 0 62 0 65' -draw 'line 129 62 129 65' -scale '200%%' %s.png", "u8g" );
+
+    sprintf(cmd, "convert u8g.pbm -extent '128x64-0-0' -fill orange -opaque white  -scale '200%%' %s.png", "u8g" );
+    
     system(cmd);
   }
   
