@@ -74,6 +74,21 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 }
 
 /*======================================================================*/
+/* box */
+// uint8_t active_encoding = 35;
+// uint8_t inactive_encoding = 33;
+
+/* circle */
+uint8_t active_encoding = 73;
+uint8_t inactive_encoding = 75;
+
+/* diamond */
+// uint8_t active_encoding = 72;
+// uint8_t inactive_encoding = 71;
+
+
+
+/*======================================================================*/
 /* extern ref to top element */
 M2_EXTERN_ALIGN(top_el_tlsm);
 
@@ -237,9 +252,9 @@ const char *el_gfx_strlist_cb(uint8_t idx, uint8_t msg) {
 }
 
 uint8_t el_gfx_first = 0;
-uint8_t el_gfx_cnt = 5;
+uint8_t el_gfx_cnt = 4;
 
-M2_STRLIST(el_gfx_strlist, "l3W57", &el_gfx_first, &el_gfx_cnt, el_gfx_strlist_cb);
+M2_STRLIST(el_gfx_strlist, "l3W56", &el_gfx_first, &el_gfx_cnt, el_gfx_strlist_cb);
 M2_SPACE(el_gfx_space, "W1h1");
 M2_VSB(el_gfx_vsb, "l3W4r1", &el_gfx_first, &el_gfx_cnt);
 M2_LIST(list_gfx_strlist) = { &el_gfx_strlist, &el_gfx_space, &el_gfx_vsb };
@@ -249,50 +264,162 @@ M2_ALIGN(top_el_gfx, "-1|1W64H64", &el_gfx_hlist);
 
 
 /*======================================================================*/
-/* top level sdl menu: tlsm */
+/* font selection:fsel */
 
-
-const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
+const char *el_fsel_strlist_cb(uint8_t idx, uint8_t msg) {
   const char *s = "";
-  if  ( idx == 0 )
-    s = "Combo";
-  else if ( idx == 1 )
-    s = "Buttons";
-  else if ( idx == 2 )
-    s = "Text Entry";
-  else if ( idx == 3 )
-    s = "Radio";
-  else if ( idx == 4 )
-    s = "Select GFX";
 
-  if (msg == M2_STRLIST_MSG_GET_STR) {
-    /* nothing else todo, return the correct string */
-  } 
-  else if ( msg == M2_STRLIST_MSG_SELECT ) {
-    if ( idx == 0 ) {
-      m2_SetRoot(&el_top_combo);
+  if ( idx == 0 ) {
+    s = "4x6";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_4x6);
+      m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
     }
-    else if ( idx == 1 ) {
-      m2_SetRoot(&el_top_btn);
+  }
+  else if ( idx == 1 ) {
+    s = "5x8";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_5x8);
+      m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
     }
-    else if ( idx == 2 ) {
-      m2_SetRoot(&el_top_te);
+  }
+  else if ( idx == 2 ) {
+    s = "6x12";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_6x12);
+      m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
     }
-    else if ( idx == 3 ) {
-      m2_SetRoot(&el_top_rb);
+  }
+  else if ( idx == 3 ) {
+    s = "6x13";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_6x13);
+      m2_SetU8gToggleFontIcon(u8g_font_6x13_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_6x13_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
     }
-    else if ( idx == 4 ) {
-      m2_SetRoot(&top_el_gfx);
-      
+  }
+  else if ( idx == 4 ) {
+    s = "7x13";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_7x13);
+      m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
+    }
+  }
+  else if ( idx == 5 ) {
+    s = "8x13";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_8x13);
+      m2_SetU8gToggleFontIcon(u8g_font_8x13_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_8x13_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
+    }
+  }
+  else if ( idx == 6 ) {
+    s = "tpss";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_tpss);
+      m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
+    }
+  }
+  else if ( idx == 7 ) {
+    s = "cu12";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_cu12);
+      m2_SetU8gToggleFontIcon(u8g_font_cu12_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_cu12_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
+    }
+  }
+  else if ( idx == 8 ) {
+    s = "unifont";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_unifont);
+      m2_SetU8gToggleFontIcon(u8g_font_unifont_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_unifont_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
+    }
+  }
+  else if ( idx == 9 ) {
+    s = "9x15";
+    if ( msg == M2_STRLIST_MSG_SELECT ) {
+      m2_SetFont(0, (const void *)u8g_font_9x15);
+      m2_SetU8gToggleFontIcon(u8g_font_9x15_75r, active_encoding, inactive_encoding);
+      m2_SetU8gRadioFontIcon(u8g_font_9x15_75r, active_encoding, inactive_encoding);
+      m2_SetRoot(&top_el_tlsm);
     }
   }
   return s;
 }
 
-uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 5;
+uint8_t el_fsel_first = 0;
+uint8_t el_fsel_cnt = 10;
 
-M2_STRLIST(el_tlsm_strlist, "l3W57", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
+M2_STRLIST(el_fsel_strlist, "l3W56", &el_fsel_first, &el_fsel_cnt, el_fsel_strlist_cb);
+M2_SPACE(el_fsel_space, "W1h1");
+M2_VSB(el_fsel_vsb, "l3W4r1", &el_fsel_first, &el_fsel_cnt);
+M2_LIST(list_fsel_strlist) = { &el_fsel_strlist, &el_fsel_space, &el_fsel_vsb };
+M2_HLIST(el_fsel_hlist, NULL, list_fsel_strlist);
+
+M2_ALIGN(top_el_fsel, "-1|1W64H64", &el_fsel_hlist);
+
+
+
+
+/*======================================================================*/
+/* top level sdl menu: tlsm */
+
+
+const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
+  const char *s = "";
+
+  if ( idx == 0 ) {
+    s = "Select Style";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_gfx);
+  }
+  else if ( idx == 1 ) {
+    s = "Select Font";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_fsel);
+  }  
+  else if ( idx == 2 ) {
+    s = "Buttons";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&el_top_btn);
+  }
+  else if ( idx == 3 ) {
+    s = "Text Entry";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&el_top_te);
+  }
+  else if ( idx == 4 ) {
+    s = "Radio";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&el_top_rb);
+  }
+  else if ( idx == 5 ) {
+    s = "Combo";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&el_top_combo);
+  }
+  return s;
+}
+
+uint8_t el_tlsm_first = 0;
+uint8_t el_tlsm_cnt = 6;
+
+M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
 M2_VSB(el_tlsm_vsb, "l3W4r1", &el_tlsm_first, &el_tlsm_cnt);
 M2_LIST(list_tlsm_strlist) = { &el_tlsm_strlist, &el_tlsm_space, &el_tlsm_vsb };
@@ -314,14 +441,14 @@ void screenshot(void)
   /* 1. Setup and create device access */
   u8g_Init(&screenshot_u8g, &u8g_dev_pbm);
   /* 2. Connect the u8g display to m2. Note: M2 is setup later */
-  m2_SetU8g(&screenshot_u8g);
+  m2_SetU8g(&screenshot_u8g, m2_u8g_font_icon);
 
   u8g_FirstPage(&screenshot_u8g);
   do{
     m2_Draw();
   } while( u8g_NextPage(&screenshot_u8g) );
 
-  m2_SetU8g(&u8g);
+  m2_SetU8g(&u8g, m2_u8g_font_icon);
 
   {
     char cmd[256*4];
@@ -349,10 +476,22 @@ int main(void)
   // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
 
   /* 3. Connect the u8g display to m2.  */
-  m2_SetU8g(&u8g);
+  m2_SetU8g(&u8g, m2_u8g_font_icon);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_7x13);
+
+  /* box */
+  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, 35, 33);
+  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, 35, 33);
+
+  /* circle */
+  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, 73, 75);
+  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, 73, 75);
+
+  /* diamond */
+  m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, 72, 71);
+  m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, 72, 71);
 
 
   for(;;)
