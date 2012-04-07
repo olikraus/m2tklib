@@ -37,7 +37,7 @@ uint8_t m2_gh_u8g_current_depth;
 uint8_t m2_gh_u8g_invert_at_depth = 255;
 
 uint8_t m2_gh_u8g_invisible_frame_border_x_size = 1;
-uint8_t m2_gh_u8g_additional_text_border_x_size = 1;    // TODO: needs to be added
+uint8_t m2_gh_u8g_additional_text_border_x_size = 1;
 
 uint8_t (*m2_gh_u8g_icon_draw)(m2_gfx_arg_p  arg) = m2_gh_dummy;
 
@@ -170,6 +170,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         y = m2_u8g_height_minus_one;
         y -= arg->y;
         x -= u8g_GetStrX(m2_u8g, arg->s);
+        x += m2_gh_u8g_additional_text_border_x_size;
         u8g_DrawStr(m2_u8g, x, y, arg->s);
         // printf("DRAW_TEXT: x=%d y=%d s=%s\n", x, y, arg->s);
       }
@@ -196,6 +197,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         y = m2_u8g_height_minus_one;
       	y -= arg->y;
         x -= u8g_GetStrXP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
+        x += m2_gh_u8g_additional_text_border_x_size;
       	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
@@ -211,10 +213,10 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetStrPixelWidth(m2_u8g, arg->s);
+      return u8g_GetStrPixelWidth(m2_u8g, arg->s)+2*m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
       u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));
-      return u8g_GetStrPixelWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
+      return u8g_GetStrPixelWidthP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s)+2*m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_CHAR_WIDTH:
       return m2_u8g_get_reference_delta_x(arg->font);
     case M2_GFX_MSG_GET_CHAR_HEIGHT:

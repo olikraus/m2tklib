@@ -43,6 +43,7 @@ extern uint8_t m2_gh_u8g_current_depth;
 extern uint8_t m2_gh_u8g_invert_at_depth;
 
 extern uint8_t m2_gh_u8g_invisible_frame_border_x_size;
+extern uint8_t m2_gh_u8g_additional_text_border_x_size;
 
 /* graphics handler for the u8glib */
 /*
