@@ -37,6 +37,7 @@ uint8_t m2_gh_u8g_current_depth;
 uint8_t m2_gh_u8g_invert_at_depth = 255;
 
 uint8_t m2_gh_u8g_invisible_frame_border_x_size = 1;
+uint8_t m2_gh_u8g_additional_text_border_x_size = 1;    // TODO: needs to be added
 
 uint8_t (*m2_gh_u8g_icon_draw)(m2_gfx_arg_p  arg) = m2_gh_dummy;
 
