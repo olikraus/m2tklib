@@ -166,9 +166,6 @@ void draw_graphics(void) {
   if ( m2.getRoot() == &m2_null_element ) {
       // all menus are gone, show the rectangle
       draw_rectangle(10,10);
-      // now check for any keys and assign a suitable menu again
-      if ( m2.getKey() != M2_KEY_NONE )
-        m2.setRoot(&el_top);
   }
 }
 
@@ -180,6 +177,10 @@ uint8_t update_graphics(void) {
   }
 
   if ( m2.getRoot() == &m2_null_element ) {
+      // check for any keys and assign a suitable menu again
+      if ( m2.getKey() != M2_KEY_NONE )
+        m2.setRoot(&el_top);
+    
       // all menus are gone, rectangle is shown, so do update
       return update_rectangle();
   }
