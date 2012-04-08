@@ -120,6 +120,10 @@ void m2_SetU8gRadioFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint
 
 void m2_SetU8g(u8g_t *u8g, m2_gfx_fnptr gh_icon_draw);          /* expects icon procedure as second argument */
 
+/* Additional style parameters */
+void m2_SetU8gInvisibleFrameXBorder(uint8_t w);
+void m2_SetU8gAdditionalTextXBorder(uint8_t w);
+
 
 /* utility procedures for the graphics handler */
 

@@ -37,7 +37,7 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
       if ( (arg->font & 4) != 0 )
       {
         m2_u8g_current_text_color = m2_u8g_bg_text_color;
-      	m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
+      	m2_u8g_draw_box(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
       else
       {
@@ -49,12 +49,13 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
       if ( (arg->font & 4) != 0 )
       {
         m2_u8g_current_text_color = m2_u8g_fg_text_color;
+        m2_u8g_draw_frame(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
       else
       {
         m2_u8g_current_text_color = m2_u8g_fg_text_color;
+        m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       }
-      m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
       m2_u8g_current_text_color = m2_u8g_bg_text_color;
@@ -77,9 +78,13 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
       return 2;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      return 2;
+      if ( (arg->font & 4) != 0 )
+	return 2+2*m2_gh_u8g_invisible_frame_border_x_size+2*m2_gh_u8g_additional_text_border_x_size;
+      return 2*m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      return 1;
+      if ( (arg->font & 4) != 0 )
+	return 1+m2_gh_u8g_invisible_frame_border_x_size+m2_gh_u8g_additional_text_border_x_size;
+      return m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       return 1;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:

@@ -206,7 +206,7 @@ M2_LABEL(el_label2, NULL, "Priority: ");
 M2_COMBO(el_combo2, "v1", &select_priority, 5, fn_idx_to_priority);
 
 M2_BUTTON(el_cancel, "f4", "cancel", fn_cancel);
-M2_BUTTON(el_ok, "f4", " ok ", fn_ok);
+M2_BUTTON(el_ok, "f4", "ok", fn_ok);
 
 M2_LIST(list_combo) = { 
     &el_label1, &el_combo1, 
@@ -401,6 +401,31 @@ M2_HLIST(el_fsel_hlist, NULL, list_fsel_strlist);
 M2_ALIGN(top_el_fsel, "-1|1W64H64", &el_fsel_hlist);
 
 /*======================================================================*/
+/* Edit x width properties */
+
+void fn_xwp_zero(m2_el_fnarg_p fnarg) {
+  m2_gh_u8g_invisible_frame_border_x_size = 0;
+  m2_gh_u8g_additional_text_border_x_size = 0;
+}
+
+M2_LABEL(el_xwp_label1, NULL, "Add to Frame:");
+M2_U8NUM(el_xwp_1, "c1", 0, 4, &m2_gh_u8g_invisible_frame_border_x_size);
+
+M2_LABEL(el_xwp_label2, NULL, "Add to Text:");
+M2_U8NUM(el_xwp_2, "c1", 0, 4, &m2_gh_u8g_additional_text_border_x_size);
+
+M2_ROOT(el_xwp_goto_top, "f4", "Goto Top Menu", &top_el_tlsm);
+M2_BUTTON(el_xwp_zero, "f4", "Zero", fn_xwp_zero);
+
+M2_LIST(xwp_list) = { 
+    &el_xwp_label1, &el_xwp_1, 
+    &el_xwp_label2, &el_xwp_2,  
+    &el_xwp_goto_top, &el_xwp_zero
+};
+M2_GRIDLIST(el_xwp_menu, "c2", xwp_list);
+M2_ALIGN(top_el_xwp, "-1|1W64H64", &el_xwp_menu);
+
+/*======================================================================*/
 /* hello world label */
 M2_LABEL(hello_world_label, NULL, "Hello World");
 
@@ -422,41 +447,46 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_gfx);
   }
   else if ( idx == 1 ) {
+    s = "Adjust Style";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_xwp);
+  }  
+  else if ( idx == 2 ) {
     s = "Select Font";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&top_el_fsel);
   }  
-  else if ( idx == 2 ) {
+  else if ( idx == 3 ) {
     s = "Buttons";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_top_btn);
   }
-  else if ( idx == 3 ) {
+  else if ( idx == 4 ) {
     s = "Text Entry";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_top_te);
   }
-  else if ( idx == 4 ) {
+  else if ( idx == 5 ) {
     s = "Radio";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_top_rb);
   }
-  else if ( idx == 5 ) {
+  else if ( idx == 6 ) {
     s = "Combo";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_top_combo);
   }
-  else if ( idx == 6 ) {
+  else if ( idx == 7 ) {
     s = "Number Entry";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_num_menu);
   }
-  else if ( idx == 7 ) {
+  else if ( idx == 8 ) {
     s = "Hello World";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&hello_world_label);
   }
-  else if ( idx == 8 ) {
+  else if ( idx == 9 ) {
     s = "U32Plain";
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_u32num);
@@ -467,7 +497,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 9;
+uint8_t el_tlsm_cnt = 10;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

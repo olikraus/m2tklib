@@ -95,9 +95,9 @@ uint8_t m2_gh_u8g_ffs(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
       return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      return 3+2*m2_gh_u8g_invisible_frame_border_x_size;
+      return 3+2*m2_gh_u8g_invisible_frame_border_x_size+2*m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      return 1+m2_gh_u8g_invisible_frame_border_x_size;
+      return 1+m2_gh_u8g_invisible_frame_border_x_size+m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       return 2;
     case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:

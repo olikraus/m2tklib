@@ -94,12 +94,12 @@ uint8_t m2_gh_u8g_bf(m2_gfx_arg_p  arg)
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
       if ( (arg->font & 4) != 0 )
-	return 2+2*m2_gh_u8g_invisible_frame_border_x_size;
-      return 0;
+	return 2+2*m2_gh_u8g_invisible_frame_border_x_size+2*m2_gh_u8g_additional_text_border_x_size;
+      return 2*m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
       if ( (arg->font & 4) != 0 )
-	return 1+m2_gh_u8g_invisible_frame_border_x_size;
-      return 0;
+	return 1+m2_gh_u8g_invisible_frame_border_x_size+m2_gh_u8g_additional_text_border_x_size;
+      return m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       if ( (arg->font & 4) != 0 )
 	return 1;
