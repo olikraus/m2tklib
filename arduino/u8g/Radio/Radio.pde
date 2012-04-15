@@ -1,6 +1,6 @@
 /*
 
-  Combo.pde
+  Radio.pde
   
   U8glib Example
 
@@ -70,7 +70,6 @@ uint8_t uiKeyDownPin = 3;
 uint8_t uiKeySelectPin = 2;
 
 uint8_t select_color = 0;
-uint8_t select_priority = 0;
 
 void fn_ok(m2_el_fnarg_p fnarg) {
   /* accept selection */
@@ -80,41 +79,22 @@ void fn_cancel(m2_el_fnarg_p fnarg) {
   /* discard selection */
 }
 
-const char *fn_idx_to_color(uint8_t idx)
-{
-  if ( idx == 0 )
-    return "red";
-  else if (idx == 1 )
-    return "green";
-  return "blue";
-}
+M2_LABEL(el_label1, NULL, "red");
+M2_RADIO(el_radio1, "v0", &select_color);
 
-const char *fn_idx_to_priority(uint8_t idx)
-{
-  switch(idx)
-  {
-    case 0: return "lowest";
-    case 1: return "low";
-    case 2: return "medium";
-    case 3: return "high";
-    case 4: return "highest";
-  }
-  return "";
-}
+M2_LABEL(el_label2, NULL, "green");
+M2_RADIO(el_radio2, "v1", &select_color);
 
-
-M2_LABEL(el_label1, NULL, "Color:");
-M2_COMBO(el_combo1, NULL, &select_color, 3, fn_idx_to_color);
-
-M2_LABEL(el_label2, NULL, "Priority: ");
-M2_COMBO(el_combo2, "v1", &select_priority, 5, fn_idx_to_priority);
+M2_LABEL(el_label3, NULL, "blue");
+M2_RADIO(el_radio3, "v2", &select_color);
 
 M2_BUTTON(el_cancel, NULL, "cancel", fn_cancel);
 M2_BUTTON(el_ok, NULL, " ok ", fn_ok);
 
 M2_LIST(list) = { 
-    &el_label1, &el_combo1, 
-    &el_label2, &el_combo2,  
+    &el_label1, &el_radio1, 
+    &el_label2, &el_radio2,  
+    &el_label3, &el_radio3, 
     &el_cancel, &el_ok 
 };
 M2_GRIDLIST(list_element, "c2",list);
