@@ -434,6 +434,56 @@ M2_LABEL(hello_world_label, NULL, "Hello World");
 uint32_t number = 1234;
 M2_U32NUM(el_u32num, "a1c4", &number);
 
+
+/*======================================================================*/
+/* StrList example */
+const char *selected = "Nothing";
+const char *el_strlist_getstr(uint8_t idx, uint8_t msg) {
+  const char *s = "";
+  if  ( idx == 0 )
+    s = "Apple";
+  else if ( idx == 1 )
+    s = "Banana";
+  else if ( idx == 2 )
+    s = "Peach";
+  else if ( idx == 3 )
+    s = "Pumpkin";
+  else if ( idx == 4 )
+    s = "Corn";
+  else if ( idx == 5 )
+    s = "[Main Menu]";
+  if (msg == M2_STRLIST_MSG_GET_STR) {
+    /* nothing else todo, return the correct string */
+  } else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    if ( idx == 5 ) {
+      m2_SetRoot(&top_el_tlsm);
+    } 
+    else {
+      selected = s;    
+    }
+  }
+  return s;
+}
+
+uint8_t el_strlist_first = 0;
+uint8_t el_strlist_cnt = 6;
+
+M2_STRLIST(el_strlist, "l2w90", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
+M2_SPACE(el_strlist_space, "w1h1");
+M2_VSB(el_strlist_vsb, "l2w5r1", &el_strlist_first, &el_strlist_cnt);
+M2_LIST(list_strlist) = { &el_strlist, &el_strlist_space, &el_strlist_vsb };
+M2_HLIST(el_strlist_hlist, NULL, list_strlist);
+
+M2_LABEL(el_strlist_label,NULL, "Selected:");
+M2_LABELPTR(el_strlist_labelptr,NULL, &selected);
+M2_LIST(list_strlist_label) = { &el_strlist_label, &el_strlist_labelptr };
+M2_HLIST(el_strlist_label_hlist, NULL, list_strlist_label);
+
+M2_LIST(strlist_list) = { &el_strlist_hlist, &el_strlist_label_hlist };
+M2_VLIST(el_strlist_vlist, NULL, strlist_list);
+M2_ALIGN(top_el_strlist, "-1|1W64H64", &el_strlist_vlist);
+
+
 /*======================================================================*/
 /* top level sdl menu: tlsm */
 
@@ -491,13 +541,18 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&el_u32num);
   }
+  else if ( idx == 10 ) {
+    s = "StrList";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_strlist);
+  }
   
   
   return s;
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 10;
+uint8_t el_tlsm_cnt = 11;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -568,6 +623,7 @@ int main(void)
   m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
   m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
 
+  // m2_SetU8gAdditionalReadOnlyXBorder(0);
 
   for(;;)
   {
