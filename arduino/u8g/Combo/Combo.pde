@@ -1,6 +1,6 @@
 /*
 
-  U32Plain.pde
+  Combo.pde
   
   U8glib Example
 
@@ -52,7 +52,7 @@
 //U8GLIB_LM6063 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGXL160_BW u8g(10, 9);            // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGXL160_GR u8g(13, 11, 10, 9);             // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
-//U8GLIB_DOGXL160_2X_BW u8g(13, 11, 10, 9);            // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+U8GLIB_DOGXL160_2X_BW u8g(13, 11, 10, 9);            // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGXL160_2X_GR u8g(13, 11, 10, 9);             // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_PCD8544 u8g(13, 11, 10, 9, 8);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, Reset = 8
 //U8GLIB_PCF8812 u8g(13, 11, 10, 9, 8);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, Reset = 8
@@ -69,14 +69,56 @@ uint8_t uiKeyUpPin = 7;
 uint8_t uiKeyDownPin = 3;
 uint8_t uiKeySelectPin = 2;
 
-// Edit the following long int number
-uint32_t number = 1234;
+uint8_t select_color = 0;
+uint8_t select_priority = 0;
 
-// Definition of the m2tklib menu
-M2_U32NUM(el_num, "a1c4", &number);
+void fn_ok(m2_el_fnarg_p fnarg) {
+  /* accept selection */
+}
 
-// M2tk init
-M2tk m2(&el_num, m2_es_arduino, m2_eh_2bs, m2_gh_u8g_bfs);
+void fn_cancel(m2_el_fnarg_p fnarg) {
+  /* discard selection */
+}
+
+const char *fn_idx_to_color(uint8_t idx)
+{
+  if ( idx == 0 )
+    return "red";
+  else if (idx == 1 )
+    return "green";
+  return "blue";
+}
+
+const char *fn_idx_to_priority(uint8_t idx)
+{
+  switch(idx)
+  {
+    case 0: return "lowest";
+    case 1: return "low";
+    case 2: return "medium";
+    case 3: return "high";
+    case 4: return "highest";
+  }
+  return "";
+}
+
+
+M2_LABEL(el_label1, NULL, "Color:");
+M2_COMBO(el_combo1, NULL, &select_color, 3, fn_idx_to_color);
+
+M2_LABEL(el_label2, NULL, "Priority: ");
+M2_COMBO(el_combo2, "v1", &select_priority, 5, fn_idx_to_priority);
+
+M2_BUTTON(el_cancel, NULL, "cancel", fn_cancel);
+M2_BUTTON(el_ok, NULL, " ok ", fn_ok);
+
+M2_LIST(list) = { 
+    &el_label1, &el_combo1, 
+    &el_label2, &el_combo2,  
+    &el_cancel, &el_ok 
+};
+M2_GRIDLIST(list_element, "c2",list);
+M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_u8g_ffs);
 
 // U8glib draw procedure: Just call the M2tklib draw procedure
 void draw(void) {
@@ -89,11 +131,12 @@ void setup() {
   m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
 
   // Assign u8g font to index 0
-  m2.setFont(0, u8g_font_7x13);
+  m2.setFont(0, u8g_font_6x13);
 
   // Setup keys
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
+  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
 }
 
 // Arduino loop procedure
