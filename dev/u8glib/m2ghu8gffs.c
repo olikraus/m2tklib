@@ -100,22 +100,6 @@ uint8_t m2_gh_u8g_ffs(m2_gfx_arg_p  arg)
       return 1+m2_gh_u8g_invisible_frame_border_x_size+m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       return 2;
-    case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
-      return 0;
-    case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:
-      return 0;
-    case M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET:
-      return 0;
-    case M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET:
-      return 0;
-    case M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT:
-      return 0;
-    case M2_GFX_MSG_GET_READONLY_BORDER_WIDTH:
-      return 0;
-    case M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET:
-      return 0;
-    case M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET:
-      return 0;
     case M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT:
       return 0;
     case M2_GFX_MSG_GET_LIST_OVERLAP_WIDTH:

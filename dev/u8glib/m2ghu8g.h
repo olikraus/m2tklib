@@ -44,6 +44,8 @@ extern uint8_t m2_gh_u8g_invert_at_depth;
 
 extern uint8_t m2_gh_u8g_invisible_frame_border_x_size;
 extern uint8_t m2_gh_u8g_additional_text_border_x_size;
+extern uint8_t m2_gh_u8g_additional_read_only_border_x_size;
+
 
 /* graphics handler for the u8glib */
 /*
@@ -123,6 +125,7 @@ void m2_SetU8g(u8g_t *u8g, m2_gfx_fnptr gh_icon_draw);          /* expects icon 
 /* Additional style parameters */
 void m2_SetU8gInvisibleFrameXBorder(uint8_t w);
 void m2_SetU8gAdditionalTextXBorder(uint8_t w);
+void m2_SetU8gAdditionalReadOnlyXBorder(uint8_t w);
 
 
 /* utility procedures for the graphics handler */

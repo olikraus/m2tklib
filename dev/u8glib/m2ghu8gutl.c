@@ -38,6 +38,7 @@ uint8_t m2_gh_u8g_invert_at_depth = 255;
 
 uint8_t m2_gh_u8g_invisible_frame_border_x_size = 1;
 uint8_t m2_gh_u8g_additional_text_border_x_size = 1;
+uint8_t m2_gh_u8g_additional_read_only_border_x_size = 1;
 
 uint8_t (*m2_gh_u8g_icon_draw)(m2_gfx_arg_p  arg) = m2_gh_dummy;
 
@@ -51,6 +52,13 @@ void m2_SetU8gAdditionalTextXBorder(uint8_t w)
 {
   m2_gh_u8g_additional_text_border_x_size = w;
 }
+
+/* this affects the readonly messages (M2_GFX_MSG_GET_READONLY_BORDER_WIDTH) and not the readonly flag */
+void m2_SetU8gAdditionalReadOnlyXBorder(uint8_t w)
+{
+  m2_gh_u8g_additional_read_only_border_x_size = w;
+}
+
 
 /* update local information */
 static void m2_u8g_update(void)
@@ -253,6 +261,24 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       	m2_u8g_draw_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);
       }
       return 1;
+    
+    case M2_GFX_MSG_GET_SMALL_BORDER_HEIGHT:
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_WIDTH:
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_X_OFFSET:
+      return 0;
+    case M2_GFX_MSG_GET_SMALL_BORDER_Y_OFFSET:
+      return 0;
+      
+    case M2_GFX_MSG_GET_READONLY_BORDER_WIDTH:
+      return 2*m2_gh_u8g_additional_read_only_border_x_size;
+    case M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET:
+      return m2_gh_u8g_additional_read_only_border_x_size;
+    case M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT:
+      return 0;
+    case M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET:
+      return 0;
     
     /*
       The following two messages are used to track the current depth within the gfx driver.
