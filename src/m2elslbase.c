@@ -53,6 +53,39 @@ uint8_t m2_el_slbase_get_top(m2_rom_void_p element)
   return *m2_el_slbase_get_top_ptr(element);
 }
 
+
+/*==============================================================*/
+/* slbase extra column procedure */
+
+
+/* return the extra font, defaults to the normal font given to 'f' */
+static uint8_t m2_el_slbase_get_extra_font(m2_rom_void_p element)
+{
+  return m2_el_fmfmt_opt_get_val_any_by_element(element, 'F', m2_el_fmfmt_get_font_by_element(element));
+}
+
+/* width of the extra column */
+static uint8_t m2_el_slbase_opt_get_eE(m2_rom_char_p str)
+{
+    uint8_t val;
+    uint16_t tmp;
+    val = m2_opt_get_val_zero_default(str, 'e'); 
+    if ( val == 0 )
+    {
+      tmp = m2_opt_get_val_zero_default(str, 'E');
+      tmp *= m2_gfx_get_display_width();
+      tmp >>= 6;
+      val = tmp;
+    }  
+    return val;
+}
+
+uint8_t m2_el_slbase_eE_by_element(m2_rom_void_p element)
+{
+  return m2_el_slbase_opt_get_eE(m2_el_fnfmt_get_fmt_by_element(element));
+}
+
+
 /*==============================================================*/
 /* slbase utility procedures */
 
@@ -115,7 +148,7 @@ uint8_t m2_el_slbase_calc_height(m2_rom_void_p element)
 /* argument must be of type m2_el_slbase_p */ 
 uint8_t m2_el_slbase_calc_width(m2_rom_void_p element)
 {
-  return m2_gfx_add_normal_border_width(m2_el_fmfmt_get_font_by_element(element), m2_el_fnfmt_get_wW_by_element(element));
+  return m2_gfx_add_normal_border_width(m2_el_fmfmt_get_font_by_element(element), m2_el_fnfmt_get_wW_by_element(element))+m2_el_slbase_eE_by_element(element);
 }
 
 void m2_el_slbase_adjust_top_to_focus(m2_rom_void_p element, uint8_t pos)
@@ -182,12 +215,33 @@ uint8_t m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p d
 /*
   show the string on the display
 */
-void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *s)
+
+static void m2_gfx_draw_text2_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t extra_font, const char *extra_s, uint8_t extra_offset, uint8_t font, const char *s)
+{
+  x0 = m2_gfx_add_normal_border_x(font, x0);
+  y0 = m2_gfx_add_normal_border_y(font, y0);  
+  if ( extra_s != NULL )
+  {
+    m2_gfx_text(x0, y0, 0, 0, extra_font, extra_s);
+    x0 += extra_offset;
+  }
+  m2_gfx_text(x0, y0, 0, 0, font, s);
+}
+
+void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *extra_s, const char *s)
 {
   m2_pos_p b = (m2_pos_p)(fn_arg->data);
   uint8_t pos = m2_nav_get_child_pos(fn_arg->nav);
   uint8_t font = m2_el_parent_get_font(fn_arg->nav);
   uint8_t visible_pos = m2_el_slbase_get_visible_pos(m2_nav_get_parent_element(fn_arg->nav), pos);
+  uint8_t extra_font = 0;
+  uint8_t extra_offset = 0;
+  
+  if ( extra_s != NULL )
+  {
+    extra_font = m2_el_slbase_get_extra_font(m2_nav_get_parent_element(fn_arg->nav));
+    extra_offset = m2_el_slbase_eE_by_element(m2_nav_get_parent_element(fn_arg->nav));
+  }
   
   /* printf("STRLINE M2_EL_MSG_SHOW arg = %d, visible_pos = %d\n", fn_arg->arg, visible_pos); */
   
@@ -202,7 +256,7 @@ void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *s)
       the focus/border, because the width of the element depends on the parent
     */
     if ( m2_is_frame_draw_at_end != 0 )
-      m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, s);
+      m2_gfx_draw_text2_add_normal_border_offset(b->x, b->y, extra_font, extra_s, extra_offset, font, s);
       
     if ( fn_arg->arg < 2 )
       m2_gfx_normal_no_focus(b->x, b->y, w, h, font);      
@@ -210,7 +264,7 @@ void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *s)
       m2_gfx_normal_focus(b->x, b->y, w, h, font);
     
     if ( m2_is_frame_draw_at_end == 0 )
-      m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 0, 0, font, s);
+      m2_gfx_draw_text2_add_normal_border_offset(b->x, b->y, extra_font, extra_s, extra_offset, font, s);
   }
 }
 

@@ -258,7 +258,7 @@ M2_EL_FN_DEF(m2_el_infoline_base_fn)
       //m2_el_info_ptr = m2_el_info_get_ptr(m2_nav_get_parent_element(fn_arg->nav));
       m2_el_info_start();
       m2_el_info_get_line(pos);
-      m2_el_slbase_show(fn_arg, m2_el_info_line);
+      m2_el_slbase_show(fn_arg, NULL, m2_el_info_line);
       return 1;
   }
   return 0;  

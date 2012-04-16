@@ -61,8 +61,13 @@ const char *m2_el_strlist_select(m2_rom_void_p element, uint8_t idx)
   return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_SELECT);
 }
 
+
+/*==============================================================*/
+/* specific options */
+
 /*==============================================================*/
 /* strlist utility procedures */
+
 
 
 
@@ -104,7 +109,7 @@ M2_EL_FN_DEF(m2_el_strline_fn)
       return 0;
 #endif
     case M2_EL_MSG_SHOW:
-      m2_el_slbase_show(fn_arg, m2_el_strlist_get_str(m2_nav_get_parent_element(fn_arg->nav), pos));
+      m2_el_slbase_show(fn_arg, NULL, m2_el_strlist_get_str(m2_nav_get_parent_element(fn_arg->nav), pos));
       return 1;
   }
   return 0;
