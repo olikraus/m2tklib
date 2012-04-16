@@ -83,6 +83,7 @@ const char *m2_el_strlist_get_extra_str(m2_rom_void_p element, uint8_t idx)
 
 M2_EL_FN_DEF(m2_el_strline_fn)
 {
+  m2_rom_void_p parent_el = m2_nav_get_parent_element(fn_arg->nav);
   uint8_t font;
   uint8_t pos;
 
@@ -96,12 +97,12 @@ M2_EL_FN_DEF(m2_el_strline_fn)
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_get_char_height_with_normal_border(font);
     case M2_EL_MSG_GET_WIDTH:
-      return m2_el_slbase_calc_width(m2_nav_get_parent_element(fn_arg->nav));
+      return m2_el_slbase_calc_width(parent_el);
     case M2_EL_MSG_NEW_FOCUS:
-      m2_el_slbase_adjust_top_to_focus(m2_nav_get_parent_element(fn_arg->nav), pos);
+      m2_el_slbase_adjust_top_to_focus(parent_el, pos);
       return 1;
     case M2_EL_MSG_SELECT:
-      m2_el_strlist_select(m2_nav_get_parent_element(fn_arg->nav), pos);
+      m2_el_strlist_select(parent_el, pos);
       return 1;
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
@@ -116,7 +117,15 @@ M2_EL_FN_DEF(m2_el_strline_fn)
       return 0;
 #endif
     case M2_EL_MSG_SHOW:
-      m2_el_slbase_show(fn_arg, NULL, m2_el_strlist_get_str(m2_nav_get_parent_element(fn_arg->nav), pos));
+     {
+       const char *extra_str = NULL;
+        if ( m2_opt_get_val( m2_el_fnfmt_get_fmt_by_element(parent_el), 'e') != M2_OPT_NOT_FOUND ||
+          m2_opt_get_val( m2_el_fnfmt_get_fmt_by_element(parent_el), 'E') != M2_OPT_NOT_FOUND )
+        {
+          extra_str = m2_el_strlist_get_extra_str(parent_el, pos);
+        }
+        m2_el_slbase_show(fn_arg, extra_str, m2_el_strlist_get_str(parent_el, pos));
+      }
       return 1;
   }
   return 0;
