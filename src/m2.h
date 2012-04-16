@@ -372,6 +372,7 @@ typedef const char *(*m2_strlist_cb_fnptr)(uint8_t idx, uint8_t msg);
 
 #define M2_STRLIST_MSG_GET_STR 101
 #define M2_STRLIST_MSG_SELECT 102
+#define M2_STRLIST_MSG_GET_EXTENDED_STR 103
 
 /*==============================================================*/
 /* list of elements */

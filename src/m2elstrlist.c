@@ -61,6 +61,13 @@ const char *m2_el_strlist_select(m2_rom_void_p element, uint8_t idx)
   return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_SELECT);
 }
 
+const char *m2_el_strlist_get_extra_str(m2_rom_void_p element, uint8_t idx)
+{
+  return m2_el_strlist_cb_fnptr(element)(idx, M2_STRLIST_MSG_GET_EXTENDED_STR);
+}
+
+
+
 
 /*==============================================================*/
 /* specific options */
