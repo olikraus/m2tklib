@@ -485,6 +485,50 @@ M2_ALIGN(top_el_strlist, "-1|1W64H64", &el_strlist_vlist);
 
 
 /*======================================================================*/
+/* multi selection */
+
+#define MULTI_SELECT_CNT 3
+const char *multi_select_strings[MULTI_SELECT_CNT] = { "red", "green", "blue" };
+uint8_t multi_select_status[MULTI_SELECT_CNT] = { 0, 0, 0};
+
+uint8_t el_muse_first = 0;
+uint8_t el_muse_cnt = MULTI_SELECT_CNT;
+
+const char *el_muse_strlist_cb(uint8_t idx, uint8_t msg) {
+  const char *s = "";
+  if ( msg == M2_STRLIST_MSG_SELECT ) {
+    if ( multi_select_status[idx] == 0 ) {
+      multi_select_status[idx] = 1;
+    }
+    else {
+      multi_select_status[idx] = 0;
+    }
+  }
+  if ( msg == M2_STRLIST_MSG_GET_STR ) {
+    s = multi_select_strings[idx];
+  }
+  if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
+    if ( multi_select_status[idx] == 0 ) {
+      s = "\x15";
+    }
+    else {
+      s = "\x14";
+    }
+  }
+  return s;  
+}
+
+M2_STRLIST(el_muse_strlist, "l3F3E10W46", &el_muse_first, &el_muse_cnt, el_muse_strlist_cb);
+M2_ROOT(el_muse_goto_top, "f4", "Goto Top Menu", &top_el_tlsm);
+
+M2_LIST(muse_list) = { 
+    &el_muse_strlist, 
+    &el_muse_goto_top,  
+};
+M2_VLIST(el_muse_vlist, "c2", muse_list);
+M2_ALIGN(top_el_muse, "-1|1W64H64", &el_muse_vlist);
+
+/*======================================================================*/
 /* top level sdl menu: tlsm */
 
 
@@ -546,13 +590,18 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&top_el_strlist);
   }
+  else if ( idx == 11 ) {
+    s = "MultiSelect";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_muse);
+  }
   
   
   return s;
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 11;
+uint8_t el_tlsm_cnt = 12;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -624,6 +673,10 @@ int main(void)
   m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
 
   // m2_SetU8gAdditionalReadOnlyXBorder(0);
+  
+  /* set the font for the multi selection */
+  m2_SetFont(3, (const void *)u8g_font_unifont_78_79);
+
 
   for(;;)
   {

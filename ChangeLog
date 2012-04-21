@@ -25,3 +25,4 @@ m2tklib ChangeLog
         * fixed arduino event-source to support DATA_UP and _DOWN
 2012-04-15      v1.07	Oliver Kraus <olikraus@gmail.com>
         * M2tk for U8glib
+2012-04-xx      v1.08	Oliver Kraus <olikraus@gmail.com>
