@@ -175,6 +175,7 @@ void fs_put_into_cache(uint8_t n)
 {
   strcpy(fs_c_name[fs_rr], fs_name);
   fs_c_is_dir[fs_rr] = fs_is_dir;
+  fs_c_idx[fs_rr] = n;
   fs_rr++;
   if ( fs_rr >= FS_CACHE_SIZE )
     fs_rr = 0;

@@ -30,6 +30,8 @@
 #include <string.h>
 
 #define DEFAULT_FONT u8g_font_6x13
+#define ICON_FONT u8g_font_m2icon_9
+//#define ICON_FONT u8g_font_6x13
 #define BIG_FONT u8g_font_fub20r
 
 /*=========================================================================*/
@@ -77,16 +79,12 @@ void info_screen_display(void)
     u8g.setFont(BIG_FONT);
     u8g.setPrintPos(0,25);
     u8g.print(millis());
-    // lcd.clear();
-    // lcd.setCursor(0,0);
-    // lcd.print(millis());
-    // delay(20);
   }
   else if ( info_screen_state == 1 )
   {
     uint16_t adc = analogRead(0);
     
-    u8g.setFont(BIG_FONT);
+    u8g.setFont(DEFAULT_FONT);
     
     u8g.setPrintPos(0,25);
     u8g.print("raw:  ");
@@ -94,16 +92,7 @@ void info_screen_display(void)
 
     u8g.setPrintPos(0,50);
     u8g.print("volt: ");
-    u8g.print((adc*3.3)/512.0);
-    
-    // lcd.clear();
-    // lcd.setCursor(0,0);
-    // lcd.print("raw:  ");
-    // lcd.print(adc);
-    // lcd.setCursor(0,1);
-    // lcd.print("volt: ");
-    // lcd.print((adc*3.3)/512.0);
-    // delay(50);
+    u8g.print((adc*3.3)/512.0);    
   }
   else if ( info_screen_state == 2 )
   {
@@ -141,7 +130,7 @@ char fs_name[2+12+1];   /* 2 chars for the prefix, 12 chars for the name, 1 for 
 uint8_t fs_is_dir = 0;
 
 /* cache */
-#define FS_CACHE_SIZE 2
+#define FS_CACHE_SIZE 6
 char fs_c_name[FS_CACHE_SIZE][2+12+1];
 uint8_t fs_c_is_dir[FS_CACHE_SIZE];
 uint8_t fs_c_idx[FS_CACHE_SIZE] = { 255, 255 };
@@ -193,6 +182,7 @@ void fs_put_into_cache(uint8_t n)
 {
   strcpy(fs_c_name[fs_rr], fs_name);
   fs_c_is_dir[fs_rr] = fs_is_dir;
+  fs_c_idx[fs_rr] = n;
   fs_rr++;
   if ( fs_rr >= FS_CACHE_SIZE )
     fs_rr = 0;
@@ -207,9 +197,9 @@ void fs_get_nth_file(uint8_t n)
   if ( fs_get_cache_entry(n) != 255 )
     return;
   
-  fs_name[0] = '-';
-  fs_name[1] = '-';
-  fs_name[2] = '\0';
+  //fs_name[0] = '-';
+  //fs_name[1] = '-';
+  //fs_name[2] = '\0';
   fs_is_dir = 0;
   
   sd.vwd()->rewind();
@@ -217,13 +207,13 @@ void fs_get_nth_file(uint8_t n)
   {
     if ( n == c )
     {
-      fs_name[0] = ' ';
-      fs_name[1] = ' ';
-      file.getFilename(fs_name+2);
-      fs_name[12+2] = '\0';
+      //fs_name[0] = ' ';
+      //fs_name[1] = ' ';
+      file.getFilename(fs_name);
+      fs_name[12] = '\0';
       fs_is_dir = file.isDir();
-      if ( fs_is_dir )
-        fs_name[0] = '+';
+      //if ( fs_is_dir )
+      //  fs_name[0] = '+';
       file.close();
       fs_put_into_cache(n);
       break;
@@ -243,10 +233,19 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
     if ( idx == 0 )
-      return "-- Back --";
+      return "Back";
     fs_get_nth_file(idx-FS_EXTRA_MENUES);
     return fs_name;
   } 
+  else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
+  {
+    if ( idx == 0 )
+      return "a";       // leave menu
+    fs_get_nth_file(idx-FS_EXTRA_MENUES);
+    if ( fs_is_dir )
+      return "A";       // folder icon
+    return "B";         // file icon
+  }
   else if ( msg == M2_STRLIST_MSG_SELECT ) 
   {
     if ( idx == 0 )
@@ -264,9 +263,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   return fs_name;
 }
 
-M2_STRLIST(el_fs_strlist, "l2W50", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_STRLIST(el_fs_strlist, "l4F3e15W47", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
 //M2_SPACE(el_fs_space, "w1h1");
-M2_VSB(el_fs_strlist_vsb, "l2W10r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_VSB(el_fs_strlist_vsb, "l4W2r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
@@ -464,6 +463,9 @@ void setup()
 
   // Assign u8g font to index 0
   m2.setFont(0, DEFAULT_FONT);
+  
+  // Assign icon font to index 3
+  m2.setFont(3, ICON_FONT);
   
   // Setup keys (botmat)
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
