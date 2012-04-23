@@ -147,6 +147,12 @@ void fs_update_file_cnt(void)
 {
   if ( fs_file_cnt == 255 )
   {
+    uint8_t i;
+    /* clear cache */
+    for( i = 0 ; i < FS_CACHE_SIZE; i++ )
+      fs_c_idx[i] = 255;
+    
+    /* recalculate number of dir entries */
     fs_file_cnt = 0;
     sd.vwd()->rewind();
     while (file.openNext(sd.vwd(), O_READ)) 
@@ -156,12 +162,10 @@ void fs_update_file_cnt(void)
         break;
       file.close();
     }
-    /*
-    if  ( fs_file_cnt > 10 )
-      fs_file_cnt = 10;
-    */
+    
     /* update m2 variable */
     fs_m2tk_cnt = fs_file_cnt;
+    fs_m2tk_cnt += FS_EXTRA_MENUES;
   }  
 }
 
@@ -190,10 +194,11 @@ void fs_put_into_cache(uint8_t n)
 
 
 
-/* get the n'th file an store it into the intermediate buffers fs_is_dir and fs_name */
+/* get the n'th file and store it into the intermediate buffers fs_is_dir and fs_name */
 void fs_get_nth_file(uint8_t n)
 {
   uint8_t c = 0;
+  
   if ( fs_get_cache_entry(n) != 255 )
     return;
   
@@ -250,13 +255,26 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   {
     if ( idx == 0 )
     {
-      m2.setRoot(&el_top);      
+      if ( sd.vwd()->isRoot() )
+        m2.setRoot(&el_top);      
+      else
+      {
+        sd.chdir();  // goto root directory
+        fs_file_cnt = 255;
+        fs_update_file_cnt();        
+        m2.setRoot(m2.getRoot());  // reset menu to first element
+      }
+        
     }
     else
     {
       fs_get_nth_file(idx);
       if ( fs_is_dir )
       {
+        sd.chdir(fs_name);
+        fs_file_cnt = 255;
+        fs_update_file_cnt();        
+        m2.setRoot(m2.getRoot());  // reset menu to first element
       }
     }
   } 
