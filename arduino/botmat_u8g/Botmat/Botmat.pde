@@ -19,6 +19,14 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
+  
+  sd support
+    SdFat (Arduino)
+    http://www.mikrocontroller.net/articles/AVR_FAT32                   --> not fully clear how to read dir entries with this
+    http://www.holger-klabunde.de/avr/avrboard.htm#FullFAT              --> seems to be a small implementation
+    http://www.dharmanitech.com/2009/01/sd-card-interfacing-with-atmega8-fat32.html
+    http://code.google.com/p/fullfat/           (http://www.fullfat-fs.co.uk/)
+    http://code.google.com/p/nanofat-lib/               -->PIC
 */
 
 #include "U8glib.h"
@@ -259,7 +267,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
         m2.setRoot(&el_top);      
       else
       {
-        sd.chdir();  // goto root directory
+        sd.vwd()->openParent(sd.vwd());
+        
+        //sd.chdir();  // goto root directory
         fs_file_cnt = 255;
         fs_update_file_cnt();        
         m2.setRoot(m2.getRoot());  // reset menu to first element
