@@ -27,6 +27,8 @@
     http://www.dharmanitech.com/2009/01/sd-card-interfacing-with-atmega8-fat32.html
     http://code.google.com/p/fullfat/           (http://www.fullfat-fs.co.uk/)
     http://code.google.com/p/nanofat-lib/               -->PIC
+    http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module
+    
 */
 
 #include "U8glib.h"
@@ -267,9 +269,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
         m2.setRoot(&el_top);      
       else
       {
-        sd.vwd()->openParent(sd.vwd());
+        //sd.vwd()->openParent(sd.vwd());
         
-        //sd.chdir();  // goto root directory
+        sd.chdir();  // goto root directory
         fs_file_cnt = 255;
         fs_update_file_cnt();        
         m2.setRoot(m2.getRoot());  // reset menu to first element
