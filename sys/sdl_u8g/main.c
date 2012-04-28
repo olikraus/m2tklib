@@ -3,6 +3,7 @@
 #include "SDL.h"
 
 #include "m2ghu8g.h"
+#include "mas.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -529,6 +530,79 @@ M2_VLIST(el_muse_vlist, "c2", muse_list);
 M2_ALIGN(top_el_muse, "-1|1W64H64", &el_muse_vlist);
 
 /*======================================================================*/
+/* file selection dialog */
+
+#define FS_EXTRA_MENUES 1
+
+/* helper variables for the strlist element */
+uint8_t fs_m2tk_first = 0;
+uint8_t fs_m2tk_cnt = 0;
+
+void fs_set_cnt(void)
+{
+  if ( mas_get_dir_entry_cnt()+FS_EXTRA_MENUES < 255 )
+    fs_m2tk_cnt = mas_get_dir_entry_cnt()+FS_EXTRA_MENUES;
+  else
+    fs_m2tk_cnt = 255;
+}
+
+const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
+{
+  
+  /* process message */
+  if (msg == M2_STRLIST_MSG_GET_STR) 
+  {
+    if ( idx == 0 )
+      return "Back";
+    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    return mas_entry_name;
+  } 
+  else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
+  {
+    if ( idx == 0 )
+      return "a";       // leave menu
+    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    if ( mas_entry_is_dir )
+      return "A";       // folder icon
+    return "B";         // file icon
+  }
+  else if ( msg == M2_STRLIST_MSG_SELECT ) 
+  {
+    if ( idx == 0 )
+    {
+      if ( mas_pwd[0] == '\0' )
+        m2_SetRoot(&top_el_tlsm);      
+      else
+      {
+        mas_change_dir_up();
+        fs_set_cnt();
+        m2_SetRoot(m2_GetRoot());  // reset menu to first element
+      }
+        
+    }
+    else
+    {
+      mas_get_nth_file(idx - FS_EXTRA_MENUES);
+      if ( mas_entry_is_dir )
+      {
+        mas_change_dir_down(mas_entry_name);
+        fs_set_cnt();
+        m2_SetRoot(m2_GetRoot());  // reset menu to first element
+      }
+      
+    }
+  } 
+  return "";
+}
+
+M2_STRLIST(el_fs_strlist, "l5F3e15W47", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_SPACE(el_fs_space, "W1h1");
+M2_VSB(el_fs_strlist_vsb, "l5W4r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
+M2_HLIST(el_top_fs, NULL, list_fs_strlist);
+
+
+/*======================================================================*/
 /* top level sdl menu: tlsm */
 
 
@@ -595,13 +669,21 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&top_el_muse);
   }
+  else if ( idx == 12 ) {
+    s = "FileSelection";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      fs_set_cnt();
+      m2_SetRoot(&el_top_fs);
+    }
+  }
   
   
   return s;
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 12;
+uint8_t el_tlsm_cnt = 13;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -675,8 +757,10 @@ int main(void)
   // m2_SetU8gAdditionalReadOnlyXBorder(0);
   
   /* set the font for the multi selection */
-  m2_SetFont(3, (const void *)u8g_font_unifont_78_79);
+  //m2_SetFont(3, (const void *)u8g_font_unifont_78_79);
+  m2_SetFont(3, (const void *)u8g_font_m2icon_9);
 
+  mas_init(mas_device_sim, 0);
 
   for(;;)
   {

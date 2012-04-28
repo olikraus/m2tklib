@@ -42,7 +42,8 @@ static uint8_t mas_sim_get_nth_file(const char *path, uint8_t n, char *buf, uint
   
   if ( n > 9 )
     return 0;
-    
+
+  i = 0;
   for(;;)
   {
     if ( path[i] == '\0' )

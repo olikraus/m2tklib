@@ -32,10 +32,10 @@
 /* global variables */
 
 /* ptr to the low level procedures */
-mas_device_fn *mas_device;
+mas_device_fn *mas_device = (mas_device_fn *)0;
 
 /* common work buffer for one file name */
-char mas_entry_name[12+1];   /* 2 chars for the prefix, 12 chars for the name, 1 for the terminating '\0' */
+char mas_entry_name[12+1];   /* 12 chars for the name, 1 for the terminating '\0' */
 uint8_t mas_entry_is_dir = 0;
 
 /* present working directory */
@@ -45,9 +45,10 @@ char mas_pwd[MAS_PATH_MAX];
 #define MAS_CACHE_SIZE 6
 char mas_cache_entry_name[MAS_CACHE_SIZE][2+12+1];               /* the cached name of the file or directory */
 uint8_t mas_cache_entry_is_dir[MAS_CACHE_SIZE];                            /* is the cached entry a file or directory */
-uint8_t mas_cache_entry_idx[MAS_CACHE_SIZE];                               /* position of the cached entry within the directory  */
+uint16_t mas_cache_entry_idx[MAS_CACHE_SIZE];                               /* position of the cached entry within the directory  */
 uint8_t mas_cache_entry_rr = 0;                                                     /* where to place the next missed entry (round robin strategy) */
 
+uint16_t mas_cache_dir_entry_cnt = 0;
 
 /*======================================================================*/
 /* cache procedures */
@@ -59,7 +60,9 @@ static void mas_clear_cache(void)
   uint8_t i;
   mas_cache_entry_rr = 0;
   for( i = 0 ; i < MAS_CACHE_SIZE; i++ )
-    mas_cache_entry_idx[i] = 255;
+    mas_cache_entry_idx[i] = 0x0ffff;
+  
+  mas_cache_dir_entry_cnt = 0x0ffff;
 }
 
 /*
@@ -71,7 +74,7 @@ static void mas_clear_cache(void)
   Return: 
     255 if there was no cache hit.
 */
-static uint8_t mas_get_cache_entry(uint8_t n)
+static uint8_t mas_get_cache_entry(uint16_t n)
 {
   uint8_t i;
   for( i = 0 ; i < MAS_CACHE_SIZE; i++ )
@@ -92,7 +95,7 @@ static uint8_t mas_get_cache_entry(uint8_t n)
     1) Valid filename and directory information in the common work buffer
     2) The position within the directory as parameter
 */
-static void mas_put_into_cache(uint8_t n)
+static void mas_put_into_cache(uint16_t n)
 {
   strcpy(mas_cache_entry_name[mas_cache_entry_rr], mas_entry_name);
   mas_cache_entry_is_dir[mas_cache_entry_rr] = mas_entry_is_dir;
@@ -120,8 +123,8 @@ uint8_t mas_change_dir_down(const char *subdir)
   mas_pwd[len] = MAS_DIR_SEP;
   strcpy(mas_pwd+len+1, subdir);
   
-  /* revert pwd to previous state */
-  mas_pwd[len] = '\0';
+  printf("mas_change_dir_down: %s\n", mas_pwd);
+  
   return 1;
 }
 
@@ -143,6 +146,8 @@ uint8_t mas_change_dir_up(void)
       break;
   }
   mas_pwd[len] = '\0';
+
+  printf("mas_change_dir_up: %s\n", mas_pwd);
   
   /* move the file system to the new directory */
   return 1; 
@@ -172,6 +177,9 @@ uint8_t mas_get_nth_file(uint16_t n)
 {
   mas_arg_get_dir_entry_at_pos_t arg;
   
+  if ( mas_device == (mas_device_fn *)0 )
+    return 0;
+  
   /* check if the position is in the cache */
   if ( mas_get_cache_entry(n) != 255 )
     return 1;   /* cache hit, result stored in the common work buffer */
@@ -196,11 +204,23 @@ uint16_t mas_get_dir_entry_cnt(void)
 {
   mas_arg_get_dir_entry_cnt_t arg;
   
+  printf("mas_get_dir_entry_cnt: ");
+  
+  if ( mas_cache_dir_entry_cnt != 0x0ffff )
+    return printf("cached %d\n", mas_cache_dir_entry_cnt), mas_cache_dir_entry_cnt;
+  
+  if ( mas_device == (mas_device_fn *)0 )
+    return printf("device not set %d\n", mas_cache_dir_entry_cnt), 0;
+  
   arg.path = mas_pwd;
   arg.cnt = 0;
 
   if ( mas_device(MAS_MSG_GET_DIR_ENTRY_CNT, &arg) == 0 )
-    return 0; 
+    return printf("device failed %d\n", mas_cache_dir_entry_cnt), 0; 
+  
+  mas_cache_dir_entry_cnt = arg.cnt;
+  
+  printf("calculated %d\n", mas_cache_dir_entry_cnt);
   
   return arg.cnt;
 }
@@ -214,6 +234,8 @@ uint8_t mas_init(mas_device_fn *device, uint8_t cs_pin)
   
   mas_device = device;
   arg.cs_pin = cs_pin;
+  
+  mas_clear_cache();
   
   return mas_device(MAS_MSG_INIT, &arg);
 }
