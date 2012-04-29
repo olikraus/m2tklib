@@ -30,6 +30,13 @@
 
 #include <stdint.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 #define MAS_PATH_MAX 64
 
 
@@ -84,8 +91,9 @@ extern char mas_pwd[MAS_PATH_MAX];
 
 
 /* devices, first argument to mas_init() */
-uint8_t mas_device_sim(uint8_t msg, void *arg);
-uint8_t mas_device_pff(uint8_t msg, void *arg);
+uint8_t mas_device_sim(uint8_t msg, void *arg);         /* internal simulation of some dirs and files, always possible */
+uint8_t mas_device_pff(uint8_t msg, void *arg);         /* http://code.google.com/p/sdfatlib/ */
+uint8_t mas_device_sdfat(uint8_t msg, void *arg);       /* http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module */
 
 
 /* user api */
@@ -95,6 +103,10 @@ void mas_change_dir_to_root(void);
 uint8_t mas_get_nth_file(uint16_t n);
 uint16_t mas_get_dir_entry_cnt(void);
 uint8_t mas_init(mas_device_fn *device, uint8_t cs_pin);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
