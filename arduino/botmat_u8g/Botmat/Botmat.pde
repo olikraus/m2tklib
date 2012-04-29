@@ -34,10 +34,11 @@
 #include "U8glib.h"
 #include <DS1307new.h>
 #include <Wire.h>                       // required for DS1307new.h
-#include <SdFat.h>
+//#include <SdFat.h>
 #include "M2tk.h"
 #include "m2ghu8g.h"
 #include <string.h>
+#include "mas.h"
 
 #define DEFAULT_FONT u8g_font_6x13
 #define ICON_FONT u8g_font_m2icon_9
@@ -51,8 +52,8 @@
 U8GLIB_DOGM128 u8g(1, 2);                    // HW SPI CS = 1, A0 = 2
 
 /* object for the SdFat library */
-SdFat sd;
-SdFile file;
+//SdFat sd;
+//SdFile file;
 
 /*=========================================================================*/
 /* pin numbers of the keypad */
@@ -135,129 +136,35 @@ void info_screen_display(void)
 
 #define FS_EXTRA_MENUES 1
 
-/* buffer for one file name */
-char fs_name[2+12+1];   /* 2 chars for the prefix, 12 chars for the name, 1 for the terminating '\0' */
-uint8_t fs_is_dir = 0;
-
-/* cache */
-#define FS_CACHE_SIZE 6
-char fs_c_name[FS_CACHE_SIZE][2+12+1];
-uint8_t fs_c_is_dir[FS_CACHE_SIZE];
-uint8_t fs_c_idx[FS_CACHE_SIZE] = { 255, 255 };
-uint8_t fs_rr = 0;
-
-/* number of files in the current folder, 255 forces recalculation */
-uint8_t fs_file_cnt = 255;
-
 /* helper variables for the strlist element */
 uint8_t fs_m2tk_first = 0;
 uint8_t fs_m2tk_cnt = 0;
 
-void fs_update_file_cnt(void)
+
+void fs_set_cnt(void)
 {
-  if ( fs_file_cnt == 255 )
-  {
-    uint8_t i;
-    /* clear cache */
-    for( i = 0 ; i < FS_CACHE_SIZE; i++ )
-      fs_c_idx[i] = 255;
-    
-    /* recalculate number of dir entries */
-    fs_file_cnt = 0;
-    sd.vwd()->rewind();
-    while (file.openNext(sd.vwd(), O_READ)) 
-    {
-      fs_file_cnt++;
-      if ( fs_file_cnt == 250 )
-        break;
-      file.close();
-    }
-    
-    /* update m2 variable */
-    fs_m2tk_cnt = fs_file_cnt;
-    fs_m2tk_cnt += FS_EXTRA_MENUES;
-  }  
-}
-
-uint8_t fs_get_cache_entry(uint8_t n)
-{
-  uint8_t i;
-  for( i = 0 ; i < FS_CACHE_SIZE; i++ )
-    if ( fs_c_idx[i] == n )
-    {
-      strcpy(fs_name, fs_c_name[i]);
-      fs_is_dir = fs_c_is_dir[i];
-      return i;
-    }
-  return 255;
-}
-
-void fs_put_into_cache(uint8_t n)
-{
-  strcpy(fs_c_name[fs_rr], fs_name);
-  fs_c_is_dir[fs_rr] = fs_is_dir;
-  fs_c_idx[fs_rr] = n;
-  fs_rr++;
-  if ( fs_rr >= FS_CACHE_SIZE )
-    fs_rr = 0;
-}
-
-
-
-/* get the n'th file and store it into the intermediate buffers fs_is_dir and fs_name */
-void fs_get_nth_file(uint8_t n)
-{
-  uint8_t c = 0;
-  
-  if ( fs_get_cache_entry(n) != 255 )
-    return;
-  
-  //fs_name[0] = '-';
-  //fs_name[1] = '-';
-  //fs_name[2] = '\0';
-  fs_is_dir = 0;
-  
-  sd.vwd()->rewind();
-  while (file.openNext(sd.vwd(), O_READ)) 
-  {
-    if ( n == c )
-    {
-      //fs_name[0] = ' ';
-      //fs_name[1] = ' ';
-      file.getFilename(fs_name);
-      fs_name[12] = '\0';
-      fs_is_dir = file.isDir();
-      //if ( fs_is_dir )
-      //  fs_name[0] = '+';
-      file.close();
-      fs_put_into_cache(n);
-      break;
-    }
-    c++;
-    file.close();
-  }
+  if ( mas_get_dir_entry_cnt()+FS_EXTRA_MENUES < 255 )
+    fs_m2tk_cnt = mas_get_dir_entry_cnt()+FS_EXTRA_MENUES;
+  else
+    fs_m2tk_cnt = 255;
 }
 
 const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
 {
-  
-  /* update files, if required */
-  fs_update_file_cnt();
-
   /* process message */
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
     if ( idx == 0 )
       return "Back";
-    fs_get_nth_file(idx-FS_EXTRA_MENUES);
-    return fs_name;
+    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    return mas_entry_name;
   } 
   else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
   {
     if ( idx == 0 )
       return "a";       // leave menu
-    fs_get_nth_file(idx-FS_EXTRA_MENUES);
-    if ( fs_is_dir )
+    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    if ( mas_entry_is_dir )
       return "A";       // folder icon
     return "B";         // file icon
   }
@@ -265,39 +172,39 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   {
     if ( idx == 0 )
     {
-      if ( sd.vwd()->isRoot() )
-        m2.setRoot(&el_top);      
+      if ( mas_pwd[0] == '\0' )
+        m2_SetRoot(&el_top);
       else
       {
-        //sd.vwd()->openParent(sd.vwd());
-        
-        sd.chdir();  // goto root directory
-        fs_file_cnt = 255;
-        fs_update_file_cnt();        
-        m2.setRoot(m2.getRoot());  // reset menu to first element
+        mas_change_dir_up();
+        fs_set_cnt();
+        m2_SetRoot(m2_GetRoot());  // reset menu to first element
       }
-        
     }
     else
     {
-      fs_get_nth_file(idx);
-      if ( fs_is_dir )
+      mas_get_nth_file(idx - FS_EXTRA_MENUES);
+      if ( mas_entry_is_dir )
       {
-        sd.chdir(fs_name);
-        fs_file_cnt = 255;
-        fs_update_file_cnt();        
-        m2.setRoot(m2.getRoot());  // reset menu to first element
+        mas_change_dir_down(mas_entry_name);
+        fs_set_cnt();
+        m2_SetRoot(m2_GetRoot());  // reset menu to first element
       }
     }
   } 
-  return fs_name;
+  return "";
 }
+
+
+
+
 
 M2_STRLIST(el_fs_strlist, "l4F3e15W47", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
 //M2_SPACE(el_fs_space, "w1h1");
 M2_VSB(el_fs_strlist_vsb, "l4W2r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
+
 
 
 /*=========================================================================*/
@@ -435,17 +342,8 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
     }
     if ( idx == 5 )
     {
-      pinMode(4, OUTPUT);
-      pinMode(5, OUTPUT);
-      pinMode(6, INPUT);
-      pinMode(7, OUTPUT);
-      pinMode(23, OUTPUT);
-      if (sd.init(SPI_HALF_SPEED, 23))
-      {
-        fs_file_cnt = 255;
-        fs_update_file_cnt();
-        m2.setRoot(&el_top_fs);
-      }
+      fs_set_cnt();
+      m2.setRoot(&el_top_fs);
     }
   }
   return s;
@@ -504,6 +402,14 @@ void setup()
   m2.setPin(M2_KEY_DATA_UP, uiKeyUpPin);
   m2.setPin(M2_KEY_DATA_DOWN, uiKeyDownPin);
 
+  // sd card setup
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, INPUT);
+  pinMode(7, OUTPUT);
+  pinMode(23, OUTPUT);
+  mas_init(mas_device_sdfat, 23);
+  //mas_init(mas_device_sim, 23);
 }
 
 void loop() 

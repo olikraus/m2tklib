@@ -158,7 +158,7 @@ uint16_t mas_sdfat_get_directory_file_cnt(const char *path)
 }
 
 
-uint8_t mas_sdfat(uint8_t msg, void *arg)
+uint8_t mas_device_sdfat(uint8_t msg, void *arg)
 {
   if ( msg == MAS_MSG_GET_DIR_ENTRY_AT_POS )
   {

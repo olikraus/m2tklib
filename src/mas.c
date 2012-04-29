@@ -6,7 +6,7 @@
 
   part of m2tklib (Mini Interative Interface Toolkit Library)
   
-  Copyright (C) 2011  olikraus@gmail.com
+  Copyright (C) 2012  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 */
 
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include "mas.h"
 
@@ -123,8 +122,6 @@ uint8_t mas_change_dir_down(const char *subdir)
   mas_pwd[len] = MAS_DIR_SEP;
   strcpy(mas_pwd+len+1, subdir);
   
-  printf("mas_change_dir_down: %s\n", mas_pwd);
-  
   return 1;
 }
 
@@ -147,8 +144,6 @@ uint8_t mas_change_dir_up(void)
   }
   mas_pwd[len] = '\0';
 
-  printf("mas_change_dir_up: %s\n", mas_pwd);
-  
   /* move the file system to the new directory */
   return 1; 
 }
@@ -204,23 +199,19 @@ uint16_t mas_get_dir_entry_cnt(void)
 {
   mas_arg_get_dir_entry_cnt_t arg;
   
-  printf("mas_get_dir_entry_cnt: ");
-  
   if ( mas_cache_dir_entry_cnt != 0x0ffff )
-    return printf("cached %d\n", mas_cache_dir_entry_cnt), mas_cache_dir_entry_cnt;
+    return mas_cache_dir_entry_cnt;
   
   if ( mas_device == (mas_device_fn *)0 )
-    return printf("device not set %d\n", mas_cache_dir_entry_cnt), 0;
+    return 0;
   
   arg.path = mas_pwd;
   arg.cnt = 0;
 
   if ( mas_device(MAS_MSG_GET_DIR_ENTRY_CNT, &arg) == 0 )
-    return printf("device failed %d\n", mas_cache_dir_entry_cnt), 0; 
+    return 0; 
   
   mas_cache_dir_entry_cnt = arg.cnt;
-  
-  printf("calculated %d\n", mas_cache_dir_entry_cnt);
   
   return arg.cnt;
 }
