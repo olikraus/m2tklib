@@ -53,6 +53,7 @@ M2TKCPP_PATH:=$(shell cd ../../.. && pwd)/cpp/
 M2DEV_PATH:=$(shell cd ../../.. && pwd)/dev/u8glib/
 M2DEV2_PATH:=$(shell cd ../../.. && pwd)/dev/arduino/
 M2DEV3_PATH:=$(shell cd ../../.. && pwd)/dev/sdfat/
+M2DEV4_PATH:=$(shell cd ../../.. && pwd)/dev/pff/
 
 
 # The location where the avr tools (e.g. avr-gcc) are located. Requires a '/' at the end.
@@ -103,7 +104,7 @@ PDESRC:=$(shell ls *.pde)
 TARGETNAME=$(basename $(PDESRC))
 
 CDIRS:=$(EXTRA_DIRS) $(addsuffix utility/,$(EXTRA_DIRS))
-CDIRS:=*.c utility/*.c $(U8G_PATH)*.c $(U8G_FONT_PATH)*.c $(M2TKLIB_PATH)*.c $(M2DEV_PATH)*.c $(M2DEV2_PATH)*.c $(addsuffix *.c,$(CDIRS)) $(ARDUINO_PATH)hardware/arduino/cores/arduino/*.c
+CDIRS:=*.c utility/*.c $(U8G_PATH)*.c $(U8G_FONT_PATH)*.c $(M2TKLIB_PATH)*.c $(M2DEV_PATH)*.c $(M2DEV2_PATH)*.c $(M2DEV4_PATH)*.c $(addsuffix *.c,$(CDIRS)) $(ARDUINO_PATH)hardware/arduino/cores/arduino/*.c
 CSRC:=$(shell ls $(CDIRS) 2>/dev/null)
 
 CCSRC:=$(shell ls *.cc 2>/dev/null)
