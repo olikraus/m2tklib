@@ -26,6 +26,11 @@
 #ifndef _FATFS
 #define _FATFS
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define	_USE_READ	1	/* 1:Enable pf_read() */
 
 #define	_USE_DIR	1	/* 1:Enable pf_opendir() and pf_readdir() */
@@ -188,5 +193,10 @@ FRESULT pf_readdir (DIR*, FILINFO*);			/* Read a directory item from the open di
 #define	ST_DWORD(ptr,val)	*(BYTE*)(ptr)=(BYTE)(val); *((BYTE*)(ptr)+1)=(BYTE)((WORD)(val)>>8); *((BYTE*)(ptr)+2)=(BYTE)((DWORD)(val)>>16); *((BYTE*)(ptr)+3)=(BYTE)((DWORD)(val)>>24)
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* _FATFS */
+

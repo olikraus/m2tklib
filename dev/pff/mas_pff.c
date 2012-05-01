@@ -99,7 +99,6 @@ static uint16_t mas_pff_get_cnt(const char *path)
 
 uint8_t mas_device_pff(uint8_t msg, void *arg)
 {
-  FRESULT fr;
   if ( msg == MAS_MSG_GET_DIR_ENTRY_AT_POS )
   {
     mas_arg_get_dir_entry_at_pos_t *a = ((mas_arg_get_dir_entry_at_pos_t *)arg);

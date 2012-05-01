@@ -1,6 +1,6 @@
 /*
 
-  pff_atmega_io.c
+  pff_io.h
   
   atmega low level procedures for pff
 
@@ -22,8 +22,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void pff_delay_us(uint16_t val);
 void pff_chip_select_high(void);
 void pff_chip_select_low(void);
 void pff_spi_init(void);
 uint8_t pff_spi_out(uint8_t data);
+
+#ifdef __cplusplus
+}
+#endif

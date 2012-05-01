@@ -3,8 +3,6 @@
 */
 
 /*------------------------------------------------------------------------/
-/  Bitbanging MMCv3/SDv1/SDv2 (in SPI mode) control module for PFF
-/-------------------------------------------------------------------------/
 /
 /  Copyright (C) 2010, ChaN, all right reserved.
 /
@@ -33,7 +31,6 @@
 /* Platform dependent macros and functions needed to be modified           */
 /*-------------------------------------------------------------------------*/
 
-#include <hardware.h>			/* Include hardware specific declareation file here */
 
 #define	INIT_PORT()	pff_spi_init()	/* Initialize MMC control port (CS/CLK/DI:output, DO:input) */
 #define DLY_US(n)	pff_delay_us(n)	/* Delay n microseconds */

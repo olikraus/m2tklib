@@ -5,8 +5,13 @@
 #ifndef _DISKIO
 #define _DISKIO
 
+
 #include "pff_integer.h"
 #include "pff.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /* Status of Disk Functions */
@@ -35,5 +40,10 @@ DRESULT disk_readp (BYTE*, DWORD, WORD, WORD);
 #if _USE_WRITE
 DRESULT disk_writep (const BYTE*, DWORD);
 #endif
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
