@@ -27,12 +27,22 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#include <arduino.h>
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
+  
+//#define PFF_MOSI_PIN MOSI
+//#define PFF_MISO_PIN MISO
+//#define PFF_SCK_PIN SCK
+//#define PFF_CS_PIN SS
 
-#define MOSI
-#define MISO
-#define SCK
-#define CHIPSELECT
+/* botmat settings? */
+#define PFF_MOSI_PIN 5
+#define PFF_MISO_PIN 6
+#define PFF_SCK_PIN 7
+#define PFF_CS_PIN 23
 
 /*
   Delay by the provided number of microseconds.
@@ -69,21 +79,21 @@ extern "C" void pff_delay_us(uint16_t val)
 
 extern "C" void pff_chip_select_high(void)
 {
-  digitalWrite(CHIPSELECT, HIGH);
+  digitalWrite(PFF_CS_PIN, HIGH);
 }
 
 extern "C" void pff_chip_select_low(void)
 {
-  digitalWrite(CHIPSELECT, LOW);
+  digitalWrite(PFF_CS_PIN, LOW);
 }
 
 extern "C" void pff_spi_init(void)
 {
 	
-  pinMode(MOSI, OUTPUT);
-  pinMode(MISO, INPUT);
-  pinMode(SCK, OUTPUT);
-  pinMode(CHIPSELECT, OUTPUT);
+  pinMode(PFF_MOSI_PIN, OUTPUT);
+  pinMode(PFF_MISO_PIN, INPUT);
+  pinMode(PFF_SCK_PIN, OUTPUT);
+  pinMode(PFF_CS_PIN, OUTPUT);
   
   
   /*

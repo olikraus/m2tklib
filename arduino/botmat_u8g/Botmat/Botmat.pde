@@ -406,10 +406,11 @@ void setup()
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
   pinMode(6, INPUT);
-  pinMode(7, OUTPUT);
+  pinMode(7, OUTPUT);		
   pinMode(23, OUTPUT);
-  mas_init(mas_device_sdfat, 23);
+  //mas_init(mas_device_sdfat, 23);
   //mas_init(mas_device_sim, 23);
+  mas_init(mas_device_pff, 23);
 }
 
 void loop() 
