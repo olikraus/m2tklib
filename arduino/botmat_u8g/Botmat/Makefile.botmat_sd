@@ -52,10 +52,9 @@ M2TKLIB_PATH:=$(shell cd ../../.. && pwd)/src/
 M2TKCPP_PATH:=$(shell cd ../../.. && pwd)/cpp/
 M2DEV_PATH:=$(shell cd ../../.. && pwd)/dev/u8glib/
 M2DEV2_PATH:=$(shell cd ../../.. && pwd)/dev/arduino/
-M2DEV3_PATH:=$(shell cd ../../.. && pwd)/dev/sdfat/
+M2DEV3_PATH:=$(shell cd ../../.. && pwd)/dev/arduino_sd/
 M2DEV4_PATH:=$(shell cd ../../.. && pwd)/dev/pff/
 M2DEV5_PATH:=$(shell cd ../../.. && pwd)/dev/pff/arduino/
-#M2DEV6_PATH:=$(shell cd ../../.. && pwd)/dev/arduino_sd/
 
 
 # The location where the avr tools (e.g. avr-gcc) are located. Requires a '/' at the end.
@@ -77,8 +76,8 @@ AVRDUDE_PORT:=/dev/ttyUSB0
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/Wire/
 EXTRA_DIRS+=$(ARDUINO_PATH)libraries/LiquidCrystal/
 EXTRA_DIRS+=$(ARDUINO_PATH)libraries/DS1307new/
-#EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SD/
-EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SdFat/
+EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SD/
+#EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SdFat/
 #EXTRA_DIRS+=$(ARDUINO_PATH)libraries/.../
 
 #=== fetch parameter from boards.txt processor parameter ===
@@ -169,7 +168,7 @@ COMMON_FLAGS += -Wall -funsigned-char -funsigned-bitfields -fpack-struct -fshort
 COMMON_FLAGS += -I. -I$(M2TKLIB_PATH) -I$(M2DEV_PATH) -I$(M2TKCPP_PATH)
 COMMON_FLAGS += -I$(ARDUINO_PATH)hardware/arduino/cores/arduino
 COMMON_FLAGS += -I$(ARDUINO_PATH)hardware/botmatGAIA/variants/$(VARIANT)
-COMMON_FLAGS += -I. -I$(U8G_PATH) -I$(U8G_CPP_PATH) -I$(ARDUINO_PATH)libraries/Wire/utility
+COMMON_FLAGS += -I. -I$(U8G_PATH) -I$(U8G_CPP_PATH) -I$(ARDUINO_PATH)libraries/Wire/utility -I$(ARDUINO_PATH)libraries/SD/utility
 COMMON_FLAGS += $(addprefix -I,$(EXTRA_DIRS))
 COMMON_FLAGS += -ffunction-sections -fdata-sections -Wl,--gc-sections
 COMMON_FLAGS += -Wl,--Map=output.map

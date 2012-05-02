@@ -51,9 +51,6 @@
 //U8GLIB_DOGM128 u8g(7, 5, 1, 2);                    // SPI Com: SCK = 7, MOSI = 5, CS = 1, A0 = 2
 U8GLIB_DOGM128 u8g(1, 2);                    // HW SPI CS = 1, A0 = 2
 
-/* object for the SdFat library */
-//SdFat sd;
-//SdFile file;
 
 /*=========================================================================*/
 /* pin numbers of the keypad */
@@ -143,8 +140,10 @@ uint8_t fs_m2tk_cnt = 0;
 
 void fs_set_cnt(void)
 {
-  if ( mas_get_dir_entry_cnt()+FS_EXTRA_MENUES < 255 )
-    fs_m2tk_cnt = mas_get_dir_entry_cnt()+FS_EXTRA_MENUES;
+  uint16_t cnt;
+  cnt = mas_get_dir_entry_cnt();
+  if ( cnt+FS_EXTRA_MENUES < 255 )
+    fs_m2tk_cnt = cnt+FS_EXTRA_MENUES;
   else
     fs_m2tk_cnt = 255;
 }
@@ -155,7 +154,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
     if ( idx == 0 )
+   {
       return "Back";
+   }
     mas_get_nth_file(idx - FS_EXTRA_MENUES);
     return mas_entry_name;
   } 
@@ -410,7 +411,7 @@ void setup()
   pinMode(23, OUTPUT);
   //mas_init(mas_device_sdfat, 23);
   //mas_init(mas_device_sim, 23);
-  mas_init(mas_device_pff, 23);
+  mas_init(mas_device_sd, 23);
 }
 
 void loop() 

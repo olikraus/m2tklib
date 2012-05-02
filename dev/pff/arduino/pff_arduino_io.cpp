@@ -33,16 +33,16 @@
 #include "WProgram.h"
 #endif
   
-//#define PFF_MOSI_PIN MOSI
-//#define PFF_MISO_PIN MISO
-//#define PFF_SCK_PIN SCK
-//#define PFF_CS_PIN SS
+#define PFF_MOSI_PIN MOSI
+#define PFF_MISO_PIN MISO
+#define PFF_SCK_PIN SCK
 
-/* botmat settings? */
-#define PFF_MOSI_PIN 5
-#define PFF_MISO_PIN 6
-#define PFF_SCK_PIN 7
-#define PFF_CS_PIN 23
+uint8_t pff_arduino_chip_select_pin = SS;
+
+
+/*=========================================================================*/
+
+
 
 /*
   Delay by the provided number of microseconds.
@@ -79,12 +79,12 @@ extern "C" void pff_delay_us(uint16_t val)
 
 extern "C" void pff_chip_select_high(void)
 {
-  digitalWrite(PFF_CS_PIN, HIGH);
+  digitalWrite(pff_arduino_chip_select_pin, HIGH);
 }
 
 extern "C" void pff_chip_select_low(void)
 {
-  digitalWrite(PFF_CS_PIN, LOW);
+  digitalWrite(pff_arduino_chip_select_pin, LOW);
 }
 
 extern "C" void pff_spi_init(void)
@@ -93,7 +93,8 @@ extern "C" void pff_spi_init(void)
   pinMode(PFF_MOSI_PIN, OUTPUT);
   pinMode(PFF_MISO_PIN, INPUT);
   pinMode(PFF_SCK_PIN, OUTPUT);
-  pinMode(PFF_CS_PIN, OUTPUT);
+  pinMode(SS, OUTPUT);	// force the hardware chip select to output
+  pinMode(pff_arduino_chip_select_pin, OUTPUT);
   
   
   /*

@@ -31,9 +31,15 @@ FATFS mas_pff_fs;
 DIR mas_pff_dir;
 FILINFO mas_pff_fi;
 
+extern uint8_t pff_arduino_chip_select_pin;
+uint16_t mas_last_readdir_n = 0x0ffff;
+
+
 static uint8_t mas_pff_init(uint8_t chip_select)
 {
   FRESULT fr;
+  mas_last_readdir_n = 0x0ffff;
+  pff_arduino_chip_select_pin = chip_select;
   fr = pf_mount(&mas_pff_fs);
   if ( fr == FR_OK )
     return 1;
@@ -49,10 +55,18 @@ static uint8_t mas_pff_get_nth_file(const char *path, uint16_t n, char *buf, uin
 {
   FRESULT fr;
   uint16_t c = 0;
-  fr = pf_opendir(&mas_pff_dir, path);
-  if ( fr != FR_OK )
-    return 0;
-  
+	
+  if ( mas_last_readdir_n >=  n )
+  {
+    fr = pf_opendir(&mas_pff_dir, path);
+    if ( fr != FR_OK )
+      return 0;
+  }
+  else
+  {
+     c = mas_last_readdir_n;
+     c++;
+  }
   while( c < 0x0ffff)
   {
     fr = pf_readdir(&mas_pff_dir, &mas_pff_fi);
@@ -71,6 +85,7 @@ static uint8_t mas_pff_get_nth_file(const char *path, uint16_t n, char *buf, uin
       {
         *is_dir = 0;        
       }
+      mas_last_readdir_n = n;
       return 1;
     }
     c++;
@@ -82,6 +97,7 @@ static uint16_t mas_pff_get_cnt(const char *path)
 {
   FRESULT fr;
   uint16_t c = 0;
+	
   fr = pf_opendir(&mas_pff_dir, path);
   if ( fr != FR_OK )
     return 0;
@@ -91,8 +107,12 @@ static uint16_t mas_pff_get_cnt(const char *path)
     fr = pf_readdir(&mas_pff_dir, &mas_pff_fi);
     if ( fr != FR_OK )
       break;
+    if ( mas_pff_fi.fname[0] == '\0' )
+      break;
     c++;
   }
+  
+  mas_last_readdir_n = 0x0ffff;
   return c;
 }
 

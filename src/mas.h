@@ -91,9 +91,10 @@ extern char mas_pwd[MAS_PATH_MAX];
 
 
 /* devices, first argument to mas_init() */
-uint8_t mas_device_sim(uint8_t msg, void *arg);         /* internal simulation of some dirs and files, always possible */
-uint8_t mas_device_pff(uint8_t msg, void *arg);         /* http://code.google.com/p/sdfatlib/ */
-uint8_t mas_device_sdfat(uint8_t msg, void *arg);       /* http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module */
+uint8_t mas_device_sim(uint8_t msg, void *arg);    	/* internal simulation of some dirs and files, always possible */
+uint8_t mas_device_pff(uint8_t msg, void *arg);   	/* http://code.google.com/p/sdfatlib/ */
+uint8_t mas_device_sdfat(uint8_t msg, void *arg);	/* http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module */
+uint8_t mas_device_sd(uint8_t msg, void *arg);	/* build in lib */
 
 
 /* user api */

@@ -171,7 +171,7 @@ void mas_change_dir_to_root(void)
 uint8_t mas_get_nth_file(uint16_t n)
 {
   mas_arg_get_dir_entry_at_pos_t arg;
-  
+
   if ( mas_device == (mas_device_fn *)0 )
     return 0;
   
@@ -198,12 +198,12 @@ uint8_t mas_get_nth_file(uint16_t n)
 uint16_t mas_get_dir_entry_cnt(void)
 {
   mas_arg_get_dir_entry_cnt_t arg;
+	
+  if ( mas_device == (mas_device_fn *)0 )
+    return 0;
   
   if ( mas_cache_dir_entry_cnt != 0x0ffff )
     return mas_cache_dir_entry_cnt;
-  
-  if ( mas_device == (mas_device_fn *)0 )
-    return 0;
   
   arg.path = mas_pwd;
   arg.cnt = 0;
@@ -228,6 +228,10 @@ uint8_t mas_init(mas_device_fn *device, uint8_t cs_pin)
   
   mas_clear_cache();
   
-  return mas_device(MAS_MSG_INIT, &arg);
+  if ( device(MAS_MSG_INIT, &arg) == 0 )
+     return 0;
+  
+  mas_device = device;
+  return 1;
 }
 

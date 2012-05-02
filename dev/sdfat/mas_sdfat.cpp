@@ -22,7 +22,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-  mas_sdfat requires Arduino Environment
+  mas_sdfat requires Arduino Environment and SdFat Library (http://code.google.com/p/sdfatlib/)
+  
 
 */
 
@@ -45,6 +46,7 @@ SdFile mas_sdfat_file;
 
 static uint8_t mas_sdfat_init(uint8_t chip_select)
 {
+  pinMode(SS, OUTPUT);	// force the hardware chip select to output
   if (mas_sdfat_sd.init(SPI_HALF_SPEED, chip_select))
     return 1;
   return 0;
