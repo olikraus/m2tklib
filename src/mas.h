@@ -48,9 +48,16 @@ extern "C" {
 
 typedef uint8_t mas_device_fn(uint8_t msg, void *arg);
 
+/* INIT: arg is ptr to mas_arg_init_t */
 #define MAS_MSG_INIT 0
+/* GET_DIR_ENTRY_AT_POS: arg is ptr to mas_arg_get_dir_entry_at_pos_t */
 #define MAS_MSG_GET_DIR_ENTRY_AT_POS 1
+/* GET_DIR_ENTRY_CNT: arg is ptr to mas_arg_get_dir_entry_cnt_t */
 #define MAS_MSG_GET_DIR_ENTRY_CNT 2
+/* OPEN_READ: arg is pointer to const char *pathname */
+#define MAS_MSG_OPEN_READ 3
+/* READ: arg is pointer to mas_arg_read_t */
+#define MAS_MSG_READ 3
 
 
 struct _mas_arg_init
@@ -80,11 +87,21 @@ struct _mas_arg_get_dir_entry_cnt
 };
 typedef struct _mas_arg_get_dir_entry_cnt mas_arg_get_dir_entry_cnt_t;
 
+struct _mas_arg_read
+{
+  /* provided input */
+  uint8_t cnt;
+  /* expected output */
+  const uint8_t *buf;
+};
+typedef struct _mas_arg_read mas_arg_read_t;
+
+
 /*======================================================*/
 
 extern char mas_entry_name[];   /* 12 chars for the name, 1 for the terminating '\0' */
 extern uint8_t mas_entry_is_dir;
-extern char mas_pwd[MAS_PATH_MAX];
+extern char mas_pwd[MAS_PATH_MAX+12];	/* add 12 to allow concat of entry_name */
 
 
 /*======================================================*/
@@ -98,12 +115,12 @@ uint8_t mas_device_sd(uint8_t msg, void *arg);	/* build in lib */
 
 
 /* user api */
-uint8_t mas_change_dir_down(const char *subdir);
-uint8_t mas_change_dir_up(void);
-void mas_change_dir_to_root(void);
-uint8_t mas_get_nth_file(uint16_t n);
-uint16_t mas_get_dir_entry_cnt(void);
-uint8_t mas_init(mas_device_fn *device, uint8_t cs_pin);
+uint8_t mas_ChDir(const char *subdir);
+uint8_t mas_ChDirUp(void);
+void mas_ChDirRoot(void);
+uint8_t mas_GetDirEntry(uint16_t n);
+uint16_t mas_GetDirEntryCnt(void);
+uint8_t mas_Init(mas_device_fn *device, uint8_t cs_pin);
 
 #ifdef __cplusplus
 }

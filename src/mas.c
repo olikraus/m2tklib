@@ -38,7 +38,7 @@ char mas_entry_name[12+1];   /* 12 chars for the name, 1 for the terminating '\0
 uint8_t mas_entry_is_dir = 0;
 
 /* present working directory */
-char mas_pwd[MAS_PATH_MAX];
+char mas_pwd[MAS_PATH_MAX+12];
 
 /* cache size should be at least the number of lines, displayed with m2tk STRLIST element */
 #define MAS_CACHE_SIZE 6
@@ -108,7 +108,7 @@ static void mas_put_into_cache(uint16_t n)
 /*======================================================================*/
 /* present working directory */
 
-uint8_t mas_change_dir_down(const char *subdir)
+uint8_t mas_ChDir(const char *subdir)
 {
   uint8_t len;
 
@@ -125,7 +125,7 @@ uint8_t mas_change_dir_down(const char *subdir)
   return 1;
 }
 
-uint8_t mas_change_dir_up(void)
+uint8_t mas_ChDirUp(void)
 {
   uint8_t len;
   
@@ -148,7 +148,7 @@ uint8_t mas_change_dir_up(void)
   return 1; 
 }
 
-void mas_change_dir_to_root(void)
+void mas_ChDirRoot(void)
 {  
   mas_clear_cache();
   
@@ -168,7 +168,7 @@ void mas_change_dir_to_root(void)
   Returns:
     0 for error
 */
-uint8_t mas_get_nth_file(uint16_t n)
+uint8_t mas_GetDirEntry(uint16_t n)
 {
   mas_arg_get_dir_entry_at_pos_t arg;
 
@@ -195,7 +195,7 @@ uint8_t mas_get_nth_file(uint16_t n)
 
 /*======================================================================*/
 /* get the number of entries in a directory */
-uint16_t mas_get_dir_entry_cnt(void)
+uint16_t mas_GetDirEntryCnt(void)
 {
   mas_arg_get_dir_entry_cnt_t arg;
 	
@@ -216,10 +216,37 @@ uint16_t mas_get_dir_entry_cnt(void)
   return arg.cnt;
 }
 
+/*======================================================================*/
+/* open a file for reading */
+
+uint8_t mas_OpenRead(void)
+{
+  uint8_t len;
+  len = strlen(mas_pwd);
+  mas_pwd[len] = '\\';
+  strcpy( mas_pwd + len + 1, mas_entry_name);
+	
+  if ( mas_device(MAS_MSG_OPEN_READ, mas_pwd) == 0 )
+  {
+    mas_pwd[len] = '\0';
+    return 0; 
+  }
+  mas_pwd[len] = '\0';
+  return 1; 
+}
+
+uint8_t mas_Read(uint8_t *buf, uint8_t cnt)
+{
+  mas_arg_read_t arg;
+  arg.buf = buf;
+  arg.cnt = cnt;
+	
+  return mas_device(MAS_MSG_READ, &arg);
+}
 
 /*======================================================================*/
 /* init */
-uint8_t mas_init(mas_device_fn *device, uint8_t cs_pin)
+uint8_t mas_Init(mas_device_fn *device, uint8_t cs_pin)
 {
   mas_arg_init_t arg;
   

@@ -141,7 +141,7 @@ uint8_t fs_m2tk_cnt = 0;
 void fs_set_cnt(void)
 {
   uint16_t cnt;
-  cnt = mas_get_dir_entry_cnt();
+  cnt = mas_GetDirEntryCnt();
   if ( cnt+FS_EXTRA_MENUES < 255 )
     fs_m2tk_cnt = cnt+FS_EXTRA_MENUES;
   else
@@ -157,14 +157,14 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
    {
       return "Back";
    }
-    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     return mas_entry_name;
   } 
   else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
   {
     if ( idx == 0 )
       return "a";       // leave menu
-    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     if ( mas_entry_is_dir )
       return "A";       // folder icon
     return "B";         // file icon
@@ -177,17 +177,17 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
         m2_SetRoot(&el_top);
       else
       {
-        mas_change_dir_up();
+        mas_ChDirUp();
         fs_set_cnt();
         m2_SetRoot(m2_GetRoot());  // reset menu to first element
       }
     }
     else
     {
-      mas_get_nth_file(idx - FS_EXTRA_MENUES);
+      mas_GetDirEntry(idx - FS_EXTRA_MENUES);
       if ( mas_entry_is_dir )
       {
-        mas_change_dir_down(mas_entry_name);
+        mas_ChDir(mas_entry_name);
         fs_set_cnt();
         m2_SetRoot(m2_GetRoot());  // reset menu to first element
       }
@@ -409,9 +409,9 @@ void setup()
   pinMode(6, INPUT);
   pinMode(7, OUTPUT);		
   pinMode(23, OUTPUT);
-  //mas_init(mas_device_sdfat, 23);
-  //mas_init(mas_device_sim, 23);
-  mas_init(mas_device_sd, 23);
+  mas_Init(mas_device_sdfat, 23);
+  //mas_Init(mas_device_sim, 23);
+  //mas_Init(mas_device_sd, 23);
 }
 
 void loop() 
