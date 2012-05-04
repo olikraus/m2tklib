@@ -173,6 +173,31 @@ uint8_t mas_device_sdfat(uint8_t msg, void *arg)
     a->cnt = mas_sdfat_get_directory_file_cnt(a->path);
     return 1;
   }
+  else if ( msg == MAS_MSG_OPEN_READ )
+  {
+    const char *pathname = ((const char *)arg);
+    //mas_sdfat_file = mas_sdfat_sd.open(pathname);
+    return 0;
+  }
+  else if ( msg == MAS_MSG_READ_BYTE )
+  {
+    return 0;
+  }
+  else if ( msg == MAS_MSG_READ )
+  {
+    mas_arg_read_t *a = ((mas_arg_read_t *)arg);
+    return 0;
+  }
+  else if ( msg == MAS_MSG_GET_POS )
+  {
+    mas_arg_file_pos_t *a = ((mas_arg_file_pos_t *)arg);
+    return 0;
+  }
+  else if ( msg == MAS_MSG_SET_POS )
+  {
+    mas_arg_file_pos_t *a = ((mas_arg_file_pos_t *)arg);
+    return 0;
+  }
   else if ( msg == MAS_MSG_INIT )
   {
     mas_arg_init_t *a = ((mas_arg_init_t *)arg);   

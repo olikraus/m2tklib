@@ -58,6 +58,13 @@ typedef uint8_t mas_device_fn(uint8_t msg, void *arg);
 #define MAS_MSG_OPEN_READ 3
 /* READ: arg is pointer to mas_arg_read_t */
 #define MAS_MSG_READ 3
+/* READ_BYTE: arg is NULL */
+#define MAS_MSG_READ_BYTE 4
+/* GET_POS: arg is mas_arg_file_pos */
+#define MAS_MSG_GET_POS 5
+/* SET_POS: arg is mas_arg_file_pos */
+#define MAS_MSG_SET_POS 6
+
 
 
 struct _mas_arg_init
@@ -95,6 +102,12 @@ struct _mas_arg_read
   const uint8_t *buf;
 };
 typedef struct _mas_arg_read mas_arg_read_t;
+
+struct _mas_arg_file_pos
+{
+  uint32_t pos;
+};
+typedef struct _mas_arg_file_pos mas_arg_file_pos_t;
 
 
 /*======================================================*/

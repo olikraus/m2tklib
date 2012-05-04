@@ -235,14 +235,39 @@ uint8_t mas_OpenRead(void)
   return 1; 
 }
 
+/* returns the number of bytes read */
 uint8_t mas_Read(uint8_t *buf, uint8_t cnt)
 {
   mas_arg_read_t arg;
   arg.buf = buf;
   arg.cnt = cnt;
-	
   return mas_device(MAS_MSG_READ, &arg);
 }
+
+/* returns a byte from the file */
+uint8_t mas_ReadByte(void)
+{
+  return mas_device(MAS_MSG_READ_BYTE, NULL);
+}
+
+/*======================================================================*/
+/* file position */
+uint32_t mas_GetPos(void)
+{
+  mas_arg_file_pos_t arg;
+  arg.pos = 0UL;
+  if ( mas_device(MAS_MSG_READ, &arg) == 0 )
+    return 0UL;
+  return arg.pos;  
+}
+
+uint8_t mas_SetPos(uint32_t pos)
+{
+  mas_arg_file_pos_t arg;
+  arg.pos = pos;
+  return mas_device(MAS_MSG_READ, &arg);
+}
+
 
 /*======================================================================*/
 /* init */
