@@ -37,8 +37,11 @@ mas_device_fn *mas_device = (mas_device_fn *)0;
 char mas_entry_name[12+1];   /* 12 chars for the name, 1 for the terminating '\0' */
 uint8_t mas_entry_is_dir = 0;
 
-/* present working directory */
-char mas_pwd[MAS_PATH_MAX+12];
+/* present working directory or directory path including filename*/
+char mas_pwd[MAS_PATH_MAX+12+1];
+
+/* contains 255 if mas_pwd only contains a path */
+uint8_t mas_pwd_filename_pos = 255;
 
 /* cache size should be at least the number of lines, displayed with m2tk STRLIST element */
 #define MAS_CACHE_SIZE 6
@@ -48,6 +51,28 @@ uint16_t mas_cache_entry_idx[MAS_CACHE_SIZE];                               /* p
 uint8_t mas_cache_entry_rr = 0;                                                     /* where to place the next missed entry (round robin strategy) */
 
 uint16_t mas_cache_dir_entry_cnt = 0;
+
+/*======================================================================*/
+/* path or filepath */
+
+static void mas_add_entry_to_pwd(void)
+{
+  if ( mas_pwd_filename_pos != 255 )
+    return;  /* aready added */
+  
+  mas_pwd_filename_pos = strlen(mas_pwd);
+  mas_pwd[mas_pwd_filename_pos] = '\\';
+  strcpy( mas_pwd + mas_pwd_filename_pos + 1, mas_entry_name);  
+}
+
+static void mas_remove_entry_from_pwd(void)
+{
+  if ( mas_pwd_filename_pos == 255 )
+    return;  /* there is no entry added */
+  mas_pwd[mas_pwd_filename_pos] = '\0';
+  mas_pwd_filename_pos = 255;
+}
+
 
 /*======================================================================*/
 /* cache procedures */
@@ -113,6 +138,7 @@ uint8_t mas_ChDir(const char *subdir)
   uint8_t len;
 
   mas_clear_cache();
+  mas_remove_entry_from_pwd();
     
   len = strlen(mas_pwd);
   
@@ -130,6 +156,7 @@ uint8_t mas_ChDirUp(void)
   uint8_t len;
   
   mas_clear_cache();
+  mas_remove_entry_from_pwd();
   
   len = strlen(mas_pwd);
   
@@ -153,6 +180,7 @@ void mas_ChDirRoot(void)
   mas_clear_cache();
   
   mas_pwd[0] = '\0';  
+  mas_pwd_filename_pos = 255;
 }
 
 
@@ -178,6 +206,8 @@ uint8_t mas_GetDirEntry(uint16_t n)
   /* check if the position is in the cache */
   if ( mas_get_cache_entry(n) != 255 )
     return 1;   /* cache hit, result stored in the common work buffer */
+
+  mas_remove_entry_from_pwd();
   
   /* copy the entry from the file system into the common work buffer */
   arg.path = mas_pwd;
@@ -204,6 +234,8 @@ uint16_t mas_GetDirEntryCnt(void)
   
   if ( mas_cache_dir_entry_cnt != 0x0ffff )
     return mas_cache_dir_entry_cnt;
+
+  mas_remove_entry_from_pwd();
   
   arg.path = mas_pwd;
   arg.cnt = 0;
@@ -216,22 +248,20 @@ uint16_t mas_GetDirEntryCnt(void)
   return arg.cnt;
 }
 
+#ifdef MAS_SD_INTERFACE
 /*======================================================================*/
-/* open a file for reading */
+/* read */
 
 uint8_t mas_OpenRead(void)
 {
-  uint8_t len;
-  len = strlen(mas_pwd);
-  mas_pwd[len] = '\\';
-  strcpy( mas_pwd + len + 1, mas_entry_name);
+  mas_add_entry_to_pwd();
 	
   if ( mas_device(MAS_MSG_OPEN_READ, mas_pwd) == 0 )
   {
-    mas_pwd[len] = '\0';
+    mas_remove_entry_from_pwd();
     return 0; 
   }
-  mas_pwd[len] = '\0';
+  mas_remove_entry_from_pwd();
   return 1; 
 }
 
@@ -267,7 +297,16 @@ uint8_t mas_SetPos(uint32_t pos)
   arg.pos = pos;
   return mas_device(MAS_MSG_READ, &arg);
 }
+#endif
 
+/*======================================================================*/
+/* file position */
+
+const char *mas_GetFilePath(void)
+{
+  mas_add_entry_to_pwd();
+  return (const char *)mas_pwd;
+}
 
 /*======================================================================*/
 /* init */

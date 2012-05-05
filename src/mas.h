@@ -54,17 +54,20 @@ typedef uint8_t mas_device_fn(uint8_t msg, void *arg);
 #define MAS_MSG_GET_DIR_ENTRY_AT_POS 1
 /* GET_DIR_ENTRY_CNT: arg is ptr to mas_arg_get_dir_entry_cnt_t */
 #define MAS_MSG_GET_DIR_ENTRY_CNT 2
-/* OPEN_READ: arg is pointer to const char *pathname */
-#define MAS_MSG_OPEN_READ 3
-/* READ: arg is pointer to mas_arg_read_t */
-#define MAS_MSG_READ 3
-/* READ_BYTE: arg is NULL */
-#define MAS_MSG_READ_BYTE 4
-/* GET_POS: arg is mas_arg_file_pos */
-#define MAS_MSG_GET_POS 5
-/* SET_POS: arg is mas_arg_file_pos */
-#define MAS_MSG_SET_POS 6
 
+
+#ifdef MAS_SD_INTERFACE
+/* OPEN_READ: arg is pointer to const char *pathname */
+#define MAS_MSG_OPEN_READ 10
+/* READ: arg is pointer to mas_arg_read_t */
+#define MAS_MSG_READ 11
+/* READ_BYTE: arg is NULL */
+#define MAS_MSG_READ_BYTE 12
+/* GET_POS: arg is mas_arg_file_pos */
+#define MAS_MSG_GET_POS 30
+/* SET_POS: arg is mas_arg_file_pos */
+#define MAS_MSG_SET_POS 31
+#endif
 
 
 struct _mas_arg_init
@@ -94,6 +97,7 @@ struct _mas_arg_get_dir_entry_cnt
 };
 typedef struct _mas_arg_get_dir_entry_cnt mas_arg_get_dir_entry_cnt_t;
 
+#ifdef MAS_SD_INTERFACE
 struct _mas_arg_read
 {
   /* provided input */
@@ -108,13 +112,13 @@ struct _mas_arg_file_pos
   uint32_t pos;
 };
 typedef struct _mas_arg_file_pos mas_arg_file_pos_t;
-
+#endif
 
 /*======================================================*/
 
 extern char mas_entry_name[];   /* 12 chars for the name, 1 for the terminating '\0' */
 extern uint8_t mas_entry_is_dir;
-extern char mas_pwd[MAS_PATH_MAX+12];	/* add 12 to allow concat of entry_name */
+extern char mas_pwd[MAS_PATH_MAX+12+1];	/* add 12 to allow concat of entry_name (including '/') */
 
 
 /*======================================================*/
@@ -133,6 +137,7 @@ uint8_t mas_ChDirUp(void);
 void mas_ChDirRoot(void);
 uint8_t mas_GetDirEntry(uint16_t n);
 uint16_t mas_GetDirEntryCnt(void);
+const char *mas_GetFilePath(void);
 uint8_t mas_Init(mas_device_fn *device, uint8_t cs_pin);
 
 #ifdef __cplusplus

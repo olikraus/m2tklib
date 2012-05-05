@@ -42,6 +42,7 @@
 /* objects for the SdFat library */
 SdFat mas_sdfat_sd;
 SdFile mas_sdfat_file;
+uint8_t mas_sdfat_file_is_open = 0;
 
 
 static uint8_t mas_sdfat_init(uint8_t chip_select)
@@ -123,6 +124,12 @@ uint8_t mas_sdfat_get_nth_file(const char *path, uint16_t n, char *buf, uint8_t 
   if ( mas_sdfat_move_to_pwd(path) == 0 )
     return 0;
   
+  if ( mas_sdfat_file_is_open != 0 )
+  {
+    mas_sdfat_file.close();
+    mas_sdfat_file_is_open = 0;
+  }
+  
   mas_sdfat_sd.vwd()->rewind();
   while (mas_sdfat_file.openNext(mas_sdfat_sd.vwd(), O_READ)) 
   {
@@ -147,6 +154,12 @@ uint16_t mas_sdfat_get_directory_file_cnt(const char *path)
   
   if ( mas_sdfat_move_to_pwd(path) == 0 )
     return 0;
+
+  if ( mas_sdfat_file_is_open != 0 )
+  {
+    mas_sdfat_file.close();
+    mas_sdfat_file_is_open = 0;
+  }
   
   mas_sdfat_sd.vwd()->rewind();
   while (mas_sdfat_file.openNext(mas_sdfat_sd.vwd(), O_READ)) 
@@ -173,10 +186,17 @@ uint8_t mas_device_sdfat(uint8_t msg, void *arg)
     a->cnt = mas_sdfat_get_directory_file_cnt(a->path);
     return 1;
   }
+#ifdef MAS_SD_INTERFACE
   else if ( msg == MAS_MSG_OPEN_READ )
   {
     const char *pathname = ((const char *)arg);
-    //mas_sdfat_file = mas_sdfat_sd.open(pathname);
+    if ( mas_sdfat_file_is_open != 0 )
+    {
+      mas_sdfat_file.close();
+      mas_sdfat_file_is_open = 0;
+    }
+    mas_sdfat_file = mas_sdfat_sd.vwd->open(pathname, O_READ);
+    if ( mas_sdfat_file
     return 0;
   }
   else if ( msg == MAS_MSG_READ_BYTE )
@@ -198,6 +218,7 @@ uint8_t mas_device_sdfat(uint8_t msg, void *arg)
     mas_arg_file_pos_t *a = ((mas_arg_file_pos_t *)arg);
     return 0;
   }
+#endif
   else if ( msg == MAS_MSG_INIT )
   {
     mas_arg_init_t *a = ((mas_arg_init_t *)arg);   
