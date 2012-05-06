@@ -127,7 +127,7 @@ extern char mas_pwd[MAS_PATH_MAX+12+1];	/* add 12 to allow concat of entry_name 
 /* devices, first argument to mas_init() */
 uint8_t mas_device_sim(uint8_t msg, void *arg);    	/* internal simulation of some dirs and files, always possible */
 uint8_t mas_device_pff(uint8_t msg, void *arg);   	/* http://code.google.com/p/sdfatlib/ */
-uint8_t mas_device_sdfat(uint8_t msg, void *arg);	/* http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module */
+uint8_t mas_device_sdfat(uint8_t msg, void *arg);	/* http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module, arg is pointer to SdFat */
 uint8_t mas_device_sd(uint8_t msg, void *arg);	/* build in lib */
 
 
@@ -138,7 +138,7 @@ void mas_ChDirRoot(void);
 uint8_t mas_GetDirEntry(uint16_t n);
 uint16_t mas_GetDirEntryCnt(void);
 const char *mas_GetFilePath(void);
-uint8_t mas_Init(mas_device_fn *device, uint8_t cs_pin);
+uint8_t mas_Init(mas_device_fn *device, void *arg);
 
 #ifdef __cplusplus
 }

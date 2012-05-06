@@ -40,31 +40,22 @@
 #include "mas.h"
 
 /* objects for the SdFat library */
-SdFat mas_sdfat_sd;
+SdFat *mas_sdfat_sd;
 SdFile mas_sdfat_file;
 uint8_t mas_sdfat_file_is_open = 0;
-
-
-static uint8_t mas_sdfat_init(uint8_t chip_select)
-{
-  pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if (mas_sdfat_sd.init(SPI_HALF_SPEED, chip_select))
-    return 1;
-  return 0;
-}
 
 
 /* Helper function: Called only from "mas_sdfat_move_to_pwd" */
 static uint8_t mas_sdfat_change_to_dir(const char *directory_name)
 {
-  mas_sdfat_sd.chdir(directory_name);
+  mas_sdfat_sd->chdir(directory_name);
   return 1;
 }
 
 /* Helper function: Called only from "mas_sdfat_move_to_pwd" */
 static uint8_t mas_sdfat_goto_root_dir(void)
 {
-  mas_sdfat_sd.chdir();
+  mas_sdfat_sd->chdir();
   return 1;
 }
 
@@ -130,8 +121,8 @@ uint8_t mas_sdfat_get_nth_file(const char *path, uint16_t n, char *buf, uint8_t 
     mas_sdfat_file_is_open = 0;
   }
   
-  mas_sdfat_sd.vwd()->rewind();
-  while (mas_sdfat_file.openNext(mas_sdfat_sd.vwd(), O_READ)) 
+  mas_sdfat_sd->vwd()->rewind();
+  while (mas_sdfat_file.openNext(mas_sdfat_sd->vwd(), O_READ)) 
   {
     if ( n == c )
     {
@@ -161,8 +152,8 @@ uint16_t mas_sdfat_get_directory_file_cnt(const char *path)
     mas_sdfat_file_is_open = 0;
   }
   
-  mas_sdfat_sd.vwd()->rewind();
-  while (mas_sdfat_file.openNext(mas_sdfat_sd.vwd(), O_READ)) 
+  mas_sdfat_sd->vwd()->rewind();
+  while (mas_sdfat_file.openNext(mas_sdfat_sd->vwd(), O_READ)) 
   {
     cnt++;
     mas_sdfat_file.close();
@@ -186,43 +177,10 @@ uint8_t mas_device_sdfat(uint8_t msg, void *arg)
     a->cnt = mas_sdfat_get_directory_file_cnt(a->path);
     return 1;
   }
-#ifdef MAS_SD_INTERFACE
-  else if ( msg == MAS_MSG_OPEN_READ )
-  {
-    const char *pathname = ((const char *)arg);
-    if ( mas_sdfat_file_is_open != 0 )
-    {
-      mas_sdfat_file.close();
-      mas_sdfat_file_is_open = 0;
-    }
-    mas_sdfat_file = mas_sdfat_sd.vwd->open(pathname, O_READ);
-    if ( mas_sdfat_file
-    return 0;
-  }
-  else if ( msg == MAS_MSG_READ_BYTE )
-  {
-    return 0;
-  }
-  else if ( msg == MAS_MSG_READ )
-  {
-    mas_arg_read_t *a = ((mas_arg_read_t *)arg);
-    return 0;
-  }
-  else if ( msg == MAS_MSG_GET_POS )
-  {
-    mas_arg_file_pos_t *a = ((mas_arg_file_pos_t *)arg);
-    return 0;
-  }
-  else if ( msg == MAS_MSG_SET_POS )
-  {
-    mas_arg_file_pos_t *a = ((mas_arg_file_pos_t *)arg);
-    return 0;
-  }
-#endif
   else if ( msg == MAS_MSG_INIT )
   {
-    mas_arg_init_t *a = ((mas_arg_init_t *)arg);   
-    return mas_sdfat_init(a->cs_pin);
+    mas_sdfat_sd = (SdFat *)arg;
+    return 1;
   }
   return 0;
 }

@@ -310,16 +310,11 @@ const char *mas_GetFilePath(void)
 
 /*======================================================================*/
 /* init */
-uint8_t mas_Init(mas_device_fn *device, uint8_t cs_pin)
+uint8_t mas_Init(mas_device_fn *device, void *arg)
 {
-  mas_arg_init_t arg;
-  
-  mas_device = device;
-  arg.cs_pin = cs_pin;
-  
   mas_clear_cache();
   
-  if ( device(MAS_MSG_INIT, &arg) == 0 )
+  if ( device(MAS_MSG_INIT, arg) == 0 )
      return 0;
   
   mas_device = device;

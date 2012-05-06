@@ -34,7 +34,7 @@
 #include "U8glib.h"
 #include <DS1307new.h>
 #include <Wire.h>                       // required for DS1307new.h
-//#include <SdFat.h>
+#include <SdFat.h>
 #include "M2tk.h"
 #include "m2ghu8g.h"
 #include <string.h>
@@ -44,6 +44,8 @@
 #define ICON_FONT u8g_font_m2icon_9
 //#define ICON_FONT u8g_font_6x13
 #define BIG_FONT u8g_font_fub20r
+
+SdFat sdfat;
 
 /*=========================================================================*/
 /* u8g object definition for botmat graphic */
@@ -409,7 +411,12 @@ void setup()
   pinMode(6, INPUT);
   pinMode(7, OUTPUT);		
   pinMode(23, OUTPUT);
-  mas_Init(mas_device_sdfat, 23);
+  
+  pinMode(SS, OUTPUT);	// force the hardware chip select to output
+  if ( sdfat.init(SPI_HALF_SPEED, 23) )
+    mas_Init(mas_device_sdfat, (void *)&sdfat);
+  
+  
   //mas_Init(mas_device_sim, 23);
   //mas_Init(mas_device_sd, 23);
 }
