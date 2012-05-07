@@ -35,11 +35,12 @@
 #include <DS1307new.h>
 #include <Wire.h>                       // required for DS1307new.h
 //#include <SdFat.h>
-#include <SD.h>
+//#include <SD.h>
 #include "M2tk.h"
 #include "m2ghu8g.h"
 #include <string.h>
 #include "mas.h"
+#include "pff.h"
 
 #define DEFAULT_FONT u8g_font_6x13
 #define ICON_FONT u8g_font_m2icon_9
@@ -47,6 +48,9 @@
 #define BIG_FONT u8g_font_fub20r
 
 //SdFat sdfat;
+
+FATFS pff_fs;
+
 
 /*=========================================================================*/
 /* u8g object definition for botmat graphic */
@@ -69,6 +73,9 @@ uint8_t uiKeyRightPin = 21;
 
 extern M2tk m2;
 M2_EXTERN_HLIST(el_top);
+
+/*=========================================================================*/
+uint8_t sd_card_status = 0;
 
 /*=========================================================================*/
 /* 
@@ -126,6 +133,14 @@ void info_screen_display(void)
     u8g.print(m2_utl_u8d(RTC.year-2000,2));
     
   }
+  else if ( info_screen_state == 3 )
+    {
+       u8g.setFont(DEFAULT_FONT);
+       u8g.setPrintPos(0,25);
+       u8g.print("sd status:");
+       u8g.print(sd_card_status);
+    }
+  
   //SPCR = backup_SPCR;
 
 }
@@ -318,10 +333,12 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
   else if ( idx == 2 )
     s = "show time";
   else if ( idx == 3 )
-    s = "set time";
+    s = "show status";
   else if ( idx == 4 )
-    s = "set date";
+    s = "set time";
   else if ( idx == 5 )
+    s = "set date";
+  else if ( idx == 6 )
     s = "file select";
   if (msg == M2_STRLIST_MSG_GET_STR) 
   {
@@ -329,22 +346,22 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
   } 
   else if ( msg == M2_STRLIST_MSG_SELECT ) 
   {
-    if ( idx <= 2 )
+    if ( idx <= 3 )
     {
       info_screen_state = idx;   
       m2.setRoot(&m2_null_element);      
     }
-    if ( idx == 3 )
+    if ( idx == 4 )
     {
       td_get_from_RTC();
       m2.setRoot(&el_top_td);      
     }
-    if ( idx == 4 )
+    if ( idx == 5 )
     {
       dt_get_from_RTC();
       m2.setRoot(&el_top_dt);
     }
-    if ( idx == 5 )
+    if ( idx == 6 )
     {
       fs_set_cnt();
       m2.setRoot(&el_top_fs);
@@ -354,7 +371,7 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
 }
 
 uint8_t el_strlist_first = 0;
-uint8_t el_strlist_cnt = 6;
+uint8_t el_strlist_cnt = 7;
 
 M2_STRLIST(el_strlist, "l4W55", &el_strlist_first, &el_strlist_cnt, el_strlist_getstr);
 //M2_SPACE(el_space, "w1h1");
@@ -417,9 +434,17 @@ void setup()
   //if ( sdfat.init(SPI_HALF_SPEED, 23) )
   //  mas_Init(mas_device_sdfat, (void *)&sdfat);
   
-  pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if (SD.begin(23))		// use the global SD object
-    mas_Init(mas_device_sd, NULL);
+  //pinMode(SS, OUTPUT);	// force the hardware chip select to output
+  //if (SD.begin(23))		// use the global SD object
+  //  mas_Init(mas_device_sd, NULL);
+  
+  sd_card_status = 0;
+  if ( pf_mount(&pff_fs) == FR_OK )
+  {
+    sd_card_status = 1;
+    mas_Init(mas_device_pff, &pff_fs);
+  }
+  
   
   //mas_Init(mas_device_sim, NULL);
 }

@@ -33,14 +33,23 @@
 #include "WProgram.h"
 #endif
   
+
+/*=========================================================================*/
+/* setup hardware SPI Arduino pin numbers */
+  
 #define PFF_MOSI_PIN MOSI
 #define PFF_MISO_PIN MISO
 #define PFF_SCK_PIN SCK
-
-uint8_t pff_arduino_chip_select_pin = SS;
+//#define PFF_CS_PIN SS
+#define PFF_CS_PIN 23
 
 
 /*=========================================================================*/
+
+uint8_t pff_arduino_chip_select_pin = PFF_CS_PIN;
+
+/*=========================================================================*/
+
 
 
 

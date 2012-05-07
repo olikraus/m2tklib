@@ -27,23 +27,20 @@
 #include "mas.h"
 #include "pff.h"
 
-FATFS mas_pff_fs;
+FATFS *mas_pff_fs;
 DIR mas_pff_dir;
 FILINFO mas_pff_fi;
 
-extern uint8_t pff_arduino_chip_select_pin;
 uint16_t mas_last_readdir_n = 0x0ffff;
 
 
-static uint8_t mas_pff_init(uint8_t chip_select)
+	  
+
+static uint8_t mas_pff_init(FATFS *pff_fs)
 {
-  FRESULT fr;
   mas_last_readdir_n = 0x0ffff;
-  pff_arduino_chip_select_pin = chip_select;
-  fr = pf_mount(&mas_pff_fs);
-  if ( fr == FR_OK )
-    return 1;
-  return 0;
+  mas_pff_fs = pff_fs;
+  return 1;
 }
 
 /*
@@ -132,8 +129,7 @@ uint8_t mas_device_pff(uint8_t msg, void *arg)
   }
   else if ( msg == MAS_MSG_INIT )
   {
-    mas_arg_init_t *a = ((mas_arg_init_t *)arg);   
-    return mas_pff_init(a->cs_pin);
+    return mas_pff_init((FATFS *)arg);
   }
   return 0;
 }
