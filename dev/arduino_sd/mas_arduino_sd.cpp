@@ -40,14 +40,6 @@
 #include "mas.h"
 
 
-static uint8_t mas_sd_init(uint8_t chip_select)
-{
-  pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if (SD.begin(chip_select))
-    return 1;
-  return 0;
-}
-
 
 /*
   Description:
@@ -115,8 +107,7 @@ uint8_t mas_device_sd(uint8_t msg, void *arg)
   }
   else if ( msg == MAS_MSG_INIT )
   {
-    mas_arg_init_t *a = ((mas_arg_init_t *)arg);   
-    return mas_sd_init(a->cs_pin);
+    return 1;
   }
   return 0;
 }
