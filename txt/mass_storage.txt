@@ -1,0 +1,35 @@
+pff for Arduino
+	- pin setup inside  pff_arduino_io.cpp
+	
+	- setup sequence
+	#include "mas.h"
+	#include "pff.h"
+  FATFS pff_fs;
+  if ( pf_mount(&pff_fs) == FR_OK )
+    mas_Init(mas_device_pff, &pff_fs);
+
+
+Arduino sd library
+	- pin setup via sd.begin() statement
+	
+	- setup sequence
+	#include "mas.h"
+	#include <SD.h>
+	#include "mas.h"
+	pinMode(SS, OUTPUT);	// force the hardware chip select to output
+	if (SD.begin(23))		// use the global SD object
+		mas_Init(mas_device_sd, NULL);
+
+	- Note: No global object required
+
+
+SdFat library (Arduino)
+	- pin setup via sd.init() statement
+	
+
+	#include "mas.h"
+	//#include <SdFat.h>
+	//SdFat sdfat;
+	//pinMode(SS, OUTPUT);	// force the hardware chip select to output
+	//if ( sdfat.init(SPI_HALF_SPEED, 23) )
+	//  mas_Init(mas_device_sdfat, (void *)&sdfat);
