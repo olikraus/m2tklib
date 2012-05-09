@@ -137,7 +137,9 @@ uint8_t mas_ChDirUp(void);
 void mas_ChDirRoot(void);
 uint8_t mas_GetDirEntry(uint16_t n);
 uint16_t mas_GetDirEntryCnt(void);
-const char *mas_GetFilePath(void);
+const char *mas_GetPathFilename(void);
+const char *mas_GetPath(void);
+const char *mas_GetFilename(void);
 uint8_t mas_Init(mas_device_fn *device, void *arg);
 
 #ifdef __cplusplus

@@ -302,10 +302,21 @@ uint8_t mas_SetPos(uint32_t pos)
 /*======================================================================*/
 /* file position */
 
-const char *mas_GetFilePath(void)
+const char *mas_GetPathFilename(void)
 {
   mas_add_entry_to_pwd();
   return (const char *)mas_pwd;
+}
+
+const char *mas_GetPath(void)
+{
+  mas_remove_entry_from_pwd();
+  return (const char *)mas_pwd;
+}
+
+const char *mas_GetFilename(void)
+{
+  return (const char *)mas_entry_name;
 }
 
 /*======================================================================*/
