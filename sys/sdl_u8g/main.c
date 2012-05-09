@@ -11,6 +11,7 @@
 
 int u8g_sdl_get_key(void);
 void screenshot(void);
+void screenshot100(void);
 
 /* 
   event source for SDL
@@ -55,7 +56,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		            return M2_KEY_EVENT(M2_KEY_DATA_DOWN);
 		          case SDLK_o:                  // screenshot
 		            puts("SDLK_o (screenshOt)");
-                            screenshot();
+                            // screenshot();
+                            screenshot100();
                             break;
 		          case SDLK_q:
 		            exit(0);
@@ -143,7 +145,6 @@ M2_LIST(list_te) = {
 M2_GRIDLIST(el_top_te, "c2", list_te);
 
 
-
 /*======================================================================*/
 /* button examples */
 
@@ -215,6 +216,39 @@ M2_LIST(list_combo) = {
     &el_cancel, &el_ok 
 };
 M2_GRIDLIST(el_top_combo, "c2", list_combo);
+
+/*======================================================================*/
+/* save as (reuse buttons from combo) */
+char save_as_str[13] = "filename.txt";
+
+M2_LABEL(el_sa_label, NULL, "Save as:");
+M2_TEXT(el_sa_text, "a0", save_as_str, 12);
+
+M2_LIST(list_ok_cancel) = {     &el_cancel, &el_ok };
+M2_HLIST(el_ok_cancel, NULL, list_ok_cancel);
+
+M2_LIST(list_sa) = {     &el_sa_label, &el_sa_text, &el_ok_cancel };
+M2_VLIST(el_sa, NULL, list_sa);
+ 
+M2_ALIGN(top_el_sa, "-1|1W64H64", &el_sa);
+
+/*======================================================================*/
+/* speed mph kmh */
+uint8_t speed = 108;
+M2_U8NUM(el_num_speed, "f2r0", 0, 255, &speed);
+
+M2_LABEL(el_speed_unit, NULL, "mph");
+
+M2_LIST(list_speed_num) = { &el_num_speed, &el_speed_unit };
+M2_HLIST(el_speed_num, NULL, list_speed_num);
+
+M2_SPACE(el_speed_space, "h10w1");
+
+
+M2_LIST(list_speed) = { &el_speed_num, &el_speed_space, &el_ok_cancel };
+M2_VLIST(el_speed, NULL, list_speed);
+ 
+M2_ALIGN(top_el_speed, "-1|1W64H64", &el_speed);
 
 /*======================================================================*/
 /* number entry */
@@ -677,13 +711,27 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_top_fs);
     }
   }
+  else if ( idx == 13 ) {
+    s = "Save As";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_sa);
+    }
+  }
+  else if ( idx == 14 ) {
+    s = "Speed";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_speed);
+    }
+  }
   
   
   return s;
 }
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 13;
+uint8_t el_tlsm_cnt = 15;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -730,6 +778,35 @@ void screenshot(void)
   
 }
 
+void screenshot100(void)
+{
+  u8g_t screenshot_u8g;
+  /* 1. Setup and create device access */
+  u8g_Init(&screenshot_u8g, &u8g_dev_pbm);
+  /* 2. Connect the u8g display to m2. Note: M2 is setup later */
+  m2_SetU8g(&screenshot_u8g, m2_u8g_font_icon);
+
+  u8g_FirstPage(&screenshot_u8g);
+  do{
+    m2_Draw();
+  } while( u8g_NextPage(&screenshot_u8g) );
+
+  m2_SetU8g(&u8g, m2_u8g_font_icon);
+
+  {
+    char cmd[256*4];
+    sprintf(cmd, "convert u8g.pbm -trim -scale '200%%' %s.png", "u8g" );
+
+    sprintf(cmd, "convert u8g.pbm -crop '128x64+0+704' -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '100%%' %s.png", "u8g" );
+    sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 3 0' -draw 'line 126 0 129 0' -draw 'line 0 65 3 65' -draw 'line 126 65 129 65'  -draw 'line 0 0 0 3' -draw 'line 129 0 129 3'  -draw 'line 0 62 0 65' -draw 'line 129 62 129 65' -scale '200%%' %s.png", "u8g" );
+
+    sprintf(cmd, "convert u8g.pbm -extent '128x64-0-0' -fill yellow -opaque white  -scale '100%%' %s.png", "u8g" );
+    
+    system(cmd);
+  }
+  
+}
+
 
 /*======================================================================*/
 
@@ -750,6 +827,7 @@ int main(void)
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_7x13);
+  m2_SetFont(2, (const void *)u8g_font_fub25n);
 
   m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
   m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);

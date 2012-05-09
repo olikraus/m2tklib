@@ -221,12 +221,15 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_SET_FONT:
       {
-	      uint8_t idx;
+	      uint8_t idx, d;
 	      idx = arg->font;
 	      idx &=3;
 	      m2_gh_u8g_fonts[idx] = (const u8g_fntpgm_uint8_t *)(arg->s);
         u8g_SetFont(m2_u8g, m2_gh_u8g_fonts[idx]);
         m2_gh_u8g_ref_dx[idx] = u8g_GetGlyphDeltaX(m2_u8g, 'm');
+	d = u8g_GetGlyphDeltaX(m2_u8g, '0');
+	if ( m2_gh_u8g_ref_dx[idx] < d )
+		m2_gh_u8g_ref_dx[idx] = d;
       }
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:

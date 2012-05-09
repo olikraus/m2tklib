@@ -26,3 +26,4 @@ m2tklib ChangeLog
 2012-04-15      v1.07	Oliver Kraus <olikraus@gmail.com>
         * M2tk for U8glib
 2012-04-xx      v1.08	Oliver Kraus <olikraus@gmail.com>
+	* Fixed char width calculation for numeric u8glib fonts
