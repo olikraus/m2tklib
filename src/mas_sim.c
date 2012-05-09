@@ -25,11 +25,6 @@
 
 #include "mas.h"
 
-static uint8_t mas_sim_init(uint8_t chip_select)
-{
-  return 1;
-}
-
 /*
   Description:
     Requrest for a specific file at a specified position within the directory
@@ -96,8 +91,7 @@ uint8_t mas_device_sim(uint8_t msg, void *arg)
   }
   else if ( msg == MAS_MSG_INIT )
   {
-    mas_arg_init_t *a = ((mas_arg_init_t *)arg);   
-    return mas_sim_init(a->cs_pin);
+    return 1;
   }
   return 0;
 }

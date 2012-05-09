@@ -540,8 +540,8 @@ uint8_t fs_m2tk_cnt = 0;
 
 void fs_set_cnt(void)
 {
-  if ( mas_get_dir_entry_cnt()+FS_EXTRA_MENUES < 255 )
-    fs_m2tk_cnt = mas_get_dir_entry_cnt()+FS_EXTRA_MENUES;
+  if ( mas_GetDirEntryCnt()+FS_EXTRA_MENUES < 255 )
+    fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
   else
     fs_m2tk_cnt = 255;
 }
@@ -554,14 +554,14 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
   {
     if ( idx == 0 )
       return "Back";
-    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     return mas_entry_name;
   } 
   else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
   {
     if ( idx == 0 )
       return "a";       // leave menu
-    mas_get_nth_file(idx - FS_EXTRA_MENUES);
+    mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     if ( mas_entry_is_dir )
       return "A";       // folder icon
     return "B";         // file icon
@@ -574,7 +574,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
         m2_SetRoot(&top_el_tlsm);      
       else
       {
-        mas_change_dir_up();
+        mas_ChDirUp();
         fs_set_cnt();
         m2_SetRoot(m2_GetRoot());  // reset menu to first element
       }
@@ -582,10 +582,10 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
     }
     else
     {
-      mas_get_nth_file(idx - FS_EXTRA_MENUES);
+      mas_GetDirEntry(idx - FS_EXTRA_MENUES);
       if ( mas_entry_is_dir )
       {
-        mas_change_dir_down(mas_entry_name);
+        mas_ChDir(mas_entry_name);
         fs_set_cnt();
         m2_SetRoot(m2_GetRoot());  // reset menu to first element
       }
@@ -760,7 +760,7 @@ int main(void)
   //m2_SetFont(3, (const void *)u8g_font_unifont_78_79);
   m2_SetFont(3, (const void *)u8g_font_m2icon_9);
 
-  mas_init(mas_device_sim, 0);
+  mas_Init(mas_device_sim, 0);
 
   for(;;)
   {
