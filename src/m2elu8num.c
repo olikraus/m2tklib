@@ -49,7 +49,7 @@ M2_EL_FN_DEF(m2_el_u8num_sub_fn)
 
   /* calculate pixel width */
   width = digits;
-  width *= m2_gfx_get_char_width(font);
+  width *= m2_gfx_get_num_char_width(font);
 
   switch(fn_arg->msg)
   {

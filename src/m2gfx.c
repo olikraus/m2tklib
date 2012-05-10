@@ -187,6 +187,12 @@ uint8_t m2_gfx_get_text_width_p(uint8_t font, const char *s)
   return m2_gfx_call_handler(M2_GFX_MSG_GET_TEXT_WIDTH_P);
 }
 
+uint8_t m2_gfx_get_num_char_width(uint8_t font)
+{
+  m2_gfx_arg_object.font = font;
+  return m2_gfx_call_handler(M2_GFX_MSG_GET_NUM_CHAR_WIDTH);
+}
+
 uint8_t m2_gfx_get_char_width(uint8_t font)
 {
   m2_gfx_arg_object.font = font;

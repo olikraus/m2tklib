@@ -333,7 +333,7 @@ M2_EL_FN_DEF(m2_el_digit_fn)
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_get_char_height_with_small_border(font);
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_get_char_width_with_small_border(font);
+      return m2_gfx_get_num_char_width_with_small_border(font);
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
@@ -354,7 +354,7 @@ M2_EL_FN_DEF(m2_el_digit_fn)
 	  {
 	    /* assumes, that pos is equal to the number of chars */
 	    /* this is true... at the moment, see m2_is_exit_char() */
-	    m2_gfx_go_up(b->x-pos*m2_gfx_get_char_width_with_small_border(font), b->y, pos*m2_gfx_get_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
+	    m2_gfx_go_up(b->x-pos*m2_gfx_get_num_char_width_with_small_border(font), b->y, pos*m2_gfx_get_num_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
 	  }
 	}
 	else
@@ -375,11 +375,11 @@ M2_EL_FN_DEF(m2_el_digit_fn)
 	  
 	  if ( fn_arg->arg == 2 )
 	  {
-	    m2_gfx_small_focus(b->x, b->y, m2_gfx_get_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
+	    m2_gfx_small_focus(b->x, b->y, m2_gfx_get_num_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
 	  }
 	  else if ( fn_arg->arg == 3 )
 	  {
-	    m2_gfx_small_data_entry(b->x, b->y, m2_gfx_get_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
+	    m2_gfx_small_data_entry(b->x, b->y, m2_gfx_get_num_char_width_with_small_border(font), m2_gfx_get_char_height_with_small_border(font), font);
 	  }
 	  else
 	  {
@@ -428,13 +428,13 @@ M2_EL_FN_DEF(m2_el_u32_fn)
     case M2_EL_MSG_IS_AUTO_SKIP:
       return m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'a'); 
     case M2_EL_MSG_GET_LIST_BOX:
-      ((m2_pcbox_p)(fn_arg->data))->c.x=m2_gfx_add_normal_border_x(font, ((m2_pcbox_p)(fn_arg->data))->p.x + fn_arg->arg*m2_gfx_get_char_width_with_small_border(font));
+      ((m2_pcbox_p)(fn_arg->data))->c.x=m2_gfx_add_normal_border_x(font, ((m2_pcbox_p)(fn_arg->data))->p.x + fn_arg->arg*m2_gfx_get_num_char_width_with_small_border(font));
       ((m2_pcbox_p)(fn_arg->data))->c.y=m2_gfx_add_normal_border_y(font, ((m2_pcbox_p)(fn_arg->data))->p.y);
       return 1;  /* element is always visible */
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_add_normal_border_height(font, m2_gfx_get_char_height_with_small_border(font));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_normal_border_width(font, m2_el_u32_get_char_size(fn_arg->element)*m2_gfx_get_char_width_with_small_border(font));
+      return m2_gfx_add_normal_border_width(font, m2_el_u32_get_char_size(fn_arg->element)*m2_gfx_get_num_char_width_with_small_border(font));
     case M2_EL_MSG_GET_OPT:
 	if ( fn_arg->arg == 'd' )
 	{

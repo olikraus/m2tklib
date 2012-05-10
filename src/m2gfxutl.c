@@ -59,6 +59,10 @@ uint8_t m2_gfx_get_char_width_with_small_border(uint8_t font)
 {
   return m2_gfx_add_small_border_width(font, m2_gfx_get_char_width(font));
 }
+uint8_t m2_gfx_get_num_char_width_with_small_border(uint8_t font)
+{
+  return m2_gfx_add_small_border_width(font, m2_gfx_get_num_char_width(font));
+}
 
 uint8_t m2_gfx_get_char_height_with_normal_border(uint8_t font)
 {

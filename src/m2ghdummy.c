@@ -32,6 +32,7 @@ uint8_t m2_gh_dummy(m2_gfx_arg_p arg)
   {
     case M2_GFX_MSG_GET_TEXT_WIDTH:
       return strlen(arg->s);
+    case M2_GFX_MSG_GET_NUM_CHAR_WIDTH:
     case M2_GFX_MSG_GET_CHAR_WIDTH:
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
     case M2_GFX_MSG_GET_ICON_WIDTH:

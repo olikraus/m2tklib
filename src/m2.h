@@ -1010,6 +1010,7 @@ void m2_gfx_go_up(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 
 uint8_t m2_gfx_get_text_width(uint8_t font, const char *s);				/* used for lables and buttons */
 uint8_t m2_gfx_get_text_width_p(uint8_t font, const char *s);
+uint8_t m2_gfx_get_num_char_width(uint8_t font);
 uint8_t m2_gfx_get_char_width(uint8_t font);			
 uint8_t m2_gfx_get_char_height(uint8_t font);
 
@@ -1068,6 +1069,8 @@ void m2_gfx_draw_vertical_scroll_bar(uint8_t x0, uint8_t y0, uint8_t w, uint8_t 
 void m2_gfx_draw_icon_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t font, uint8_t icon_number) M2_NOINLINE;	/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_height_with_small_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_width_with_small_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
+uint8_t m2_gfx_get_num_char_width_with_small_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
+
 uint8_t m2_gfx_get_char_height_with_normal_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 uint8_t m2_gfx_get_char_width_with_normal_border(uint8_t font) M2_NOINLINE;											/* m2gfxutl.c */
 
