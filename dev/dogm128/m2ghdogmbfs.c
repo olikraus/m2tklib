@@ -82,6 +82,7 @@ uint8_t m2_gh_dogm_bfs(m2_gfx_arg_p  arg)
       return dog_GetStrWidth(m2_dogm_get_font(arg->font), arg->s);
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
       return dog_GetStrWidthP(m2_dogm_get_font(arg->font), arg->s);
+    case M2_GFX_MSG_GET_NUM_CHAR_WIDTH:
     case M2_GFX_MSG_GET_CHAR_WIDTH:
       return dog_GetFontBBXWidth(m2_dogm_get_font(arg->font));
     case M2_GFX_MSG_GET_CHAR_HEIGHT:

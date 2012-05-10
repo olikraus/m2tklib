@@ -827,7 +827,7 @@ int main(void)
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_7x13);
-  m2_SetFont(2, (const void *)u8g_font_fub25n);
+  m2_SetFont(2, (const void *)u8g_font_fub25);
 
   m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
   m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
