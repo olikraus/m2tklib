@@ -140,6 +140,7 @@ uint16_t mas_GetDirEntryCnt(void);
 const char *mas_GetPathFilename(void);
 const char *mas_GetPath(void);
 const char *mas_GetFilename(void);
+void mas_ClearFilename(void);
 uint8_t mas_Init(mas_device_fn *device, void *arg);
 
 #ifdef __cplusplus

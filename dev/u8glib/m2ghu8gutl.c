@@ -202,8 +202,8 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
       {
-	      u8g_uint_t x = arg->x;
-	      u8g_uint_t y;
+	u8g_uint_t x = arg->x;
+	u8g_uint_t y;
         
         u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
         u8g_SetFont(m2_u8g, m2_u8g_get_font(arg->font));

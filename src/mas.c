@@ -319,6 +319,11 @@ const char *mas_GetFilename(void)
   return (const char *)mas_entry_name;
 }
 
+void mas_ClearFilename(void)
+{
+  mas_entry_name[0] = '\0';
+}
+
 /*======================================================================*/
 /* init */
 uint8_t mas_Init(mas_device_fn *device, void *arg)
