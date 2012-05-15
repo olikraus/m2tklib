@@ -1,6 +1,6 @@
 /*
 
-  hello_world.c 
+  radio.c 
   
   m2tklib - Mini Interative Interface Toolkit Library
   u8glib - Universal 8bit Graphics Library
@@ -34,10 +34,40 @@
 /*=========================================================================*/
 /* menu definitions */
 
-M2_LABEL(hello_world_label, NULL, "Hello World");
+uint8_t select_color = 0;
+
+void fn_ok(m2_el_fnarg_p fnarg) {
+  /* accept selection */
+}
+
+void fn_cancel(m2_el_fnarg_p fnarg) {
+  /* discard selection */
+}
+
+M2_LABEL(el_label1, NULL, "red");
+M2_RADIO(el_radio1, "v0", &select_color);
+
+M2_LABEL(el_label2, NULL, "green");
+M2_RADIO(el_radio2, "v1", &select_color);
+
+M2_LABEL(el_label3, NULL, "blue");
+M2_RADIO(el_radio3, "v2", &select_color);
+
+M2_BUTTON(el_cancel, NULL, "cancel", fn_cancel);
+M2_BUTTON(el_ok, NULL, " ok ", fn_ok);
+
+M2_LIST(list) = { 
+    &el_label1, &el_radio1, 
+    &el_label2, &el_radio2,  
+    &el_label3, &el_radio3, 
+    &el_cancel, &el_ok 
+};
+M2_GRIDLIST(el_top, "c2",list);
+
 
 /*=========================================================================*/
 /* controller, u8g and m2 setup */
+
 
 /* 
   Software SPI:
@@ -74,13 +104,17 @@ void setup(void)
   u8g_InitSPI(&u8g, &u8g_dev_st7565_dogm132_sw_spi, PN(1, 5), PN(1, 3), PN(1, 2), PN(1, 1), U8G_PIN_NONE);
 
   /* 2. Setup m2 */
-  m2_Init(&hello_world_label, m2_es_avr_u8g, m2_eh_6bs, m2_gh_u8g_bfs);
+  m2_Init(&el_top, m2_es_avr_u8g, m2_eh_2bs, m2_gh_u8g_bfs);
 
   /* 3. Connect u8g display to m2  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. Set a font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_6x10);
+  m2_SetFont(0, (const void *)u8g_font_4x6);
+	
+  /* 5. Define keys */
+  m2_SetPin(M2_KEY_SELECT, PN(1, 7));
+  m2_SetPin(M2_KEY_NEXT, PN(3, 7));
 }
 
 void sys_init(void)
