@@ -93,7 +93,7 @@ void setup(void)
   m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. Set a font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_5x8);
+  m2_SetFont(0, (const void *)u8g_font_5x8r);
 	
   /* 5. Define keys */
   m2_SetPin(M2_KEY_EXIT, PN(3, 5));

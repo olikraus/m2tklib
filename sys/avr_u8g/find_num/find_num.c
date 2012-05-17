@@ -1,0 +1,217 @@
+/*
+
+  find_num.c 
+
+  "Find my number" game from here:
+  http://code.google.com/p/m2tklib/wiki/t04
+
+  m2tklib - Mini Interative Interface Toolkit Library
+  u8glib - Universal 8bit Graphics Library
+  
+  Copyright (C) 2012  olikraus@gmail.com
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+*/
+
+#include "u8g.h"
+#include "m2.h"
+#include "m2ghu8g.h"
+
+#if defined(__AVR__)
+#include <avr/interrupt.h>
+#include <avr/io.h>
+#endif
+
+/*=========================================================================*/
+/* menu definitions */
+
+#define GEN_RAND 1
+#define SETUP_NUM_INPUT 2
+#define WAIT_NUM_INPUT 3
+#define CHK_NUM 4
+#define SETUP_LOWER 5
+#define WAIT_LOWER 6
+#define SETUP_HIGHER 7
+#define WAIT_HIGHER 8
+#define SETUP_SUCCESS 9
+#define WAIT_SUCCESS 10
+
+M2_EXTERN_U8NUM(el_num_input_u8);
+
+uint8_t state; 	/* will contain the current state within the control flow diagram */ 
+uint8_t r;     	/* the generated random numer */ 
+uint8_t u;     	/* the number, which was entered by the user */ 
+
+/* ===== NUM_INPUT ===== */
+
+void fn_num_input_ok(m2_el_fnarg_p fnarg) {
+  state = CHK_NUM;
+  m2_Clear();
+}
+
+M2_LABEL(el_num_input_label, NULL, "Num: ");
+M2_U8NUM(el_num_input_u8, "c2", 0, 15, &u);
+M2_BUTTON(el_num_input_ok, "", "ok", fn_num_input_ok);
+M2_LIST(list_num_input) = { &el_num_input_label, &el_num_input_u8, &el_num_input_ok };
+M2_HLIST(top_el_num_input, NULL, list_num_input);
+
+/* ===== LOWER ===== */
+
+void fn_lower_ok(m2_el_fnarg_p fnarg) {
+  state = SETUP_NUM_INPUT;
+  m2_Clear();
+}
+
+M2_LABEL(el_lower_label, NULL, "Number too low");
+M2_BUTTON(el_lower_ok, "", "ok", fn_lower_ok);
+M2_LIST(list_lower) = { &el_lower_label, &el_lower_ok };
+M2_VLIST(top_el_lower, NULL, list_lower);
+
+/* ===== HIGHER ===== */
+
+void fn_higher_ok(m2_el_fnarg_p fnarg) {
+  state = SETUP_NUM_INPUT;
+  m2_Clear();
+}
+
+M2_LABEL(el_higher_label, NULL, "Number too high");
+M2_BUTTON(el_higher_ok, "", "ok", fn_higher_ok);
+M2_LIST(list_higher) = { &el_higher_label, &el_higher_ok };
+M2_VLIST(top_el_higher, NULL, list_higher);
+
+/* ===== SUCCESS ===== */
+
+void fn_success_ok(m2_el_fnarg_p fnarg) {
+  state = GEN_RAND;
+  m2_Clear();
+}
+
+M2_LABEL(el_success_label, NULL, "Number found!");
+M2_BUTTON(el_success_ok, "", "ok", fn_success_ok);
+M2_LIST(list_success) = { &el_success_label, &el_success_ok };
+M2_VLIST(top_el_success, NULL, list_success);
+
+/* ===== calculate next state of the game ===== */
+
+void set_next_state(void) {
+  switch(state) {
+    case GEN_RAND: r = rand(); r&=15; state = SETUP_NUM_INPUT; break;
+    case SETUP_NUM_INPUT: m2_SetRoot(&top_el_num_input); state = WAIT_NUM_INPUT; break;
+    case WAIT_NUM_INPUT: break; 	/* state is changed in the fn_num_input_ok() callback procedure */
+    case CHK_NUM:
+      if ( u < r ) state = SETUP_LOWER;
+      else if ( u > r ) state = SETUP_HIGHER;
+      else state = SETUP_SUCCESS;
+      break;
+    case SETUP_LOWER: m2_SetRoot(&top_el_lower); state = WAIT_LOWER; break;
+    case WAIT_LOWER: break; /* state is changed in the fn_lower_ok() callback procedure */
+    case SETUP_HIGHER: m2_SetRoot(&top_el_higher); state = WAIT_HIGHER; break;
+    case WAIT_HIGHER: break; /* state is changed in the fn_higher_ok() callback procedure */
+    case SETUP_SUCCESS: m2_SetRoot(&top_el_success); state = WAIT_SUCCESS; break;
+    case WAIT_SUCCESS: break; /* state is changed in the fn_success_ok() callback procedure */
+    default: state = GEN_RAND; break;
+  }
+}
+
+
+
+/*=========================================================================*/
+/* global variables and objects */
+
+u8g_t u8g;
+
+/*=========================================================================*/
+/* controller, u8g and m2 setup */
+
+void setup(void)
+{  
+  /*
+    Test Envionment, ATMEGA with the following settings:
+    CS: PORTB, Bit 2
+    A0: PORTB, Bit 1
+    SCK: PORTB, Bit 5
+    MOSI: PORTB, Bit 3
+  */
+  /* 1. Setup and create u8g device */
+  /* u8g_InitSPI(&u8g, &u8g_dev_st7565_dogm132_sw_spi, PN(1, 5), PN(1, 3), PN(1, 2), PN(1, 1), U8G_PIN_NONE); */
+  u8g_InitHWSPI(&u8g, &u8g_dev_st7565_dogm132_hw_spi, PN(1, 2), PN(1, 1), U8G_PIN_NONE);
+
+  /* 2. Setup m2 */
+  m2_Init(&el_num_input_u8, m2_es_avr_u8g, m2_eh_4bs, m2_gh_u8g_bfs);
+
+  /* 3. Connect u8g display to m2  */
+  m2_SetU8g(&u8g, m2_u8g_box_icon);
+
+  /* 4. Set a font, use normal u8g_font's */
+  m2_SetFont(0, (const void *)u8g_font_5x8r);
+	
+  /* 5. Define keys */
+  m2_SetPin(M2_KEY_EXIT, PN(3, 5));
+  m2_SetPin(M2_KEY_SELECT, PN(3, 6));
+  m2_SetPin(M2_KEY_NEXT, PN(3, 7));
+  m2_SetPin(M2_KEY_PREV, PN(1, 7));
+}
+
+/*=========================================================================*/
+/* system setup */
+
+void sys_init(void)
+{
+#if defined(__AVR__)
+  /* select minimal prescaler (max system speed) */
+  CLKPR = 0x80;
+  CLKPR = 0x00;
+#endif
+}
+
+/*=========================================================================*/
+/* u8g draw procedure (body of picture loop) */
+
+/* draw procedure of the u8g picture loop */
+void draw(void)
+{	
+  /* call the m2 draw procedure */
+  m2_Draw();
+}
+
+/*=========================================================================*/
+/* main procedure with u8g picture loop */
+
+int main(void)
+{
+  /* setup controller */
+  sys_init();
+	
+  /* setup u8g and m2 libraries */
+  setup();
+
+  /* application main loop */
+  for(;;)
+  {  
+    m2_CheckKey();
+    if ( m2_HandleKey() ) 
+    {
+      /* picture loop */
+      u8g_FirstPage(&u8g);
+      do
+      {
+	draw();
+        m2_CheckKey();
+      } while( u8g_NextPage(&u8g) );
+    }
+    set_next_state();
+  }  
+}
+
