@@ -66,30 +66,12 @@ M2_GRIDLIST(el_top, "c2",list);
 
 
 /*=========================================================================*/
-/* controller, u8g and m2 setup */
-
-
-/* 
-  Software SPI:
-  uint8_t u8g_InitSPI(u8g_t *u8g, u8g_dev_t *dev, uint8_t sck, uint8_t mosi, uint8_t cs, uint8_t a0, uint8_t reset); 
-
-  Hardware SPI:
-  uint8_t u8g_InitHWSPI(u8g_t *u8g, u8g_dev_t *dev, uint8_t cs, uint8_t a0, uint8_t reset);
-
-  Parallel Interface:
-  uint8_t u8g_Init8Bit(u8g_t *u8g, u8g_dev_t *dev, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3, uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7, 
-    uint8_t en, uint8_t cs1, uint8_t cs2, uint8_t di, uint8_t rw, uint8_t reset);
-
-  Visit 
-    http://code.google.com/p/u8glib/wiki/device 
-  for a list of valid devices (second argument of the constructor).
-
-  The following examples will use the dogm132 device: u8g_dev_st7565_dogm132_sw_spi
-
-  Note: The device must match the setup: For example, do not use a sw_spi device with u8g_InitHWSPI().
-*/
+/* global variables and objects */
 
 u8g_t u8g;
+
+/*=========================================================================*/
+/* controller, u8g and m2 setup */
 
 void setup(void)
 {  
@@ -111,7 +93,7 @@ void setup(void)
   m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. Set a font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_4x6);
+  m2_SetFont(0, (const void *)u8g_font_5x8);
 	
   /* 5. Define keys */
   m2_SetPin(M2_KEY_EXIT, PN(3, 5));
@@ -119,6 +101,9 @@ void setup(void)
   m2_SetPin(M2_KEY_NEXT, PN(3, 7));
   m2_SetPin(M2_KEY_PREV, PN(1, 7));
 }
+
+/*=========================================================================*/
+/* system setup */
 
 void sys_init(void)
 {
@@ -150,21 +135,20 @@ int main(void)
   /* setup u8g and m2 libraries */
   setup();
 
-  /* picture loop */
+  /* application main loop */
   for(;;)
   {  
     m2_CheckKey();
     if ( m2_HandleKey() ) 
     {
+      /* picture loop */
       u8g_FirstPage(&u8g);
       do
-     {
+      {
 	draw();
         m2_CheckKey();
       } while( u8g_NextPage(&u8g) );
     }
-  }
-  
-  
+  }  
 }
 
