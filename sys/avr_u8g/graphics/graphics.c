@@ -53,8 +53,8 @@
 /*=========================================================================*/
 /* global variables and objects */
 
-/* system 10ms counter */
-volatile uint16_t sys_10ms_cnt = 0;
+/* system 10ms counter, will overflow after 497 days */
+volatile uint32_t sys_10ms_cnt = 0;
 
 /* u8g object */
 u8g_t u8g;
@@ -64,11 +64,11 @@ u8g_t u8g;
 
 M2_EXTERN_ALIGN(el_top);
 
-//================================================================
-// low level graphics
+/*=========================================================================*/
+/* low level graphics */
 
 uint8_t is_bigger = 0;
-uint16_t next_state_change = 0;
+uint32_t next_state_change = 0;
 uint8_t size = 1;
 
 /* draw a rectange at x/y */
@@ -77,8 +77,8 @@ void draw_rectangle(uint8_t x, uint8_t y) {
   u8g_DrawBox(&u8g,x,y,size,size);
 }
 
-// state machine for the animation of the rectangle
-// will return none-zero if an update is required
+/* state machine for the animation of the rectangle */
+/* will return none-zero if an update is required */
 uint8_t update_rectangle(void) {
   if ( next_state_change < sys_10ms_cnt ) {
     next_state_change = sys_10ms_cnt;
@@ -98,8 +98,8 @@ uint8_t update_rectangle(void) {
   return 0;
 }
 
-//================================================================
-// m2tk related code
+/*=========================================================================*/
+/* m2tk related code */
 
 uint8_t y = 0;                   // position of the low level graphics
 
@@ -126,41 +126,41 @@ M2_LIST(list_menu) = {&el_goto_title, &el_goto_combine, &el_goto_switch};
 M2_VLIST(el_menu_vlist, NULL, list_menu);
 M2_ALIGN(el_top, "W64H64", &el_menu_vlist);
 
-//================================================================
-// high level draw and update procedures
+/*=========================================================================*/
+/* high level draw and update procedures */
 
 void draw_graphics(void) {
-  // show the graphics depending on the current toplevel element
+  /* show the graphics depending on the current toplevel element */
   
   if ( m2_GetRoot() == &el_combine ) {
-      // combine is active, do add the rectangle
-      // menu is on the right, put the rectangle to the left
+      /* combine is active, do add the rectangle */
+      /* menu is on the right, put the rectangle to the left */
       draw_rectangle(0,y);
   }
 
   if ( m2_GetRoot() == &m2_null_element ) {
-      // all menus are gone, show the rectangle
+      /* all menus are gone, show the rectangle */
       draw_rectangle(10,10);
   }
 }
 
-// update graphics, will return none-zero if an update is required
+/* update graphics, will return none-zero if an update is required */
 uint8_t update_graphics(void) {  
   if ( m2_GetRoot() == &el_combine ) {
-      // combine is active, update the rectangle for animation
+      /* "combine graphics" is active, update the rectangle for animation */
       return update_rectangle();
   }
 
   if ( m2_GetRoot() == &m2_null_element ) {
-      // check for any keys and assign a suitable menu again
+      /* check for any keys and assign a suitable menu again */
       if ( m2_GetKey() != M2_KEY_NONE )
         m2_SetRoot(&el_top);
     
-      // all menus are gone, rectangle is shown, so do update
+      /* all menus are gone, rectangle is shown, so do update */
       return update_rectangle();
   }
   
-  // no update for the graphics required
+  /* no update for the graphics required */
   return 0;
 }
 
@@ -169,8 +169,7 @@ uint8_t update_graphics(void) {
 /*=========================================================================*/
 /* controller, u8g and m2 setup */
 
-void setup(void)
-{  
+void setup(void) {
   /*
     Test Envionment, ATMEGA with the following settings:
     CS: PORTB, Bit 2
@@ -205,8 +204,7 @@ void setup(void)
 /* 256 - 8000000Hz / (100 Hz *1024) = 256L - F_CPU / 102400L */
 #define TCNT_START_VALUE (256L - F_CPU / 102400L)
 
-ISR(TIMER0_OVF_vect)
-{
+ISR(TIMER0_OVF_vect) {
   TCNT0 = TCNT_START_VALUE;
   sys_10ms_cnt++;
 }
@@ -215,8 +213,7 @@ ISR(TIMER0_OVF_vect)
 /* system setup */
 
 
-void sys_init(void)
-{
+void sys_init(void) {
 #if defined(__AVR__)
   cli();
   
@@ -224,6 +221,7 @@ void sys_init(void)
   CLKPR = 0x80;
   CLKPR = 0x00;
   
+  /* setup 10ms interrupt (overflow Timer 0) */
   TCCR0A = 0;           /* all external pins disconnected, normal mode */
   TCCR0B = 5;           /* devide by 1024 */
   TCNT0 = TCNT_START_VALUE;	
@@ -247,8 +245,7 @@ void draw(void)
 /*=========================================================================*/
 /* main procedure with u8g picture loop */
 
-int main(void)
-{
+int main(void) {
   /* setup controller */
   sys_init();
 	
@@ -256,15 +253,12 @@ int main(void)
   setup();
 
   /* application main loop */
-  for(;;)
-  {  
+  for(;;) {  
     m2_CheckKey();
-    if ( m2_HandleKey() || update_graphics() )
-    {
+    if ( m2_HandleKey() || update_graphics() ) {
       /* picture loop */
       u8g_FirstPage(&u8g);
-      do
-      {
+      do {
 	draw();
         m2_CheckKey();
       } while( u8g_NextPage(&u8g) );
