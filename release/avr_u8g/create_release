@@ -24,7 +24,7 @@ cp ../../gpl-3.0.txt ./m2tk_u8g/doc/m2/.
 #cp ../INSTALL_ARDUINO.TXT ./libraries/M2tklib/INSTALL.TXT
 cp ../../src/*.c ./m2tk_u8g/src/.
 cp ../../src/*.h ./m2tk_u8g/src/.
-cp ../../dev/arduino/*.[hc] ./m2tk_u8g/src/.
+cp ../../dev/avr_u8g/*.[hc] ./m2tk_u8g/src/.
 cp ../../dev/u8glib/*.[hc] ./m2tk_u8g/src/.
 cp ../../sys/avr_u8g/blink/*.c ./m2tk_u8g/m2_examples/blink/.
 cp ../../sys/avr_u8g/find_num/*.c ./m2tk_u8g/m2_examples/find_num/.
@@ -52,5 +52,5 @@ cp ../../../../u8g/u8glib/sys/atmega/u8g_logo/*.c ./m2tk_u8g/u8g_examples/u8g_lo
 
 
 #cd libraries 
-zip -r ../m2tklib_avr_u8g_`../../print_release`.zip m2tk_u8g
+zip -r m2tklib_avr_u8g_`../print_release`.zip m2tk_u8g
 #cd ..

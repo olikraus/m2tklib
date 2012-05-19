@@ -148,8 +148,8 @@ void setup(void) {
     MOSI: PORTB, Bit 3
   */
   /* 1. Setup and create u8g device */
-  /* u8g_InitSPI(&u8g, &u8g_dev_st7565_dogm132_sw_spi, PN(1, 5), PN(1, 3), PN(1, 2), PN(1, 1), U8G_PIN_NONE); */
-  u8g_InitHWSPI(&u8g, &u8g_dev_st7565_dogm132_hw_spi, PN(1, 2), PN(1, 1), U8G_PIN_NONE);
+  u8g_InitSPI(&u8g, &u8g_dev_st7565_dogm132_sw_spi, PN(1, 5), PN(1, 3), PN(1, 2), PN(1, 1), U8G_PIN_NONE); 
+  /*u8g_InitHWSPI(&u8g, &u8g_dev_st7565_dogm132_hw_spi, PN(1, 2), PN(1, 1), U8G_PIN_NONE);*/
 
   /* 2. Setup m2 */
   m2_Init(&el_align, m2_es_avr_u8g, m2_eh_4bs, m2_gh_u8g_bfs);

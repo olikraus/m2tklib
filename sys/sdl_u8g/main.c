@@ -636,6 +636,281 @@ M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
 
+
+/*======================================================================*/
+/* menue examples: show several menue types 
+  VLIST Menu: M2_ROOT within M2_VLIST
+    Advantage: No callback procedure required, automatic menu width calculation
+  STRLIST Menu: M2_STRLIST 
+    Advantage: Scrollable, simple form has only one element
+
+  Nested Menues:
+    VLIST and STRLIST Menus can nest each other.
+
+*/
+
+M2_EXTERN_ALIGN(top_el_select_menu);
+
+/*=== VLIST Sub-Menu ===*/
+/* each menu line is defined by a M2_ROOT element */
+M2_ROOT(el_vlistsum_m1, NULL, "Sub-Menu 1", &top_el_select_menu);
+M2_ROOT(el_vlistsum_m2, NULL, "Sub-Menu 2", &top_el_select_menu);
+M2_ROOT(el_vlistsum_m3, NULL, "Sub-Menu 3", &top_el_select_menu);
+M2_ROOT(el_vlistsum_m4, NULL, "Sub-Menu 4", &top_el_select_menu);
+/* all menu lines are grouped by a vlist element */
+M2_LIST(list_vlistsum) = { &el_vlistsum_m1, &el_vlistsum_m2, &el_vlistsum_m3, &el_vlistsum_m4 };
+M2_VLIST(el_vlistsum_list, NULL, list_vlistsum);
+/* center the menu on the display */
+M2_ALIGN(top_el_vlist_submenu, "-1|1W64H64", &el_vlistsum_list);
+
+/*=== VLIST Main-Menu with VLIST Sub-Menues ===*/
+/* each menu line is defined by a M2_ROOT element */
+/* in this example, all four menues refer to the same submenu: top_el_vlist_submenu */
+M2_ROOT(el_vlistmm_m1, NULL, "Menu 1", &top_el_vlist_submenu);
+M2_ROOT(el_vlistmm_m2, NULL, "Menu 2", &top_el_vlist_submenu);
+M2_ROOT(el_vlistmm_m3, NULL, "Menu 3", &top_el_vlist_submenu);
+M2_ROOT(el_vlistmm_m4, NULL, "Menu 4", &top_el_vlist_submenu);
+
+/* all menu lines are grouped by a vlist element */
+M2_LIST(list_vlistmm) = { &el_vlistmm_m1, &el_vlistmm_m2, &el_vlistmm_m3, &el_vlistmm_m4 };
+M2_VLIST(el_vlistmm_list, NULL, list_vlistmm);
+
+/* center the menu on the display */
+M2_ALIGN(top_el_vlist_mainmenu, "-1|1W64H64", &el_vlistmm_list);
+
+/*=== STRLIST Sub-Menu ===*/
+/* all STRLIST elements requre the following two variables */
+uint8_t el_strlistsum_first = 0;
+uint8_t el_strlistsum_cnt = 4;
+/* sub menu names can be stored in a string list */
+const char * strlistsumdefs[] = { "Sub-Menu 1", "Sub-Menu 2", "Sub-Menu 3", "Sub-Menu 4" };  
+/* the STRLIST element always requires a callback procedure */
+const char *el_strlistsum_cb(uint8_t idx, uint8_t msg) {
+  /* for any value in "idx", jumpo back to the selection menu */
+  if ( msg == M2_STRLIST_MSG_SELECT )
+    m2_SetRoot(&top_el_select_menu);
+  
+  /* "idx" contains the selected or requested submenu line (starts with 0) */
+  return strlistsumdefs[idx];;
+}
+
+M2_STRLIST(el_strlistsum, "l4W64", &el_strlistsum_first, &el_strlistsum_cnt, el_strlistsum_cb);
+/* center the STRLIST sub-menu on the display */
+M2_ALIGN(top_el_strlist_submenu, "-1|1W64H64", &el_strlistsum);
+
+
+/*=== STRLIST Main-Menu with STRLIST Sub-Menues ===*/
+/* all STRLIST elements requre the following two variables */
+uint8_t el_strlistmm_first = 0;
+uint8_t el_strlistmm_cnt = 4;
+/* sub menu names can be stored in a string list */
+const char * strlistmmdefs[] = { "Menu 1", "Menu 2", "Menu 3", "Menu 4" };  
+/* the STRLIST element always requires a callback procedure */
+const char *el_strlistmm_cb(uint8_t idx, uint8_t msg) {
+  /* for any value in "idx", jumpo to the sub-menu */
+  if ( msg == M2_STRLIST_MSG_SELECT )
+    m2_SetRoot(&top_el_strlist_submenu);
+  
+  /* "idx" contains the selected or requested submenu line (starts with 0) */
+  return strlistmmdefs[idx];;
+}
+
+M2_STRLIST(el_strlistmm, "l4W64", &el_strlistmm_first, &el_strlistmm_cnt, el_strlistmm_cb);
+/* center the STRLIST sub-menu on the display */
+M2_ALIGN(top_el_strlist_mainmenu, "-1|1W64H64", &el_strlistmm);
+
+/*=== Expandable Menu ===*/
+
+struct menu
+{
+  const char *label;
+  m2_rom_void_p element;
+};
+
+uint8_t el_exme_first = 0;
+uint8_t el_exme_cnt = 2;
+uint8_t el_exme_expanded = 255;
+
+struct menu exmedef[] = 
+{
+  { "Menu 1", NULL },
+  { "+ Sub 1-1", &top_el_select_menu },
+  { "+ Sub 1-2", &top_el_select_menu },
+  { "Menu 2", &top_el_select_menu },
+  { "Menu 3", NULL },
+  { "+ Sub 3-1", &top_el_select_menu },
+  { "+ Sub 3-2", &top_el_select_menu },
+  { "Menu 4", &top_el_select_menu },
+  { "Menu 5", NULL },
+  { "+ Sub 5-1", &top_el_select_menu },
+  { "+ Sub 5-2", &top_el_select_menu },
+  { "+ Sub 5-3", &top_el_select_menu },
+  { NULL, NULL },
+};
+
+uint8_t el_exme_is_submenu(uint8_t defidx)
+{
+  if ( exmedef[defidx].label == NULL )
+    return 0;
+  if ( exmedef[defidx].label[0] != '+' )
+    return 0;
+  return 1;
+}
+
+uint8_t el_exme_has_submenu(uint8_t defidx)
+{
+  if ( exmedef[defidx].label == NULL )
+    return 0;
+  if ( exmedef[defidx].label[0] == '+' )
+    return 0;
+  return el_exme_is_submenu(defidx+1);
+}
+
+uint8_t el_exme_get_submenu_cnt(uint8_t defidx)
+{
+  uint8_t cnt = 0;
+  for(;;)
+  {
+    defidx++;
+    if ( el_exme_is_submenu(defidx) == 0 )
+      break;
+    cnt++;
+  }
+  return cnt;
+}
+
+uint8_t el_exme_get_defidx_by_strlistidx(uint8_t strlistidx)
+{
+  uint8_t strlistcnt = 0;
+  uint8_t defidx = 0;
+  for(;;)
+  {
+    if ( strlistidx == strlistcnt )
+      break;
+    if ( exmedef[defidx].label == NULL )
+      break;
+    if ( el_exme_has_submenu(defidx) != 0 )
+    {
+      if ( defidx == el_exme_expanded )
+      {
+	defidx++;
+	strlistcnt++;
+	while(el_exme_is_submenu(defidx))
+	{
+	  if ( strlistidx == strlistcnt )
+	    break;
+	  defidx++;
+	  strlistcnt++;
+	}
+      }
+      else
+      {
+	defidx++;
+	strlistcnt++;
+	while(el_exme_is_submenu(defidx))
+	{
+	  defidx++;
+	}
+      }
+    }
+    else
+    {
+      defidx++;
+      strlistcnt++;
+    }
+  }
+  if ( strlistidx == 255 )
+    return strlistcnt;
+  return defidx;
+}
+
+/* calculate "cnt", based on "expanded" */
+void el_exme_update_cnt(void)
+{
+  el_exme_cnt = el_exme_get_defidx_by_strlistidx(255);
+}
+
+const char *el_exme_strlist_cb(uint8_t idx, uint8_t msg) {
+  uint8_t defidx;
+  
+  defidx = el_exme_get_defidx_by_strlistidx(idx);
+  
+  if ( msg == M2_STRLIST_MSG_SELECT )
+  {
+    if ( el_exme_has_submenu(defidx) != 0 )
+    {
+      if ( el_exme_expanded == defidx )
+	el_exme_expanded = 255;
+      else
+      {
+	if ( el_exme_expanded < defidx )
+	{
+	  uint8_t cnt = el_exme_get_submenu_cnt(defidx);
+	  /* correct position */
+	}
+	el_exme_expanded = defidx;
+      }
+      el_exme_update_cnt();
+    }
+    else
+    {
+      m2_SetRoot(exmedef[defidx].element);
+    }
+  }
+  if ( exmedef[defidx].label == NULL )
+    return "---";
+  if ( el_exme_is_submenu(defidx) != 0 )
+    return exmedef[defidx].label+1;
+  return exmedef[defidx].label;
+}
+
+
+M2_STRLIST(el_exme_strlist, "l4W56", &el_exme_first, &el_exme_cnt, el_exme_strlist_cb);
+M2_SPACE(el_exme_space, "W1h1");
+M2_VSB(el_exme_vsb, "l4W4r1", &el_exme_first, &el_exme_cnt);
+M2_LIST(list_exme_strlist) = { &el_exme_strlist, &el_exme_space, &el_exme_vsb };
+M2_HLIST(el_exme_hlist, NULL, list_exme_strlist);
+M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_exme_hlist);
+
+
+/*=== Menu Selection ===*/
+
+uint8_t el_seme_first = 0;
+uint8_t el_seme_cnt = 3;
+const char *el_seme_strlist_cb(uint8_t idx, uint8_t msg) {
+  const char *s = "";
+  if ( idx == 0 ) {
+    s = "VLIST->VLIST";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_vlist_mainmenu);
+  }
+  else if ( idx == 1 ) {
+    s = "STRLIST->STRLIST";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+      m2_SetRoot(&top_el_strlist_mainmenu);
+  }
+  else if ( idx == 2 ) {
+    s = "Expandable Menu";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      el_exme_update_cnt();
+      m2_SetRoot(&top_el_expandable_menu);
+    }
+  }
+
+  
+  return s;
+}
+
+M2_STRLIST(el_seme_strlist, "l3W56", &el_seme_first, &el_seme_cnt, el_seme_strlist_cb);
+M2_SPACE(el_seme_space, "W1h1");
+M2_VSB(el_seme_vsb, "l3W4r1", &el_seme_first, &el_seme_cnt);
+M2_LIST(list_seme_strlist) = { &el_seme_strlist, &el_seme_space, &el_seme_vsb };
+M2_HLIST(el_seme_hlist, NULL, list_seme_strlist);
+M2_ALIGN(top_el_select_menu, "-1|1W64H64", &el_seme_hlist);
+
+
+
 /*======================================================================*/
 /* top level sdl menu: tlsm */
 
@@ -725,13 +1000,19 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_speed);
     }
   }
-  
-  
+  else if ( idx == 15 ) {
+    s = "Menues";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_select_menu);
+    }
+  }
   return s;
 }
 
+
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 15;
+uint8_t el_tlsm_cnt = 16;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -804,15 +1085,14 @@ void screenshot100(void)
     
     system(cmd);
   }
-  
 }
 
 
 /*======================================================================*/
 
+
 int main(void)
 {  
-
   /* this is the setup sequence, steps 1..4 should be in this order */
   
   /* 1. Setup and create device access */
@@ -832,10 +1112,8 @@ int main(void)
   m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
   m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
 
-  // m2_SetU8gAdditionalReadOnlyXBorder(0);
-  
+  // m2_SetU8gAdditionalReadOnlyXBorder(0);  
   /* set the font for the multi selection */
-  //m2_SetFont(3, (const void *)u8g_font_unifont_78_79);
   m2_SetFont(3, (const void *)u8g_font_m2icon_9);
 
   mas_Init(mas_device_sim, 0);
@@ -855,4 +1133,5 @@ int main(void)
   }
   return 0;
 }
+
 
