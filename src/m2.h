@@ -718,6 +718,11 @@ M2_EL_FN_DEF(m2_el_infop_fn);
 #define M2_INFOP(el,fmt,first,cnt,str,cb) m2_el_infop_t el M2_SECTION_PROGMEM = { { { { m2_el_infop_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
 #define M2_EXTERN_INFOP(el) extern m2_el_infop_t el
 
+/* defines the buffer for the info line, this is also used by some callback procedures */
+#define M2_INFO_LINE_LEN 40
+extern char m2_el_info_line[M2_INFO_LINE_LEN];
+
+
 /*==============================================================*/
 /* m2nav....c */
 

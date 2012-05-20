@@ -38,11 +38,11 @@ void m2_el_info_copy_line(void) M2_NOINLINE;
 
 
 /* number of chars in the RAM buffer, must include the terminating '\0' character */
-#define M2_INFO_LINE_LEN 40
+/* #define M2_INFO_LINE_LEN 40 */
+char m2_el_info_line[M2_INFO_LINE_LEN];
 uint8_t m2_el_info_is_rom_ptr = 0;
 uint8_t *m2_el_info_base_ptr;
 uint8_t *m2_el_info_ptr;
-char m2_el_info_line[M2_INFO_LINE_LEN];
 
 uint8_t m2_el_info_cached_lines = 0;
 uint8_t m2_el_info_last_pos = 0;
