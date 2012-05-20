@@ -153,8 +153,10 @@ uint8_t m2_el_slbase_calc_width(m2_rom_void_p element)
 
 void m2_el_slbase_adjust_top_to_focus(m2_rom_void_p element, uint8_t pos)
 {
+  uint8_t cnt = m2_el_slbase_get_len(element);
   uint8_t top = m2_el_slbase_get_top(element);
   uint8_t lines;
+  
   if ( pos < top )
   {
     top = pos;
@@ -167,6 +169,18 @@ void m2_el_slbase_adjust_top_to_focus(m2_rom_void_p element, uint8_t pos)
       top = pos;
       top -= lines;
       top++;
+    }
+    if ( top + lines >= cnt ) 
+    {
+      if ( cnt > lines )
+      {
+	top = cnt;
+	top -= lines;
+      }
+      else
+      {
+	top = 0;
+      }
     }
   }
   *m2_el_slbase_get_top_ptr(element) = top;

@@ -111,9 +111,11 @@ void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   
 }
 
+/* origin is low left */
 void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
   u8g_uint_t y;
+  /* transform y to upper left */
   y = m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
@@ -267,7 +269,6 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       m2_u8g_draw_frame(arg->x, arg->y, arg->w, arg->h);
       {
       	uint16_t h, y;
-	
        	h = m2_utl_sb_get_slider_height(arg->h-2, arg->total, arg->visible);
       	y = m2_utl_sb_get_slider_position(arg->h-2, h, arg->total, arg->visible, arg->top); 	
       	m2_u8g_draw_box(arg->x+1, arg->y+arg->h-1-h-y, arg->w-2, h);

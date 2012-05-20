@@ -27,3 +27,5 @@ m2tklib ChangeLog
         * M2tk for U8glib
 2012-04-xx      v1.08	Oliver Kraus <olikraus@gmail.com>
 	* Fixed char width calculation for numeric u8glib fonts
+	* Fixed bug on the top element calculation for STRLSIT/INFO elements
+	

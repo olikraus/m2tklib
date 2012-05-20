@@ -734,17 +734,17 @@ uint8_t el_exme_expanded = 255;
 struct menu exmedef[] = 
 {
   { "Menu 1", NULL },
-  { "+ Sub 1-1", &top_el_select_menu },
-  { "+ Sub 1-2", &top_el_select_menu },
+  { ". Sub 1-1", &top_el_select_menu },
+  { ". Sub 1-2", &top_el_select_menu },
   { "Menu 2", &top_el_select_menu },
   { "Menu 3", NULL },
-  { "+ Sub 3-1", &top_el_select_menu },
-  { "+ Sub 3-2", &top_el_select_menu },
+  { ". Sub 3-1", &top_el_select_menu },
+  { ". Sub 3-2", &top_el_select_menu },
   { "Menu 4", &top_el_select_menu },
   { "Menu 5", NULL },
-  { "+ Sub 5-1", &top_el_select_menu },
-  { "+ Sub 5-2", &top_el_select_menu },
-  { "+ Sub 5-3", &top_el_select_menu },
+  { ". Sub 5-1", &top_el_select_menu },
+  { ". Sub 5-2", &top_el_select_menu },
+  { ". Sub 5-3", &top_el_select_menu },
   { NULL, NULL },
 };
 
@@ -752,7 +752,7 @@ uint8_t el_exme_is_submenu(uint8_t defidx)
 {
   if ( exmedef[defidx].label == NULL )
     return 0;
-  if ( exmedef[defidx].label[0] != '+' )
+  if ( exmedef[defidx].label[0] != '.' )
     return 0;
   return 1;
 }
@@ -761,7 +761,7 @@ uint8_t el_exme_has_submenu(uint8_t defidx)
 {
   if ( exmedef[defidx].label == NULL )
     return 0;
-  if ( exmedef[defidx].label[0] == '+' )
+  if ( exmedef[defidx].label[0] == '.' )
     return 0;
   return el_exme_is_submenu(defidx+1);
 }
@@ -835,7 +835,19 @@ const char *el_exme_strlist_cb(uint8_t idx, uint8_t msg) {
   
   defidx = el_exme_get_defidx_by_strlistidx(idx);
   
-  if ( msg == M2_STRLIST_MSG_SELECT )
+  if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
+  {
+      if ( el_exme_expanded == defidx )
+      {
+	return "-";
+      }
+      if ( el_exme_has_submenu(defidx) != 0 )
+      {
+	return "+";
+      }
+      return "";
+  }
+  else if ( msg == M2_STRLIST_MSG_SELECT )
   {
     if ( el_exme_has_submenu(defidx) != 0 )
     {
@@ -870,6 +882,7 @@ const char *el_exme_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(exmedef[defidx].element);
     }
   }
+
   if ( exmedef[defidx].label == NULL )
     return "---";
   if ( el_exme_is_submenu(defidx) != 0 )
@@ -878,7 +891,7 @@ const char *el_exme_strlist_cb(uint8_t idx, uint8_t msg) {
 }
 
 
-M2_STRLIST(el_exme_strlist, "l4W56", &el_exme_first, &el_exme_cnt, el_exme_strlist_cb);
+M2_STRLIST(el_exme_strlist, "l4e15W47", &el_exme_first, &el_exme_cnt, el_exme_strlist_cb);
 M2_SPACE(el_exme_space, "W1h1");
 M2_VSB(el_exme_vsb, "l4W4r1", &el_exme_first, &el_exme_cnt);
 M2_LIST(list_exme_strlist) = { &el_exme_strlist, &el_exme_space, &el_exme_vsb };
@@ -1074,6 +1087,8 @@ void screenshot(void)
 
 void screenshot100(void)
 {
+  static int cnt = 0;
+  
   u8g_t screenshot_u8g;
   /* 1. Setup and create device access */
   u8g_Init(&screenshot_u8g, &u8g_dev_pbm);
@@ -1094,10 +1109,11 @@ void screenshot100(void)
     sprintf(cmd, "convert u8g.pbm -crop '128x64+0+704' -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '100%%' %s.png", "u8g" );
     sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 3 0' -draw 'line 126 0 129 0' -draw 'line 0 65 3 65' -draw 'line 126 65 129 65'  -draw 'line 0 0 0 3' -draw 'line 129 0 129 3'  -draw 'line 0 62 0 65' -draw 'line 129 62 129 65' -scale '200%%' %s.png", "u8g" );
 
-    sprintf(cmd, "convert u8g.pbm -extent '128x64-0-0' -fill yellow -opaque white  -scale '100%%' %s.png", "u8g" );
+    sprintf(cmd, "convert u8g.pbm -extent '128x64-0-0' -fill yellow -opaque white  -scale '100%%' %s%03d.png", "u8g", cnt );
     
     system(cmd);
   }
+  cnt++;
 }
 
 

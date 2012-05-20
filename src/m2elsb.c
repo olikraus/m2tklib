@@ -84,8 +84,16 @@ uint8_t m2_utl_sb_get_slider_height(uint8_t height, uint8_t total, uint8_t visib
 {
   uint16_t tmp;
   uint8_t slider;
+  /*
+  if ( top+visible > total )
+  {
+    visible = total;
+    visible -= top;
+  }
+  */
   if ( total <= visible )
     return height;
+  
   tmp = height;
   tmp *= visible;
   tmp /= total;
