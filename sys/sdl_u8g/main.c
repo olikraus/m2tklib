@@ -840,17 +840,30 @@ const char *el_exme_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( el_exme_has_submenu(defidx) != 0 )
     {
       if ( el_exme_expanded == defidx )
+      {
 	el_exme_expanded = 255;
+	el_exme_update_cnt();
+      }
       else
       {
 	if ( el_exme_expanded < defidx )
 	{
-	  uint8_t cnt = el_exme_get_submenu_cnt(defidx);
-	  /* correct position */
+	  uint8_t cnt = el_exme_get_submenu_cnt(el_exme_expanded);
+	  el_exme_expanded = defidx;
+	  el_exme_update_cnt();
+	  while( cnt > 0 )
+	  {
+	    cnt--;
+	    m2_HandleKey();				/* first, handle the existing keys */
+	    m2_SetKey(M2_KEY_PREV);		/* put new key into queue, leave last added key in the queue */
+	  }
 	}
-	el_exme_expanded = defidx;
+	else
+	{
+	  el_exme_expanded = defidx;
+	  el_exme_update_cnt();
+	}
       }
-      el_exme_update_cnt();
     }
     else
     {
