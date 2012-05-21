@@ -968,6 +968,22 @@ uint8_t m2_el_slbase_calc_box(m2_rom_void_p el_slbase, uint8_t idx, m2_pcbox_p d
 void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *extra_s, const char *s);				/* m2elslbase.c */
 
 /*==============================================================*/
+
+struct _m2_menu_entry
+{
+  const char *label;
+  m2_rom_void_p element;
+};
+typedef struct _m2_menu_entry m2_menu_entry;
+
+extern uint8_t m2_strlist_menu_first;
+extern uint8_t m2_strlist_menu_cnt;
+
+
+const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg);																/* m2cbslmenu.c */
+void m2_SetStrlistMenuData(m2_menu_entry *menu_data, char main_menu_char, char expanded_menu_char, char submenu_char);		/* m2cbslmenu.c */
+
+/*==============================================================*/
 uint8_t *m2_el_setval_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;							/* m2elsetval.c */
 
 

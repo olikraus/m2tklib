@@ -721,17 +721,7 @@ M2_ALIGN(top_el_strlist_mainmenu, "-1|1W64H64", &el_strlistmm);
 
 /*=== Expandable Menu ===*/
 
-struct menu
-{
-  const char *label;
-  m2_rom_void_p element;
-};
-
-uint8_t el_exme_first = 0;
-uint8_t el_exme_cnt = 2;
-uint8_t el_exme_expanded = 255;
-
-struct menu exmedef[] = 
+m2_menu_entry exmedef[] = 
 {
   { "Menu 1", NULL },
   { ". Sub 1-1", &top_el_select_menu },
@@ -748,152 +738,13 @@ struct menu exmedef[] =
   { NULL, NULL },
 };
 
-uint8_t el_exme_is_submenu(uint8_t defidx)
-{
-  if ( exmedef[defidx].label == NULL )
-    return 0;
-  if ( exmedef[defidx].label[0] != '.' )
-    return 0;
-  return 1;
-}
-
-uint8_t el_exme_has_submenu(uint8_t defidx)
-{
-  if ( exmedef[defidx].label == NULL )
-    return 0;
-  if ( exmedef[defidx].label[0] == '.' )
-    return 0;
-  return el_exme_is_submenu(defidx+1);
-}
-
-uint8_t el_exme_get_submenu_cnt(uint8_t defidx)
-{
-  uint8_t cnt = 0;
-  for(;;)
-  {
-    defidx++;
-    if ( el_exme_is_submenu(defidx) == 0 )
-      break;
-    cnt++;
-  }
-  return cnt;
-}
-
-uint8_t el_exme_get_defidx_by_strlistidx(uint8_t strlistidx)
-{
-  uint8_t strlistcnt = 0;
-  uint8_t defidx = 0;
-  for(;;)
-  {
-    if ( strlistidx == strlistcnt )
-      break;
-    if ( exmedef[defidx].label == NULL )
-      break;
-    if ( el_exme_has_submenu(defidx) != 0 )
-    {
-      if ( defidx == el_exme_expanded )
-      {
-	defidx++;
-	strlistcnt++;
-	while(el_exme_is_submenu(defidx))
-	{
-	  if ( strlistidx == strlistcnt )
-	    break;
-	  defidx++;
-	  strlistcnt++;
-	}
-      }
-      else
-      {
-	defidx++;
-	strlistcnt++;
-	while(el_exme_is_submenu(defidx))
-	{
-	  defidx++;
-	}
-      }
-    }
-    else
-    {
-      defidx++;
-      strlistcnt++;
-    }
-  }
-  if ( strlistidx == 255 )
-    return strlistcnt;
-  return defidx;
-}
-
-/* calculate "cnt", based on "expanded" */
-void el_exme_update_cnt(void)
-{
-  el_exme_cnt = el_exme_get_defidx_by_strlistidx(255);
-}
-
-const char *el_exme_strlist_cb(uint8_t idx, uint8_t msg) {
-  uint8_t defidx;
-  
-  defidx = el_exme_get_defidx_by_strlistidx(idx);
-  
-  if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
-  {
-      if ( el_exme_expanded == defidx )
-      {
-	return "-";
-      }
-      if ( el_exme_has_submenu(defidx) != 0 )
-      {
-	return "+";
-      }
-      return "";
-  }
-  else if ( msg == M2_STRLIST_MSG_SELECT )
-  {
-    if ( el_exme_has_submenu(defidx) != 0 )
-    {
-      if ( el_exme_expanded == defidx )
-      {
-	el_exme_expanded = 255;
-	el_exme_update_cnt();
-      }
-      else
-      {
-	if ( el_exme_expanded < defidx )
-	{
-	  uint8_t cnt = el_exme_get_submenu_cnt(el_exme_expanded);
-	  el_exme_expanded = defidx;
-	  el_exme_update_cnt();
-	  while( cnt > 0 )
-	  {
-	    cnt--;
-	    m2_HandleKey();				/* first, handle the existing keys */
-	    m2_SetKey(M2_KEY_PREV);		/* put new key into queue, leave last added key in the queue */
-	  }
-	}
-	else
-	{
-	  el_exme_expanded = defidx;
-	  el_exme_update_cnt();
-	}
-      }
-    }
-    else
-    {
-      m2_SetRoot(exmedef[defidx].element);
-    }
-  }
-
-  if ( exmedef[defidx].label == NULL )
-    return "---";
-  if ( el_exme_is_submenu(defidx) != 0 )
-    return exmedef[defidx].label+1;
-  return exmedef[defidx].label;
-}
 
 
-M2_STRLIST(el_exme_strlist, "l4e15W47", &el_exme_first, &el_exme_cnt, el_exme_strlist_cb);
+//M2_STRLIST(el_exme_strlist, "l4e15W47", &el_exme_first, &el_exme_cnt, el_exme_strlist_cb);
+M2_STRLIST(el_exme_strlist, "l4e15W47", &m2_strlist_menu_first, &m2_strlist_menu_cnt, m2_strlist_menu_cb);
+
 M2_SPACE(el_exme_space, "W1h1");
-M2_VSB(el_exme_vsb, "l4W4r1", &el_exme_first, &el_exme_cnt);
+M2_VSB(el_exme_vsb, "l4W4r1", &m2_strlist_menu_first, &m2_strlist_menu_cnt);
 M2_LIST(list_exme_strlist) = { &el_exme_strlist, &el_exme_space, &el_exme_vsb };
 M2_HLIST(el_exme_hlist, NULL, list_exme_strlist);
 M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_exme_hlist);
@@ -919,7 +770,8 @@ const char *el_seme_strlist_cb(uint8_t idx, uint8_t msg) {
     s = "Expandable Menu";
     if ( msg == M2_STRLIST_MSG_SELECT )
     {
-      el_exme_update_cnt();
+      //el_exme_update_cnt();
+      m2_SetStrlistMenuData(exmedef, '+', '-', ' ');
       m2_SetRoot(&top_el_expandable_menu);
     }
   }

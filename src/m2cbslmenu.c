@@ -27,18 +27,15 @@
 
 #include "m2.h"
 
-struct _m2_menu_entry
-{
-  const char *label;
-  m2_rom_void_p element;
-};
-typedef struct _m2_menu_entry m2_menu_entry;
-
 /*========================================================================*/
 uint8_t m2_strlist_menu_first = 0;
 uint8_t m2_strlist_menu_cnt = 2;
 uint8_t m2_strlist_menu_expanded = 255;
 m2_menu_entry *m2_strlist_menu_data;
+char m2_strlist_menu_main_menu;
+char m2_strlist_menu_expanded_menu;
+char m2_strlist_menu_submenu;
+
 
 /*========================================================================*/
 
@@ -127,7 +124,8 @@ static void m2_strlist_menu_update_cnt(void)
 
 /*========================================================================*/
 
-const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg) {
+const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg) 
+{
   uint8_t defidx;
   
   defidx = m2_strlist_menu_get_defidx_by_strlistidx(idx);
@@ -181,7 +179,7 @@ const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg) {
   }
 
   if ( m2_strlist_menu_data[defidx].label == NULL )
-    return "---";
+    return "";
   if ( m2_strlist_menu_is_submenu(defidx) != 0 )
     return m2_strlist_menu_data[defidx].label+1;
   return m2_strlist_menu_data[defidx].label;
@@ -189,8 +187,11 @@ const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg) {
 
 /*========================================================================*/
 
-void m2_SetStrlistMenuData(m2_menu_entry *menu_data)
+void m2_SetStrlistMenuData(m2_menu_entry *menu_data, char main_menu_char, char expanded_menu_char, char submenu_char)
 {
+  m2_strlist_menu_main_menu = main_menu_char;
+  m2_strlist_menu_expanded_menu = expanded_menu_char;
+  m2_strlist_menu_submenu = submenu_char;
   m2_strlist_menu_data = menu_data;
   m2_strlist_menu_update_cnt();
 }
