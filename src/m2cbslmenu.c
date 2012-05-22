@@ -30,8 +30,8 @@
 /*========================================================================*/
 uint8_t m2_strlist_menu_first = 0;
 uint8_t m2_strlist_menu_cnt = 2;
-uint8_t m2_strlist_menu_expanded = 255;
 m2_menu_entry *m2_strlist_menu_data;
+uint8_t m2_strlist_menu_expanded = 255;
 char m2_strlist_menu_main_menu;
 char m2_strlist_menu_expanded_menu;
 char m2_strlist_menu_submenu;
@@ -41,12 +41,14 @@ char m2_strlist_menu_submenu;
 
 static m2_rom_void_p m2_strlist_menu_get_label(uint8_t defidx)
 {
-  return m2_rom_get_rom_ptr(m2_strlist_menu_data+defidx, offsetof(m2_menu_entry, label));
+  return m2_strlist_menu_data[defidx].label;
+  // return m2_rom_get_rom_ptr(m2_strlist_menu_data+defidx, offsetof(m2_menu_entry, label));
 }
 
 static m2_rom_void_p m2_strlist_menu_get_element(uint8_t defidx)
 {
-  return m2_rom_get_rom_ptr(m2_strlist_menu_data+defidx, offsetof(m2_menu_entry, element));
+  return m2_strlist_menu_data[defidx].element;
+  //return m2_rom_get_rom_ptr(m2_strlist_menu_data+defidx, offsetof(m2_menu_entry, element));
 }
 
 static uint8_t m2_strlist_menu_is_submenu(uint8_t defidx)
@@ -54,7 +56,8 @@ static uint8_t m2_strlist_menu_is_submenu(uint8_t defidx)
   const char *label = (const char *)m2_strlist_menu_get_label(defidx);
   if ( label == NULL )
     return 0;
-  if ( m2_rom_low_level_get_byte(label) != '.' )
+  // if ( m2_rom_low_level_get_byte(label) != '.' )
+  if ( label[0]   != '.' )
     return 0;
   return 1;
 }
@@ -64,7 +67,8 @@ static uint8_t m2_strlist_menu_has_submenu(uint8_t defidx)
   const char *label = (const char *)m2_strlist_menu_get_label(defidx);
   if ( label == NULL )
     return 0;
-  if ( m2_rom_low_level_get_byte(label) == '.' )
+  //if ( m2_rom_low_level_get_byte(label) == '.' )
+  if ( label[0]   == '.' )
     return 0;
   return m2_strlist_menu_is_submenu(defidx+1);
 }
@@ -188,12 +192,27 @@ const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg)
       m2_SetRoot(m2_strlist_menu_get_element(defidx));
     }
   }
-
-  if ( m2_strlist_menu_data[defidx].label == NULL )
-    return "";
-  if ( m2_strlist_menu_is_submenu(defidx) != 0 )
-    return m2_strlist_menu_data[defidx].label+1;
-  return m2_strlist_menu_data[defidx].label;
+  else if ( msg == M2_STRLIST_MSG_GET_STR )
+  {
+    const char *ptr = m2_strlist_menu_get_label(defidx);
+    if ( ptr == NULL )
+    {
+      m2_el_info_line[0] = '\0';
+    }
+    else if ( m2_strlist_menu_is_submenu(defidx) != 0 )
+    {
+      //m2_rom_low_level_strncpy(m2_el_info_line, ptr+1, M2_INFO_LINE_LEN);
+      strncpy(m2_el_info_line, ptr+1, M2_INFO_LINE_LEN);
+    }
+    else
+    {
+      //m2_rom_low_level_strncpy(m2_el_info_line, ptr, M2_INFO_LINE_LEN);
+      strncpy(m2_el_info_line, ptr, M2_INFO_LINE_LEN);
+    }
+    m2_el_info_line[M2_INFO_LINE_LEN-1] = '\0';
+    return m2_el_info_line;
+  }
+  return NULL;
 }
 
 /*========================================================================*/

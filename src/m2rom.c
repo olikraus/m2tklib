@@ -55,6 +55,24 @@ void m2_rom_low_level_copy(void *dest, m2_rom_void_p src, uint8_t cnt)
 #endif
 }
 
+void m2_rom_low_level_strncpy(void *dest, m2_rom_void_p src, uint8_t cnt)
+{
+#if defined(M2_AVR_PGM)
+  strncpy_P(dest, src, cnt);
+#else
+  
+  while( cnt > 0 )
+  {
+    *(uint8_t *)dest = *(uint8_t *)src;
+    if ( *(uint8_t *)src == 0 )
+      break;
+    dest = ((uint8_t *)dest) + 1;
+    src = ((const uint8_t *)src) + 1;
+    cnt--;
+  }
+#endif
+}
+
 /*==============================================================*/
 /* structure access */
 

@@ -97,11 +97,14 @@ M2_EL_FN_DEF(m2_el_strline_fn)
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_get_char_height_with_normal_border(font);
     case M2_EL_MSG_GET_WIDTH:
+      /* width is defined only be the eE and wW options */
       return m2_el_slbase_calc_width(parent_el);
     case M2_EL_MSG_NEW_FOCUS:
+      /* adjust the top value, if required */
       m2_el_slbase_adjust_top_to_focus(parent_el, pos);
       return 1;
     case M2_EL_MSG_SELECT:
+      /* make a call to the supplied user procedure */
       m2_el_strlist_select(parent_el, pos);
       return 1;
 #ifdef M2_EL_MSG_DBG_SHOW

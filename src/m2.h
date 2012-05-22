@@ -62,9 +62,11 @@
 #define M2_PROGMEM PROGMEM
 #define M2_SECTION_PROGMEM __attribute__((section(".progmem.data")))
 //#define M2_AVR_OPT_ROM
+#define M2_PSTR(s) PSTR(s)
 #else
 #define M2_PROGMEM
 #define M2_SECTION_PROGMEM
+#define M2_PSTR(s) (s)
 #endif
 
 #ifdef __GNUC__
@@ -221,8 +223,6 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 /*==============================================================*/
 /* Macro Definitions */
 
-#define M2_PSTR(s) s
-
 /* Define the maximum depth of  the menu tree */
 #define M2_DEPTH_MAX 7
 
@@ -339,6 +339,7 @@ struct _m2_el_fnarg
 /*==============================================================*/
 uint8_t m2_rom_low_level_get_byte(m2_rom_void_p ptr) M2_NOINLINE;									/* m2rom.c */
 void m2_rom_low_level_copy(void *dest, m2_rom_void_p src, uint8_t cnt) M2_NOINLINE;					/* m2rom.c */
+void m2_rom_low_level_strncpy(void *dest, m2_rom_void_p src, uint8_t cnt) M2_NOINLINE;					/* m2rom.c */
 uint8_t m2_rom_get_u8(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;								/* m2rom.c */
 uint32_t m2_rom_get_u32(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;							/* m2rom.c */
 m2_rom_void_p m2_rom_get_rom_ptr(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;					/* m2rom.c */
@@ -684,6 +685,31 @@ M2_EL_FN_DEF(m2_el_strlist_fn);
 #define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
 #define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
 
+struct _m2_menu_entry
+{
+  const char *label;
+  m2_rom_void_p element;
+};
+typedef struct _m2_menu_entry m2_menu_entry;
+
+extern uint8_t m2_strlist_menu_first;
+extern uint8_t m2_strlist_menu_cnt;
+
+struct _m2_el_2lmenu_struct
+{
+  m2_el_slbase_t slbase;
+  m2_menu_entry *menu_entries;
+  uint8_t menu_char;
+  uint8_t expanded_char;
+  uint8_t submenu_char;
+};
+typedef struct _m2_el_2lmenu_struct m2_el_2lmenu_t;
+typedef m2_el_2lmenu_t *m2_el_2lmenu_p;
+
+M2_EL_FN_DEF(m2_el_strlist_fn);
+#define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
+#define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
+
 
 struct _m2_el_infobase_struct
 {
@@ -969,15 +995,6 @@ void m2_el_slbase_show(m2_el_fnarg_p fn_arg, const char *extra_s, const char *s)
 
 /*==============================================================*/
 
-struct _m2_menu_entry
-{
-  const char *label;
-  m2_rom_void_p element;
-};
-typedef struct _m2_menu_entry m2_menu_entry;
-
-extern uint8_t m2_strlist_menu_first;
-extern uint8_t m2_strlist_menu_cnt;
 
 
 const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg);																/* m2cbslmenu.c */

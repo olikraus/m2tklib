@@ -37,6 +37,7 @@ uint8_t *m2_el_slbase_get_len_ptr(m2_rom_void_p element)
   return (uint8_t *)m2_rom_get_ram_ptr(element, offsetof(m2_el_slbase_t, len));
 }
 
+/* this is the total number of elements, do not confuse this with the visible line cnt */
 uint8_t m2_el_slbase_get_len(m2_rom_void_p element)
 {
   return *m2_el_slbase_get_len_ptr(element);
