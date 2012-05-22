@@ -39,21 +39,32 @@ char m2_strlist_menu_submenu;
 
 /*========================================================================*/
 
+static m2_rom_void_p m2_strlist_menu_get_label(uint8_t defidx)
+{
+  return m2_rom_get_rom_ptr(m2_strlist_menu_data+defidx, offsetof(m2_menu_entry, label));
+}
+
+static m2_rom_void_p m2_strlist_menu_get_element(uint8_t defidx)
+{
+  return m2_rom_get_rom_ptr(m2_strlist_menu_data+defidx, offsetof(m2_menu_entry, element));
+}
 
 static uint8_t m2_strlist_menu_is_submenu(uint8_t defidx)
 {
-  if ( m2_strlist_menu_data[defidx].label == NULL )
+  const char *label = (const char *)m2_strlist_menu_get_label(defidx);
+  if ( label == NULL )
     return 0;
-  if ( m2_strlist_menu_data[defidx].label[0] != '.' )
+  if ( m2_rom_low_level_get_byte(label) != '.' )
     return 0;
   return 1;
 }
 
 static uint8_t m2_strlist_menu_has_submenu(uint8_t defidx)
 {
-  if ( m2_strlist_menu_data[defidx].label == NULL )
+  const char *label = (const char *)m2_strlist_menu_get_label(defidx);
+  if ( label == NULL )
     return 0;
-  if ( m2_strlist_menu_data[defidx].label[0] == '.' )
+  if ( m2_rom_low_level_get_byte(label) == '.' )
     return 0;
   return m2_strlist_menu_is_submenu(defidx+1);
 }
@@ -79,7 +90,7 @@ static uint8_t m2_strlist_menu_get_defidx_by_strlistidx(uint8_t strlistidx)
   {
     if ( strlistidx == strlistcnt )
       break;
-    if ( m2_strlist_menu_data[defidx].label == NULL )
+    if ( m2_strlist_menu_get_label(defidx) == NULL )
       break;
     if ( m2_strlist_menu_has_submenu(defidx) != 0 )
     {
@@ -174,7 +185,7 @@ const char *m2_strlist_menu_cb(uint8_t idx, uint8_t msg)
     }
     else
     {
-      m2_SetRoot(m2_strlist_menu_data[defidx].element);
+      m2_SetRoot(m2_strlist_menu_get_element(defidx));
     }
   }
 
