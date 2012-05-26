@@ -258,7 +258,7 @@ M2_EL_FN_DEF(m2_el_2lmenu_line_fn)
     case M2_EL_MSG_SHOW:
       m2_el_2lmenu_data = m2_el_2lmenu_get_menu_data_ptr(parent_el);
      {
-       const char *extra_str = NULL;
+       char extra_str[2] = " ";
 	uint8_t defidx  = m2_2lmenu_get_defidx_by_strlistidx(pos);
 	const char *ptr = m2_2lmenu_get_label(defidx);
        
@@ -270,13 +270,16 @@ M2_EL_FN_DEF(m2_el_2lmenu_line_fn)
         {
 	  if ( m2_el_2lmenu_expanded_position == defidx )
 	  {
-	    extra_str = "-";
+	    extra_str[0] = '-';
 	  }
-	  if ( m2_2lmenu_has_submenu(defidx) != 0 )
+	  else if ( m2_2lmenu_has_submenu(defidx) != 0 )
 	  {
-	    extra_str = "+";
+	    extra_str[0] = '+';
 	  }
-	  extra_str = "";
+	  else if ( m2_2lmenu_is_submenu(defidx) != 0 )
+	  {
+	    extra_str[0] = ' ';
+	  }
         }
         m2_el_slbase_show(fn_arg, extra_str, ptr);
       }
