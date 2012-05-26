@@ -721,7 +721,7 @@ M2_ALIGN(top_el_strlist_mainmenu, "-1|1W64H64", &el_strlistmm);
 
 /*=== Expandable Menu ===*/
 
-m2_menu_entry exmedef[] M2_PROGMEM = 
+m2_menu_entry exmedef[] = 
 {
   { M2_PSTR("Menu 1"), NULL },
   { M2_PSTR(". Sub 1-1"), &top_el_select_menu },
@@ -750,10 +750,23 @@ M2_HLIST(el_exme_hlist, NULL, list_exme_strlist);
 M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_exme_hlist);
 
 
+/*=== Expandable Menu 2 ===*/
+
+uint8_t el_2lme_first = 0;
+uint8_t el_2lme_cnt = 4;
+
+
+M2_2LMENU(el_2lme_strlist, "l4e15W47", &el_2lme_first, &el_2lme_cnt, exmedef, '+', '-', ' ');
+M2_SPACE(el_2lme_space, "W1h1");
+M2_VSB(el_2lme_vsb, "l4W4r1", &el_2lme_first, &el_2lme_cnt);
+M2_LIST(list_2lme_strlist) = { &el_2lme_strlist, &el_2lme_space, &el_2lme_vsb };
+M2_HLIST(el_2lme_hlist, NULL, list_2lme_strlist);
+M2_ALIGN(top_el_2l_menu, "-1|1W64H64", &el_2lme_hlist);
+
 /*=== Menu Selection ===*/
 
 uint8_t el_seme_first = 0;
-uint8_t el_seme_cnt = 3;
+uint8_t el_seme_cnt = 4;
 const char *el_seme_strlist_cb(uint8_t idx, uint8_t msg) {
   const char *s = "";
   if ( idx == 0 ) {
@@ -775,10 +788,19 @@ const char *el_seme_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_expandable_menu);
     }
   }
+  else if ( idx == 3 ) {
+    s = "2L Menu";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      //el_exme_update_cnt();
+      m2_SetRoot(&top_el_2l_menu);
+    }
+  }
 
   
   return s;
 }
+
 
 M2_STRLIST(el_seme_strlist, "l3W56", &el_seme_first, &el_seme_cnt, el_seme_strlist_cb);
 M2_SPACE(el_seme_space, "W1h1");

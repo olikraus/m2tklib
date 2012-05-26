@@ -706,9 +706,10 @@ struct _m2_el_2lmenu_struct
 typedef struct _m2_el_2lmenu_struct m2_el_2lmenu_t;
 typedef m2_el_2lmenu_t *m2_el_2lmenu_p;
 
-M2_EL_FN_DEF(m2_el_strlist_fn);
-#define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
-#define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
+M2_EL_FN_DEF(m2_el_2lmenu_fn);
+
+#define M2_2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
+#define M2_EXTERN_2LMENU(el) extern m2_el_2lmenu_t el
 
 
 struct _m2_el_infobase_struct
