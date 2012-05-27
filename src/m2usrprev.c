@@ -32,21 +32,6 @@
 static void m2_nav_user_down_last(m2_nav_p nav) M2_NOINLINE;
 static uint8_t m2_nav_user_prev_sub(m2_nav_p nav) M2_NOINLINE;
 
-#ifdef OBSOLETE
-static uint8_t m2_nav_user_prev_sub(m2_nav_p nav)
-{
-  if ( m2_nav_prev(nav) != 0 )
-    return m2_nav_do_auto_down(nav);
-  if ( m2_nav_do_auto_up(nav) == 0 )
-    return 0;
-  if ( m2_nav_prev(nav) != 0 )
-    return m2_nav_do_auto_down(nav);
-  if ( m2_nav_last(nav) != 0 )
-    return m2_nav_do_auto_down(nav);
-  return 0;  
-}
-#endif
-
 static void m2_nav_user_down_last(m2_nav_p nav)
 {
   for(;;)

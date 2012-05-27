@@ -4,6 +4,7 @@ M2TKPATH = ../../
 
 
 CFLAGS = -g -Wall -I$(U8GPATH)csrc/.  -I$(M2TKPATH)src/. -I$(M2TKPATH)dev/u8glib/. `sdl-config --cflags` 
+# CFLAGS += -DM2_EL_MSG_DBG_SHOW
 
 # CFLAGS += -DM2_EL_MSG_DBG_SHOW -DU8G_16BIT 
 

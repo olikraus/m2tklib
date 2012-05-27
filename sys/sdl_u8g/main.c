@@ -755,8 +755,8 @@ M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_exme_hlist);
 uint8_t el_2lme_first = 0;
 uint8_t el_2lme_cnt = 4;
 
-
-M2_2LMENU(el_2lme_strlist, "l4e15W47", &el_2lme_first, &el_2lme_cnt, exmedef, '+', '-', ' ');
+/* for m2icon fonts, 65: closed folder, 102: open folder */
+M2_2LMENU(el_2lme_strlist, "l4e15F3W47", &el_2lme_first, &el_2lme_cnt, exmedef, 65, 102, '\0');
 M2_SPACE(el_2lme_space, "W1h1");
 M2_VSB(el_2lme_vsb, "l4W4r1", &el_2lme_first, &el_2lme_cnt);
 M2_LIST(list_2lme_strlist) = { &el_2lme_strlist, &el_2lme_space, &el_2lme_vsb };

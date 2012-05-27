@@ -33,23 +33,6 @@
 static void m2_nav_user_down_first(m2_nav_p nav) M2_NOINLINE;
 static uint8_t m2_nav_user_next_sub(m2_nav_p nav) M2_NOINLINE;
 
-#ifdef OBSOLETE
-static uint8_t m2_nav_user_next_sub(m2_nav_p nav)
-{
-  if ( m2_nav_next(nav) != 0 )
-    return m2_nav_do_auto_down(nav);
-  if ( m2_nav_do_auto_up(nav) == 0 )
-    return 0;
-  /* if auto up does not change the depth, then the next command would be repeated */
-  if ( m2_nav_next(nav) != 0 )
-    return m2_nav_do_auto_down(nav);
-  if ( m2_nav_first(nav) != 0 )
-    return m2_nav_do_auto_down(nav);
-  return 0;  
-}
-#endif
-
-
 static void m2_nav_user_down_first(m2_nav_p nav)
 {
   for(;;)

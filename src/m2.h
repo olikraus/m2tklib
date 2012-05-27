@@ -149,6 +149,8 @@ typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 typedef const char *(*m2_labelfn_fnptr)(m2_rom_void_p element);
 
 
+
+
 /* u8fn procedure */
 typedef uint8_t (*m2_u8fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint8_t val);
 #define M2_U8_MSG_GET_VALUE 0
@@ -175,6 +177,8 @@ void m2_SetRootM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;								/* m2obj.c
 m2_rom_void_p m2_GetRootM2(m2_p m2) M2_NOINLINE;										/* m2obj.c */
 void m2_ClearM2(m2_p m2);
 void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh);
+
+
 
 /* simplified interface */
 extern m2_t m2_global_object;
@@ -260,7 +264,12 @@ uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
 #define M2_EL_MSG_DATA_DOWN 22
 #define M2_EL_MSG_DATA_SET_U8 23
 #define M2_EL_MSG_SELECT 30
+/* new focus is sent only to elements which really get the focus */
+/* escpecially if autoskip is active, there will be not such a message */
 #define M2_EL_MSG_NEW_FOCUS 31
+/* this msg is sent by m2_nav_init (m2navinit.c), when the root element has been assigned or changed */
+#define M2_EL_MSG_NEW_DIALOG 32
+
 #define M2_EL_MSG_SHOW 40
 #if defined(M2_USE_DBG_SHOW)
 #define M2_EL_MSG_DBG_SHOW 41
@@ -827,6 +836,13 @@ uint8_t m2_nav_data_down(m2_nav_p nav) M2_NOINLINE;					/* m2navdatadn.c */
 
 
 uint8_t m2_el_parent_get_font(m2_nav_p nav) M2_NOINLINE;				/* m2elsubutl.c */
+
+
+/*==============================================================*/
+/* m2dfs.c */
+/* dfs handler (callback procedure) */
+typedef uint8_t (*m2_dfs_fnptr)(m2_nav_p nav);
+void m2_nav_dfs(m2_nav_p nav, m2_dfs_fnptr cb);		/* m2dfs.c */
 
 
 /*==============================================================*/

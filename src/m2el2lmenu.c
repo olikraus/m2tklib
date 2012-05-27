@@ -45,19 +45,19 @@ m2_menu_entry *m2_el_2lmenu_get_menu_data_ptr(m2_rom_void_p element)
 }
 
 
-uint8_t m2_el_2lmenu_get_menu_char(m2_el_fnarg_p fn_arg)
+uint8_t m2_el_2lmenu_get_menu_char(m2_rom_void_p element)
 {
-  return m2_rom_get_u8(fn_arg->element, offsetof(m2_el_2lmenu_t, menu_char));
+  return m2_rom_get_u8(element, offsetof(m2_el_2lmenu_t, menu_char));
 }
 
-uint8_t m2_el_2lmenu_get_expanded_char(m2_el_fnarg_p fn_arg)
+uint8_t m2_el_2lmenu_get_expanded_char(m2_rom_void_p element)
 {
-  return m2_rom_get_u8(fn_arg->element, offsetof(m2_el_2lmenu_t, expanded_char));
+  return m2_rom_get_u8(element, offsetof(m2_el_2lmenu_t, expanded_char));
 }
 
-uint8_t m2_el_2lmenu_get_submenu_char(m2_el_fnarg_p fn_arg)
+uint8_t m2_el_2lmenu_get_submenu_char(m2_rom_void_p element)
 {
-  return m2_rom_get_u8(fn_arg->element, offsetof(m2_el_2lmenu_t, submenu_char));
+  return m2_rom_get_u8(element, offsetof(m2_el_2lmenu_t, submenu_char));
 }
 
 /*==============================================================*/
@@ -270,15 +270,15 @@ M2_EL_FN_DEF(m2_el_2lmenu_line_fn)
         {
 	  if ( m2_el_2lmenu_expanded_position == defidx )
 	  {
-	    extra_str[0] = '-';
+	    extra_str[0] = m2_el_2lmenu_get_expanded_char(parent_el);
 	  }
 	  else if ( m2_2lmenu_has_submenu(defidx) != 0 )
 	  {
-	    extra_str[0] = '+';
+	    extra_str[0] = m2_el_2lmenu_get_menu_char(parent_el);
 	  }
 	  else if ( m2_2lmenu_is_submenu(defidx) != 0 )
 	  {
-	    extra_str[0] = ' ';
+	    extra_str[0] = m2_el_2lmenu_get_submenu_char(parent_el);
 	  }
         }
         m2_el_slbase_show(fn_arg, extra_str, ptr);
@@ -322,9 +322,16 @@ M2_EL_FN_DEF(m2_el_2lmenu_fn)
       return m2_el_slbase_calc_height((fn_arg->element));
     case M2_EL_MSG_GET_WIDTH:
       return m2_el_slbase_calc_width((fn_arg->element));
-    case M2_EL_MSG_NEW_FOCUS:
+    case M2_EL_MSG_NEW_DIALOG:
       m2_el_2lmenu_data = m2_el_2lmenu_get_menu_data_ptr(fn_arg->element);
       m2_2lmenu_update_cnt(fn_arg->element);
+      break;
+    case M2_EL_MSG_NEW_FOCUS:
+      /* obsolete, replaced by M2_EL_MSG_NEW_DIALOG */
+      /*
+      m2_el_2lmenu_data = m2_el_2lmenu_get_menu_data_ptr(fn_arg->element);
+      m2_2lmenu_update_cnt(fn_arg->element);
+      */
       break;
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
@@ -333,7 +340,7 @@ M2_EL_FN_DEF(m2_el_2lmenu_fn)
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
 	width = m2_el_slbase_calc_width((fn_arg->element));
 	height = m2_el_slbase_calc_height((fn_arg->element));
-	printf("strlist w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
+	printf("2lmenu w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
 	    (fn_arg->arg), b->x, b->y, m2_el_slbase_get_len(fn_arg->element));
       }
       return 0;

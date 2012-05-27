@@ -26,35 +26,29 @@
 #include "m2.h"
 
 /*=========================================================================*/
+/* callback procedure for the DFS algorithm */
+uint8_t m2_send_new_dialog(m2_nav_p nav)
+{
+  m2_nav_prepare_fn_arg_current_element(nav);
+  m2_fn_arg_call(M2_EL_MSG_NEW_DIALOG);
+}
+
+/*=========================================================================*/
+
 /*
   go down, util there is something to select
   this is used after a new root element has been set. 
   Note that other methodes are required for the user select/go down request.
-  
-  
 */
 static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
 {
-  /*obsolete: m2_nav_do_auto_down(nav); */
-  
   m2_nav_user_first(nav);
-
-  /* obsolete
-  if ( m2_nav_get_list_len(nav) >= 1 )
-  {
-    m2_nav_user_down(nav, 0);
-  }
-
-  m2_nav_do_auto_down(nav);
-  
-  if ( m2_nav_is_read_only(nav) != 0 )
-    m2_nav_user_next(nav);
-  */
 }
 
 /* constructor: init a new cursor into our tree */
 /* memory for m2_nav_p nav must be provided by the calling procedure */
 /* usually called by m2_ep_init(), see m2ep.c */
+/* this procedure is called when a new root is assigned */
 
 void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element)
 {
@@ -66,6 +60,8 @@ void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element)
   nav->pos[0] = 0;
   nav->depth = 1;
   nav->new_root_element = NULL;
+  
+  m2_nav_dfs(nav, m2_send_new_dialog);
   m2_nav_do_down_after_root_assignment(nav);
 }
 
