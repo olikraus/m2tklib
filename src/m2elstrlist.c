@@ -185,6 +185,9 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
 	/* adjust top element to total size, if required */
 	m2_el_slbase_adjust_top_to_cnt(fn_arg->element);
 	break;
+      case M2_EL_MSG_NEW_DIALOG:
+	m2_el_strlist_cb_fnptr(fn_arg->element)(255, M2_STRLIST_MSG_NEW_DIALOG);
+	return 0;
   }
   return m2_el_fnfmt_fn(fn_arg);
 }

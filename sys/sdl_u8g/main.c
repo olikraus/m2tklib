@@ -600,6 +600,10 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
       return "A";       // folder icon
     return "B";         // file icon
   }
+  else if ( msg == M2_STRLIST_MSG_NEW_DIALOG )
+  {
+    fs_set_cnt();    
+  }
   else if ( msg == M2_STRLIST_MSG_SELECT ) 
   {
     if ( idx == 0 )
@@ -622,8 +626,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
         mas_ChDir(mas_entry_name);
         fs_set_cnt();
         m2_SetRoot(m2_GetRoot());  // reset menu to first element
-      }
-      
+      }      
     }
   } 
   return "";
@@ -884,7 +887,6 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     s = "FileSelection";
     if ( msg == M2_STRLIST_MSG_SELECT )
     {
-      fs_set_cnt();
       m2_SetRoot(&el_top_fs);
     }
   }
