@@ -741,6 +741,7 @@ m2_menu_entry exmedef[] =
 
 
 //M2_STRLIST(el_exme_strlist, "l4e15W47", &el_exme_first, &el_exme_cnt, el_exme_strlist_cb);
+/* this has been removed, use M2_2LMENU
 M2_STRLIST(el_exme_strlist, "l4e15W47", &m2_strlist_menu_first, &m2_strlist_menu_cnt, m2_strlist_menu_cb);
 
 M2_SPACE(el_exme_space, "W1h1");
@@ -748,12 +749,12 @@ M2_VSB(el_exme_vsb, "l4W4r1", &m2_strlist_menu_first, &m2_strlist_menu_cnt);
 M2_LIST(list_exme_strlist) = { &el_exme_strlist, &el_exme_space, &el_exme_vsb };
 M2_HLIST(el_exme_hlist, NULL, list_exme_strlist);
 M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_exme_hlist);
-
+*/
 
 /*=== Expandable Menu 2 ===*/
 
 uint8_t el_2lme_first = 0;
-uint8_t el_2lme_cnt = 4;
+uint8_t el_2lme_cnt = 3;
 
 /* for m2icon fonts, 65: closed folder, 102: open folder */
 M2_2LMENU(el_2lme_strlist, "l4e15F3W47", &el_2lme_first, &el_2lme_cnt, exmedef, 65, 102, '\0');
@@ -766,7 +767,7 @@ M2_ALIGN(top_el_2l_menu, "-1|1W64H64", &el_2lme_hlist);
 /*=== Menu Selection ===*/
 
 uint8_t el_seme_first = 0;
-uint8_t el_seme_cnt = 4;
+uint8_t el_seme_cnt = 3;
 const char *el_seme_strlist_cb(uint8_t idx, uint8_t msg) {
   const char *s = "";
   if ( idx == 0 ) {
@@ -779,16 +780,17 @@ const char *el_seme_strlist_cb(uint8_t idx, uint8_t msg) {
     if ( msg == M2_STRLIST_MSG_SELECT )
       m2_SetRoot(&top_el_strlist_mainmenu);
   }
+  /*
   else if ( idx == 2 ) {
     s = "Expandable Menu";
     if ( msg == M2_STRLIST_MSG_SELECT )
     {
-      //el_exme_update_cnt();
       m2_SetStrlistMenuData(exmedef, '+', '-', ' ');
       m2_SetRoot(&top_el_expandable_menu);
     }
   }
-  else if ( idx == 3 ) {
+  */
+  else if ( idx == 2 ) {
     s = "2L Menu";
     if ( msg == M2_STRLIST_MSG_SELECT )
     {
