@@ -319,6 +319,11 @@ const char *mas_GetFilename(void)
   return (const char *)mas_entry_name;
 }
 
+uint8_t mas_IsDir(void)
+{
+  return mas_entry_is_dir;
+}
+
 void mas_ClearFilename(void)
 {
   mas_entry_name[0] = '\0';

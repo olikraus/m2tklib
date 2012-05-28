@@ -572,64 +572,52 @@ M2_ALIGN(top_el_muse, "-1|1W64H64", &el_muse_vlist);
 uint8_t fs_m2tk_first = 0;
 uint8_t fs_m2tk_cnt = 0;
 
-void fs_set_cnt(void)
-{
-  if ( mas_GetDirEntryCnt()+FS_EXTRA_MENUES < 255 )
-    fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
-  else
-    fs_m2tk_cnt = 255;
-}
-
-const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
-{
-  
-  /* process message */
-  if (msg == M2_STRLIST_MSG_GET_STR) 
-  {
+const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
+  if (msg == M2_STRLIST_MSG_GET_STR)  {
+    /* Check for the extra button: Return string for this extra button */
     if ( idx == 0 )
-      return "Back";
+      return "..";
+    
+    /* Not the extra button: Return file/directory name */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
-    return mas_entry_name;
+    return mas_GetFilename();
   } 
-  else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
-  {
+  else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
+    /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
-      return "a";       // leave menu
+      return "a";       /* arrow left of the m2icon font */
+    /* Not the extra button: Return file or directory icon */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
-    if ( mas_entry_is_dir )
-      return "A";       // folder icon
-    return "B";         // file icon
+    if ( mas_IsDir() )
+      return "A";       /* folder icon of the m2icon font */
+    return "B";         /* file icon of the m2icon font */
   }
-  else if ( msg == M2_STRLIST_MSG_NEW_DIALOG )
-  {
-    fs_set_cnt();    
-  }
-  else if ( msg == M2_STRLIST_MSG_SELECT ) 
-  {
-    if ( idx == 0 )
-    {
+  else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    /* Check for the extra button: Execute button action */
+    if ( idx == 0 ) {
       if ( mas_pwd[0] == '\0' )
         m2_SetRoot(&top_el_tlsm);      
-      else
-      {
+      else {
         mas_ChDirUp();
-        fs_set_cnt();
-        m2_SetRoot(m2_GetRoot());  // reset menu to first element
+        m2_SetRoot(m2_GetRoot());  // reset menu to first element, send NEW_DIALOG and force recount
       }
-        
     }
-    else
-    {
+    else {
       mas_GetDirEntry(idx - FS_EXTRA_MENUES);
-      if ( mas_entry_is_dir )
-      {
-        mas_ChDir(mas_entry_name);
-        fs_set_cnt();
-        m2_SetRoot(m2_GetRoot());  // reset menu to first element
+      if ( mas_IsDir() ) {
+        mas_ChDir(mas_GetFilename());
+        m2_SetRoot(m2_GetRoot());  // reset menu to first element, send NEW_DIALOG and force recount
       }      
     }
   } 
-  return "";
+  else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
+    /* (re-) calculate number of entries, limit no of entries to 250 */
+    if ( mas_GetDirEntryCnt() < 250-FS_EXTRA_MENUES )
+      fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
+    else
+      fs_m2tk_cnt = 250;
+  }
+  return NULL;
 }
 
 M2_STRLIST(el_fs_strlist, "l5F3e15W47", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
