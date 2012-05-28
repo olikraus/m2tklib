@@ -56,8 +56,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		            return M2_KEY_EVENT(M2_KEY_DATA_DOWN);
 		          case SDLK_o:                  // screenshot
 		            puts("SDLK_o (screenshOt)");
-                            // screenshot();
-                            screenshot100();
+                            screenshot();
+                            //screenshot100();
                             break;
 		          case SDLK_q:
 		            exit(0);
@@ -564,8 +564,23 @@ M2_VLIST(el_muse_vlist, "c2", muse_list);
 M2_ALIGN(top_el_muse, "-1|1W64H64", &el_muse_vlist);
 
 /*======================================================================*/
-/* file selection dialog */
+/* Show selected file */
 
+const char *fs_show_file_label_cb(m2_rom_void_p element)
+{
+  return mas_GetFilename();
+}
+
+M2_LABEL(el_show_file_label, NULL, "Selected file:");
+M2_LABELFN(el_show_filename, NULL, fs_show_file_label_cb);
+M2_ROOT(el_show_file_ok, NULL, "ok", &top_el_tlsm);
+M2_LIST(list_show_file) = { &el_show_file_label, &el_show_filename, &el_show_file_ok };
+M2_VLIST(el_show_file_Vlist, NULL, list_show_file);
+M2_ALIGN(top_el_show_file, "-1|1W64H64", &el_show_file_Vlist);
+
+/* File selection dialog */
+
+/* defines the number of additional buttons at the beginning of the STRLIST lines */
 #define FS_EXTRA_MENUES 1
 
 /* helper variables for the strlist element */
@@ -577,12 +592,10 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
     /* Check for the extra button: Return string for this extra button */
     if ( idx == 0 )
       return "..";
-    
     /* Not the extra button: Return file/directory name */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     return mas_GetFilename();
-  } 
-  else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
+  } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
     /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
       return "a";       /* arrow left of the m2icon font */
@@ -591,26 +604,27 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
     if ( mas_IsDir() )
       return "A";       /* folder icon of the m2icon font */
     return "B";         /* file icon of the m2icon font */
-  }
-  else if ( msg == M2_STRLIST_MSG_SELECT ) {
+  } else if ( msg == M2_STRLIST_MSG_SELECT ) {
     /* Check for the extra button: Execute button action */
     if ( idx == 0 ) {
-      if ( mas_pwd[0] == '\0' )
+      if ( mas_GetPath()[0] == '\0' )
         m2_SetRoot(&top_el_tlsm);      
       else {
         mas_ChDirUp();
-        m2_SetRoot(m2_GetRoot());  // reset menu to first element, send NEW_DIALOG and force recount
+        m2_SetRoot(m2_GetRoot());  /* reset menu to first element, send NEW_DIALOG and force recount */
       }
-    }
-    else {
+    /* Not the extra button: Goto subdir or return (with selected file) */
+    } else {
       mas_GetDirEntry(idx - FS_EXTRA_MENUES);
       if ( mas_IsDir() ) {
         mas_ChDir(mas_GetFilename());
-        m2_SetRoot(m2_GetRoot());  // reset menu to first element, send NEW_DIALOG and force recount
-      }      
+        m2_SetRoot(m2_GetRoot());  /* reset menu to first element, send NEW_DIALOG and force recount */
+      } else {
+	/* File has been selected. Here: Show the file to the user */
+        m2_SetRoot(&top_el_show_file);  
+      }
     }
-  } 
-  else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
+  } else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
     /* (re-) calculate number of entries, limit no of entries to 250 */
     if ( mas_GetDirEntryCnt() < 250-FS_EXTRA_MENUES )
       fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
@@ -620,12 +634,17 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   return NULL;
 }
 
-M2_STRLIST(el_fs_strlist, "l5F3e15W47", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_STRLIST(el_fs_strlist, "l5F3e15W49", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
 M2_SPACE(el_fs_space, "W1h1");
 M2_VSB(el_fs_strlist_vsb, "l5W4r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
+M2_STRLIST(el_fs2_strlist, "l5W57", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_SPACE(el_fs2_space, "W1h1");
+M2_VSB(el_fs2_strlist_vsb, "l5W4r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_LIST(list_fs2_strlist) = { &el_fs2_strlist, &el_fs2_space, &el_fs2_strlist_vsb };
+M2_HLIST(el_top_fs2, NULL, list_fs2_strlist);
 
 
 /*======================================================================*/
@@ -899,12 +918,19 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_select_menu);
     }
   }
+  else if ( idx == 16 ) {
+    s = "FileSelection 2";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_top_fs2);
+    }
+  }
   return s;
 }
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 16;
+uint8_t el_tlsm_cnt = 17;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
