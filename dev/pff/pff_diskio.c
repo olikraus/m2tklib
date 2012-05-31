@@ -67,7 +67,7 @@
 
 
 
-static
+//static
 BYTE CardType;			/* b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressing */
 
 
@@ -193,6 +193,7 @@ DSTATUS disk_initialize (void)
 	CS_H();
 	skip_mmc(10);			/* Dummy clocks */
 
+        send_cmd(CMD0, 0);	/* added for power on reset */
 	ty = 0;
 	if (send_cmd(CMD0, 0) == 1) {			/* Enter Idle state */
 		if (send_cmd(CMD8, 0x1AA) == 1) {	/* SDv2 */

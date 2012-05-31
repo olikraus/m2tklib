@@ -203,6 +203,7 @@ M2_LABEL(el_mm_path, NULL, "Path:");
 M2_LABELPTR(el_mm_pathname, NULL, &ptr_to_pathname);
 
 
+
 M2_LABEL(el_mm_selected, NULL, "Selected:");
 M2_LABELPTR(el_mm_filename, NULL, &ptr_to_filename);
 M2_BUTTON(el_mm_fs, NULL, "Select File", mm_fs_fn);
@@ -211,9 +212,12 @@ M2_VLIST(el_top, NULL, list_mm);
 
 M2tk m2(&el_top, m2_es_arduino, m2_eh_6bs, m2_gh_u8g_ffs);
 
+extern BYTE CardType;
 
 // U8glib draw procedure: Just call the M2tklib draw procedure
 void draw(void) {
+  u8g.setPrintPos(50,10);
+  u8g.print(CardType);
   m2.draw();
 }
 
@@ -255,6 +259,9 @@ void setup()
   ptr_to_filename = mas_entry_name;
   ptr_to_pathname = mas_pwd;
 
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
+
 #ifdef FS_SdFat
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
   if ( sdfat.init(SPI_HALF_SPEED, 23) )
@@ -274,10 +281,10 @@ void setup()
 #endif
 
 #ifdef FS_PFF
-  sd_card_status = 0;
   if ( pf_mount(&pff_fs) == FR_OK )
   {
     sd_card_status = 1;
+  digitalWrite(13, HIGH);
     mas_Init(mas_device_pff, &pff_fs);
   }
 #endif

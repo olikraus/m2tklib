@@ -31,6 +31,7 @@ uint8_t m2_send_new_dialog(m2_nav_p nav)
 {
   m2_nav_prepare_fn_arg_current_element(nav);
   m2_fn_arg_call(M2_EL_MSG_NEW_DIALOG);
+  return 1;
 }
 
 /*=========================================================================*/
