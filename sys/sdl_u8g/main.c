@@ -589,6 +589,7 @@ uint8_t fs_m2tk_cnt = 0;
 
 const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   if (msg == M2_STRLIST_MSG_GET_STR)  {
+    puts("M2_STRLIST_MSG_GET_STR");
     /* Check for the extra button: Return string for this extra button */
     if ( idx == 0 )
       return "..";
@@ -596,6 +597,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     return mas_GetFilename();
   } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
+    puts("M2_STRLIST_MSG_GET_EXTENDED_STR");
     /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
       return "a";       /* arrow left of the m2icon font */
@@ -605,6 +607,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
       return "A";       /* folder icon of the m2icon font */
     return "B";         /* file icon of the m2icon font */
   } else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    puts("M2_STRLIST_MSG_SELECT");
     /* Check for the extra button: Execute button action */
     if ( idx == 0 ) {
       if ( mas_GetPath()[0] == '\0' )
@@ -625,6 +628,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
       }
     }
   } else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
+      puts("M2_STRLIST_MSG_NEW_DIALOG");
     /* (re-) calculate number of entries, limit no of entries to 250 */
     if ( mas_GetDirEntryCnt() < 250-FS_EXTRA_MENUES )
       fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
@@ -1020,8 +1024,8 @@ int main(void)
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
   
   /* 2. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
-  // m2_Init(&list_element, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_fb);
+  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
 
   /* 3. Connect the u8g display to m2.  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);
@@ -1035,7 +1039,7 @@ int main(void)
 
   // m2_SetU8gAdditionalReadOnlyXBorder(0);  
   /* set the font for the multi selection */
-  m2_SetFont(3, (const void *)u8g_font_m2icon_9);
+  m2_SetFont(3, (const void *)u8g_font_m2icon_7);
 
   mas_Init(mas_device_sim, 0);
 

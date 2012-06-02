@@ -19,22 +19,19 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
-  
-  sd support
-    SdFat (Arduino)
-    http://www.mikrocontroller.net/articles/AVR_FAT32                   --> not fully clear how to read dir entries with this
-    http://www.holger-klabunde.de/avr/avrboard.htm#FullFAT              --> seems to be a small implementation
-    http://www.dharmanitech.com/2009/01/sd-card-interfacing-with-atmega8-fat32.html
-    http://code.google.com/p/fullfat/           (http://www.fullfat-fs.co.uk/)
-    http://code.google.com/p/nanofat-lib/               -->PIC
-    http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module
-    
 */
+
+
+/*=========================================================================*/
+/* select mass storage sub system */
 
 //#define FS_SdFat
 //#define FS_SD
 #define FS_PFF
 //#define FS_SIM
+
+/*=========================================================================*/
+/* generic includes */
 
 #include "U8glib.h"
 #include "M2tk.h"
@@ -42,6 +39,8 @@
 #include <string.h>
 #include "mas.h"
 
+/*=========================================================================*/
+/* specific includes for the mass storage sub system */
 
 #ifdef FS_SdFat
 #include <SdFat.h>
@@ -58,9 +57,8 @@
 #ifdef FS_SIM
 #endif
 
-
-#define DEFAULT_FONT u8g_font_6x12
-#define ICON_FONT u8g_font_m2icon_7
+/*=========================================================================*/
+/* specific includes for the mass storage sub system */
 
 #ifdef FS_SdFat
 SdFat sdfat;
@@ -71,10 +69,17 @@ FATFS pff_fs;
 #endif
 
 /*=========================================================================*/
-/* u8g object definition for botmat graphic */
+/* forward declarations */
+
+M2_EXTERN_ALIGN(top_el_start);
+
+/*=========================================================================*/
+/* u8g and m2tk object  */
 
 //U8GLIB_DOGM128 u8g(7, 5, 1, 2);                    // SPI Com: SCK = 7, MOSI = 5, CS = 1, A0 = 2
 U8GLIB_DOGM128 u8g(1, 2);                    // HW SPI CS = 1, A0 = 2
+
+M2tk m2(&top_el_start, m2_es_arduino, m2_eh_6bs, m2_gh_u8g_ffs);
 
 
 /*=========================================================================*/
@@ -87,147 +92,100 @@ uint8_t uiKeyLeftPin = 20;
 uint8_t uiKeyRightPin = 21;
 
 /*=========================================================================*/
-/* forward declarations */
+/* file selection box */
 
-extern M2tk m2;
-M2_EXTERN_HLIST(el_top);
-
-/*=========================================================================*/
-uint8_t sd_card_status = 0;
-
-
-/*=========================================================================*/
-/* file selection dialog */
-/* limitation: not more than 250 elements per directory allowed */
-
+/* defines the number of additional buttons at the beginning of the STRLIST lines */
 #define FS_EXTRA_MENUES 1
 
 /* helper variables for the strlist element */
 uint8_t fs_m2tk_first = 0;
 uint8_t fs_m2tk_cnt = 0;
 
+/* show selected file */
 
-void fs_set_cnt(void)
-{
-  uint16_t cnt;
-  cnt = mas_GetDirEntryCnt();
-  if ( cnt+FS_EXTRA_MENUES < 255 )
-    fs_m2tk_cnt = cnt+FS_EXTRA_MENUES;
-  else
-    fs_m2tk_cnt = 255;
+const char *fs_show_file_label_cb(m2_rom_void_p element) {
+  return mas_GetFilename();
 }
 
-const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
-{
-  /* process message */
-  if (msg == M2_STRLIST_MSG_GET_STR) 
-  {
+M2_LABEL(el_show_file_label, NULL, "Selected file:");
+M2_LABELFN(el_show_filename, NULL, fs_show_file_label_cb);
+M2_ROOT(el_show_file_ok, NULL, "ok", &top_el_start);
+M2_LIST(list_show_file) = { &el_show_file_label, &el_show_filename, &el_show_file_ok };
+M2_VLIST(el_show_file_Vlist, NULL, list_show_file);
+M2_ALIGN(top_el_show_file, "-1|1W64H64", &el_show_file_Vlist);
+
+/* callback procedure for the file selection dialog */
+const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
+  if (msg == M2_STRLIST_MSG_GET_STR)  {
+    /* Check for the extra button: Return string for this extra button */
     if ( idx == 0 )
-   {
-      return "Back";
-   }
+      return "..";
+    /* Not the extra button: Return file/directory name */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
-    return mas_entry_name;
-  } 
-  else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR )
-  {
+    return mas_GetFilename();
+  } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
+    /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
-      return "a";       // leave menu
+      return "a";       /* arrow left of the m2icon font */
+    /* Not the extra button: Return file or directory icon */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
-    if ( mas_entry_is_dir )
-      return "A";       // folder icon
-    return "B";         // file icon
-  }
-  else if ( msg == M2_STRLIST_MSG_SELECT ) 
-  {
-    if ( idx == 0 )
-    {
-      if ( mas_pwd[0] == '\0' )
-      {
-	mas_ClearFilename();
-	m2_SetRoot(&el_top);
-      }
-      else
-      {
+    if ( mas_IsDir() )
+      return "A";       /* folder icon of the m2icon font */
+    return "B";         /* file icon of the m2icon font */
+  } else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    /* Check for the extra button: Execute button action */
+    if ( idx == 0 ) {
+      if ( mas_GetPath()[0] == '\0' )
+        m2_SetRoot(&top_el_start);      	/* go back to previous menu */
+      else {
         mas_ChDirUp();
-        fs_set_cnt();
-        m2_SetRoot(m2_GetRoot());  // reset menu to first element
+        m2_SetRoot(m2_GetRoot());  /* reset menu to first element, send NEW_DIALOG and force recount */
       }
-    }
-    else
-    {
+    /* Not the extra button: Goto subdir or return (with selected file) */
+    } else {
       mas_GetDirEntry(idx - FS_EXTRA_MENUES);
-      if ( mas_entry_is_dir )
-      {
-        mas_ChDir(mas_entry_name);
-        fs_set_cnt();
-        m2_SetRoot(m2_GetRoot());  // reset menu to first element
-      }
-      else
-      {
-	m2_SetRoot(&el_top);
+      if ( mas_IsDir() ) {
+        mas_ChDir(mas_GetFilename());
+        m2_SetRoot(m2_GetRoot());  /* reset menu to first element, send NEW_DIALOG and force recount */
+      } else {
+	/* File has been selected. Here: Show the file to the user */
+        m2_SetRoot(&top_el_show_file);  
       }
     }
-  } 
-  return "";
+  } else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
+    /* (re-) calculate number of entries, limit no of entries to 250 */
+    if ( mas_GetDirEntryCnt() < 250-FS_EXTRA_MENUES )
+      fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
+    else
+      fs_m2tk_cnt = 250;
+  }
+  return NULL;
 }
 
-
-
-
-
-M2_STRLIST(el_fs_strlist, "l4F3e15W47", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
-//M2_SPACE(el_fs_space, "w1h1");
-M2_VSB(el_fs_strlist_vsb, "l4W2r1", &fs_m2tk_first, &fs_m2tk_cnt);
-M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
+M2_STRLIST(el_fs_strlist, "l5F3e15W49", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_SPACE(el_fs_space, "W1h1");
+M2_VSB(el_fs_strlist_vsb, "l5W4r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
 
+/*=========================================================================*/
+/* a simple main menu for the file select */
 
+M2_ROOT(el_start, NULL, "File Selection", &el_top_fs);
+M2_ALIGN(top_el_start, "-1|1W64H64", &el_start);
 
 /*=========================================================================*/
-/* main menu for the file select */
+/* u8glib draw procedure: Just call the M2tklib draw procedure */
 
-
-void mm_fs_fn(m2_el_fnarg_p fnarg) 
-{
-  fs_set_cnt();
-  m2.setRoot(&el_top_fs);
-}
-
-const char *ptr_to_pathname = "";
-
-const char *ptr_to_filename = "";
-
-M2_LABEL(el_mm_path, NULL, "Path:");
-M2_LABELPTR(el_mm_pathname, NULL, &ptr_to_pathname);
-
-
-
-M2_LABEL(el_mm_selected, NULL, "Selected:");
-M2_LABELPTR(el_mm_filename, NULL, &ptr_to_filename);
-M2_BUTTON(el_mm_fs, NULL, "Select File", mm_fs_fn);
-M2_LIST(list_mm) = {&el_mm_path, &el_mm_pathname, &el_mm_selected, &el_mm_filename, &el_mm_fs };
-M2_VLIST(el_top, NULL, list_mm);
-
-M2tk m2(&el_top, m2_es_arduino, m2_eh_6bs, m2_gh_u8g_ffs);
-
-extern BYTE CardType;
-
-// U8glib draw procedure: Just call the M2tklib draw procedure
 void draw(void) {
-  u8g.setPrintPos(50,10);
-  u8g.print(CardType);
   m2.draw();
 }
-
-
 
 /*=========================================================================*/
 /* arduino entry points */
 
-void setup() 
-{
+void setup()  {
   // activate backlight
   pinMode(3, OUTPUT);
   digitalWrite(3, HIGH);
@@ -236,10 +194,10 @@ void setup()
   m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
 
   // Assign u8g font to index 0
-  m2.setFont(0, DEFAULT_FONT);
+  m2.setFont(0, u8g_font_6x10);
   
   // Assign icon font to index 3
-  m2.setFont(3, ICON_FONT);
+  m2.setFont(3, u8g_font_m2icon_7);
   
   // Setup keys (botmat)
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
@@ -255,36 +213,22 @@ void setup()
   pinMode(7, OUTPUT);		
   pinMode(23, OUTPUT);
 
-  sd_card_status = 0;
-  ptr_to_filename = mas_entry_name;
-  ptr_to_pathname = mas_pwd;
-
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);
-
 #ifdef FS_SdFat
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if ( sdfat.init(SPI_HALF_SPEED, 23) )
-  {
-    sd_card_status = 1;
+  if ( sdfat.init(SPI_HALF_SPEED, 23) ) {
     mas_Init(mas_device_sdfat, (void *)&sdfat);
   }
 #endif
 
 #ifdef FS_SD
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if (SD.begin(23))		// use the global SD object
-  {
-    sd_card_status = 1;
+  if (SD.begin(23)) {		// use the global SD object
     mas_Init(mas_device_sd, NULL);
   }
 #endif
 
 #ifdef FS_PFF
-  if ( pf_mount(&pff_fs) == FR_OK )
-  {
-    sd_card_status = 1;
-  digitalWrite(13, HIGH);
+  if ( pf_mount(&pff_fs) == FR_OK ) {
     mas_Init(mas_device_pff, &pff_fs);
   }
 #endif
@@ -295,9 +239,7 @@ void setup()
 
 }
 
-void loop() 
-{
- 
+void loop() {
   m2.checkKey();
   m2.checkKey();
   if ( m2.handleKey() || m2.getRoot() == &m2_null_element ) {

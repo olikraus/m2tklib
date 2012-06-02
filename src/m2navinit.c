@@ -60,7 +60,6 @@ void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element)
   nav->element_list[0] = (m2_el_fnfmt_p)element;
   nav->pos[0] = 0;
   nav->depth = 1;
-  nav->new_root_element = NULL;
   
   m2_nav_dfs(nav, m2_send_new_dialog);
   m2_nav_do_down_after_root_assignment(nav);

@@ -44,6 +44,7 @@ uint8_t m2_nav_check_and_assign_new_root(m2_nav_p nav)
   if ( nav->new_root_element != NULL )
   {
     m2_nav_init(nav, nav->new_root_element);
+    nav->new_root_element = NULL;
     return 1;
   }
   return 0;
