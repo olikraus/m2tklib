@@ -263,32 +263,49 @@ uint8_t m2_gfx_add_small_border_y(uint8_t font, uint8_t y)
   return y;
 }
 
-
-uint8_t m2_gfx_add_readonly_border_height(uint8_t font, uint8_t height)
+uint8_t m2_gfx_add_readonly_border_height(uint8_t is_normal, uint8_t font, uint8_t height)
 {
   m2_gfx_arg_object.font = font;
-  height +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT);
+  if ( is_normal )
+    height +=  m2_gfx_call_handler(M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT);
+  else
+    height +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_HEIGHT);
   return height;
 }
 
-uint8_t m2_gfx_add_readonly_border_width(uint8_t font, uint8_t width)
+uint8_t m2_gfx_add_readonly_border_width(uint8_t is_normal, uint8_t font, uint8_t width)
 {
   m2_gfx_arg_object.font = font;
-  width +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_WIDTH);
+  /* the is_normal border modification is ignored in x direction */
+  /*
+  if ( is_normal )
+    width +=  m2_gfx_call_handler(M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH);
+  else
+  */
+    width +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_WIDTH);    
   return width;
 }
 
-uint8_t m2_gfx_add_readonly_border_x(uint8_t font, uint8_t x)
+uint8_t m2_gfx_add_readonly_border_x(uint8_t is_normal, uint8_t font, uint8_t x)
 {
-  x +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET);
   m2_gfx_arg_object.font = font;
+  /* the is_normal border modification is ignored in x direction */
+  /*
+  if ( is_normal )
+    x +=  m2_gfx_call_handler(M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET);    
+  else
+  */
+    x +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_X_OFFSET);
   return x;
 }
 
-uint8_t m2_gfx_add_readonly_border_y(uint8_t font, uint8_t y)
+uint8_t m2_gfx_add_readonly_border_y(uint8_t is_normal, uint8_t font, uint8_t y)
 {
   m2_gfx_arg_object.font = font;
-  y +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET);
+  if ( is_normal )
+    y +=  m2_gfx_call_handler(M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET);    
+  else
+    y +=  m2_gfx_call_handler(M2_GFX_MSG_GET_READONLY_BORDER_Y_OFFSET);
   return y;
 }
 

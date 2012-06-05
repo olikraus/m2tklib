@@ -41,14 +41,14 @@ void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t w,
   m2_gfx_text(m2_gfx_add_small_border_x(font, x0), m2_gfx_add_small_border_y(font, y0), w, h, font, s);
 }
 
-void m2_gfx_draw_text_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s)
+void m2_gfx_draw_text_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s)
 {
-  m2_gfx_text(m2_gfx_add_readonly_border_x(font, x0), m2_gfx_add_readonly_border_y(font, y0), w, h, font, s);
+  m2_gfx_text(m2_gfx_add_readonly_border_x(is_normal, font, x0), m2_gfx_add_readonly_border_y(is_normal, font, y0), w, h, font, s);
 }
 
-void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s)
+void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s)
 {
-  m2_gfx_text_p(m2_gfx_add_readonly_border_x(font, x0), m2_gfx_add_readonly_border_y(font, y0), w, h, font, s);
+  m2_gfx_text_p(m2_gfx_add_readonly_border_x(is_normal, font, x0), m2_gfx_add_readonly_border_y(is_normal, font, y0), w, h, font, s);
 }
 
 uint8_t m2_gfx_get_char_height_with_small_border(uint8_t font)

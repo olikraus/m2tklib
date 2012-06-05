@@ -1081,10 +1081,10 @@ uint8_t m2_gfx_add_small_border_width(uint8_t font, uint8_t width);
 uint8_t m2_gfx_add_small_border_x(uint8_t font, uint8_t x);
 uint8_t m2_gfx_add_small_border_y(uint8_t font, uint8_t y);
 
-uint8_t m2_gfx_add_readonly_border_height(uint8_t font, uint8_t height);
-uint8_t m2_gfx_add_readonly_border_width(uint8_t font, uint8_t width);
-uint8_t m2_gfx_add_readonly_border_x(uint8_t font, uint8_t x);
-uint8_t m2_gfx_add_readonly_border_y(uint8_t font, uint8_t y);
+uint8_t m2_gfx_add_readonly_border_height(uint8_t is_normal, uint8_t font, uint8_t height);
+uint8_t m2_gfx_add_readonly_border_width(uint8_t is_normal, uint8_t font, uint8_t width);
+uint8_t m2_gfx_add_readonly_border_x(uint8_t is_normal, uint8_t font, uint8_t x);
+uint8_t m2_gfx_add_readonly_border_y(uint8_t is_normal, uint8_t font, uint8_t y);
 
 uint8_t m2_gfx_get_list_overlap_height(void);
 uint8_t m2_gfx_get_list_overlap_width(void);
@@ -1117,8 +1117,8 @@ void m2_gfx_level_next(uint8_t depth);
 
 void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
-void m2_gfx_draw_text_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
-void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_text_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 
 void m2_gfx_draw_vertical_scroll_bar(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t total, uint8_t top, uint8_t visible);
 

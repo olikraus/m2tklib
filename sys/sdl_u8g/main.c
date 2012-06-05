@@ -469,6 +469,43 @@ M2_LABEL(hello_world_label, NULL, "Hello World");
 uint32_t number = 1234;
 M2_U32NUM(el_u32num, "a1c4", &number);
 
+/*=========================================================================*/
+/* edit date dialog */
+
+uint8_t dt_day = 1;
+uint8_t dt_month = 1;
+uint8_t dt_year = 12;
+
+void dt_get_from_RTC(void)
+{
+}
+
+void dt_put_to_RTC(void)
+{
+}
+
+void dt_ok_fn(m2_el_fnarg_p fnarg) 
+{
+  m2_SetRoot(&top_el_tlsm);
+}
+
+M2_U8NUM(el_dt_day, "c2", 1,31,&dt_day);
+M2_LABEL(el_dt_sep1, "b1", ".");
+M2_U8NUM(el_dt_month, "c2", 1,12,&dt_month);
+M2_LABEL(el_dt_sep2, "b1", ".");
+M2_U8NUM(el_dt_year, "c2", 0,99,&dt_year);
+
+M2_LIST(list_date) = { &el_dt_day, &el_dt_sep1, &el_dt_month, &el_dt_sep2, &el_dt_year };
+M2_HLIST(el_date, NULL, list_date);
+
+M2_ROOT(el_dt_cancel, NULL, "cancel", &top_el_tlsm);
+M2_BUTTON(el_dt_ok, NULL, "ok", dt_ok_fn);
+M2_LIST(list_dt_buttons) = {&el_dt_cancel, &el_dt_ok };
+M2_HLIST(el_dt_buttons, NULL, list_dt_buttons);
+
+M2_LIST(list_dt) = {&el_date, &el_dt_buttons };
+M2_VLIST(el_top_dt, NULL, list_dt);
+
 
 /*======================================================================*/
 /* StrList example */
@@ -589,7 +626,6 @@ uint8_t fs_m2tk_cnt = 0;
 
 const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   if (msg == M2_STRLIST_MSG_GET_STR)  {
-    puts("M2_STRLIST_MSG_GET_STR");
     /* Check for the extra button: Return string for this extra button */
     if ( idx == 0 )
       return "..";
@@ -597,7 +633,6 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     return mas_GetFilename();
   } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
-    puts("M2_STRLIST_MSG_GET_EXTENDED_STR");
     /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
       return "a";       /* arrow left of the m2icon font */
@@ -607,7 +642,6 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
       return "A";       /* folder icon of the m2icon font */
     return "B";         /* file icon of the m2icon font */
   } else if ( msg == M2_STRLIST_MSG_SELECT ) {
-    puts("M2_STRLIST_MSG_SELECT");
     /* Check for the extra button: Execute button action */
     if ( idx == 0 ) {
       if ( mas_GetPath()[0] == '\0' )
@@ -628,7 +662,6 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
       }
     }
   } else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
-      puts("M2_STRLIST_MSG_NEW_DIALOG");
     /* (re-) calculate number of entries, limit no of entries to 250 */
     if ( mas_GetDirEntryCnt() < 250-FS_EXTRA_MENUES )
       fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
@@ -929,12 +962,19 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_top_fs2);
     }
   }
+  else if ( idx == 17 ) {
+    s = "Date";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_top_dt);
+    }
+  }
   return s;
 }
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 17;
+uint8_t el_tlsm_cnt = 18;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1024,8 +1064,8 @@ int main(void)
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
   
   /* 2. Now, setup m2 */
-  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
-  m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  //m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
 
   /* 3. Connect the u8g display to m2.  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);
