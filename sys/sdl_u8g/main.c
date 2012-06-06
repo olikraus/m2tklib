@@ -476,23 +476,14 @@ uint8_t dt_day = 1;
 uint8_t dt_month = 1;
 uint8_t dt_year = 12;
 
-void dt_get_from_RTC(void)
-{
-}
-
-void dt_put_to_RTC(void)
-{
-}
-
-void dt_ok_fn(m2_el_fnarg_p fnarg) 
-{
+void dt_ok_fn(m2_el_fnarg_p fnarg)  {
   m2_SetRoot(&top_el_tlsm);
 }
 
 M2_U8NUM(el_dt_day, "c2", 1,31,&dt_day);
 M2_LABEL(el_dt_sep1, "b1", ".");
 M2_U8NUM(el_dt_month, "c2", 1,12,&dt_month);
-M2_LABEL(el_dt_sep2, "b1", ".");
+M2_LABEL(el_dt_sep2, "b0", ".");
 M2_U8NUM(el_dt_year, "c2", 0,99,&dt_year);
 
 M2_LIST(list_date) = { &el_dt_day, &el_dt_sep1, &el_dt_month, &el_dt_sep2, &el_dt_year };
