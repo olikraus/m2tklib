@@ -759,20 +759,20 @@ M2_ALIGN(top_el_strlist_mainmenu, "-1|1W64H64", &el_strlistmm);
 
 /*=== Expandable Menu ===*/
 
-m2_menu_entry exmedef[] = 
+m2_menu_entry menu_data[] = 
 {
-  { M2_PSTR("Menu 1"), NULL },
-  { M2_PSTR(". Sub 1-1"), &top_el_select_menu },
-  { M2_PSTR(". Sub 1-2"), &top_el_select_menu },
-  { M2_PSTR("Menu 2"), &top_el_select_menu },
-  { M2_PSTR("Menu 3"), NULL },
-  { M2_PSTR(". Sub 3-1"), &top_el_select_menu },
-  { M2_PSTR(". Sub 3-2"), &top_el_select_menu },
-  { M2_PSTR("Menu 4"), &top_el_select_menu },
-  { M2_PSTR("Menu 5"), NULL },
-  { M2_PSTR(". Sub 5-1"), &top_el_select_menu },
-  { M2_PSTR(". Sub 5-2"), &top_el_select_menu },
-  { M2_PSTR(". Sub 5-3"), &top_el_select_menu },
+  { "Menu 1", NULL },
+  { ". Sub 1-1", &top_el_select_menu },
+  { ". Sub 1-2", &top_el_select_menu },
+  { "Menu 2", &top_el_select_menu },
+  { "Menu 3", NULL },
+  { ". Sub 3-1", &top_el_select_menu },
+  { ". Sub 3-2", &top_el_select_menu },
+  { "Menu 4", &top_el_select_menu },
+  { "Menu 5", NULL },
+  { ". Sub 5-1", &top_el_select_menu },
+  { ". Sub 5-2", &top_el_select_menu },
+  { ". Sub 5-3", &top_el_select_menu },
   { NULL, NULL },
 };
 
