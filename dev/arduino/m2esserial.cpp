@@ -55,6 +55,7 @@ extern "C" void m2_serial_show_help(void)
   Serial.println("Key binding depends on the current event handler.");  
 }
 
+uint8_t u8g_es_arduino_serial_is_init = 0;
 
 extern "C" uint8_t m2_es_arduino_serial(m2_p ep, uint8_t msg)
 {
@@ -63,6 +64,12 @@ extern "C" uint8_t m2_es_arduino_serial(m2_p ep, uint8_t msg)
   switch(msg)
   {
     case M2_ES_MSG_GET_KEY:
+      if ( u8g_es_arduino_serial_is_init == 0 )
+      {
+	Serial.begin(9600);        // init serial
+	Serial.println("m2tklib serial (press 'h' for help)");
+	u8g_es_arduino_serial_is_init = 1;
+      }
       r = M2_KEY_NONE;
       if ( Serial.available() )
       {
@@ -76,17 +83,13 @@ extern "C" uint8_t m2_es_arduino_serial(m2_p ep, uint8_t msg)
 	  r = m2_serial_char_to_key(c);
 	  if ( r != M2_KEY_NONE )
 	  {
-	    char s[2] = " ";
-	    s[0] = c;
-	    Serial.println(s);
+	    Serial.print((char)c);
 	    r = M2_KEY_EVENT(r);
 	  }
 	}
       }
       return r;
     case M2_ES_MSG_INIT:
-      Serial.begin(9600);        // init serial
-      Serial.println("m2tklib serial event source (press 'h' for help)");
       return 0;
   }
   return 0;
