@@ -25,6 +25,7 @@ sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/M2tk.h
 cp ../../src/*.c ./libraries/M2tklib/utility/.
 cp ../../src/*.h ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/arduino/*.cpp ./libraries/M2tklib/utility/.
 cp ../../dev/LiquidCrystal/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/LiquidCrystal/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghlc.h
