@@ -26,8 +26,8 @@
 /* select mass storage sub system */
 
 //#define FS_SdFat
-//#define FS_SD
-#define FS_PFF
+#define FS_SD
+//#define FS_PFF
 //#define FS_SIM
 
 /*=========================================================================*/
@@ -76,8 +76,8 @@ M2_EXTERN_ALIGN(top_el_start);
 /*=========================================================================*/
 /* u8g and m2tk object  */
 
-//U8GLIB_DOGM128 u8g(7, 5, 1, 2);                    // SPI Com: SCK = 7, MOSI = 5, CS = 1, A0 = 2
-U8GLIB_DOGM128 u8g(1, 2);                    // HW SPI CS = 1, A0 = 2
+U8GLIB_DOGM128 u8g(7, 5, 1, 2);                    // SPI Com: SCK = 7, MOSI = 5, CS = 1, A0 = 2
+//U8GLIB_DOGM128 u8g(1, 2);                    // HW SPI CS = 1, A0 = 2
 
 M2tk m2(&top_el_start, m2_es_arduino, m2_eh_6bs, m2_gh_u8g_ffs);
 
@@ -212,6 +212,9 @@ void setup()  {
   pinMode(6, INPUT);
   pinMode(7, OUTPUT);		
   pinMode(23, OUTPUT);
+  
+  // SPI backup (avoids conflict between SW-SPI and HW-SPI libs)
+  u8g.setHardwareBackup(u8g_backup_avr_spi);
 
 #ifdef FS_SdFat
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
