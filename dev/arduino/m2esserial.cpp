@@ -6,7 +6,7 @@
   
   m2tklib = Mini Interative Interface Toolkit Library
   
-  Copyright (C) 2011  olikraus@gmail.com
+  Copyright (C) 2012  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 #if ARDUINO < 100 
 #include "wiring.h"
-//#include <WProgram.h> 
+#include <WProgram.h> 
 #else 
 #include <Arduino.h> 
 #endif
