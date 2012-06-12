@@ -1,9 +1,11 @@
 /*
 
-  FileSelect.pde
-  
-  File selection box with u8g and m2tklib (Botmat graphic)
+  2LMenu.pde
 
+  GLCD Example
+
+  m2tklib = Mini Interative Interface Toolkit Library
+  
   Copyright (C) 2012  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
@@ -18,9 +20,8 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
-*/
 
+*/
 
 /*=========================================================================*/
 /* Select mass storage sub system: Please uncomment one of the following constants*/
@@ -33,9 +34,9 @@
 /*=========================================================================*/
 /* generic includes */
 
-#include "U8glib.h"
+#include <glcd.h>		// inform Arduino IDE that we will use GLCD library
 #include "M2tk.h"
-#include "m2ghu8g.h"
+#include "m2ghglcd.h"
 #include <string.h>
 #include "mas.h"
 
@@ -71,28 +72,22 @@ FATFS pff_fs;
 #endif
 
 /*=========================================================================*/
-/* u8g and m2tk object  */
-
-U8GLIB_DOGM128 u8g(7, 5, 1, 2);                    // SPI Com: SCK = 7, MOSI = 5, CS = 1, A0 = 2
-//U8GLIB_DOGM128 u8g(1, 2);                    // HW SPI CS = 1, A0 = 2
-
-/*=========================================================================*/
 /* forward declarations */
 
 M2_EXTERN_ALIGN(top_el_start);
 
 /*=========================================================================*/
 /* M2tk lib start */
-M2tk m2(&top_el_start, m2_es_arduino, m2_eh_6bs, m2_gh_u8g_ffs);
+M2tk m2(&top_el_start, m2_es_arduino, m2_eh_4bs, m2_gh_glcd_ffs);
 
 /*=========================================================================*/
 /* pin numbers of the keypad */
 
-uint8_t uiKeySelectPin = 18;
-uint8_t uiKeyUpPin = 22;
-uint8_t uiKeyDownPin = 19;
-uint8_t uiKeyLeftPin = 20;
-uint8_t uiKeyRightPin = 21;
+uint8_t uiKeySelectPin = 3;
+uint8_t uiKeyDownPin = 2;
+uint8_t uiKeyUpPin = 1;
+uint8_t uiKeyExitPin = 0;
+
 
 /*=========================================================================*/
 /* file selection box */
@@ -178,46 +173,11 @@ M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 M2_ROOT(el_start, NULL, "File Selection", &el_top_fs);
 M2_ALIGN(top_el_start, "-1|1W64H64", &el_start);
 
-/*=========================================================================*/
-/* u8glib draw procedure: Just call the M2tklib draw procedure */
-
-void draw(void) {
-  m2.draw();
-}
-
-/*=========================================================================*/
-/* arduino entry points */
-
-void setup()  {
-  // activate backlight
-  pinMode(3, OUTPUT);
-  digitalWrite(3, HIGH);
-  
-  // Connect u8glib with m2tklib
-  m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
-
-  // Assign u8g font to index 0
-  m2.setFont(0, u8g_font_6x10);
-  
-  // Assign icon font to index 3
-  m2.setFont(3, u8g_font_m2icon_7);
-  
-  // Setup keys (botmat)
+void setup() {
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
-  m2.setPin(M2_KEY_NEXT, uiKeyRightPin);
-  m2.setPin(M2_KEY_PREV, uiKeyLeftPin);
-  m2.setPin(M2_KEY_DATA_UP, uiKeyUpPin);
-  m2.setPin(M2_KEY_DATA_DOWN, uiKeyDownPin);
-
-  // sd card setup
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, INPUT);
-  pinMode(7, OUTPUT);		
-  pinMode(23, OUTPUT);
-  
-  // SPI backup (avoids conflict between u8g and other SPI libs)
-  u8g.setHardwareBackup(u8g_backup_avr_spi);
+  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
+  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
+  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);
 
   // setup storage library and mas subsystem
 #ifdef FS_SdFat
@@ -243,18 +203,14 @@ void setup()  {
 #ifdef FS_SIM
   mas_Init(mas_device_sim, NULL);
 #endif
+  
 }
 
 void loop() {
   m2.checkKey();
-  m2.checkKey();
-  if ( m2.handleKey() || m2.getRoot() == &m2_null_element ) {
-    u8g.firstPage();  
-    do {
-      draw();
-    } while( u8g.nextPage() );
+  if ( m2.handleKey() ) {
+      m2.draw();
   }
-  m2.checkKey();
 }
 
 
