@@ -1,10 +1,13 @@
 /*
 
   FileSelect.pde
-
-  GLCD Example
+  
+  U8glib Example
 
   m2tklib = Mini Interative Interface Toolkit Library
+
+  >>> Before compiling: Please remove comment from the constructor of the 
+  >>> connected graphics display (see below).
   
   Copyright (C) 2012  olikraus@gmail.com
 
@@ -20,8 +23,9 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+  
 */
+
 
 /*=========================================================================*/
 /* Select mass storage sub system: Please uncomment one of the following constants*/
@@ -34,9 +38,9 @@
 /*=========================================================================*/
 /* generic includes */
 
-#include <glcd.h>		// inform Arduino IDE that we will use GLCD library
+#include "U8glib.h"
 #include "M2tk.h"
-#include "m2ghglcd.h"
+#include "m2ghu8g.h"
 #include <string.h>
 #include "mas.h"
 
@@ -72,22 +76,53 @@ FATFS pff_fs;
 #endif
 
 /*=========================================================================*/
+/* u8g object  */
+
+// setup u8g object, please remove comment from one of the following constructor calls
+
+//U8GLIB_NHD27OLED_BW u8g(13, 11, 10, 9);       // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_NHD27OLED_2X_BW u8g(13, 11, 10, 9); // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_NHD27OLED_GR u8g(13, 11, 10, 9);       // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_NHD27OLED_2X_GR u8g(13, 11, 10, 9);  // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGS102 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGM132 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_ST7920_128X64 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
+//U8GLIB_ST7920_128X64 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
+//U8GLIB_ST7920_192X32 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
+//U8GLIB_ST7920_192X32 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
+//U8GLIB_LM6059 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_LM6063 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGXL160_BW u8g(10, 9);            // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGXL160_GR u8g(13, 11, 10, 9);             // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGXL160_2X_BW u8g(13, 11, 10, 9);            // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGXL160_2X_GR u8g(13, 11, 10, 9);             // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_PCD8544 u8g(13, 11, 10, 9, 8);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, Reset = 8
+//U8GLIB_PCF8812 u8g(13, 11, 10, 9, 8);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, Reset = 8
+//U8GLIB_KS0108_128 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 14, 15, 17, 16); // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, cs1=14, cs2=15,di=17,rw=16
+//U8GLIB_LC7981_160X80 u8g(8, 9, 10, 11, 4, 5, 6, 7,  18, 14, 15, 17, 16); // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, cs=14 ,di=15,rw=17, reset = 16
+
+/*=========================================================================*/
 /* forward declarations */
 
 M2_EXTERN_ALIGN(top_el_start);
 
 /*=========================================================================*/
 /* M2tk lib start */
-M2tk m2(&top_el_start, m2_es_arduino, m2_eh_4bs, m2_gh_glcd_ffs);
+M2tk m2(&top_el_start, m2_es_arduino, m2_eh_6bs, m2_gh_u8g_ffs);
 
 /*=========================================================================*/
 /* pin numbers of the keypad */
 
-uint8_t uiKeySelectPin = 3;
-uint8_t uiKeyDownPin = 2;
-uint8_t uiKeyUpPin = 1;
-uint8_t uiKeyExitPin = 0;
+// DOGS102 shield 
+// uint8_t uiKeyUpPin = 5;
+// uint8_t uiKeyDownPin = 3;
+// uint8_t uiKeySelectPin = 4;
 
+// DOGM132, DOGM128 and DOGXL160 shield
+uint8_t uiKeyUpPin = 7;         
+uint8_t uiKeyDownPin = 3;
+uint8_t uiKeySelectPin = 2;
 
 /*=========================================================================*/
 /* file selection box */
@@ -173,11 +208,34 @@ M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 M2_ROOT(el_start, NULL, "File Selection", &el_top_fs);
 M2_ALIGN(top_el_start, "-1|1W64H64", &el_start);
 
-void setup() {
+/*=========================================================================*/
+/* u8glib draw procedure: Just call the M2tklib draw procedure */
+
+void draw(void) {
+  m2.draw();
+}
+
+/*=========================================================================*/
+/* arduino entry points */
+
+void setup()  {
+  
+  // Connect u8glib with m2tklib
+  m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
+
+  // Assign u8g font to index 0
+  m2.setFont(0, u8g_font_6x10);
+  
+  // Assign icon font to index 3
+  m2.setFont(3, u8g_font_m2icon_7);
+  
+  // Setup keys 
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
-  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
-  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
-  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);
+  m2.setPin(M2_KEY_NEXT, uiKeyUpPin);
+  m2.setPin(M2_KEY_PREV, uiKeyDownPin);
+
+  // SPI backup (avoids conflict between u8g and other SPI libs)
+  // u8g.setHardwareBackup(u8g_backup_avr_spi);
 
   // setup storage library and mas subsystem
 #ifdef FS_SdFat
@@ -203,14 +261,18 @@ void setup() {
 #ifdef FS_SIM
   mas_Init(mas_device_sim, NULL);
 #endif
-  
 }
 
 void loop() {
   m2.checkKey();
-  if ( m2.handleKey() ) {
-      m2.draw();
+  m2.checkKey();
+  if ( m2.handleKey() || m2.getRoot() == &m2_null_element ) {
+    u8g.firstPage();  
+    do {
+      draw();
+    } while( u8g.nextPage() );
   }
+  m2.checkKey();
 }
 
 
