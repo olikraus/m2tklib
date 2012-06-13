@@ -128,12 +128,12 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
     /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
-      return "a";       /* arrow left of the m2icon font */
+      return "<";       /* go back */
     /* Not the extra button: Return file or directory icon */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     if ( mas_IsDir() )
-      return "A";       /* folder icon of the m2icon font */
-    return "B";         /* file icon of the m2icon font */
+      return "+";       /* folder */
+    return " ";         /* file */
   } else if ( msg == M2_STRLIST_MSG_SELECT ) {
     /* Check for the extra button: Execute button action */
     if ( idx == 0 ) {
@@ -164,10 +164,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   return NULL;
 }
 
-M2_STRLIST(el_fs_strlist, "l5F3e15W49", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
-M2_SPACE(el_fs_space, "W1h1");
-M2_VSB(el_fs_strlist_vsb, "l5W4r1", &fs_m2tk_first, &fs_m2tk_cnt);
-M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
+M2_STRLIST(el_fs_strlist, "l4e1w12", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_VSB(el_fs_strlist_vsb, "l4w1r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
 
@@ -183,6 +182,31 @@ void setup() {
   m2_SetLiquidCrystal(&lcd, 16, 4);
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
+
+  // setup storage library and mas subsystem
+#ifdef FS_SdFat
+  pinMode(SS, OUTPUT);	// force the hardware chip select to output
+  if ( sdfat.init(SPI_HALF_SPEED, 23) ) {
+    mas_Init(mas_device_sdfat, (void *)&sdfat);
+  }
+#endif
+
+#ifdef FS_SD
+  pinMode(SS, OUTPUT);	// force the hardware chip select to output
+  if (SD.begin(23)) {		// use the global SD object
+    mas_Init(mas_device_sd, NULL);
+  }
+#endif
+
+#ifdef FS_PFF
+  if ( pf_mount(&pff_fs) == FR_OK ) {
+    mas_Init(mas_device_pff, &pff_fs);
+  }
+#endif
+
+#ifdef FS_SIM
+  mas_Init(mas_device_sim, NULL);
+#endif
 }
 
 void loop() {
