@@ -14,6 +14,8 @@ mkdir libraries/M2tklib/examples/Radio
 mkdir libraries/M2tklib/examples/StrList
 mkdir libraries/M2tklib/examples/TextInput
 mkdir libraries/M2tklib/examples/U32Plain
+mkdir libraries/M2tklib/examples/2LMenu
+mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/utility
 cp ../../ChangeLog ./libraries/M2tklib/.
 cp ../../gpl-3.0.txt ./libraries/M2tklib/.
@@ -51,6 +53,11 @@ cp ../../arduino/u8g/TextInput/*.pde ./libraries/M2tklib/examples/TextInput/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/TextInput/TextInput.pde
 cp ../../arduino/u8g/U32Plain/*.pde ./libraries/M2tklib/examples/U32Plain/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/U32Plain/U32Plain.pde
+
+cp ../../arduino/u8g/2LMenu/*.pde ./libraries/M2tklib/examples/2LMenu/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/2LMenu/2LMenu.pde
+cp ../../arduino/u8g/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 
 cd libraries 
 zip -r ../m2tklib_arduino_u8g_`../../print_release`.zip *
