@@ -124,12 +124,12 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
     /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
-      return "a";       /* arrow left of the m2icon font */
+      return "";       /* go back icon */
     /* Not the extra button: Return file or directory icon */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     if ( mas_IsDir() )
-      return "A";       /* folder icon of the m2icon font */
-    return "B";         /* file icon of the m2icon font */
+      return "+";       /* folder icon */
+    return "";         /* file icon */
   } else if ( msg == M2_STRLIST_MSG_SELECT ) {
     /* Check for the extra button: Execute button action */
     if ( idx == 0 ) {
@@ -160,7 +160,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   return NULL;
 }
 
-M2_STRLIST(el_fs_strlist, "l5F3e15W49", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_STRLIST(el_fs_strlist, "l5e15W48", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
 M2_SPACE(el_fs_space, "W1h1");
 M2_VSB(el_fs_strlist_vsb, "l5W4r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
