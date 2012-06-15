@@ -86,7 +86,7 @@ FATFS pff_fs;
 //U8GLIB_NHD27OLED_2X_GR u8g(13, 11, 10, 9);  // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGS102 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGM132 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
-U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+//U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_ST7920_128X64 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
 //U8GLIB_ST7920_192X32 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
@@ -235,19 +235,21 @@ void setup()  {
   m2.setPin(M2_KEY_PREV, uiKeyDownPin);
 
   // SPI backup (avoids conflict between u8g and other SPI libs)
-  // u8g.setHardwareBackup(u8g_backup_avr_spi);
+  u8g.setHardwareBackup(u8g_backup_avr_spi);
 
   // setup storage library and mas subsystem
+  // CS=23 	Botmat Project
+  // CS=10	Seeedstudio Shield http://www.seeedstudio.com/wiki/SD_Card_Shield
 #ifdef FS_SdFat
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if ( sdfat.init(SPI_HALF_SPEED, 23) ) {
+  if ( sdfat.init(SPI_HALF_SPEED, 10) ) {
     mas_Init(mas_device_sdfat, (void *)&sdfat);
   }
 #endif
 
 #ifdef FS_SD
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if (SD.begin(23)) {		// use the global SD object
+  if (SD.begin(10)) {		// use the global SD object
     mas_Init(mas_device_sd, NULL);
   }
 #endif

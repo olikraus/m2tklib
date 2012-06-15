@@ -52,6 +52,7 @@ M2TKLIB_PATH:=$(shell cd ../../.. && pwd)/src/
 M2TKCPP_PATH:=$(shell cd ../../.. && pwd)/cpp/
 M2DEV_PATH:=$(shell cd ../../.. && pwd)/dev/u8glib/
 M2DEV2_PATH:=$(shell cd ../../.. && pwd)/dev/arduino/
+M2DEV3_PATH:=$(shell cd ../../.. && pwd)/dev/sdfat/
 
 
 # The location where the avr tools (e.g. avr-gcc) are located. Requires a '/' at the end.
@@ -71,6 +72,7 @@ AVRDUDE_PORT:=/dev/ttyACM0
 
 # List of all libaries which should be included.
 EXTRA_DIRS=$(ARDUINO_PATH)libraries/LiquidCrystal/
+EXTRA_DIRS=$(ARDUINO_PATH)libraries/SdFat/
 #EXTRA_DIRS+=$(ARDUINO_PATH)libraries/.../
 
 #=== fetch parameter from boards.txt processor parameter ===
@@ -105,7 +107,7 @@ CSRC:=$(shell ls $(CDIRS) 2>/dev/null)
 CCSRC:=$(shell ls *.cc 2>/dev/null)
 
 CPPDIRS:=$(EXTRA_DIRS) $(addsuffix utility/,$(EXTRA_DIRS))
-CPPDIRS:=*.cpp utility/*.cpp $(addsuffix *.cpp,$(CPPDIRS)) $(U8G_CPP_PATH)/*.cpp $(M2TKCPP_PATH)/*.cpp $(ARDUINO_PATH)hardware/arduino/cores/arduino/*.cpp 
+CPPDIRS:=*.cpp utility/*.cpp $(addsuffix *.cpp,$(CPPDIRS)) $(U8G_CPP_PATH)/*.cpp $(M2DEV3_PATH)/*.cpp $(M2TKCPP_PATH)/*.cpp $(ARDUINO_PATH)hardware/arduino/cores/arduino/*.cpp 
 CPPSRC:=$(shell ls $(CPPDIRS) 2>/dev/null)
 
 #=== build internal variables ===

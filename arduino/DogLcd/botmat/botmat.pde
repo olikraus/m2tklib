@@ -2,7 +2,7 @@
 
   botmat.pde
   
-  botmat example program
+  botmat ascii example program
 
   Copyright (C) 2012  olikraus@gmail.com
 
@@ -26,6 +26,7 @@
 #include <Wire.h>                       // required for DS1307new.h
 #include <SdFat.h>
 #include "M2tk.h"
+#include "mas.h"
 #include "m2ghdoglcd.h"
 #include <string.h>
 
@@ -216,6 +217,7 @@ void fs_get_nth_file(uint8_t n)
   }
 }
 
+#if OLD
 const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
 {
   
@@ -252,7 +254,74 @@ M2_STRLIST(el_fs_strlist, "l2w13", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_gets
 M2_VSB(el_fs_strlist_vsb, "l2w1r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
+#endif
 
+/* show selected file */
+
+const char *fs_show_file_label_cb(m2_rom_void_p element) {
+  return mas_GetFilename();
+}
+
+M2_LABELFN(el_show_filename, NULL, fs_show_file_label_cb);
+M2_ROOT(el_show_file_ok, NULL, "ok", &el_top);
+M2_LIST(list_show_file) = { &el_show_filename, &el_show_file_ok };
+M2_VLIST(el_show_file_Vlist, NULL, list_show_file);
+M2_ALIGN(top_el_show_file, "-1|1W64H64", &el_show_file_Vlist);
+
+
+/* callback procedure for the file selection dialog */
+const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
+  if (msg == M2_STRLIST_MSG_GET_STR)  {
+    /* Check for the extra button: Return string for this extra button */
+    if ( idx == 0 )
+      return "..";
+    /* Not the extra button: Return file/directory name */
+    mas_GetDirEntry(idx - FS_EXTRA_MENUES);
+    return mas_GetFilename();
+  } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
+    /* Check for the extra button: Return icon for this extra button */
+    if ( idx == 0 )
+      return "a";       /* arrow left of the m2icon font */
+    /* Not the extra button: Return file or directory icon */
+    mas_GetDirEntry(idx - FS_EXTRA_MENUES);
+    if ( mas_IsDir() )
+      return "A";       /* folder icon of the m2icon font */
+    return "B";         /* file icon of the m2icon font */
+  } else if ( msg == M2_STRLIST_MSG_SELECT ) {
+    /* Check for the extra button: Execute button action */
+    if ( idx == 0 ) {
+      if ( mas_GetPath()[0] == '\0' )
+        m2_SetRoot(&el_top);      	/* go back to previous menu */
+      else {
+        mas_ChDirUp();
+        m2_SetRoot(m2_GetRoot());  /* reset menu to first element, send NEW_DIALOG and force recount */
+      }
+    /* Not the extra button: Goto subdir or return (with selected file) */
+    } else {
+      mas_GetDirEntry(idx - FS_EXTRA_MENUES);
+      if ( mas_IsDir() ) {
+        mas_ChDir(mas_GetFilename());
+        m2_SetRoot(m2_GetRoot());  /* reset menu to first element, send NEW_DIALOG and force recount */
+      } else {
+	/* File has been selected. Here: Show the file to the user */
+        m2_SetRoot(&top_el_show_file);  
+      }
+    }
+  } else if ( msg == M2_STRLIST_MSG_NEW_DIALOG ) {
+    /* (re-) calculate number of entries, limit no of entries to 250 */
+    if ( mas_GetDirEntryCnt() < 250-FS_EXTRA_MENUES )
+      fs_m2tk_cnt = mas_GetDirEntryCnt()+FS_EXTRA_MENUES;
+    else
+      fs_m2tk_cnt = 250;
+  }
+  return NULL;
+}
+
+//M2_STRLIST(el_fs_strlist, "l5F3e15W49", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_STRLIST(el_fs_strlist, "l2w13", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_VSB(el_fs_strlist_vsb, "l2w1r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
+M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
 /*=========================================================================*/
 /* edit time dialog */
@@ -394,12 +463,13 @@ const char *el_strlist_getstr(uint8_t idx, uint8_t msg)
       pinMode(6, INPUT);
       pinMode(7, OUTPUT);
       pinMode(23, OUTPUT);
-      if (sd.init(SPI_HALF_SPEED, 23))
-      {
-        fs_file_cnt = 255;
-        fs_update_file_cnt();
-        m2.setRoot(&el_top_fs);
+      pinMode(SS, OUTPUT);	// force the hardware chip select to output
+      
+      if ( sd.init(SPI_HALF_SPEED, 23) ) {
+	mas_Init(mas_device_sdfat, (void *)&sd);
       }
+      
+        m2.setRoot(&el_top_fs);
     }
   }
   return s;
@@ -435,6 +505,7 @@ void setup()
   m2.setPin(M2_KEY_PREV, uiKeyLeftPin);
   m2.setPin(M2_KEY_DATA_UP, uiKeyUpPin);
   m2.setPin(M2_KEY_DATA_DOWN, uiKeyDownPin);
+  
 
 }
 
