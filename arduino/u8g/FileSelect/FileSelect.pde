@@ -226,7 +226,7 @@ void setup()  {
   u8g.setHardwareBackup(u8g_backup_avr_spi);
 
   // setup storage library and mas subsystem
-  // CS=23 	Botmat Project
+  // CS=23 	Botmat Project www.botmat.cc
   // CS=10	Seeedstudio Shield http://www.seeedstudio.com/wiki/SD_Card_Shield
 #if defined(FS_SdFat)
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
@@ -241,6 +241,8 @@ void setup()  {
   }
   
 #elif defined(FS_PFF)
+  //pff_arduino_chip_select_pin = 23; 	/* Botmat Project www.botmat.cc */
+  pff_arduino_chip_select_pin = 10; 	/* Seeedstudio Shield http://www.seeedstudio.com/wiki/SD_Card_Shield */
   if ( pf_mount(&pff_fs) == FR_OK ) {
     mas_Init(mas_device_pff, &pff_fs);
   }

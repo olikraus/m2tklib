@@ -1,0 +1,35 @@
+
+License information for M2tklib releases (http://code.google.com/p/m2tklib/) 
+
+== M2tklib ==
+Core files for M2tklib are licensed under the terms of the GNU GENERAL PUBLIC LICENSE Version 3.
+See also gpl-3.0.txt
+
+== Petit Fat File System ==
+The M2tklib release contains the "Petit Fat File System", which is distributed under 
+the Petit FatFs License: 
+/*----------------------------------------------------------------------------/
+/  Petit FatFs - FAT file system module  R0.02a                (C)ChaN, 2010
+/-----------------------------------------------------------------------------/
+/ Petit FatFs module is an open source software to implement FAT file system to
+/ small embedded systems. This is a free software and is opened for education,
+/ research and commercial developments under license policy of following trems.
+/
+/  Copyright (C) 2010, ChaN, all right reserved.
+/
+/ * The Petit FatFs module is a free software and there is NO WARRANTY.
+/ * No restriction on use. You can use, modify and redistribute it for
+/   personal, non-profit or commercial use UNDER YOUR RESPONSIBILITY.
+/ * Redistributions of source code must retain the above copyright notice.
+/
+/-----------------------------------------------------------------------------/
+See also http://elm-chan.org/fsw/ff/pf/appnote.html.
+
+== U8glib ==
+Some releases of M2tklib include U8glib (http://code.google.com/p/u8glib/).
+License information for U8glib is here: 
+http://code.google.com/p/u8glib/source/browse/license.txt
+
+The license information for font files, distributed along with U8glib, are
+given here: http://code.google.com/p/u8glib/wiki/fontgroup
+

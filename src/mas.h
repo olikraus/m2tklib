@@ -126,6 +126,8 @@ extern char mas_pwd[MAS_PATH_MAX+12+1];	/* add 12 to allow concat of entry_name 
 
 /* devices, first argument to mas_init() */
 uint8_t mas_device_sim(uint8_t msg, void *arg);    	/* internal simulation of some dirs and files, always possible */
+
+extern uint8_t pff_arduino_chip_select_pin;		/* contains the Arduino pin number of the chip select signal for pff */
 uint8_t mas_device_pff(uint8_t msg, void *arg);   	/* http://code.google.com/p/sdfatlib/ */
 uint8_t mas_device_sdfat(uint8_t msg, void *arg);	/* http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module, arg is pointer to SdFat */
 uint8_t mas_device_sd(uint8_t msg, void *arg);	/* build in lib */
