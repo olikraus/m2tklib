@@ -33,6 +33,8 @@ cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.cpp ./libraries/M2tklib/utility/.
 cp ../../dev/glcd/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/glcd/*.cpp ./libraries/M2tklib/utility/.
+cp ../../dev/pff/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/pff/arduino/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghglcd.h
 #sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/utility/m2ghglcd.h
 cp ../../arduino/glcd/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.

@@ -28,6 +28,8 @@ cp ../../src/*.h ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.cpp ./libraries/M2tklib/utility/.
 cp ../../dev/u8glib/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/pff/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/pff/arduino/*.cpp ./libraries/M2tklib/utility/.
 #cp ../../dev/u8glib/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2[.]h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghu8g.h
 sed -i 's|u8g[.]h|utility/u8g.h|g' ./libraries/M2tklib/utility/m2ghu8g.h

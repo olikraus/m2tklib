@@ -30,6 +30,8 @@ cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.cpp ./libraries/M2tklib/utility/.
 cp ../../dev/LiquidCrystal/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/LiquidCrystal/*.cpp ./libraries/M2tklib/utility/.
+cp ../../dev/pff/*.[hc] ./libraries/M2tklib/utility/.
+cp ../../dev/pff/arduino/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghlc.h
 #sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/utility/m2ghlc.h
 cp ../../arduino/LiquidCrystal/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
