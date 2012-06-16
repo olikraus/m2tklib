@@ -60,6 +60,8 @@ cp ../../arduino/LiquidCrystal/2LMenu/*.pde ./libraries/M2tklib/examples/2LMenu/
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/2LMenu/2LMenu.pde
 cp ../../arduino/LiquidCrystal/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
+sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
+sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 
 
 

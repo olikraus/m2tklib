@@ -69,6 +69,8 @@ cp ../../arduino/glcd/2LMenu/*.pde ./libraries/M2tklib/examples/2LMenu/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/2LMenu/2LMenu.pde
 cp ../../arduino/glcd/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
+sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
+sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 
 
 cd libraries 

@@ -6,8 +6,10 @@
 
   m2tklib = Mini Interative Interface Toolkit Library
 
-  >>> Before compiling: Please remove comment from the constructor of the 
-  >>> connected graphics display (see below).
+  >>> IMPORTANT: Ensure that the chip select line of the SD card is not shared with any pins of the display
+  >>> Before compiling: 
+  >>> 1) Please remove comment from the constructor of the connected graphics display (see below).
+  >>> 2) Please remove comment from the mass storage subsystem below
   
   Copyright (C) 2012  olikraus@gmail.com
 
@@ -28,14 +30,6 @@
 
 
 /*=========================================================================*/
-/* Select mass storage sub system: Please uncomment one of the following constants*/
-
-//#define FS_SdFat
-//#define FS_SD
-//#define FS_PFF
-#define FS_SIM
-
-/*=========================================================================*/
 /* generic includes */
 
 #include "U8glib.h"
@@ -45,35 +39,29 @@
 #include "mas.h"
 
 /*=========================================================================*/
-/* specific includes for the mass storage sub system */
+/* Specific sections for the mass storage sub system. Please uncomment one of the following sections (remove //)  */
 
-#ifdef FS_SdFat
-// requires download and installation of the SdFat library
-#include <SdFat.h>
-#endif
+/* === SdFat Library (download and installation required) === */
+//#define FS_SdFat
+//#include <SdFat.h>
+//SdFat sdfat;
 
-#ifdef FS_SD
-#include <SD.h>
-#endif
+/* === Arduino SD Library === */
+//#define FS_SD
+//#include <SD.h>
 
-#ifdef FS_PFF
-#include "pff.h"
-#endif
+/* === Petit Fat File System Library === */
+//#define FS_PFF
+//#include "utility/pff.h"
+//FATFS pff_fs;
 
-#ifdef FS_SIM
-// no includes required
-#endif
+/* === Petit Fat File System Library === */
+#define FS_SIM
+
 
 /*=========================================================================*/
 /* low level objects for storage sub system */
 
-#ifdef FS_SdFat
-SdFat sdfat;
-#endif
-
-#ifdef FS_PFF
-FATFS pff_fs;
-#endif
 
 /*=========================================================================*/
 /* u8g object  */
@@ -90,7 +78,7 @@ FATFS pff_fs;
 //U8GLIB_ST7920_128X64 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
 //U8GLIB_ST7920_192X32 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
-//U8GLIB_ST7920_192X32 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
+U8GLIB_ST7920_192X32 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
 //U8GLIB_LM6059 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_LM6063 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGXL160_BW u8g(10, 9);            // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
@@ -195,9 +183,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   return NULL;
 }
 
-M2_STRLIST(el_fs_strlist, "l5F3e15W46", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_STRLIST(el_fs_strlist, "l3F3e15W46", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
 M2_SPACE(el_fs_space, "W1h1");
-M2_VSB(el_fs_strlist_vsb, "l5W2r1", &fs_m2tk_first, &fs_m2tk_cnt);
+M2_VSB(el_fs_strlist_vsb, "l3W2r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_space, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
 
@@ -224,7 +212,7 @@ void setup()  {
   m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
 
   // Assign u8g font to index 0
-  m2.setFont(0, u8g_font_6x10);
+  m2.setFont(0, u8g_font_5x7);
   
   // Assign icon font to index 3
   m2.setFont(3, u8g_font_m2icon_7);
@@ -240,27 +228,24 @@ void setup()  {
   // setup storage library and mas subsystem
   // CS=23 	Botmat Project
   // CS=10	Seeedstudio Shield http://www.seeedstudio.com/wiki/SD_Card_Shield
-#ifdef FS_SdFat
+#if defined(FS_SdFat)
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
   if ( sdfat.init(SPI_HALF_SPEED, 10) ) {
     mas_Init(mas_device_sdfat, (void *)&sdfat);
   }
-#endif
-
-#ifdef FS_SD
+  
+#elif defined(FS_SD)
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
   if (SD.begin(10)) {		// use the global SD object
     mas_Init(mas_device_sd, NULL);
   }
-#endif
-
-#ifdef FS_PFF
+  
+#elif defined(FS_PFF)
   if ( pf_mount(&pff_fs) == FR_OK ) {
     mas_Init(mas_device_pff, &pff_fs);
   }
-#endif
-
-#ifdef FS_SIM
+  
+#elif defined(FS_SIM)
   mas_Init(mas_device_sim, NULL);
 #endif
 }
