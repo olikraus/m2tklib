@@ -60,6 +60,36 @@ void pff_delay_us(uint16_t val)
   }
 }
 
+#ifndef MOSI_DDR
+#define MOSI_DDR DDRB
+#endif
+#ifndef MISO_DDR
+#define MISO_DDR DDRB
+#endif
+#ifndef SCK_DDR
+#define SCK_DDR DDRB
+#endif
+#ifndef SS_DDR
+#define SS_DDR DDRB
+#endif
+
+#ifndef MOSI_BIT
+#define MOSI_BIT 3
+#endif
+#ifndef MISO_BIT
+#define MISO_BIT 4
+#endif
+#ifndef SCK_BIT
+#define SCK_BIT 5
+#endif
+#ifndef SS_BIT
+#define SS_BIT 2
+#endif
+
+#ifndef SS_PORT
+#define SS_PORT DDRB
+#endif
+
 void pff_chip_select_high(void)
 {
   SS_PORT |= _BV(SS_BIT);

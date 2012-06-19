@@ -42,12 +42,21 @@
 /* Specific sections for the mass storage sub system. */
 /* Please uncomment one of the following sections (remove all // from one section)  */
 
-/* === SdFat Library (download and installation required) === */
+/* === SdFat Library === */
+/*
+  1) Download and install SdFat 
+  2) Copy "mas_sdfat.cpp" from M2tklib/addon/mas_sdfat.cpp to M2tklib/utility/mas_sdfat.cpp
+  3) Uncomment the following tree lines
+*/
 //#define FS_SdFat
 //#include <SdFat.h>
 //SdFat sdfat;
 
 /* === Arduino SD Library === */
+/*
+  1) Copy "mas_arduino_sd.cpp" from M2tklib/addon/mas_arduino_sd.cpp to M2tklib/utility/mas_arduino_sd.cpp
+  2) Uncomment the following two lines
+*/
 //#define FS_SD
 //#include <SD.h>
 
@@ -58,11 +67,6 @@
 
 /* === Petit Fat File System Library === */
 #define FS_SIM
-
-
-/*=========================================================================*/
-/* low level objects for storage sub system */
-
 
 /*=========================================================================*/
 /* u8g object  */

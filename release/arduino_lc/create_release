@@ -18,6 +18,7 @@ mkdir libraries/M2tklib/examples/StrList
 mkdir libraries/M2tklib/examples/2LMenu
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/utility
+mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
 cp ../../license.txt ./libraries/M2tklib/.
 cp ../../gpl-3.0.txt ./libraries/M2tklib/.
@@ -34,6 +35,11 @@ cp ../../dev/LiquidCrystal/*.cpp ./libraries/M2tklib/utility/.
 cp ../../dev/pff/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/pff/arduino/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2.h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghlc.h
+cp ../../dev/arduino_sd/*.cpp ./libraries/M2tklib/addon/.
+cp ../../dev/sdfat/*.cpp ./libraries/M2tklib/addon/.
+
+
+
 #sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/utility/m2ghlc.h
 cp ../../arduino/LiquidCrystal/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde

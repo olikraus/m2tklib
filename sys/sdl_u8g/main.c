@@ -795,7 +795,7 @@ uint8_t el_2lme_first = 0;
 uint8_t el_2lme_cnt = 3;
 
 /* for m2icon fonts, 65: closed folder, 102: open folder */
-M2_2LMENU(el_2lme_strlist, "l4e15F3W47", &el_2lme_first, &el_2lme_cnt, exmedef, 65, 102, '\0');
+M2_2LMENU(el_2lme_strlist, "l4e15F3W47", &el_2lme_first, &el_2lme_cnt, menu_data, 65, 102, '\0');
 M2_SPACE(el_2lme_space, "W1h1");
 M2_VSB(el_2lme_vsb, "l4W4r1", &el_2lme_first, &el_2lme_cnt);
 M2_LIST(list_2lme_strlist) = { &el_2lme_strlist, &el_2lme_space, &el_2lme_vsb };
@@ -848,6 +848,56 @@ M2_VSB(el_seme_vsb, "l3W4r1", &el_seme_first, &el_seme_cnt);
 M2_LIST(list_seme_strlist) = { &el_seme_strlist, &el_seme_space, &el_seme_vsb };
 M2_HLIST(el_seme_hlist, NULL, list_seme_strlist);
 M2_ALIGN(top_el_select_menu, "-1|1W64H64", &el_seme_hlist);
+
+
+/*======================================================================*/
+
+M2_EXTERN_ALIGN(el_top_controller_menu);
+
+// ====  Light Dialog Window ====
+
+// the following variables contain the input values from the user
+uint8_t light_timer = 0;
+uint8_t light_on = 0;
+
+// definition of the dialog window starts here
+
+M2_LABEL(el_light_on_label, NULL, "Light On: ");
+M2_TOGGLE(el_light_on_toggle, NULL, &light_on);
+
+M2_LABEL(el_light_timer_label, NULL, "Timer: ");
+M2_U8NUM(el_light_timer_u8, "c2", 0, 99, &light_timer);
+
+void light_dialog_ok(m2_el_fnarg_p fnarg) {
+  /* do something with the values */
+  /* ... */
+  
+  /* go back to main menu */
+  m2_SetRoot(&el_top_controller_menu);  
+}
+
+M2_BUTTON(el_light_ok, "f4", " ok ", light_dialog_ok);
+
+M2_LIST(list_light_dialog) = { 
+    &el_light_on_label, &el_light_on_toggle, 
+    &el_light_timer_label, &el_light_timer_u8,  
+    &el_light_ok
+};
+M2_GRIDLIST(el_light_grid, "c2", list_light_dialog);
+
+M2_ALIGN(el_top_light, "-1|1W64H64", &el_light_grid);
+
+// ====  Main Menu ====
+
+M2_ROOT(list_controller_light, NULL, "Light", &el_top_light);
+M2_ROOT(list_controller_power, NULL, "Power", &el_top_light);
+
+// all menu lines are grouped by a vlist element
+M2_LIST(list_controller_menu) = { &list_controller_light, &list_controller_power};
+M2_VLIST(el_controller_menu_vlist, NULL, list_controller_menu);
+
+// center the menu on the display
+M2_ALIGN(el_top_controller_menu, "-1|1W64H64", &el_controller_menu_vlist);
 
 
 
@@ -960,12 +1010,19 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_top_dt);
     }
   }
+  else if ( idx == 18 ) {
+    s = "Forum Jun 2012";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_top_controller_menu);
+    }
+  }
   return s;
 }
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 18;
+uint8_t el_tlsm_cnt = 19;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

@@ -1,4 +1,4 @@
-# arduino_u8g
+# avr_u8g
 #
 rm -rf m2tk_u8g
 mkdir m2tk_u8g
@@ -13,6 +13,7 @@ mkdir m2tk_u8g/m2_examples/graphics
 mkdir m2tk_u8g/m2_examples/hello_world
 mkdir m2tk_u8g/m2_examples/radio
 mkdir m2tk_u8g/m2_examples/rapunzel
+mkdir m2tk_u8g/m2_examples/file_select
 mkdir m2tk_u8g/u8g_examples
 mkdir m2tk_u8g/u8g_examples/hello_world
 mkdir m2tk_u8g/u8g_examples/graphics_test
@@ -21,23 +22,22 @@ mkdir m2tk_u8g/u8g_examples/u8g_logo
 
 cp ../../ChangeLog ./m2tk_u8g/doc/m2/.
 cp ../../gpl-3.0.txt ./m2tk_u8g/doc/m2/.
+cp ../../license.txt ./m2tk_u8g/doc/m2/.
 #cp ../INSTALL_ARDUINO.TXT ./libraries/M2tklib/INSTALL.TXT
 cp ../../src/*.c ./m2tk_u8g/src/.
 cp ../../src/*.h ./m2tk_u8g/src/.
 cp ../../dev/avr_u8g/*.[hc] ./m2tk_u8g/src/.
 cp ../../dev/u8glib/*.[hc] ./m2tk_u8g/src/.
+cp ../../dev/pff/*.[hc] ./m2tk_u8g/src/.
+cp ../../dev/pff/atmega/*.[hc] ./m2tk_u8g/src/.
 cp ../../sys/avr_u8g/blink/*.c ./m2tk_u8g/m2_examples/blink/.
 cp ../../sys/avr_u8g/find_num/*.c ./m2tk_u8g/m2_examples/find_num/.
 cp ../../sys/avr_u8g/graphics/*.c ./m2tk_u8g/m2_examples/graphics/.
 cp ../../sys/avr_u8g/hello_world/*.c ./m2tk_u8g/m2_examples/hello_world/.
 cp ../../sys/avr_u8g/radio/*.c ./m2tk_u8g/m2_examples/radio/.
 cp ../../sys/avr_u8g/rapunzel/*.c ./m2tk_u8g/m2_examples/rapunzel/.
+cp ../../sys/avr_u8g/file_select/*.c ./m2tk_u8g/m2_examples/file_select/.
 
-
-#cp ../../dev/u8glib/*.cpp ./libraries/M2tklib/utility/.
-#sed -i 's|m2[.]h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghu8g.h
-#sed -i 's|u8g[.]h|utility/u8g.h|g' ./libraries/M2tklib/utility/m2ghu8g.h
-#sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/utility/m2ghu8g.h
 
 cp ../../../../u8g/u8glib/ChangeLog ./m2tk_u8g/doc/u8g/.
 cp ../../../../u8g/u8glib/license.txt ./m2tk_u8g/doc/u8g/.
