@@ -18,7 +18,7 @@ mkdir libraries/M2tklib/examples/LEDFlash
 mkdir libraries/M2tklib/examples/Rapunzel
 mkdir libraries/M2tklib/examples/StrList
 mkdir libraries/M2tklib/examples/Graphics
-mkdir libraries/M2tklib/examples/2LMenu
+mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
@@ -72,8 +72,8 @@ sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/StrList/
 cp ../../arduino/glcd/Graphics/*.pde ./libraries/M2tklib/examples/Graphics/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Graphics/Graphics.pde
 
-cp ../../arduino/glcd/2LMenu/*.pde ./libraries/M2tklib/examples/2LMenu/.
-sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/2LMenu/2LMenu.pde
+cp ../../arduino/glcd/Menu2L/*.pde ./libraries/M2tklib/examples/Menu2L/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Menu2L/Menu2L.pde
 cp ../../arduino/glcd/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde

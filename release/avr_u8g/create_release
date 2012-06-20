@@ -8,17 +8,28 @@ mkdir m2tk_u8g/doc/m2
 mkdir m2tk_u8g/doc/u8g
 mkdir m2tk_u8g/m2_examples
 mkdir m2tk_u8g/m2_examples/blink
+cp Makefile m2tk_u8g/m2_examples/blink
 mkdir m2tk_u8g/m2_examples/find_num
+cp Makefile m2tk_u8g/m2_examples/find_num
 mkdir m2tk_u8g/m2_examples/graphics
+cp Makefile m2tk_u8g/m2_examples/graphics
 mkdir m2tk_u8g/m2_examples/hello_world
+cp Makefile m2tk_u8g/m2_examples/hello_world
 mkdir m2tk_u8g/m2_examples/radio
+cp Makefile m2tk_u8g/m2_examples/radio
 mkdir m2tk_u8g/m2_examples/rapunzel
+cp Makefile m2tk_u8g/m2_examples/rapunzel
 mkdir m2tk_u8g/m2_examples/file_select
+cp Makefile m2tk_u8g/m2_examples/file_select
 mkdir m2tk_u8g/u8g_examples
 mkdir m2tk_u8g/u8g_examples/hello_world
+cp Makefile m2tk_u8g/u8g_examples/hello_world
 mkdir m2tk_u8g/u8g_examples/graphics_test
+cp Makefile m2tk_u8g/u8g_examples/graphics_test
 mkdir m2tk_u8g/u8g_examples/menu
+cp Makefile m2tk_u8g/u8g_examples/menu
 mkdir m2tk_u8g/u8g_examples/u8g_logo
+cp Makefile m2tk_u8g/u8g_examples/u8g_logo
 
 cp ../../ChangeLog ./m2tk_u8g/doc/m2/.
 cp ../../gpl-3.0.txt ./m2tk_u8g/doc/m2/.

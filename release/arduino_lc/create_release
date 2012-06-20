@@ -15,7 +15,7 @@ mkdir libraries/M2tklib/examples/U32Plain
 mkdir libraries/M2tklib/examples/LEDFlash
 mkdir libraries/M2tklib/examples/Rapunzel
 mkdir libraries/M2tklib/examples/StrList
-mkdir libraries/M2tklib/examples/2LMenu
+mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
@@ -65,8 +65,8 @@ sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Rapunzel/Rap
 cp ../../arduino/LiquidCrystal/StrList/*.pde ./libraries/M2tklib/examples/StrList/.
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/StrList/StrList.pde
 
-cp ../../arduino/LiquidCrystal/2LMenu/*.pde ./libraries/M2tklib/examples/2LMenu/.
-sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/2LMenu/2LMenu.pde
+cp ../../arduino/LiquidCrystal/Menu2L/*.pde ./libraries/M2tklib/examples/Menu2L/.
+sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/Menu2L/Menu2L.pde
 cp ../../arduino/LiquidCrystal/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
