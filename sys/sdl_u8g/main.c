@@ -3,6 +3,7 @@
 #include "SDL.h"
 
 #include "m2ghu8g.h"
+#include "m2ghtty.h"
 #include "mas.h"
 
 #include <stdlib.h>
@@ -1113,6 +1114,7 @@ int main(void)
   
   /* 2. Now, setup m2 */
   m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
   //m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
 
   /* 3. Connect the u8g display to m2.  */
