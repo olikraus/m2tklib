@@ -109,6 +109,7 @@ M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_hlist);
 
 // m2 object and constructor
 M2tk m2(&top_el_expandable_menu, m2_es_arduino, m2_eh_4bs, m2_gh_u8g_ffs);
+//M2tk m2(&top_el_expandable_menu, m2_es_arduino, m2_eh_4bs, m2_gh_arduino_serial);
 
 //=================================================
 // Draw procedure, Arduino Setup & Loop

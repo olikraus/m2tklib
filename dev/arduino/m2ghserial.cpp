@@ -59,12 +59,12 @@ static void m2_gh_serial_draw_text(uint8_t x, uint8_t y, const char *text)
 
 static void m2_gh_serial_out(char c)
 {
-  serial.print(c);
+  Serial.print(c);
 }
 
 static void m2_gh_serial_cr(void)
 {
-  serial.println("");
+  Serial.println("");
 }
 
 static void m2_gh_serial_show(void)
@@ -111,9 +111,11 @@ extern "C" uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg)
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
-      serial.begin(9600);
+      Serial.begin(9600);
+      Serial.println("M2tklib Serial Graphics Handler");
       break;
     case M2_GFX_MSG_START:
+      Serial.println("Page Start");
       m2_gh_serial_small_cursor_pos = 255;
       m2_gh_serial_clear_screen();
       break;
