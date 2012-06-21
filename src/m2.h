@@ -223,6 +223,7 @@ uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg);		/* m2eh6bs.c simplified 6
 /* graphics handler */
 uint8_t m2_gh_dummy(m2_gfx_arg_p arg);
 uint8_t m2_gh_sdl(m2_gfx_arg_p arg);					/* m2ghsdl.c: SDL Graphics Handler */
+uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 
 
 /*==============================================================*/

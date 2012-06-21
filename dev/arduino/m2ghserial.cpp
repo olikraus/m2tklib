@@ -23,8 +23,14 @@
 
 */
 
+#if ARDUINO < 100 
+#include "wiring.h"
+#include <WProgram.h> 
+#else 
+#include <Arduino.h> 
+#endif
+
 #include <string.h>
-#include <stdio.h>
 #include "m2.h"
 
 /*====================================================*/
@@ -32,16 +38,16 @@
 #define WIDTH 40
 #define HEIGHT 4
 
-char m2_gh_tty_screen[HEIGHT*WIDTH];
+static char m2_gh_serial_screen[HEIGHT*WIDTH];
 
-uint8_t m2_gh_tty_small_cursor_pos = 255;
+static uint8_t m2_gh_serial_small_cursor_pos = 255;
 
 
 /* x,y origin is at lower left (m2tklib system) */
-void m2_gh_tty_draw_text(uint8_t x, uint8_t y, const char *text)
+static void m2_gh_serial_draw_text(uint8_t x, uint8_t y, const char *text)
 {
   uint8_t idx;
-  char *ptr = m2_gh_tty_screen;
+  char *ptr = m2_gh_serial_screen;
   idx = HEIGHT - 1;
   idx -= y;
   idx *= WIDTH;
@@ -51,90 +57,91 @@ void m2_gh_tty_draw_text(uint8_t x, uint8_t y, const char *text)
     *ptr++ = *text++;
 }
 
-void m2_gh_tty_out(char c)
+static void m2_gh_serial_out(char c)
 {
-  printf("%c", c);
+  serial.print(c);
 }
 
-void m2_gh_tty_cr(void)
+static void m2_gh_serial_cr(void)
 {
-  printf("\n");
+  serial.println("");
 }
 
-void m2_gh_tty_show(void)
+static void m2_gh_serial_show(void)
 {
   uint8_t i, j, pos;
-  char *line = m2_gh_tty_screen;
+  char *line = m2_gh_serial_screen;
   pos = 0;
   for( i = 0; i < HEIGHT; i++ )
   {
     for( j = 0; j < WIDTH; j++ )
     {
-      if ( m2_gh_tty_small_cursor_pos != 255 )
+      if ( m2_gh_serial_small_cursor_pos != 255 )
       {
-	if ( (m2_gh_tty_small_cursor_pos == pos) || (m2_gh_tty_small_cursor_pos == (pos + 1)) )
+	if ( (m2_gh_serial_small_cursor_pos == pos) || (m2_gh_serial_small_cursor_pos == (pos + 1)) )
 	{
-	  m2_gh_tty_out('_');
+	  m2_gh_serial_out('_');
 	}
 	else
 	{
-	  m2_gh_tty_out(' ');
+	  m2_gh_serial_out(' ');
 	}
       }
-      m2_gh_tty_out(*line);
+      m2_gh_serial_out(*line);
       line++;
       pos++;
     }
-    m2_gh_tty_cr();
+    m2_gh_serial_cr();
   }
 }
 
-void m2_gh_tty_clear_screen(void)
+static void m2_gh_serial_clear_screen(void)
 {
   uint8_t i;
   for( i = 0; i < HEIGHT*WIDTH; i++ )
-    m2_gh_tty_screen[i] = ' ';
+    m2_gh_serial_screen[i] = ' ';
 }
 
 /*====================================================*/
 
 
 
-uint8_t m2_gh_tty(m2_gfx_arg_p  arg)
+extern "C" uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg)
 {
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
+      serial.begin(9600);
       break;
     case M2_GFX_MSG_START:
-      m2_gh_tty_small_cursor_pos = 255;
-      m2_gh_tty_clear_screen();
+      m2_gh_serial_small_cursor_pos = 255;
+      m2_gh_serial_clear_screen();
       break;
     case M2_GFX_MSG_END:
-      m2_gh_tty_show();
+      m2_gh_serial_show();
       break;
     case M2_GFX_MSG_DRAW_TEXT:
-      m2_gh_tty_draw_text(arg->x, arg->y, arg->s);
+      m2_gh_serial_draw_text(arg->x, arg->y, arg->s);
       return 0;
     case M2_GFX_MSG_DRAW_NORMAL_FOCUS:
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
-      m2_gh_tty_draw_text(arg->x, arg->y, "[");
-      m2_gh_tty_draw_text(arg->x+arg->w-1, arg->y, "]");
+      m2_gh_serial_draw_text(arg->x, arg->y, "[");
+      m2_gh_serial_draw_text(arg->x+arg->w-1, arg->y, "]");
       return 0;
     case M2_GFX_MSG_DRAW_GO_UP:
-      m2_gh_tty_draw_text(arg->x-1, arg->y, "<");
-      m2_gh_tty_draw_text(arg->x+arg->w, arg->y, ">");
+      m2_gh_serial_draw_text(arg->x-1, arg->y, "<");
+      m2_gh_serial_draw_text(arg->x+arg->w, arg->y, ">");
       return 0;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
-      m2_gh_tty_small_cursor_pos = HEIGHT -  1 - arg->y;
-      m2_gh_tty_small_cursor_pos*= WIDTH;
-      m2_gh_tty_small_cursor_pos += arg->x+1;  // why is +1 required here???
+      m2_gh_serial_small_cursor_pos = HEIGHT -  1 - arg->y;
+      m2_gh_serial_small_cursor_pos*= WIDTH;
+      m2_gh_serial_small_cursor_pos += arg->x+1;  // why is +1 required here???
       return 0;
     case M2_GFX_MSG_DRAW_ICON:
       if ( arg->icon == M2_ICON_TOGGLE_ACTIVE || arg->icon == M2_ICON_RADIO_ACTIVE )
-	m2_gh_tty_draw_text(arg->x, arg->y, "*");
+	m2_gh_serial_draw_text(arg->x, arg->y, "*");
       else
-	m2_gh_tty_draw_text(arg->x, arg->y, ".");
+	m2_gh_serial_draw_text(arg->x, arg->y, ".");
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
       return strlen(arg->s);
