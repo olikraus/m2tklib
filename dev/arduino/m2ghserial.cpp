@@ -104,6 +104,7 @@ static void m2_gh_serial_clear_screen(void)
 
 /*====================================================*/
 
+uint8_t m2_gh_arduino_serial_is_init = 0;
 
 
 extern "C" uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg)
@@ -111,11 +112,14 @@ extern "C" uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg)
   switch(arg->msg)
   {
     case M2_GFX_MSG_INIT:
-      Serial.begin(9600);
-      Serial.println("M2tklib Serial Graphics Handler");
       break;
     case M2_GFX_MSG_START:
-      Serial.println("Page Start");
+      if ( m2_gh_arduino_serial_is_init == 0 )
+      {
+	Serial.begin(9600);        // init serial
+	Serial.println("m2tklib LCD simulator");
+	m2_gh_arduino_serial_is_init = 1;
+      }
       m2_gh_serial_small_cursor_pos = 255;
       m2_gh_serial_clear_screen();
       break;
