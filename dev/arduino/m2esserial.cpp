@@ -68,6 +68,7 @@ extern "C" uint8_t m2_es_arduino_serial(m2_p ep, uint8_t msg)
       {
 	Serial.begin(9600);        // init serial
 	Serial.println("m2tklib serial (press 'h' for help)");
+	Serial.println("");
 	m2_es_arduino_serial_is_init = 1;
       }
       r = M2_KEY_NONE;

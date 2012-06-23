@@ -118,6 +118,7 @@ extern "C" uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg)
       {
 	Serial.begin(9600);        // init serial
 	Serial.println("m2tklib LCD simulator");
+	Serial.println("");
 	m2_gh_arduino_serial_is_init = 1;
       }
       m2_gh_serial_small_cursor_pos = 255;
