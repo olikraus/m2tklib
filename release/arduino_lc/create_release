@@ -17,6 +17,7 @@ mkdir libraries/M2tklib/examples/Rapunzel
 mkdir libraries/M2tklib/examples/StrList
 mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
+mkdir libraries/M2tklib/examples/Serial
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -71,6 +72,7 @@ cp ../../arduino/LiquidCrystal/FileSelect/*.pde ./libraries/M2tklib/examples/Fil
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
+cp ../../arduino/LiquidCrystal/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
 
 
 
