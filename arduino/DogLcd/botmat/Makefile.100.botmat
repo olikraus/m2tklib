@@ -48,6 +48,7 @@ DEFS:=-DARDUINO=100
 
 M2TKLIB_PATH:=$(shell cd ../../.. && pwd)/src/
 M2DEV_PATH:=$(shell cd ../../.. && pwd)/dev/DogLcd/
+M2SDFAT_PATH:=$(shell cd ../../.. && pwd)/dev/sdfat/
 M2ARDUINO_PATH:=$(shell cd ../../.. && pwd)/dev/arduino/
 M2CPP_PATH:=$(shell cd ../../.. && pwd)/cpp/
 
@@ -75,6 +76,7 @@ EXTRA_DIRS+=$(ARDUINO_PATH)libraries/DS1307new/
 EXTRA_DIRS+=$(ARDUINO_PATH)libraries/SdFat/
 EXTRA_DIRS+=$(M2TKLIB_PATH)
 EXTRA_DIRS+=$(M2DEV_PATH)
+EXTRA_DIRS+=$(M2SDFAT_PATH)
 EXTRA_DIRS+=$(M2ARDUINO_PATH)
 EXTRA_DIRS+=$(M2CPP_PATH)
 
@@ -92,7 +94,7 @@ VARIANT:=$(shell sed -n -e "s/$(BOARD).build.variant=\(.*\)/\1/p" $(BOARDS_TXT))
 # construct variant include path
 VARIANT_INC:=$(ARDUINO_PATH)hardware/botmatGAIA/variants/$(VARIANT)
 
-# avrdude
+# avrdude-
 # get the AVRDUDE_UPLOAD_RATE value from the $(BOARD).upload.speed variable. For the atmega328 board this is 57600
 AVRDUDE_UPLOAD_RATE:=$(shell sed -n -e "s/$(BOARD).upload.speed=\(.*\)/\1/p" $(BOARDS_TXT))
 # get the AVRDUDE_PROGRAMMER value from the $(BOARD).upload.protocol variable. For the atmega328 board this is stk500

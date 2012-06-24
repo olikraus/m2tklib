@@ -25,7 +25,14 @@ m2tklib ChangeLog
         * fixed arduino event-source to support DATA_UP and _DOWN
 2012-04-15      v1.07	Oliver Kraus <olikraus@gmail.com>
         * M2tk for U8glib
-2012-04-xx      v1.08	Oliver Kraus <olikraus@gmail.com>
-	* Fixed char width calculation for numeric u8glib fonts
+2012-06-xx      v1.08	Oliver Kraus <olikraus@gmail.com>
+	* Fixed char width calculation for numeric u8glib fonts (issue 54)
 	* Fixed bug on the top element calculation for STRLSIT/INFO elements
+	* Extra column for STRLIST element
+	* Added mass storage subsystem (mas)
+	* File-Selection-Box code example (wiki)
+	* Petit Fat File System added to M2tklib
+	* New element: M2_2LMENU
+	* Serial console input and/or output (20x4 LCD simulator)
+	
 	

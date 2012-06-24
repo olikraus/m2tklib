@@ -114,148 +114,6 @@ void info_screen_display(void)
 }
 
 /*=========================================================================*/
-/* file selection dialog */
-/* limitation: not more than 250 elements per directory allowed */
-
-#define FS_EXTRA_MENUES 1
-
-/* buffer for one file name */
-char fs_name[2+12+1];   /* 2 chars for the prefix, 12 chars for the name, 1 for the terminating '\0' */
-uint8_t fs_is_dir = 0;
-
-/* cache */
-#define FS_CACHE_SIZE 2
-char fs_c_name[FS_CACHE_SIZE][2+12+1];
-uint8_t fs_c_is_dir[FS_CACHE_SIZE];
-uint8_t fs_c_idx[FS_CACHE_SIZE] = { 255, 255 };
-uint8_t fs_rr = 0;
-
-/* number of files in the current folder, 255 forces recalculation */
-uint8_t fs_file_cnt = 255;
-
-/* helper variables for the strlist element */
-uint8_t fs_m2tk_first = 0;
-uint8_t fs_m2tk_cnt = 0;
-
-void fs_update_file_cnt(void)
-{
-  if ( fs_file_cnt == 255 )
-  {
-    fs_file_cnt = 0;
-    sd.vwd()->rewind();
-    while (file.openNext(sd.vwd(), O_READ)) 
-    {
-      fs_file_cnt++;
-      if ( fs_file_cnt == 250 )
-        break;
-      file.close();
-    }
-    /*
-    if  ( fs_file_cnt > 10 )
-      fs_file_cnt = 10;
-    */
-    /* update m2 variable */
-    fs_m2tk_cnt = fs_file_cnt;
-  }  
-}
-
-uint8_t fs_get_cache_entry(uint8_t n)
-{
-  uint8_t i;
-  for( i = 0 ; i < FS_CACHE_SIZE; i++ )
-    if ( fs_c_idx[i] == n )
-    {
-      strcpy(fs_name, fs_c_name[i]);
-      fs_is_dir = fs_c_is_dir[i];
-      return i;
-    }
-  return 255;
-}
-
-void fs_put_into_cache(uint8_t n)
-{
-  strcpy(fs_c_name[fs_rr], fs_name);
-  fs_c_is_dir[fs_rr] = fs_is_dir;
-  fs_c_idx[fs_rr] = n;
-  fs_rr++;
-  if ( fs_rr >= FS_CACHE_SIZE )
-    fs_rr = 0;
-}
-
-
-
-/* get the n'th file an store it into the intermediate buffers fs_is_dir and fs_name */
-void fs_get_nth_file(uint8_t n)
-{
-  uint8_t c = 0;
-  if ( fs_get_cache_entry(n) != 255 )
-    return;
-  
-  fs_name[0] = '-';
-  fs_name[1] = '-';
-  fs_name[2] = '\0';
-  fs_is_dir = 0;
-  
-  sd.vwd()->rewind();
-  while (file.openNext(sd.vwd(), O_READ)) 
-  {
-    if ( n == c )
-    {
-      fs_name[0] = ' ';
-      fs_name[1] = ' ';
-      file.getFilename(fs_name+2);
-      fs_name[12+2] = '\0';
-      fs_is_dir = file.isDir();
-      if ( fs_is_dir )
-        fs_name[0] = '+';
-      file.close();
-      fs_put_into_cache(n);
-      break;
-    }
-    c++;
-    file.close();
-  }
-}
-
-#if OLD
-const char *fs_strlist_getstr(uint8_t idx, uint8_t msg) 
-{
-  
-  /* update files, if required */
-  fs_update_file_cnt();
-
-  /* process message */
-  if (msg == M2_STRLIST_MSG_GET_STR) 
-  {
-    if ( idx == 0 )
-      return "-- Back --";
-    fs_get_nth_file(idx-FS_EXTRA_MENUES);
-    return fs_name;
-  } 
-  else if ( msg == M2_STRLIST_MSG_SELECT ) 
-  {
-    if ( idx == 0 )
-    {
-      m2.setRoot(&el_top);      
-    }
-    else
-    {
-      fs_get_nth_file(idx);
-      if ( fs_is_dir )
-      {
-      }
-    }
-  } 
-  return fs_name;
-}
-
-M2_STRLIST(el_fs_strlist, "l2w13", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
-//M2_SPACE(el_fs_space, "w1h1");
-M2_VSB(el_fs_strlist_vsb, "l2w1r1", &fs_m2tk_first, &fs_m2tk_cnt);
-M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
-M2_HLIST(el_top_fs, NULL, list_fs_strlist);
-#endif
-
 /* show selected file */
 
 const char *fs_show_file_label_cb(m2_rom_void_p element) {
@@ -269,6 +127,16 @@ M2_VLIST(el_show_file_Vlist, NULL, list_show_file);
 M2_ALIGN(top_el_show_file, "-1|1W64H64", &el_show_file_Vlist);
 
 
+/*=========================================================================*/
+/* file selection dialog */
+/* limitation: not more than 250 elements per directory allowed */
+
+#define FS_EXTRA_MENUES 1
+
+/* helper variables for the strlist element */
+uint8_t fs_m2tk_first = 0;
+uint8_t fs_m2tk_cnt = 0;
+
 /* callback procedure for the file selection dialog */
 const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   if (msg == M2_STRLIST_MSG_GET_STR)  {
@@ -281,12 +149,12 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   } else if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
     /* Check for the extra button: Return icon for this extra button */
     if ( idx == 0 )
-      return "a";       /* arrow left of the m2icon font */
+      return " ";       /* use a blank */
     /* Not the extra button: Return file or directory icon */
     mas_GetDirEntry(idx - FS_EXTRA_MENUES);
     if ( mas_IsDir() )
-      return "A";       /* folder icon of the m2icon font */
-    return "B";         /* file icon of the m2icon font */
+      return "+";       /* folder */
+    return " ";         /* file */
   } else if ( msg == M2_STRLIST_MSG_SELECT ) {
     /* Check for the extra button: Execute button action */
     if ( idx == 0 ) {
@@ -317,8 +185,7 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)  {
   return NULL;
 }
 
-//M2_STRLIST(el_fs_strlist, "l5F3e15W49", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
-M2_STRLIST(el_fs_strlist, "l2w13", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
+M2_STRLIST(el_fs_strlist, "l2e1w13", &fs_m2tk_first, &fs_m2tk_cnt, fs_strlist_getstr);
 M2_VSB(el_fs_strlist_vsb, "l2w1r1", &fs_m2tk_first, &fs_m2tk_cnt);
 M2_LIST(list_fs_strlist) = { &el_fs_strlist, &el_fs_strlist_vsb };
 M2_HLIST(el_top_fs, NULL, list_fs_strlist);
