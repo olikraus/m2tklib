@@ -18,38 +18,26 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
-  
-  sd support
-    SdFat (Arduino)
-    http://www.mikrocontroller.net/articles/AVR_FAT32                   --> not fully clear how to read dir entries with this
-    http://www.holger-klabunde.de/avr/avrboard.htm#FullFAT              --> seems to be a small implementation
-    http://www.dharmanitech.com/2009/01/sd-card-interfacing-with-atmega8-fat32.html
-    http://code.google.com/p/fullfat/           (http://www.fullfat-fs.co.uk/)
-    http://code.google.com/p/nanofat-lib/               -->PIC
-    http://elm-chan.org/fsw/ff/00index_p.html   Petit FAT File System Module
     
 */
 
 #include "U8glib.h"
 #include <DS1307new.h>
 #include <Wire.h>                       // required for DS1307new.h
-//#include <SdFat.h>
-//#include <SD.h>
+#include <SdFat.h>
 #include "M2tk.h"
 #include "m2ghu8g.h"
 #include <string.h>
 #include "mas.h"
-#include "pff.h"
+//#include "pff.h"
 
 #define DEFAULT_FONT u8g_font_6x13
 #define ICON_FONT u8g_font_m2icon_9
-//#define ICON_FONT u8g_font_6x13
 #define BIG_FONT u8g_font_fub20r
 
-//SdFat sdfat;
+SdFat sdfat;
 
-FATFS pff_fs;
+//FATFS pff_fs;
 
 
 /*=========================================================================*/
@@ -90,8 +78,6 @@ uint8_t info_screen_state = 0;
 
 void info_screen_display(void)
 {
-  //uint8_t backup_SPCR = SPCR;
-  //SPCR = 0;
   if ( info_screen_state == 0 )
   {
     u8g.setFont(BIG_FONT);
@@ -140,10 +126,20 @@ void info_screen_display(void)
        u8g.print("sd status:");
        u8g.print(sd_card_status);
     }
-  
-  //SPCR = backup_SPCR;
-
 }
+
+/*=========================================================================*/
+/* show selected file */
+
+const char *fs_show_file_label_cb(m2_rom_void_p element) {
+  return mas_GetFilename();
+}
+
+M2_LABELFN(el_show_filename, NULL, fs_show_file_label_cb);
+M2_ROOT(el_show_file_ok, NULL, "ok", &el_top);
+M2_LIST(list_show_file) = { &el_show_filename, &el_show_file_ok };
+M2_VLIST(el_show_file_Vlist, NULL, list_show_file);
+M2_ALIGN(top_el_show_file, "-1|1W64H64", &el_show_file_Vlist);
 
 /*=========================================================================*/
 /* file selection dialog */
@@ -208,6 +204,9 @@ const char *fs_strlist_getstr(uint8_t idx, uint8_t msg)
         mas_ChDir(mas_entry_name);
         fs_set_cnt();
         m2_SetRoot(m2_GetRoot());  // reset menu to first element
+      } else {
+	/* File has been selected. Here: Show the file to the user */
+        m2_SetRoot(&top_el_show_file);  
       }
     }
   } 
@@ -430,20 +429,18 @@ void setup()
   pinMode(7, OUTPUT);		
   pinMode(23, OUTPUT);
   
-  //pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  //if ( sdfat.init(SPI_HALF_SPEED, 23) )
-  //  mas_Init(mas_device_sdfat, (void *)&sdfat);
-  
-  //pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  //if (SD.begin(23))		// use the global SD object
-  //  mas_Init(mas_device_sd, NULL);
-  
   sd_card_status = 0;
-  if ( pf_mount(&pff_fs) == FR_OK )
-  {
+  pinMode(SS, OUTPUT);	// force the hardware chip select to output
+  if ( sdfat.init(SPI_HALF_SPEED, 23) ) {
     sd_card_status = 1;
-    mas_Init(mas_device_pff, &pff_fs);
+    mas_Init(mas_device_sdfat, (void *)&sdfat);
   }
+  
+  //sd_card_status = 0;
+  //if ( pf_mount(&pff_fs) == FR_OK ) {
+  //  sd_card_status = 1;
+  //  mas_Init(mas_device_pff, &pff_fs);
+  //}
   
   
   //mas_Init(mas_device_sim, NULL);

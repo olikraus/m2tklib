@@ -22,6 +22,7 @@ cp ../../src/*.c ./libraries/M2tklib/utility/.
 cp ../../src/*.h ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.[hc] ./libraries/M2tklib/utility/.
 cp ../../dev/arduino/*.cpp ./libraries/M2tklib/utility/.
+cp ../../dev/sdfat/*.cpp ./libraries/M2tklib/utility/.
 cp ../../dev/u8glib/*.[hc] ./libraries/M2tklib/utility/.
 #cp ../../dev/u8glib/*.cpp ./libraries/M2tklib/utility/.
 sed -i 's|m2[.]h|utility/m2.h|g' ./libraries/M2tklib/utility/m2ghu8g.h
@@ -40,6 +41,7 @@ cp ../../arduino/botmat_u8g/TextInput/*.pde ./libraries/M2tklib/examples/TextInp
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/TextInput/TextInput.pde
 cp ../../arduino/botmat_u8g/Botmat/*.pde ./libraries/M2tklib/examples/Botmat/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/Botmat/Botmat.pde
+sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/Botmat/Botmat.pde
 
 
 cd libraries 
