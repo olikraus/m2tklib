@@ -34,7 +34,7 @@ cp Makefile m2tk_u8g/u8g_examples/u8g_logo
 cp ../../ChangeLog ./m2tk_u8g/doc/m2/.
 cp ../../gpl-3.0.txt ./m2tk_u8g/doc/m2/.
 cp ../../license.txt ./m2tk_u8g/doc/m2/.
-#cp ../INSTALL_ARDUINO.TXT ./libraries/M2tklib/INSTALL.TXT
+cp ../INSTALL_AVR.TXT ./libraries/M2tklib/INSTALL.TXT
 cp ../../src/*.c ./m2tk_u8g/src/.
 cp ../../src/*.h ./m2tk_u8g/src/.
 cp ../../dev/avr_u8g/*.[hc] ./m2tk_u8g/src/.

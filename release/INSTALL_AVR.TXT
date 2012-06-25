@@ -1,0 +1,7 @@
+
+=== M2TKLIB ===
+http://code.google.com/p/m2tklib/
+
+Install instructions for Atmel Studio 6 are here:
+http://code.google.com/p/m2tklib/wiki/as6
+

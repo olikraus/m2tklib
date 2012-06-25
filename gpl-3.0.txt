@@ -1,3 +1,10 @@
+This is the GPL V3 for M2tklib core files.
+Please note that some parts are covered by different licenses.
+See also license.txt.
+
+
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
