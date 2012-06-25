@@ -23,14 +23,6 @@
 
 */
 
-/*=========================================================================*/
-/* Select mass storage sub system: Please uncomment one of the following constants*/
-
-//#define FS_SdFat
-//#define FS_SD
-//#define FS_PFF
-#define FS_SIM
-
 
 /*=========================================================================*/
 /* generic includes */
@@ -42,35 +34,34 @@
 #include "mas.h"
 
 /*=========================================================================*/
-/* specific includes for the mass storage sub system */
+/* Specific sections for the mass storage sub system. */
+/* Please uncomment one of the following sections (remove all // from one section)  */
 
-#ifdef FS_SdFat
-// requires download and installation of the SdFat library
-#include <SdFat.h>
-#endif
+/* === SdFat Library === */
+/*
+  1) Download and install SdFat 
+  2) Copy "mas_sdfat.cpp" from M2tklib/addon/mas_sdfat.cpp to M2tklib/utility/mas_sdfat.cpp
+  3) Uncomment the following tree lines
+*/
+//#define FS_SdFat
+//#include <SdFat.h>
+//SdFat sdfat;
 
-#ifdef FS_SD
-#include <SD.h>
-#endif
+/* === Arduino SD Library === */
+/*
+  1) Copy "mas_arduino_sd.cpp" from M2tklib/addon/mas_arduino_sd.cpp to M2tklib/utility/mas_arduino_sd.cpp
+  2) Uncomment the following two lines
+*/
+//#define FS_SD
+//#include <SD.h>
 
-#ifdef FS_PFF
-#include "pff.h"
-#endif
+/* === Petit Fat File System Library === */
+//#define FS_PFF
+//#include "pff.h"
+//FATFS pff_fs;
 
-#ifdef FS_SIM
-// no includes required
-#endif
-
-/*=========================================================================*/
-/* low level objects for storage sub system */
-
-#ifdef FS_SdFat
-SdFat sdfat;
-#endif
-
-#ifdef FS_PFF
-FATFS pff_fs;
-#endif
+/* === Petit Fat File System Library === */
+#define FS_SIM
 
 /*=========================================================================*/
 /* lcd object  */
@@ -184,27 +175,28 @@ void setup() {
   m2.setPin(M2_KEY_NEXT, uiKeyNextPin);
 
   // setup storage library and mas subsystem
-#ifdef FS_SdFat
+  // CS=23 	Botmat Project www.botmat.cc
+  // CS=10	Seeedstudio Shield http://www.seeedstudio.com/wiki/SD_Card_Shield
+#if defined(FS_SdFat)
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if ( sdfat.init(SPI_HALF_SPEED, 23) ) {
+  if ( sdfat.init(SPI_HALF_SPEED, 10) ) {
     mas_Init(mas_device_sdfat, (void *)&sdfat);
   }
-#endif
-
-#ifdef FS_SD
+  
+#elif defined(FS_SD)
   pinMode(SS, OUTPUT);	// force the hardware chip select to output
-  if (SD.begin(23)) {		// use the global SD object
+  if (SD.begin(10)) {		// use the global SD object
     mas_Init(mas_device_sd, NULL);
   }
-#endif
-
-#ifdef FS_PFF
+  
+#elif defined(FS_PFF)
+  //pff_arduino_chip_select_pin = 23; 	/* Botmat Project www.botmat.cc */
+  pff_arduino_chip_select_pin = 10; 	/* Seeedstudio Shield http://www.seeedstudio.com/wiki/SD_Card_Shield */
   if ( pf_mount(&pff_fs) == FR_OK ) {
     mas_Init(mas_device_pff, &pff_fs);
   }
-#endif
-
-#ifdef FS_SIM
+  
+#elif defined(FS_SIM)
   mas_Init(mas_device_sim, NULL);
 #endif
 }
