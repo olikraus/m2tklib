@@ -23,7 +23,7 @@
 
 */
 
-#include <LiquidCrystal.h>	// ensure that the include path is set
+#include "U8glib.h"		// ensure that the include path is set
 #include "M2tk.h"
 
 

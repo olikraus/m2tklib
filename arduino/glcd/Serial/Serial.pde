@@ -23,7 +23,7 @@
 
 */
 
-#include <LiquidCrystal.h>	// ensure that the include path is set
+#include <glcd.h>		// set path to glcd
 #include "M2tk.h"
 
 

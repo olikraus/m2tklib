@@ -70,7 +70,7 @@ sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/FileSelect
 sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 
-cp ../../arduino/LiquidCrystal/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
+cp ../../arduino/u8g/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
 
 
 cd libraries 
