@@ -34,5 +34,5 @@ M2tklib ChangeLog
 	* Petit Fat File System added to M2tklib
 	* New element: M2_2LMENU
 	* Serial console input and/or output (20x4 LCD simulator)
-	
+	* Fixed bug in M2_COMBO (string buffer return)
 	

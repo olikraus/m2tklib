@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 int u8g_sdl_get_key(void);
@@ -901,6 +902,97 @@ M2_VLIST(el_controller_menu_vlist, NULL, list_controller_menu);
 M2_ALIGN(el_top_controller_menu, "-1|1W64H64", &el_controller_menu_vlist);
 
 
+/*======================================================================*/
+/* prepare & apply */
+
+void pwm_value_to_str(uint8_t value, char *dest) {
+  switch(value) {
+    case 0: strcpy(dest, "low"); break;
+    case 1: strcpy(dest, "25%"); break;
+    case 2: strcpy(dest, "50%"); break;
+    case 3: strcpy(dest, "75%"); break;
+    case 4: strcpy(dest, "high"); break;
+  }
+}
+
+uint8_t pwm_value_to_analog(uint8_t value) {
+  switch(value) {
+    case 0: return 0;
+    case 1: return 63;
+    case 2: return 127;
+    case 3: return 191;
+  }
+  return 255;
+}
+
+// array with all the information
+
+#define PWM_PIN_CNT 6
+uint8_t pwm_values[PWM_PIN_CNT] = { 0,0,0,0,0,0 };
+uint8_t pwm_pins[PWM_PIN_CNT] = { 3,5,6,9,10,11 };
+
+// the current index contains the position within the array which gets presented to the user
+uint8_t pwm_menu_current_index = 0;
+
+// values for the menu; will be modified by the user
+uint8_t pwm_menu_value = 0;
+uint8_t pwm_menu_pin = 0;
+
+// get pin and value pair from the global array and store them in the menu variables
+void pwm_prepare_user_input(void) {
+  pwm_menu_value = pwm_values[pwm_menu_current_index];
+  pwm_menu_pin = pwm_pins[pwm_menu_current_index];
+}
+
+// write user input back to the array and to the analog pin
+void pwm_apply_user_input(void) {
+  // write user input into array
+  pwm_values[pwm_menu_current_index] = pwm_menu_value;
+  pwm_pins[pwm_menu_current_index] = pwm_menu_pin;
+  // apply user input to the hardware
+  // analogWrite(pwm_menu_pin, pwm_value_to_analog(pwm_menu_value));
+}
+
+
+void fn_pwm_ok(m2_el_fnarg_p fnarg) {
+  // finish user entry
+  pwm_apply_user_input();
+  
+  // accept selection
+  m2_SetRoot(&top_el_tlsm);
+}
+
+const char *pwm_fn_duty(uint8_t idx) {
+  static char buf[8];
+  pwm_value_to_str(idx, buf);
+  return buf;
+}
+
+
+M2_LABEL(el_pwm_pin_label, NULL, "Pin:");
+M2_U8NUM(el_pwm_pin_num, "r1c2", 0, 255, &pwm_menu_pin);
+
+M2_LABEL(el_pwm_duty_label, NULL, "Duty: ");
+M2_COMBO(el_pwm_duty, NULL, &pwm_menu_value, 5, pwm_fn_duty);
+
+M2_ROOT(el_pwm_cancel, "f4", "Cancel", &top_el_tlsm);
+M2_BUTTON(el_pwm_ok, "f4", "Ok", fn_pwm_ok);
+
+M2_LIST(list_pwm_menu) = { 
+    &el_pwm_pin_label, &el_pwm_pin_num, 
+    &el_pwm_duty_label, &el_pwm_duty,  
+    &el_pwm_cancel, &el_pwm_ok 
+};
+M2_GRIDLIST(el_pwm_grid, "c2", list_pwm_menu);
+
+
+// center the menu on the display
+M2_ALIGN(el_top_pwm_menu, "-1|1W64H64", &el_pwm_grid);
+
+
+
+
+
 
 /*======================================================================*/
 /* top level sdl menu: tlsm */
@@ -1018,12 +1110,21 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_top_controller_menu);
     }
   }
+  else if ( idx == 19 ) {
+    s = "PWM Menu";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_top_pwm_menu);
+    }
+  }
+  
+  
   return s;
 }
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 19;
+uint8_t el_tlsm_cnt = 20;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1113,8 +1214,8 @@ int main(void)
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
   
   /* 2. Now, setup m2 */
-  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
   //m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
 
   /* 3. Connect the u8g display to m2.  */

@@ -126,13 +126,15 @@ M2_EL_FN_DEF(m2_el_combo_fn)
 #endif
     case M2_EL_MSG_SHOW:
       {
+	uint8_t max_width = m2_gfx_get_text_width(font,m2_el_combo_get_str(fn_arg,m2_el_combo_get_max_len_idx(fn_arg)));
+	
 	m2_pos_p b = (m2_pos_p)(fn_arg->data);
 	
 	if ( m2_is_frame_draw_at_end == 0 )
 	  m2_el_fnfmt_fn(fn_arg);
 	
 	m2_gfx_draw_text_add_normal_border_offset(b->x, b->y, 
-	      m2_align_get_max_width(fn_arg, m2_gfx_get_text_width(font,m2_el_combo_get_str(fn_arg,m2_el_combo_get_max_len_idx(fn_arg)))),
+	      m2_align_get_max_width(fn_arg, max_width),
 	      m2_align_get_max_height(fn_arg, m2_gfx_get_char_height(font)),
 	      font, m2_el_combo_get_curr_str(fn_arg));
 	
