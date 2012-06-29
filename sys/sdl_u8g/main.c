@@ -2,6 +2,8 @@
 
 #include "SDL.h"
 
+#include "m2.h"
+#include "m2utl.h"
 #include "m2ghu8g.h"
 #include "m2ghtty.h"
 #include "mas.h"
@@ -903,8 +905,8 @@ M2_ALIGN(el_top_controller_menu, "-1|1W64H64", &el_controller_menu_vlist);
 
 
 /*======================================================================*/
-/* prepare & apply */
-
+//=======================================
+// utility procedure to convert values
 void pwm_value_to_str(uint8_t value, char *dest) {
   switch(value) {
     case 0: strcpy(dest, "low"); break;
@@ -925,59 +927,82 @@ uint8_t pwm_value_to_analog(uint8_t value) {
   return 255;
 }
 
-// array with all the information
+//=======================================
+// forward declaration of the pin selection menu
+M2_EXTERN_ALIGN(top_el_pin_list);
 
+//=======================================
+// array for the pwm information of all pwm pins 
+
+// array with all the information
 #define PWM_PIN_CNT 6
-uint8_t pwm_values[PWM_PIN_CNT] = { 0,0,0,0,0,0 };
-uint8_t pwm_pins[PWM_PIN_CNT] = { 3,5,6,9,10,11 };
+uint8_t pwm_duty_array[PWM_PIN_CNT] = { 0,0,0,0,0,0 };
+uint8_t pwm_pin_array[PWM_PIN_CNT] = { 3,5,6,9,10,11 };
+
+//=======================================
+// variables for the user interface
 
 // the current index contains the position within the array which gets presented to the user
 uint8_t pwm_menu_current_index = 0;
 
 // values for the menu; will be modified by the user
-uint8_t pwm_menu_value = 0;
+// transfer values from the array to these variables: pwm_prepare_user_input
+// transfer values from these variables to the array: pwm_apply_user_input
+uint8_t pwm_menu_duty = 0;
 uint8_t pwm_menu_pin = 0;
+
+//=======================================
+// transfer procedure between menu variables and the array with pwm information
 
 // get pin and value pair from the global array and store them in the menu variables
 void pwm_prepare_user_input(void) {
-  pwm_menu_value = pwm_values[pwm_menu_current_index];
-  pwm_menu_pin = pwm_pins[pwm_menu_current_index];
+  pwm_menu_duty = pwm_duty_array[pwm_menu_current_index];
+  pwm_menu_pin = pwm_pin_array[pwm_menu_current_index];
 }
 
 // write user input back to the array and to the analog pin
 void pwm_apply_user_input(void) {
   // write user input into array
-  pwm_values[pwm_menu_current_index] = pwm_menu_value;
-  pwm_pins[pwm_menu_current_index] = pwm_menu_pin;
+  pwm_duty_array[pwm_menu_current_index] = pwm_menu_duty;
+  pwm_pin_array[pwm_menu_current_index] = pwm_menu_pin;
   // apply user input to the hardware
   // analogWrite(pwm_menu_pin, pwm_value_to_analog(pwm_menu_value));
 }
 
+//=======================================
+// the menu / user interface for one pwm pin
 
-void fn_pwm_ok(m2_el_fnarg_p fnarg) {
+// this procedure is called by the "ok" button
+void pwm_fn_ok(m2_el_fnarg_p fnarg) {
   // finish user entry
   pwm_apply_user_input();
   
-  // accept selection
-  m2_SetRoot(&top_el_tlsm);
+  // go back to parent menu
+  m2_SetRoot(&top_el_pin_list);
 }
 
+// this will return a user readable string for the internal value
 const char *pwm_fn_duty(uint8_t idx) {
   static char buf[8];
   pwm_value_to_str(idx, buf);
   return buf;
 }
 
-
+// the arduino pin number is read only for the user (info field)
 M2_LABEL(el_pwm_pin_label, NULL, "Pin:");
 M2_U8NUM(el_pwm_pin_num, "r1c2", 0, 255, &pwm_menu_pin);
 
+// the duty field can be changed by the user
 M2_LABEL(el_pwm_duty_label, NULL, "Duty: ");
-M2_COMBO(el_pwm_duty, NULL, &pwm_menu_value, 5, pwm_fn_duty);
+M2_COMBO(el_pwm_duty, NULL, &pwm_menu_duty, 5, pwm_fn_duty);
 
-M2_ROOT(el_pwm_cancel, "f4", "Cancel", &top_el_tlsm);
-M2_BUTTON(el_pwm_ok, "f4", "Ok", fn_pwm_ok);
+// cancel: do not store user values, go back directly
+M2_ROOT(el_pwm_cancel, "f4", "Cancel", &top_el_pin_list);
 
+// ok: write user values back to the array and apply values to the hardware
+M2_BUTTON(el_pwm_ok, "f4", "Ok", pwm_fn_ok);
+
+// the following grid-list will arrange the elements on the display
 M2_LIST(list_pwm_menu) = { 
     &el_pwm_pin_label, &el_pwm_pin_num, 
     &el_pwm_duty_label, &el_pwm_duty,  
@@ -985,12 +1010,53 @@ M2_LIST(list_pwm_menu) = {
 };
 M2_GRIDLIST(el_pwm_grid, "c2", list_pwm_menu);
 
-
 // center the menu on the display
 M2_ALIGN(el_top_pwm_menu, "-1|1W64H64", &el_pwm_grid);
 
 
+//=======================================
+// this menu selects one of the pwm pins (implemented with the STRLIST element)
+uint8_t pin_list_first = 0;
+uint8_t pin_list_cnt = PWM_PIN_CNT;
 
+// callback procedure for the STRLIST element
+const char *pin_list_cb(uint8_t idx, uint8_t msg) {
+  static char s[12];
+  s[0] = '\0';
+  if ( msg == M2_STRLIST_MSG_SELECT ) {
+    // the user has selected a pin, prepare sub menu
+    
+    // inform the pwm dialog which array index has to be modfied
+    pwm_menu_current_index = idx;
+    
+    // transfer values from the array to the menu variables
+    pwm_prepare_user_input();
+    
+    // give control to the pwm dialog
+    m2_SetRoot(&el_top_pwm_menu);
+  } else {
+    // convert the idx into some readable line for the user
+    strcpy(s, "Pin ");
+    strcpy(s+4, m2_utl_u8d(pwm_pin_array[idx], 2));
+    // add a space
+    s[6] = ' ';
+    // also show the current duty
+    pwm_value_to_str(pwm_duty_array[idx], s+7);
+  }
+  return s;
+}
+
+// selection menu for the pins, composed of a STRLIST element with a scroll bar
+M2_STRLIST(el_pin_list_strlist, "l3W56", &pin_list_first, &pin_list_cnt, pin_list_cb);
+M2_SPACE(el_pin_list_space, "W1h1");
+M2_VSB(el_pin_list_vsb, "l3W4r1", &pin_list_first, &pin_list_cnt);
+M2_LIST(list_pin_list) = { &el_pin_list_strlist, &el_pin_list_space, &el_pin_list_vsb };
+M2_HLIST(el_pin_list_hlist, NULL, list_pin_list);
+M2_ALIGN(top_el_pin_list, "-1|1W64H64", &el_pin_list_hlist);
+
+
+
+/*======================================================================*/
 
 
 
@@ -1114,7 +1180,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     s = "PWM Menu";
     if ( msg == M2_STRLIST_MSG_SELECT )
     {
-      m2_SetRoot(&el_top_pwm_menu);
+      m2_SetRoot(&top_el_pin_list);
     }
   }
   
@@ -1131,7 +1197,6 @@ M2_SPACE(el_tlsm_space, "W1h1");
 M2_VSB(el_tlsm_vsb, "l3W4r1", &el_tlsm_first, &el_tlsm_cnt);
 M2_LIST(list_tlsm_strlist) = { &el_tlsm_strlist, &el_tlsm_space, &el_tlsm_vsb };
 M2_HLIST(el_tlsm_hlist, NULL, list_tlsm_strlist);
-
 M2_ALIGN(top_el_tlsm, "-1|1W64H64", &el_tlsm_hlist);
 
 
