@@ -71,6 +71,10 @@ sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSel
 sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 
 cp ../../arduino/u8g/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
+#sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/Serial/Serial.pde
+cp ../../arduino/u8g/PWMPinList/*.pde ./libraries/M2tklib/examples/PWMPinList/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
+sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 
 
 cd libraries 

@@ -21,6 +21,7 @@ mkdir libraries/M2tklib/examples/Graphics
 mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/examples/Serial
+mkdir libraries/M2tklib/examples/PWMPinList
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -81,6 +82,11 @@ sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSel
 sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 
 cp ../../arduino/glcd/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
+#sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Serial/Serial.pde
+cp ../../arduino/glcd/PWMPinList/*.pde ./libraries/M2tklib/examples/PWMPinList/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
+sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
+
 
 cd libraries 
 zip -r ../m2tklib_arduino_glcd_`../../print_release`.zip *
