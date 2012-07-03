@@ -21,6 +21,11 @@ mkdir m2tk_u8g/m2_examples/rapunzel
 cp Makefile m2tk_u8g/m2_examples/rapunzel
 mkdir m2tk_u8g/m2_examples/file_select
 cp Makefile m2tk_u8g/m2_examples/file_select
+mkdir m2tk_u8g/m2_examples/pwm_pin_list
+cp Makefile m2tk_u8g/m2_examples/pwm_pin_list
+
+
+
 mkdir m2tk_u8g/u8g_examples
 mkdir m2tk_u8g/u8g_examples/hello_world
 cp Makefile m2tk_u8g/u8g_examples/hello_world
@@ -34,7 +39,7 @@ cp Makefile m2tk_u8g/u8g_examples/u8g_logo
 cp ../../ChangeLog ./m2tk_u8g/doc/m2/.
 cp ../../gpl-3.0.txt ./m2tk_u8g/doc/m2/.
 cp ../../license.txt ./m2tk_u8g/doc/m2/.
-cp ../INSTALL_AVR.TXT ./libraries/M2tklib/INSTALL.TXT
+cp ../INSTALL_AVR.TXT ./m2tk_u8g/doc/m2/.
 cp ../../src/*.c ./m2tk_u8g/src/.
 cp ../../src/*.h ./m2tk_u8g/src/.
 cp ../../dev/avr_u8g/*.[hc] ./m2tk_u8g/src/.
@@ -48,6 +53,7 @@ cp ../../sys/avr_u8g/hello_world/*.c ./m2tk_u8g/m2_examples/hello_world/.
 cp ../../sys/avr_u8g/radio/*.c ./m2tk_u8g/m2_examples/radio/.
 cp ../../sys/avr_u8g/rapunzel/*.c ./m2tk_u8g/m2_examples/rapunzel/.
 cp ../../sys/avr_u8g/file_select/*.c ./m2tk_u8g/m2_examples/file_select/.
+cp ../../sys/avr_u8g/pwm_pin_list/*.c ./m2tk_u8g/m2_examples/pwm_pin_list/.
 
 
 cp ../../../../u8g/u8glib/ChangeLog ./m2tk_u8g/doc/u8g/.
