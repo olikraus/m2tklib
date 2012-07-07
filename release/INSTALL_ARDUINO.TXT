@@ -7,8 +7,9 @@ Install instructions for the Arduino environment.
 
 1. Install graphics subsystem if required.
       a) "lc": LiquidCrystal: Part of Arduino Environment
-      b) "dogm128": dogm128 library, http://code.google.com/p/dogm128/
+      b) "u8g": u8g library, http://code.google.com/p/u8glib/
       c) "glcd": glcd library, http://code.google.com/p/glcd-arduino/
+      d) "dogm128": dogm128 library, http://code.google.com/p/dogm128/
 2. Unzip m2tklib_arduino_..._X.XX.zip into the "libraries" folder
 3. Start Arduino IDE
 
