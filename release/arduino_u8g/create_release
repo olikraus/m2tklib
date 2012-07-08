@@ -17,6 +17,7 @@ mkdir libraries/M2tklib/examples/U32Plain
 mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/examples/Serial
+mkdir libraries/M2tklib/examples/PWMPinList
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
