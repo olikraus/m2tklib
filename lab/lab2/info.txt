@@ -1,0 +1,30 @@
+
+Specificaton
+
+Prefix: mt (menu tree)
+A tree represents the menu structure.
+The tree has generic nodes: struct mt_node { next, prev, ptr_to_element (ptr to me) }
+Operation on the tree
+- save to file
+- load from file
+- convert to c code
+- convert to element hierarchy for immediate execution by u8glib
+- convert to gtk tree object
+- delete subtree
+- add element (node)
+- copy subtree
+- cut subtree
+- paste subtree
+- history (copy full tree to history buffer)
+
+Prefix: me (menu element)
+
+struct me
+{
+  callback procedure
+  element name
+  comment string
+  option string
+  int int_arg_1;  
+  int int_arg_2;  
+}

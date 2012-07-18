@@ -140,6 +140,7 @@ uint8_t m2_gh_tty(m2_gfx_arg_p  arg)
       return strlen(arg->s);
     case M2_GFX_MSG_GET_ICON_WIDTH:
     case M2_GFX_MSG_GET_ICON_HEIGHT:
+    case M2_GFX_MSG_GET_NUM_CHAR_WIDTH:
     case M2_GFX_MSG_GET_CHAR_WIDTH:
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
       return 1;

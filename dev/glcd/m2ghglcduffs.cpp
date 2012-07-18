@@ -86,6 +86,9 @@ extern "C" uint8_t m2_gh_glcd_uffs(m2_gfx_arg_p arg)
     case M2_GFX_MSG_GET_ICON_WIDTH:
     case M2_GFX_MSG_GET_ICON_HEIGHT:
       return m2_gh_glcd_get_user_font_height(arg);
+    case M2_GFX_MSG_GET_NUM_CHAR_WIDTH:
+      m2_gh_glcd_set_user_font(arg->font);
+      return GLCD.CharWidth('0');
     case M2_GFX_MSG_GET_CHAR_WIDTH:
       m2_gh_glcd_set_user_font(arg->font);
       return GLCD.CharWidth('m');
