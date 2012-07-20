@@ -1,9 +1,9 @@
 
 Specificaton
 
-Prefix: mt (menu tree)
+Prefix: mn
 A tree represents the menu structure.
-The tree has generic nodes: struct mt_node { next, prev, ptr_to_element (ptr to me) }
+The tree has nodes: struct mn_type { next, prev, ptr_to_element (ptr to me) }
 Operation on the tree
 - save to file
 - load from file
