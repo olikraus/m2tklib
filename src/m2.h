@@ -211,6 +211,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg);		/* m2ghsdl.c: SDL Event Source */
 uint8_t m2_es_arduino(m2_p ep, uint8_t msg);			/* m2esarduino.c */
 uint8_t m2_es_arduino_ir(m2_p ep, uint8_t msg);                 /* contributed code: m2esarduinoir.c, not part of the m2tklib core files */
 uint8_t m2_es_arduino_serial(m2_p ep, uint8_t msg);	/* m2esserial.cpp */
+uint8_t m2_es_arduino_rotary_encoder(m2_p ep, uint8_t msg); /* m2esarduino.c */
+
 uint8_t m2_es_avr_u8g(m2_p ep, uint8_t msg);	/* m2esavru8g.c: Event handler for m2tklib for avr (based on u8glib) */
 
 /* event handler */
@@ -240,9 +242,12 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_KEY_PREV 4
 #define M2_KEY_DATA_UP 5
 #define M2_KEY_DATA_DOWN 6
-#define M2_KEY_REFRESH 7
+#define M2_KEY_ROT_ENC_A 7
+#define M2_KEY_ROT_ENC_B 8
+#define M2_KEY_ANALOG 9
+#define M2_KEY_REFRESH 10
 
-#define M2_KEY_CNT 7
+#define M2_KEY_CNT 10
 
 /* mark key as event */
 /* if the EVENT bit is set, then the key is directly passed to the queue */

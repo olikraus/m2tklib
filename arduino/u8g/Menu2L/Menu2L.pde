@@ -109,6 +109,7 @@ M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_hlist);
 
 // m2 object and constructor
 M2tk m2(&top_el_expandable_menu, m2_es_arduino, m2_eh_4bs, m2_gh_u8g_ffs);
+//M2tk m2(&top_el_expandable_menu, m2_es_arduino_rotary_encoder, m2_eh_4bs, m2_gh_u8g_ffs);
 //M2tk m2(&top_el_expandable_menu, m2_es_arduino, m2_eh_4bs, m2_gh_arduino_serial);
 
 //=================================================
@@ -134,6 +135,9 @@ void setup(void) {
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_EXIT, uiKeyExitPin);    
+  
+  //m2.setPin(M2_KEY_ROT_ENC_A, 4);
+  //m2.setPin(M2_KEY_ROT_ENC_B, 5);
 }
 
 void loop() {
@@ -142,6 +146,7 @@ void loop() {
   if ( m2.handleKey() != 0 ) {
     u8g.firstPage();  
     do {
+      m2.checkKey();
       draw();
     } while( u8g.nextPage() );
   }

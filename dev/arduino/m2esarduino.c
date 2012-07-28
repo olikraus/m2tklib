@@ -32,10 +32,21 @@
 
 #include "m2.h"
 
+#define M2_ROTARY_ENCODER_STATE_CHANGE_DELAY 20 
+
+#define RE_A 4
+#define RE_B 5
+
 static void m2_arduino_setup_key(uint8_t key) M2_NOINLINE;
 static void m2_arduino_setup(void) M2_NOINLINE;
 static uint8_t m2_arduino_check_key(uint8_t key) M2_NOINLINE;
 static uint8_t m2_arduino_get_key(void) M2_NOINLINE;
+
+static uint8_t m2_rot_enc_get_input(void) M2_NOINLINE;
+static uint8_t m2_rot_enc_init_state(uint8_t in) M2_NOINLINE;
+static uint8_t m2_rot_enc_next_state(uint8_t state, uint8_t in) M2_NOINLINE;
+static uint8_t m2_get_rot_enc_get_key(void) M2_NOINLINE;
+static uint8_t m2_get_rot_enc_get_key(void) M2_NOINLINE;
 
 static void m2_arduino_setup_key(uint8_t key)
 {
@@ -56,6 +67,8 @@ static void m2_arduino_setup(void)
   m2_arduino_setup_key(M2_KEY_PREV);  
   m2_arduino_setup_key(M2_KEY_DATA_UP);  
   m2_arduino_setup_key(M2_KEY_DATA_DOWN);  
+  m2_arduino_setup_key(M2_KEY_ROT_ENC_A);  
+  m2_arduino_setup_key(M2_KEY_ROT_ENC_B);  
 }
 
 static uint8_t m2_arduino_check_key(uint8_t key)
@@ -81,6 +94,9 @@ static uint8_t m2_arduino_get_key(void)
   return M2_KEY_NONE;
 }
 
+/*=================================================================*/
+/* normal button handler, one button per pin */
+
 uint8_t m2_es_arduino(m2_p ep, uint8_t msg)
 {
   
@@ -90,6 +106,167 @@ uint8_t m2_es_arduino(m2_p ep, uint8_t msg)
       return m2_arduino_get_key();
     case M2_ES_MSG_INIT:
       m2_arduino_setup();
+      return 0;
+  }
+  return 0;
+}
+
+/*=================================================================*/
+/* rotary encode with normal button handler (one button per pin) */
+
+static uint8_t m2_rec_enc_next_state_array[] = { 
+#ifdef M2_WITHOUT_INTERMEDIATE_UNKNOWN_STATE
+0x090, // 10 01 00 00
+0x021, // 00 10 00 01
+0x048, // 01 00 10 00
+0x006, // 00 00 01 10
+  
+0x091, // 10 01 00 01
+0x025, // 00 10 01 01
+0x058, // 01 01 10 00
+0x046, // 01 00 01 10
+
+0x092, // 10 01 00 10
+0x029, // 00 10 10 01
+0x068, // 01 10 10 00
+0x086, // 10 00 01 10
+
+#else
+  
+0x090, // 10 10 00 00
+0x021, // 00 10 00 10
+0x048, // 10 00 10 00
+0x006, // 00 00 10 10
+  
+0x091, // 10 01 10 01
+0x025, // 10 10 01 01
+0x058, // 01 01 10 10
+0x046, // 01 10 01 10
+
+0x092, // 10 01 00 10
+0x029, // 00 10 10 01
+0x068, // 01 10 10 00
+0x086, // 10 00 01 10
+#endif
+};
+
+static uint8_t m2_rot_enc_get_input(void)
+{
+  uint8_t in = 0;
+  
+  if ( m2_arduino_check_key(M2_KEY_ROT_ENC_A) != 0 )
+    in |= 1;
+  if ( m2_arduino_check_key(M2_KEY_ROT_ENC_B) != 0 )
+    in |= 2;
+  return in;
+}
+
+/* based on the input, get the initial state */
+static uint8_t m2_rot_enc_init_state(uint8_t in)
+{
+  return (in & 3) | 8;
+}
+
+/* based on the input, calculate the next state */
+static uint8_t m2_rot_enc_next_state(uint8_t state, uint8_t in)
+{
+  uint8_t new_state;
+  if ( state > 12 )
+    state = m2_rot_enc_init_state(in);
+  new_state = m2_rec_enc_next_state_array[state] >> ((in)*2);
+  new_state &= 3;
+  new_state <<= 2;
+  new_state |= in;
+  return new_state;
+}
+
+uint8_t m2_rot_enc_state;
+uint8_t m2_rot_enc_debounce_cnt;
+int8_t m2_rot_enc_div_cnt;
+#define ROT_ENC_DEBOUNCE_VAL 3
+#define ROT_ENC_EVENT_DIVISION 3
+
+static uint8_t m2_get_rot_enc_get_key(void)
+{
+  uint8_t new_m2_rot_enc_state;
+  
+  /* calculate the next state */
+  new_m2_rot_enc_state = m2_rot_enc_next_state(m2_rot_enc_state, m2_rot_enc_get_input());
+
+  if ( new_m2_rot_enc_state != m2_rot_enc_state )
+  {
+    /* if state has changed, then reset the debounce counter */
+    m2_rot_enc_debounce_cnt = 0;
+    /* ... and store new state */
+    m2_rot_enc_state = new_m2_rot_enc_state;
+    
+    delay(M2_ROTARY_ENCODER_STATE_CHANGE_DELAY);
+  }
+  else
+  {
+    /* only if the direction is known */
+    if ( new_m2_rot_enc_state < 8 ) 
+    {
+      /* increment the debounce counter */
+      if ( m2_rot_enc_debounce_cnt < ROT_ENC_DEBOUNCE_VAL )
+      { 
+        m2_rot_enc_debounce_cnt++;
+        if ( m2_rot_enc_debounce_cnt >= ROT_ENC_DEBOUNCE_VAL )
+        {
+	  if ( new_m2_rot_enc_state & 4 )
+	  {
+	    if ( m2_rot_enc_div_cnt > ROT_ENC_EVENT_DIVISION )
+	    {
+	      m2_rot_enc_div_cnt = 0;
+	      return M2_KEY_EVENT(M2_KEY_NEXT);		/* disable debounce by M2tk algoritm */	      
+	    }
+	    else
+	    {
+	      m2_rot_enc_div_cnt++;
+	    }
+	  }
+	  else
+	  {
+	    if ( m2_rot_enc_div_cnt < -ROT_ENC_EVENT_DIVISION )
+	    {
+	      m2_rot_enc_div_cnt = 0;
+	      return M2_KEY_EVENT(M2_KEY_PREV);		/* disable debounce by M2tk algoritm */
+	    }
+	    else
+	    {
+	      m2_rot_enc_div_cnt--;
+	    }
+	  }
+        }
+      }
+    }
+  }
+  
+  return M2_KEY_NONE;
+}
+
+uint8_t m2_es_arduino_rotary_encoder(m2_p ep, uint8_t msg)
+{
+  uint8_t key, i;
+  switch(msg)
+  {
+    case M2_ES_MSG_GET_KEY:
+      for( i = 0; i < 4; i++ )
+      {
+	key = m2_get_rot_enc_get_key();
+	if ( key != M2_KEY_NONE )
+	  return key;
+      }
+      return m2_arduino_get_key();
+    case M2_ES_MSG_INIT:
+      m2_arduino_setup();
+    
+      pinMode(RE_A, INPUT);           /* set pin to input */
+      digitalWrite(RE_A, HIGH);       /* turn on pullup resistors */
+      pinMode(RE_B, INPUT);           /* set pin to input */
+      digitalWrite(RE_B, HIGH);       /* turn on pullup resistors */
+    
+      m2_rot_enc_init_state(m2_rot_enc_get_input());
       return 0;
   }
   return 0;
