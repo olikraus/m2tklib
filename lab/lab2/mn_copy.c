@@ -4,6 +4,10 @@
   
 */
 
+#include "mn.h"
+#include <assert.h>
+#include <stdlib.h>
+
 mn_type mn_Copy(mn_type n)
 {
   mn_type t;

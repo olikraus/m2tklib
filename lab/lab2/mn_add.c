@@ -4,13 +4,21 @@
   
 */
 
+#include "mn.h"
 #include <assert.h>
+#include <stdlib.h>
 
+/*
+  Add subtree s as last child to n.
+  If s is equal to NULL, nothing will happen.
+*/
 void mn_AppendSubtree(mn_type n, mn_type s)
 {
   if ( n == NULL )
     return;
-  if ( n->d == NULL
+  if ( s == NULL )
+    return;
+  if ( n->d == NULL )
   {
     n->d = s;
     return;

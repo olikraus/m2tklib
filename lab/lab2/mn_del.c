@@ -1,6 +1,13 @@
+/*
+
+  mn_del.c
+  
+*/
 
 
 #include "mn.h"
+#include <assert.h>
+#include <stdlib.h>
 
 
 void mn_Del(mn_type n)
@@ -39,7 +46,7 @@ mn_type mn_CutSubtree(mn_type n, int pos)
   return n;
 }
 
-mn_type mn_DelSubtree(mn_type n, int pos)
+void mn_DelSubtree(mn_type n, int pos)
 {
   mn_Del(mn_CutSubtree(n, pos));
 }
