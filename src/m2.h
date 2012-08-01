@@ -167,13 +167,14 @@ typedef uint32_t (*m2_u32fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint32_t 
 
 
 /* object interface */
+void m2_SetHomeM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;	/* m2obj.c */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
 void m2_CheckKeyM2(m2_p m2) M2_NOINLINE;
 uint8_t m2_HandleKeyM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
 void m2_DrawM2(m2_p m2) M2_NOINLINE;													/* m2draw.c */
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;					/* m2obj.c */
 void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
-void m2_SetRootM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;								/* m2obj.c */
+void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt) M2_NOINLINE;								/* m2obj.c */
 m2_rom_void_p m2_GetRootM2(m2_p m2) M2_NOINLINE;										/* m2obj.c */
 void m2_ClearM2(m2_p m2);
 void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh);
@@ -191,6 +192,7 @@ uint8_t m2_GetKey(void);                /* usually you do not want to use this f
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetRoot(m2_rom_void_p element);
+void m2_SetRootWithNextCnt(m2_rom_void_p element, uint8_t next_cnt);
 m2_rom_void_p m2_GetRoot(void);
 void m2_Clear(void);
 void m2_SetGraphicsHandler(m2_gfx_fnptr gh);
@@ -242,12 +244,13 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_KEY_PREV 4
 #define M2_KEY_DATA_UP 5
 #define M2_KEY_DATA_DOWN 6
-#define M2_KEY_ROT_ENC_A 7
-#define M2_KEY_ROT_ENC_B 8
-#define M2_KEY_ANALOG 9
-#define M2_KEY_REFRESH 10
+#define M2_KEY_HOME 7
+#define M2_KEY_ROT_ENC_A 8
+#define M2_KEY_ROT_ENC_B 9
+#define M2_KEY_ANALOG 10
+#define M2_KEY_REFRESH 11
 
-#define M2_KEY_CNT 10
+#define M2_KEY_CNT 11
 
 /* mark key as event */
 /* if the EVENT bit is set, then the key is directly passed to the queue */
@@ -804,6 +807,8 @@ struct _m2_nav_struct
   
   /* can be set to change the root node of the tree */
   m2_rom_void_p new_root_element;
+  /* used to go to a specific field after the new root element has been assigned */
+  uint8_t next_cnt;
 };
 
 
@@ -825,7 +830,7 @@ uint8_t m2_nav_get_child_pos(m2_nav_p nav) M2_NOINLINE;		/* m2navutl.c */
 
 void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element) M2_NOINLINE; /* m2navinit.c */
 
-void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element) M2_NOINLINE; 	/* m2navroot.c */
+void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element, uint8_t next_cnt) M2_NOINLINE; 	/* m2navroot.c */
 /*void m2_nav_set_root(m2_nav_p nav,  m2_attrib_element_p ae);*/	/* m2navroot.c */
 uint8_t m2_nav_check_and_assign_new_root(m2_nav_p nav) M2_NOINLINE;		/* m2navroot.c */
 
@@ -903,6 +908,9 @@ struct _m2_struct
   uint8_t key_queue_array[M2_KEY_QUEUE_LEN];
   uint8_t key_queue_pos;
   uint8_t key_queue_len;
+  
+  /* home menue for the HOME key */
+  m2_rom_void_p home;
 };
 
 #define M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS 	0
@@ -914,7 +922,7 @@ struct _m2_struct
 m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 
 
-/* messages for the event handler callback procedure */
+/* messages for the event handler callback procedure, Note: the event handler will not get the HOME msg or key */
 #define M2_EP_MSG_SELECT M2_KEY_SELECT
 #define M2_EP_MSG_NEXT M2_KEY_NEXT
 #define M2_EP_MSG_PREV M2_KEY_PREV

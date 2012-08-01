@@ -34,7 +34,8 @@ class M2tk
     uint8_t getKey(void) { return m2_GetKey(); }
     void setFont(uint8_t font_idx, const void *font_ptr) { m2_SetFont(font_idx, font_ptr); }
     void setPin(uint8_t key, uint8_t pin) { m2_SetPin(key, pin); }
-    void setRoot(m2_rom_void_p element) { m2_SetRoot(element); }
+    void setRoot(m2_rom_void_p element, uint8_t next_cnt = 0) { m2_SetRootWithNextCnt(element, next_cnt); }
+    void setHome(m2_rom_void_p element) { m2_SetHome(element); }
     void clear(void) { m2_Clear(); }
     m2_rom_void_p getRoot() { return m2_GetRoot(); }    
 };

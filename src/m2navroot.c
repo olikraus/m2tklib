@@ -29,12 +29,14 @@
 /* new root assignment */
 /* idea: assign a new root to an intermediate variable, init the nav with the new root at top level */
 /* any element function could call this procedure */
+/* 1 Aug 2012: added next_cnt to allow the selection of a different inital field */
 
-void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element)
+void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element, uint8_t next_cnt)
 {
   if ( element == NULL )
     element = &m2_null_element;
   nav->new_root_element = element;
+  nav->next_cnt = next_cnt;
 }
 
 /* should be called only at the top level */
@@ -44,6 +46,13 @@ uint8_t m2_nav_check_and_assign_new_root(m2_nav_p nav)
   if ( nav->new_root_element != NULL )
   {
     m2_nav_init(nav, nav->new_root_element);
+    
+    while( nav->next_cnt > 0 )
+    {
+      m2_nav_user_next(nav);
+      nav->next_cnt--;
+    }
+    
     nav->new_root_element = NULL;
     return 1;
   }

@@ -38,7 +38,7 @@ M2_EL_FN_DEF(m2_el_root_fn)
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_SELECT:
-      m2_nav_set_root(fn_arg->nav,  m2_el_root_get_ae(fn_arg));
+      m2_nav_set_root(fn_arg->nav,  m2_el_root_get_ae(fn_arg), m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'n'));
       return 1;
   }
   return m2_el_str_fn(fn_arg);

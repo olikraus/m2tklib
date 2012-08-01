@@ -50,6 +50,11 @@ void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh)
   }
 }
 
+void m2_SetHomeM2(m2_p m2, m2_rom_void_p element)
+{
+  m2->home = element;
+}
+
 /*
   element: 	the root element
   es:			event source handler, can be NULL
@@ -67,6 +72,7 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
   m2->forced_key = M2_KEY_REFRESH;
   m2->debounce_state = M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS;
+  m2_SetHomeM2(m2, element);
   m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
   m2_nav_init(m2_get_nav(m2),  element);
   m2_SetEventSourceHandlerM2(m2, es);
@@ -129,11 +135,15 @@ uint8_t m2_HandleKeyM2(m2_p m2)
     if ( key == M2_KEY_NONE )
       break;
     
-    /* otherwise, process the key event */
-    /* note, that key numbers are equal to message numbers */
-    if ( m2->eh != NULL )
+    /* otherwise, process the key event */    
+    if ( key == M2_KEY_HOME ) /* aways process the HOME key */
     {
-      /* handle the key */
+      m2_SetRootM2(m2, m2->home, 0);
+    }
+    /* note, that key numbers are equal to message numbers */
+    else if ( m2->eh != NULL )
+    {
+      /* handle all keys except HOME key */
       m2->eh(m2, key, 0);
     }
     
@@ -149,9 +159,9 @@ void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
   m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
 }
 
-void m2_SetRootM2(m2_p m2, m2_rom_void_p element)
+void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt)
 {
-  m2_nav_set_root(m2_get_nav(m2),  element);
+  m2_nav_set_root(m2_get_nav(m2),  element, next_cnt);
 }
 
 m2_rom_void_p m2_GetRootM2(m2_p m2)
@@ -161,5 +171,5 @@ m2_rom_void_p m2_GetRootM2(m2_p m2)
 
 void m2_ClearM2(m2_p m2)
 {
-  m2_SetRootM2(m2, NULL);
+  m2_SetRootM2(m2, NULL, 0);
 }

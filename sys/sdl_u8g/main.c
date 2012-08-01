@@ -58,6 +58,9 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		          case SDLK_d:
 		            puts("SDLK_d");
 		            return M2_KEY_EVENT(M2_KEY_DATA_DOWN);
+		          case SDLK_h:
+		            puts("SDLK_h");
+		            return M2_KEY_EVENT(M2_KEY_HOME);
 		          case SDLK_o:                  // screenshot
 		            puts("SDLK_o (screenshOt)");
                             screenshot();
@@ -978,7 +981,7 @@ void pwm_fn_ok(m2_el_fnarg_p fnarg) {
   pwm_apply_user_input();
   
   // go back to parent menu
-  m2_SetRoot(&top_el_pin_list);
+  m2_SetRootWithNextCnt(&top_el_pin_list, pwm_menu_current_index);
 }
 
 // this will return a user readable string for the internal value
@@ -997,7 +1000,7 @@ M2_LABEL(el_pwm_duty_label, NULL, "Duty: ");
 M2_COMBO(el_pwm_duty, NULL, &pwm_menu_duty, 5, pwm_fn_duty);
 
 // cancel: do not store user values, go back directly
-M2_ROOT(el_pwm_cancel, "f4", "Cancel", &top_el_pin_list);
+M2_ROOT(el_pwm_cancel, "f4n3", "Cancel", &top_el_pin_list);
 
 // ok: write user values back to the array and apply values to the hardware
 M2_BUTTON(el_pwm_ok, "f4", "Ok", pwm_fn_ok);
