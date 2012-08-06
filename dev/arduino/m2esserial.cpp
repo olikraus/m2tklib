@@ -40,6 +40,7 @@ extern "C" uint8_t m2_serial_char_to_key(uint8_t c)
   if ( c == 'p' ) return M2_KEY_PREV;
   if ( c == 'u' ) return M2_KEY_DATA_UP;
   if ( c == 'd' ) return M2_KEY_DATA_DOWN;
+  if ( c == 'h' ) return M2_KEY_HOME;
   return M2_KEY_NONE;
 }
 
@@ -52,6 +53,7 @@ extern "C" void m2_serial_show_help(void)
   Serial.println("'p' Previous element");
   Serial.println("'u' data increment (Up)");
   Serial.println("'d' data decrement (Down)");
+  Serial.println("'h' Home menu");
   Serial.println("Key binding depends on the current event handler.");  
 }
 
