@@ -148,6 +148,8 @@ typedef void (*m2_button_fnptr)(m2_el_fnarg_p fnarg);
 /* labelfn procedure */
 typedef const char *(*m2_labelfn_fnptr)(m2_rom_void_p element);
 
+/* root change callback procedure */
+typedef void (*m2_root_change_fnptr)(m2_rom_void_p new_root, m2_rom_void_p old_root, uint8_t change_value);
 
 
 
@@ -174,7 +176,7 @@ uint8_t m2_HandleKeyM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
 void m2_DrawM2(m2_p m2) M2_NOINLINE;													/* m2draw.c */
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;					/* m2obj.c */
 void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
-void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt) M2_NOINLINE;								/* m2obj.c */
+void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value) M2_NOINLINE;								/* m2obj.c */
 m2_rom_void_p m2_GetRootM2(m2_p m2) M2_NOINLINE;										/* m2obj.c */
 void m2_ClearM2(m2_p m2);
 void m2_SetGraphicsHandlerM2(m2_p m2, m2_gfx_fnptr gh);
@@ -193,7 +195,7 @@ void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetHome(m2_rom_void_p element);
 void m2_SetRoot(m2_rom_void_p element);
-void m2_SetRootWithNextCnt(m2_rom_void_p element, uint8_t next_cnt);
+void m2_SetRootExtended(m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value);
 m2_rom_void_p m2_GetRoot(void);
 void m2_Clear(void);
 void m2_SetGraphicsHandler(m2_gfx_fnptr gh);
@@ -808,6 +810,10 @@ struct _m2_nav_struct
   
   /* can be set to change the root node of the tree */
   m2_rom_void_p new_root_element;
+  
+  /* additional value, which will be passed to the root_change callback */
+  uint8_t root_change_value;
+  
   /* used to go to a specific field after the new root element has been assigned */
   uint8_t next_cnt;
 };
@@ -831,7 +837,7 @@ uint8_t m2_nav_get_child_pos(m2_nav_p nav) M2_NOINLINE;		/* m2navutl.c */
 
 void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element) M2_NOINLINE; /* m2navinit.c */
 
-void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element, uint8_t next_cnt) M2_NOINLINE; 	/* m2navroot.c */
+void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value) M2_NOINLINE; 	/* m2navroot.c */
 /*void m2_nav_set_root(m2_nav_p nav,  m2_attrib_element_p ae);*/	/* m2navroot.c */
 uint8_t m2_nav_check_and_assign_new_root(m2_nav_p nav) M2_NOINLINE;		/* m2navroot.c */
 
@@ -912,6 +918,10 @@ struct _m2_struct
   
   /* home menue for the HOME key */
   m2_rom_void_p home;
+
+  /* will be called when there is a change of the root menu (by m2_SetRoot or M2_ROOT) */
+  m2_root_change_fnptr root_change_callback;
+  
 };
 
 #define M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS 	0

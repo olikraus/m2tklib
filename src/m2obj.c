@@ -55,6 +55,12 @@ void m2_SetHomeM2(m2_p m2, m2_rom_void_p element)
   m2->home = element;
 }
 
+void m2_root_change_default_cb(m2_rom_void_p new_root, m2_rom_void_p old_root, uint8_t change_value)
+{
+}
+
+
+
 /*
   element: 	the root element
   es:			event source handler, can be NULL
@@ -68,6 +74,7 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2->key_queue_pos = 0;
   m2->eh = eh;
   m2->gh = gh;
+  m2->root_change_callback = m2_root_change_default_cb;  /* called in m2navinit.c */
   m2_gfx_init(gh);
   m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
   m2->forced_key = M2_KEY_REFRESH;
@@ -75,6 +82,7 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2_SetHomeM2(m2, element);
   m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
   m2_nav_init(m2_get_nav(m2),  element);
+  m2_get_nav(m2)->root_change_value = 0;
   m2_SetEventSourceHandlerM2(m2, es);
 }
 
@@ -107,6 +115,21 @@ void m2_CheckKeyM2(m2_p m2)
 }
 
 
+static uint8_t m2_check_and_assign_new_root(m2_p m2) M2_NOINLINE;
+static uint8_t m2_check_and_assign_new_root(m2_p m2)
+{
+  m2_nav_p nav = m2_get_nav(m2);
+  m2_rom_void_p old_element = nav->element_list[0];
+  m2_rom_void_p new_element = nav->new_root_element;
+  if ( m2_nav_check_and_assign_new_root(nav) != 0 ) 		/* m2navroot.c */
+  {
+    m2->root_change_callback(new_element, old_element, nav->root_change_value);
+    nav->root_change_value = 0;
+    return 1;	/* break and let redraw */
+  }
+  return 0;
+}
+
 /*
   return:
     0: nothing happend
@@ -117,7 +140,7 @@ uint8_t m2_HandleKeyM2(m2_p m2)
   uint8_t is_redraw_required = 0;
   uint8_t key;
   
-  if ( m2_nav_check_and_assign_new_root(m2_get_nav(m2)) != 0 )
+  if ( m2_check_and_assign_new_root(m2) != 0 ) 		/* m2navroot.c */
     return 1;	/* break and let redraw */
   
   if ( m2_GetRootM2(m2) == &m2_null_element )
@@ -126,7 +149,7 @@ uint8_t m2_HandleKeyM2(m2_p m2)
   for(;;)
   {
     /* check if the root node has been changed */
-    if ( m2_nav_check_and_assign_new_root(m2_get_nav(m2)) != 0 )
+    if ( m2_check_and_assign_new_root(m2) != 0 )		/* m2navroot.c */
       return 1;	/* break and let redraw */
 
     key = m2_GetKeyFromQueue(m2);
@@ -138,7 +161,7 @@ uint8_t m2_HandleKeyM2(m2_p m2)
     /* otherwise, process the key event */    
     if ( key == M2_KEY_HOME ) /* aways process the HOME key */
     {
-      m2_SetRootM2(m2, m2->home, 0);
+      m2_SetRootM2(m2, m2->home, 0, 0);
     }
     /* note, that key numbers are equal to message numbers */
     else if ( m2->eh != NULL )
@@ -159,9 +182,9 @@ void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr)
   m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
 }
 
-void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt)
+void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value)
 {
-  m2_nav_set_root(m2_get_nav(m2),  element, next_cnt);
+  m2_nav_set_root(m2_get_nav(m2),  element, next_cnt, change_value);
 }
 
 m2_rom_void_p m2_GetRootM2(m2_p m2)
@@ -171,5 +194,5 @@ m2_rom_void_p m2_GetRootM2(m2_p m2)
 
 void m2_ClearM2(m2_p m2)
 {
-  m2_SetRootM2(m2, NULL, 0);
+  m2_SetRootM2(m2, NULL, 0, 0);
 }

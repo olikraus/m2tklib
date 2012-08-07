@@ -31,12 +31,13 @@
 /* any element function could call this procedure */
 /* 1 Aug 2012: added next_cnt to allow the selection of a different inital field */
 
-void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element, uint8_t next_cnt)
+void m2_nav_set_root(m2_nav_p nav,  m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value)
 {
   if ( element == NULL )
     element = &m2_null_element;
   nav->new_root_element = element;
   nav->next_cnt = next_cnt;
+  nav->root_change_value = change_value;
 }
 
 /* should be called only at the top level */

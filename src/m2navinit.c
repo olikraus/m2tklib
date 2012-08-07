@@ -50,9 +50,11 @@ static void m2_nav_do_down_after_root_assignment(m2_nav_p nav)
 /* memory for m2_nav_p nav must be provided by the calling procedure */
 /* usually called by m2_ep_init(), see m2ep.c */
 /* this procedure is called when a new root is assigned */
+/* called by m2_nav_check_and_assign_new_root() */
 
 void m2_nav_init(m2_nav_p nav,  m2_rom_void_p element)
 {
+  
   if ( element == NULL )
     element = &m2_null_element;
   

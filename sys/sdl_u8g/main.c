@@ -981,7 +981,7 @@ void pwm_fn_ok(m2_el_fnarg_p fnarg) {
   pwm_apply_user_input();
   
   // go back to parent menu
-  m2_SetRootWithNextCnt(&top_el_pin_list, pwm_menu_current_index);
+  m2_SetRootExtended(&top_el_pin_list, pwm_menu_current_index, 0);
 }
 
 // this will return a user readable string for the internal value
