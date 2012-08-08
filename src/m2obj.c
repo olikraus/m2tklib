@@ -55,6 +55,11 @@ void m2_SetHomeM2(m2_p m2, m2_rom_void_p element)
   m2->home = element;
 }
 
+void m2_SetRootChangeCallbackM2(m2_p m2, m2_root_change_fnptr cb)
+{
+  m2->root_change_callback = cb;
+}
+
 void m2_root_change_default_cb(m2_rom_void_p new_root, m2_rom_void_p old_root, uint8_t change_value)
 {
 }

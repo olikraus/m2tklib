@@ -170,6 +170,7 @@ typedef uint32_t (*m2_u32fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint32_t 
 
 /* object interface */
 void m2_SetHomeM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;	/* m2obj.c */
+void m2_SetRootChangeCallbackM2(m2_p m2, m2_root_change_fnptr cb) M2_NOINLINE;	/* m2obj.c */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
 void m2_CheckKeyM2(m2_p m2) M2_NOINLINE;
 uint8_t m2_HandleKeyM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
@@ -194,6 +195,7 @@ uint8_t m2_GetKey(void);                /* usually you do not want to use this f
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetHome(m2_rom_void_p element);
+void m2_SetRootChangeCallback(m2_root_change_fnptr cb);
 void m2_SetRoot(m2_rom_void_p element);
 void m2_SetRootExtended(m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value);
 m2_rom_void_p m2_GetRoot(void);

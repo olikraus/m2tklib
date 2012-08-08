@@ -92,14 +92,19 @@ void m2_SetGraphicsHandler(m2_gfx_fnptr gh)
   m2_SetGraphicsHandlerM2(&m2_global_object, gh);
 }
 
-void m2_SetRoot(m2_rom_void_p element)
-{
-  m2_SetRootM2(&m2_global_object, element, 0, 0);
-}
-
 void m2_SetHome(m2_rom_void_p element)
 {
   m2_SetHomeM2(&m2_global_object, element);
+}
+
+void m2_SetRootChangeCallback(m2_root_change_fnptr cb)
+{
+  m2_SetRootChangeCallbackM2(&m2_global_object, cb);
+}
+
+void m2_SetRoot(m2_rom_void_p element)
+{
+  m2_SetRootM2(&m2_global_object, element, 0, 0);
 }
 
 void m2_SetRootExtended(m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value)
