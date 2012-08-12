@@ -717,7 +717,7 @@ M2_ROOT(el_vlistmm_m3, NULL, "Menu 3", &top_el_vlist_submenu);
 M2_ROOT(el_vlistmm_m4, NULL, "Menu 4", &top_el_vlist_submenu);
 
 /* all menu lines are grouped by a vlist element */
-M2_LIST(list_vlistmm) = { &el_vlistmm_m1, &el_vlistmm_m2, &el_vlistmm_m3, &el_vlistmm_m4 };
+M2_LIST(list_vlistmm) = { &el_vlistmm_m1, &el_vlistmm_m2, &el_vlistmm_m4, &el_vlistmm_m4 };
 M2_VLIST(el_vlistmm_list, NULL, list_vlistmm);
 
 /* center the menu on the display */
@@ -931,10 +931,6 @@ uint8_t pwm_value_to_analog(uint8_t value) {
 }
 
 //=======================================
-// forward declaration of the pin selection menu
-M2_EXTERN_ALIGN(top_el_pin_list);
-
-//=======================================
 // array for the pwm information of all pwm pins 
 
 // array with all the information
@@ -971,6 +967,10 @@ void pwm_apply_user_input(void) {
   // apply user input to the hardware
   // analogWrite(pwm_menu_pin, pwm_value_to_analog(pwm_menu_value));
 }
+
+//=======================================
+// forward declaration of the pin selection menu
+M2_EXTERN_ALIGN(top_el_pin_list);
 
 //=======================================
 // the menu / user interface for one pwm pin
@@ -1059,6 +1059,206 @@ M2_ALIGN(top_el_pin_list, "-1|1W64H64", &el_pin_list_hlist);
 
 
 
+/*======================================================================*/
+/* bookmarks */
+
+char bm_m1_name[] = "Menu 1";
+M2_EXTERN_ALIGN(el_bm_m1);
+char bm_m2_name[] = "Menu 2";
+M2_EXTERN_ALIGN(el_bm_m2);
+char bm_m3_name[] = "Menu 3";
+M2_EXTERN_ALIGN(el_bm_m3);
+char bm_m4_name[] = "Menu 4";
+M2_EXTERN_ALIGN(el_bm_m4);
+
+char bm_m5_name[] = "Menu 5";
+M2_EXTERN_ALIGN(el_bm_m5);
+char bm_m6_name[] = "Menu 6";
+M2_EXTERN_ALIGN(el_bm_m6);
+char bm_m7_name[] = "Menu 7";
+M2_EXTERN_ALIGN(el_bm_m7);
+char bm_m8_name[] = "Menu 8";
+M2_EXTERN_ALIGN(el_bm_m8);
+
+
+#define BM_MAX 6
+const char *bm_name[BM_MAX] = { "", "", "", "", "", "" };
+m2_rom_void_p  bm_menu[BM_MAX] = { NULL, NULL, NULL, NULL, NULL, NULL };
+const char *bm_last_name = "";
+m2_rom_void_p bm_last_menu = NULL;
+
+/* variables for the STRLIST element with all bookmarks */
+uint8_t bm_list_cnt = BM_MAX;
+uint8_t bm_list_first = 0;
+
+/* Is this menu already a bookmark? */
+uint8_t bm_is_bookmark(m2_rom_void_p menu) {
+  uint8_t i;
+  for ( i = 0; i < BM_MAX; i++ ) {
+    if ( bm_menu[i] ==  menu )
+      return 1;
+  }
+  return 0;
+}
+
+/* Add a new bookmark the bookmark list. Add the new bookmark at the beginning of the list. */
+void bm_add_menu(const char *name, m2_rom_void_p menu) {
+  uint8_t i;
+  for ( i = BM_MAX-1; i > 0; i-- ) {
+    bm_name[i] = bm_name[i-1];
+    bm_menu[i] = bm_menu[i-1];
+  }
+  bm_name[0] = name;
+  bm_menu[0] = menu;
+}
+
+/* root change callback to support the bookmark menu */
+void bm_root_change_cb(m2_rom_void_p new_root, m2_rom_void_p old_root, uint8_t change_value)
+{
+  bm_last_name = "";
+  if ( old_root == &el_bm_m1 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m1_name;
+  }
+  if ( old_root == &el_bm_m2 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m2_name;
+  }
+  if ( old_root == &el_bm_m3 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m3_name;
+  }
+  if ( old_root == &el_bm_m4 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m4_name;
+  }
+  if ( old_root == &el_bm_m5 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m5_name;
+  }
+  if ( old_root == &el_bm_m6 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m6_name;
+  }
+  if ( old_root == &el_bm_m7 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m7_name;
+  }
+  if ( old_root == &el_bm_m8 )  {
+    bm_last_menu = old_root;
+    bm_last_name = bm_m8_name;
+  }
+  printf("bookmark root change (last = '%s')\n", bm_last_name);
+  
+}
+
+/*--- Home Menu ---*/
+
+void bm_add_bookmark_button_function(m2_el_fnarg_p fnarg) {
+    if ( bm_last_menu != NULL ) {
+      /* check if the menu is already bookmarked */
+      if ( bm_is_bookmark(bm_last_menu) == 0 ) {
+	/* if not, add it to the list */
+	bm_add_menu(bm_last_name, bm_last_menu);
+      }
+      m2_SetRoot(bm_last_menu);
+    }
+}
+
+void bm_return_to_last_menu_cb(m2_el_fnarg_p fnarg) {
+    if ( bm_last_menu != NULL )
+      m2_SetRoot(bm_last_menu);
+}
+
+const char *bm_list_cb(uint8_t idx, uint8_t msg) {
+  if ( msg == M2_STRLIST_MSG_SELECT ) {
+    if ( bm_menu[idx] != NULL ) {
+      m2_SetRoot(bm_menu[idx]);
+    }
+  }
+  return bm_name[idx];
+}
+
+M2_LABEL(el_bm_home_label, NULL, "Last Menu:");
+M2_BUTTONPTR(el_bm_home_last, "f4", &bm_last_name, bm_return_to_last_menu_cb);
+M2_BUTTON(el_bm_add, "f4", "Add as bookmark", bm_add_bookmark_button_function);
+
+
+M2_STRLIST(el_bm_list_strlist, "l3W56", &bm_list_first, &bm_list_cnt, bm_list_cb);
+M2_SPACE(el_bm_list_space, "W1h1");
+M2_VSB(el_bm_list_vsb, "l3W4r1", &bm_list_first, &bm_list_cnt);
+M2_LIST(list_bm_list) = { &el_bm_list_strlist, &el_bm_list_space, &el_bm_list_vsb };
+M2_HLIST(el_bm_list_hlist, NULL, list_bm_list);
+
+M2_LIST(list_bm_home) = { &el_bm_home_label, &el_bm_home_last, &el_bm_add, &el_bm_list_hlist };
+M2_VLIST(el_bm_home_vl, NULL, list_bm_home);
+M2_ALIGN(el_bm_home, "W64H64", &el_bm_home_vl);
+
+
+/*--- Menu 1 ---*/
+M2_LABEL(el_bm_m1_label, NULL, bm_m1_name);
+M2_LABEL(el_bm_m1_home_info, NULL, "Press Home Button");
+M2_ROOT(el_bm_m1_b1, "f4", bm_m2_name, &el_bm_m2);
+M2_ROOT(el_bm_m1_b2, "f4", bm_m5_name, &el_bm_m5);
+M2_LIST(list_bm_m1) = { &el_bm_m1_label, &el_bm_m1_home_info, &el_bm_m1_b1, &el_bm_m1_b2 };
+M2_VLIST(el_bm_m1_vl, NULL, list_bm_m1);
+M2_ALIGN(el_bm_m1, "W64H64", &el_bm_m1_vl);
+
+/*--- Menu 2 ---*/
+M2_LABEL(el_bm_m2_label, NULL, bm_m2_name);
+M2_ROOT(el_bm_m2_b1, "f4", bm_m7_name, &el_bm_m7);
+M2_ROOT(el_bm_m2_b2, "f4", bm_m3_name, &el_bm_m3);
+M2_LIST(list_bm_m2) = { &el_bm_m2_label, &el_bm_m2_b1, &el_bm_m2_b2 };
+M2_VLIST(el_bm_m2_vl, NULL, list_bm_m2);
+M2_ALIGN(el_bm_m2, "W64H64", &el_bm_m2_vl);
+
+/*--- Menu 3 ---*/
+M2_LABEL(el_bm_m3_label, NULL, bm_m3_name);
+M2_ROOT(el_bm_m3_b1, "f4", bm_m4_name, &el_bm_m4);
+M2_ROOT(el_bm_m3_b2, "f4", bm_m8_name, &el_bm_m8);
+M2_LIST(list_bm_m3) = { &el_bm_m3_label, &el_bm_m3_b1, &el_bm_m3_b2 };
+M2_VLIST(el_bm_m3_vl, NULL, list_bm_m3);
+M2_ALIGN(el_bm_m3, "W64H64", &el_bm_m3_vl);
+
+/*--- Menu 4 ---*/
+M2_LABEL(el_bm_m4_label, NULL, bm_m4_name);
+M2_ROOT(el_bm_m4_b1, "f4", bm_m5_name, &el_bm_m5);
+M2_ROOT(el_bm_m4_b2, "f4", bm_m3_name, &el_bm_m3);
+M2_LIST(list_bm_m4) = { &el_bm_m4_label, &el_bm_m4_b1, &el_bm_m4_b2 };
+M2_VLIST(el_bm_m4_vl, NULL, list_bm_m4);
+M2_ALIGN(el_bm_m4, "W64H64", &el_bm_m4_vl);
+
+/*--- Menu 5 ---*/
+M2_LABEL(el_bm_m5_label, NULL, bm_m5_name);
+M2_ROOT(el_bm_m5_b1, "f4", bm_m2_name, &el_bm_m2);
+M2_ROOT(el_bm_m5_b2, "f4", bm_m6_name, &el_bm_m6);
+M2_LIST(list_bm_m5) = { &el_bm_m5_label, &el_bm_m5_b1, &el_bm_m5_b2 };
+M2_VLIST(el_bm_m5_vl, NULL, list_bm_m5);
+M2_ALIGN(el_bm_m5, "W64H64", &el_bm_m5_vl);
+
+/*--- Menu 6 ---*/
+M2_LABEL(el_bm_m6_label, NULL, bm_m6_name);
+M2_ROOT(el_bm_m6_b1, "f4", bm_m5_name, &el_bm_m5);
+M2_ROOT(el_bm_m6_b2, "f4", bm_m7_name, &el_bm_m7);
+M2_LIST(list_bm_m6) = { &el_bm_m6_label, &el_bm_m6_b1, &el_bm_m6_b2 };
+M2_VLIST(el_bm_m6_vl, NULL, list_bm_m6);
+M2_ALIGN(el_bm_m6, "W64H64", &el_bm_m6_vl);
+
+/*--- Menu 7 ---*/
+M2_LABEL(el_bm_m7_label, NULL, bm_m7_name);
+M2_ROOT(el_bm_m7_b1, "f4", bm_m1_name, &el_bm_m1);
+M2_ROOT(el_bm_m7_b2, "f4", bm_m3_name, &el_bm_m3);
+M2_LIST(list_bm_m7) = { &el_bm_m7_label, &el_bm_m7_b1, &el_bm_m7_b2 };
+M2_VLIST(el_bm_m7_vl, NULL, list_bm_m7);
+M2_ALIGN(el_bm_m7, "W64H64", &el_bm_m7_vl);
+
+/*--- Menu 8 ---*/
+M2_LABEL(el_bm_m8_label, NULL, bm_m8_name);
+M2_ROOT(el_bm_m8_b1, "f4", bm_m6_name, &el_bm_m6);
+M2_ROOT(el_bm_m8_b2, "f4", bm_m2_name, &el_bm_m2);
+M2_LIST(list_bm_m8) = { &el_bm_m8_label, &el_bm_m8_b1, &el_bm_m8_b2 };
+M2_VLIST(el_bm_m8_vl, NULL, list_bm_m8);
+M2_ALIGN(el_bm_m8, "W64H64", &el_bm_m8_vl);
 /*======================================================================*/
 
 
@@ -1186,6 +1386,16 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_pin_list);
     }
   }
+  else if ( idx == 20 ) {
+    s = "Bookmarks";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetFont(0, (const void *)u8g_font_6x10);
+      m2_SetHome(&el_bm_home);
+      m2_SetRootChangeCallback(bm_root_change_cb);
+      m2_SetRoot(&el_bm_m1);
+    }
+  }
   
   
   return s;
@@ -1193,7 +1403,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 20;
+uint8_t el_tlsm_cnt = 21;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1201,6 +1411,7 @@ M2_VSB(el_tlsm_vsb, "l3W4r1", &el_tlsm_first, &el_tlsm_cnt);
 M2_LIST(list_tlsm_strlist) = { &el_tlsm_strlist, &el_tlsm_space, &el_tlsm_vsb };
 M2_HLIST(el_tlsm_hlist, NULL, list_tlsm_strlist);
 M2_ALIGN(top_el_tlsm, "-1|1W64H64", &el_tlsm_hlist);
+
 
 
 /*======================================================================*/
@@ -1273,6 +1484,14 @@ void screenshot100(void)
 
 /*======================================================================*/
 
+void generic_root_change_cb(m2_rom_void_p new_root, m2_rom_void_p old_root, uint8_t change_value)
+{
+  printf("%p->%p %d\n", old_root, new_root, change_value);
+}
+
+
+/*======================================================================*/
+
 
 int main(void)
 {  
@@ -1301,6 +1520,8 @@ int main(void)
   m2_SetFont(3, (const void *)u8g_font_m2icon_7);
 
   mas_Init(mas_device_sim, 0);
+
+  m2_SetRootChangeCallback(generic_root_change_cb);
 
   for(;;)
   {

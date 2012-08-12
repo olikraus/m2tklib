@@ -18,6 +18,7 @@ mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/examples/Serial
 mkdir libraries/M2tklib/examples/PWMPinList
+mkdir libraries/M2tklib/examples/Bookmarks
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -76,6 +77,8 @@ cp ../../arduino/u8g/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
 cp ../../arduino/u8g/PWMPinList/*.pde ./libraries/M2tklib/examples/PWMPinList/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
+cp ../../arduino/u8g/Bookmarks/*.pde ./libraries/M2tklib/examples/Bookmarks/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/Bookmarks/Bookmarks.pde
 
 
 cd libraries 
