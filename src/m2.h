@@ -339,6 +339,8 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_GFX_MSG_LEVEL_DOWN           				42
 #define M2_GFX_MSG_LEVEL_UP                   				43
 #define M2_GFX_MSG_LEVEL_NEXT                 				44
+#define M2_GFX_MSG_DRAW_XBM 						45
+#define M2_GFX_MSG_DRAW_XBM_P 					46
 
 /*==============================================================*/
 /* object function */
@@ -466,6 +468,33 @@ typedef m2_el_buttonptr_t *m2_el_buttonptr_p;
 M2_EL_FN_DEF(m2_el_buttonptr_fn);
 #define M2_BUTTONPTR(el, fmt,strptr,callback) m2_el_buttonptr_t el M2_SECTION_PROGMEM = { { { m2_el_buttonptr_fn, (fmt) }, (strptr) },  (callback)  }
 #define M2_EXTERN_BUTTONPTR(el) extern m2_el_buttonptr_t el
+
+
+struct _m2_el_xbm_struct
+{
+  m2_el_fnfmt_t ff;
+  uint8_t w;
+  uint8_t h;
+  const char *ptr;
+};
+typedef struct _m2_el_xbm_struct m2_el_xbm_t;
+typedef m2_el_xbm_t *m2_el_xbm_p;
+
+M2_EL_FN_DEF(m2_el_xbmlabelp_fn);
+#define M2_XBMLABELP(el,fmt,w,h,ptr) m2_el_xbm_t el M2_SECTION_PROGMEM = { { m2_el_xbmlabelp_fn, (fmt) }, (w), (h), (ptr) }
+#define M2_EXTERN_XBMLABELP(el) extern m2_el_xbm_t el
+
+struct _m2_el_xbmroot_struct
+{
+  m2_el_xbm_t xbm;
+  m2_rom_void_p element;
+};
+typedef struct _m2_el_xbmroot_struct m2_el_xbmroot_t;
+typedef m2_el_xbmroot_t *m2_el_xbmroot_p;
+
+M2_EL_FN_DEF(m2_el_xbmrootp_fn);
+#define M2_XBMROOTP(el,fmt,w,h,ptr,root) m2_el_xbmroot_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmrootp_fn, (fmt) }, (w), (h), (ptr) }, (root) }
+#define M2_EXTERN_XBMROOTP(el) extern m2_el_xbmroot_t el
 
 
 struct _m2_el_str_struct
@@ -1084,6 +1113,9 @@ void m2_gfx_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h);
 void m2_gfx_text(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s);
 void m2_gfx_text_p(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s);
 
+void m2_gfx_xbm(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s);
+void m2_gfx_xbm_p(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s);
+
 void m2_gfx_normal_no_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 void m2_gfx_normal_focus(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font);
 /* used only of there is also a small focus */
@@ -1147,6 +1179,8 @@ void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w
 void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_xbm_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_xbm_p_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s); /* m2gfxutl.c */
 
 void m2_gfx_draw_vertical_scroll_bar(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t total, uint8_t top, uint8_t visible);
 
