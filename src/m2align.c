@@ -44,3 +44,17 @@ uint8_t m2_align_get_max_width(m2_el_fnarg_p fn_arg, uint8_t size)
     max = size;
   return max;
 }
+
+/*
+  centers a line of length "smaler_len" within a line of length "bigger_len"
+  return 0 if bigger_len <= smaler_len
+  else return (bigger_len - smaler_len) / 2
+*/
+uint8_t m2_get_center_line_offset(uint8_t bigger_len, uint8_t smaler_len)
+{
+  if ( bigger_len <= smaler_len )
+    return 0;
+  bigger_len -= smaler_len;
+  bigger_len >>= 1;
+  return bigger_len;
+}

@@ -1273,7 +1273,7 @@ static char memory_card_28_bits[] U8G_PROGMEM = {
   0x3C, 0x00, 0xE0, 0x03, 0xFC, 0xFF, 0xFF, 0x03, 0xFC, 0xFF, 0xFF, 0x03, 
   0xF8, 0xFF, 0xFF, 0x01, };
 
-  static char tools_28_bits[] U8G_PROGMEM = {
+static char tools_28_bits[] U8G_PROGMEM = {
   0x00, 0x00, 0x0E, 0x00, 0x00, 0x80, 0x0F, 0x00, 0x04, 0xC0, 0x0F, 0x00, 
   0x0E, 0xE0, 0x07, 0x00, 0x1F, 0xE0, 0x03, 0x00, 0x3F, 0xF0, 0x03, 0x00, 
   0x3E, 0xF0, 0x03, 0x00, 0x7C, 0xF0, 0x03, 0x00, 0xF0, 0xF0, 0x03, 0x0E, 
@@ -1288,8 +1288,8 @@ static char memory_card_28_bits[] U8G_PROGMEM = {
   
 //M2_XBMLABELP(el_xbm_mc, NULL, 28, 28, memory_card_28_bits);
 //M2_XBMLABELP(el_xbm_tools, NULL, 28, 28, tools_28_bits);
-M2_XBMROOTP(el_xbm_mc, NULL, 28, 28, memory_card_28_bits, &top_el_tlsm);
-M2_XBMROOTP(el_xbm_tools, NULL, 28, 28, tools_28_bits, &top_el_tlsm);
+M2_XBMROOTP(el_xbm_mc, "W30H60", 28, 28, memory_card_28_bits, &top_el_tlsm);
+M2_XBMROOTP(el_xbm_tools, "W30H60", 28, 28, tools_28_bits, &top_el_tlsm);
 M2_LIST(el_xbm_list) = { &el_xbm_mc, &el_xbm_tools };
 M2_HLIST(el_xbm, NULL, el_xbm_list);
 

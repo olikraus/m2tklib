@@ -59,9 +59,9 @@ M2_EL_FN_DEF(m2_el_xbmlabelp_fn)
      case M2_EL_MSG_IS_READ_ONLY:
       return 1;
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_gfx_add_readonly_border_height(m2_el_fmfmt_opt_get_val_zero_default( fn_arg, 'b' ), font, m2_el_xbm_get_h(fn_arg));
+      return m2_gfx_add_readonly_border_height(m2_el_fmfmt_opt_get_val_zero_default( fn_arg, 'b' ), font, m2_align_get_max_height(fn_arg, m2_el_xbm_get_h(fn_arg)));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_readonly_border_width(m2_el_fmfmt_opt_get_val_zero_default( fn_arg, 'b' ), font, m2_el_xbm_get_w(fn_arg));
+      return m2_gfx_add_readonly_border_width(m2_el_fmfmt_opt_get_val_zero_default( fn_arg, 'b' ), font, m2_align_get_max_width(fn_arg, m2_el_xbm_get_w(fn_arg)));
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       return 0;
@@ -77,6 +77,8 @@ M2_EL_FN_DEF(m2_el_xbmlabelp_fn)
 	  m2_el_fmfmt_opt_get_val_zero_default( fn_arg, 'b' ), 
 	  b->x, 
 	  b->y, 
+	  m2_el_fnfmt_get_wW(fn_arg),
+	  m2_el_fnfmt_get_hH(fn_arg),
 	  m2_el_xbm_get_w(fn_arg),
 	  m2_el_xbm_get_h(fn_arg),
 	  m2_el_xbm_get_ptr(fn_arg));
@@ -103,9 +105,9 @@ M2_EL_FN_DEF(m2_el_xbmrootp_fn)
     case M2_EL_MSG_GET_LIST_LEN:
       return 0;  /* not a list, return 0 */
     case M2_EL_MSG_GET_HEIGHT:
-      return m2_gfx_add_normal_border_height(font, m2_el_xbm_get_h(fn_arg));
+      return m2_gfx_add_normal_border_height(font, m2_align_get_max_height(fn_arg, m2_el_xbm_get_h(fn_arg)));
     case M2_EL_MSG_GET_WIDTH:
-      return m2_gfx_add_normal_border_width(font, m2_el_xbm_get_w(fn_arg));
+      return m2_gfx_add_normal_border_width(font, m2_align_get_max_width(fn_arg, m2_el_xbm_get_w(fn_arg)));
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       return 0;
@@ -120,6 +122,8 @@ M2_EL_FN_DEF(m2_el_xbmrootp_fn)
       m2_gfx_draw_xbm_p_add_normal_border_offset(
 	  b->x, 
 	  b->y, 
+	  m2_el_fnfmt_get_wW(fn_arg),
+	  m2_el_fnfmt_get_hH(fn_arg),
 	  m2_el_xbm_get_w(fn_arg),
 	  m2_el_xbm_get_h(fn_arg),
 	  m2_el_xbm_get_ptr(fn_arg));

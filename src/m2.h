@@ -1179,8 +1179,9 @@ void m2_gfx_draw_text_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w
 void m2_gfx_draw_text_add_small_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
 void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t font, const char *s); /* m2gfxutl.c */
-void m2_gfx_draw_xbm_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s); /* m2gfxutl.c */
-void m2_gfx_draw_xbm_p_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s); /* m2gfxutl.c */
+
+void m2_gfx_draw_xbm_p_add_readonly_border_offset(uint8_t is_normal, uint8_t ww, uint8_t hh, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s); /* m2gfxutl.c */
+void m2_gfx_draw_xbm_p_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t ww, uint8_t hh, uint8_t w, uint8_t h, const char *s); /* m2gfxutl.c */
 
 void m2_gfx_draw_vertical_scroll_bar(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t total, uint8_t top, uint8_t visible);
 
@@ -1203,6 +1204,7 @@ uint8_t m2_IsPinAssigned(uint8_t key);					/* m2pin.c */
 /*==============================================================*/
 uint8_t m2_align_get_max_height(m2_el_fnarg_p fn_arg, uint8_t size);		/* m2align.c */
 uint8_t m2_align_get_max_width(m2_el_fnarg_p fn_arg, uint8_t size);		/* m2align.c */
+uint8_t m2_get_center_line_offset(uint8_t bigger_len, uint8_t smaler_len);	/* m2align.c */
 
 
 /*==============================================================*/

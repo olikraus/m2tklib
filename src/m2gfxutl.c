@@ -51,13 +51,29 @@ void m2_gfx_draw_text_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0
   m2_gfx_text_p(m2_gfx_add_readonly_border_x(is_normal, font, x0), m2_gfx_add_readonly_border_y(is_normal, font, y0), w, h, font, s);
 }
 
-void m2_gfx_draw_xbm_p_add_readonly_border_offset(uint8_t is_normal, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s)
+/*
+  x0,y0 	lower left of the element
+  ww,hh	dimensions of the element (m2_el_fnfmt_get_hH(fn_arg), m2_el_fnfmt_get_wW(fn_arg))
+  w,h		dimensions of the bitmap itself
+  s		pointer to the bitmap data (xbm format)
+*/
+void m2_gfx_draw_xbm_p_add_readonly_border_offset(uint8_t is_normal, uint8_t ww, uint8_t hh, uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s)
 {
+  x0 += m2_get_center_line_offset(ww, w);
+  y0 += m2_get_center_line_offset(hh, h);
   m2_gfx_xbm_p(m2_gfx_add_readonly_border_x(is_normal, 0, x0), m2_gfx_add_readonly_border_y(is_normal, 0, y0), w, h, s);
 }
 
-void m2_gfx_draw_xbm_p_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, const char *s)
+/*
+  x0,y0 	lower left of the element
+  ww,hh	dimensions of the element (m2_el_fnfmt_get_hH(fn_arg), m2_el_fnfmt_get_wW(fn_arg))
+  w,h		dimensions of the bitmap itself
+  s		pointer to the bitmap data (xbm format)
+*/
+void m2_gfx_draw_xbm_p_add_normal_border_offset(uint8_t x0, uint8_t y0, uint8_t ww, uint8_t hh, uint8_t w, uint8_t h, const char *s)
 {
+  x0 += m2_get_center_line_offset(ww, w);
+  y0 += m2_get_center_line_offset(hh, h);
   m2_gfx_xbm_p(m2_gfx_add_normal_border_x(0, x0), m2_gfx_add_normal_border_y(0, y0), w, h, s);
 }
 
