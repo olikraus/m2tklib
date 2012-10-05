@@ -52,6 +52,7 @@ static void m2_avr_u8g_setup(void)
   m2_avr_u8g_setup_key(M2_KEY_PREV);  
   m2_avr_u8g_setup_key(M2_KEY_DATA_UP);  
   m2_avr_u8g_setup_key(M2_KEY_DATA_DOWN);  
+  m2_avr_u8g_setup_key(M2_KEY_HOME);  
 }
 
 static uint8_t m2_avr_u8g_check_key(uint8_t key)
@@ -74,6 +75,7 @@ static uint8_t m2_avr_u8g_get_key(void)
   if ( m2_avr_u8g_check_key(M2_KEY_PREV) ) return M2_KEY_PREV;
   if ( m2_avr_u8g_check_key(M2_KEY_DATA_UP) ) return M2_KEY_DATA_UP;
   if ( m2_avr_u8g_check_key(M2_KEY_DATA_DOWN) ) return M2_KEY_DATA_DOWN;
+  if ( m2_avr_u8g_check_key(M2_KEY_HOME) ) return M2_KEY_HOME;
   return M2_KEY_NONE;
 }
 

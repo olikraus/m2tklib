@@ -34,8 +34,6 @@
 
 #define M2_ROTARY_ENCODER_STATE_CHANGE_DELAY 20 
 
-#define RE_A 4
-#define RE_B 5
 
 static void m2_arduino_setup_key(uint8_t key) M2_NOINLINE;
 static void m2_arduino_setup(void) M2_NOINLINE;
@@ -262,12 +260,6 @@ uint8_t m2_es_arduino_rotary_encoder(m2_p ep, uint8_t msg)
       return m2_arduino_get_key();
     case M2_ES_MSG_INIT:
       m2_arduino_setup();
-    
-      pinMode(RE_A, INPUT);           /* set pin to input */
-      digitalWrite(RE_A, HIGH);       /* turn on pullup resistors */
-      pinMode(RE_B, INPUT);           /* set pin to input */
-      digitalWrite(RE_B, HIGH);       /* turn on pullup resistors */
-    
       m2_rot_enc_init_state(m2_rot_enc_get_input());
       return 0;
   }
