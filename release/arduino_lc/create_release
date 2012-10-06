@@ -19,6 +19,7 @@ mkdir libraries/M2tklib/examples/Menu2L
 mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/examples/Serial
 mkdir libraries/M2tklib/examples/PWMPinList
+mkdir libraries/M2tklib/examples/RotEnc
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -79,6 +80,8 @@ cp ../../arduino/LiquidCrystal/PWMPinList/*.pde ./libraries/M2tklib/examples/PWM
 sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 
+cp ../../arduino/LiquidCrystal/RotEnc/*.pde ./libraries/M2tklib/examples/RotEnc/.
+sed -i 's|m2ghlc.h|utility/m2ghlc.h|g' ./libraries/M2tklib/examples/RotEnc/RotEnc.pde
 
 
 cd libraries 

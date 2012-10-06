@@ -2,7 +2,7 @@
 
   RotEnc.pde
   
-  U8glib Example
+  U8glib Example (Incremental Rotary Encoder)
 
   m2tklib = Mini Interative Interface Toolkit Library
 
