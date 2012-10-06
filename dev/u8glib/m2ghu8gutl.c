@@ -228,6 +228,14 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
+    case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
+      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
+      break;
+    case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
+      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
+      break;
     case M2_GFX_MSG_SET_FONT:
       {
 	      uint8_t idx;

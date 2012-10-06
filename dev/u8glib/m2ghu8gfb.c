@@ -61,14 +61,6 @@ uint8_t m2_gh_u8g_fb(m2_gfx_arg_p  arg)
       m2_u8g_current_text_color = m2_u8g_bg_text_color;
       m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
       break;
-    case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
-      m2_u8g_current_text_color = m2_u8g_fg_text_color;
-      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y, arg->w);
-      break;
-    case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
-      m2_u8g_current_text_color = m2_u8g_fg_text_color;
-      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y, arg->w);
-      break;
     case M2_GFX_MSG_DRAW_GO_UP:
       /* does not work because of missing xor...
          also: can not be fixed with FRAME_DRAW_AT_END

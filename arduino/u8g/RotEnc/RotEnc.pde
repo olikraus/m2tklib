@@ -1,6 +1,6 @@
 /*
 
-  Menu2L.pde
+  RotEnc.pde
   
   U8glib Example
 
@@ -35,7 +35,7 @@
 //U8GLIB_NHD27OLED_2X_GR u8g(13, 11, 10, 9);  // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGS102 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGM132 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
-//U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_ST7920_128X64 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64 u8g(18, 16, 17, U8G_PIN_NONE);                  // SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
 //U8GLIB_ST7920_192X32 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, U8G_PIN_NONE, U8G_PIN_NONE, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
@@ -69,48 +69,24 @@ uint8_t uiKeyExitPin = 0;
 
 //=================================================
 // Forward declaration of the toplevel element
-M2_EXTERN_ALIGN(top_el_expandable_menu);
+M2_EXTERN_ALIGN(top_menu);
 
-// Left entry: Menu name. Submenus must have a '.' at the beginning
-// Right entry: Reference to the target dialog box (In this example all menus call the toplevel element again
-m2_menu_entry m2_2lmenu_data[] = 
-{
-  { "Menu 1", NULL },
-  { ". Sub 1-1", &top_el_expandable_menu },
-  { ". Sub 1-2", &top_el_expandable_menu },
-  { "Menu 2", &top_el_expandable_menu },
-  { "Menu 3", NULL },
-  { ". Sub 3-1", &top_el_expandable_menu },
-  { ". Sub 3-2", &top_el_expandable_menu },
-  { "Menu 4", &top_el_expandable_menu },
-  { "Menu 5", NULL },
-  { ". Sub 5-1", &top_el_expandable_menu },
-  { ". Sub 5-2", &top_el_expandable_menu },
-  { ". Sub 5-3", &top_el_expandable_menu },
-  { NULL, NULL },
-};
+uint8_t n1 = 0;
+uint8_t n2 = 0;
 
-// The first visible line and the total number of visible lines.
-// Both values are written by M2_2LMENU and read by M2_VSB
-uint8_t m2_2lmenu_first;
-uint8_t m2_2lmenu_cnt;
 
-// M2_2LMENU definition
-// Option l4 = four visible lines
-// Option e15 = first column has a width of 15 pixel
-// Option W43 = second column has a width of 43/64 of the display width
+M2_LABEL(el_l1, NULL, "value 1:");
+M2_U8NUM(el_u1, NULL, 0, 99, &n1);
+M2_LABEL(el_l2, NULL, "value 2:");
+M2_U8NUM(el_u2, NULL, 0, 99, &n2);
 
-M2_2LMENU(el_2lmenu,"l4F3e15W43",&m2_2lmenu_first,&m2_2lmenu_cnt, m2_2lmenu_data,65,102,'\0');
-M2_SPACE(el_space, "W1h1");
-M2_VSB(el_vsb, "l4W2r1", &m2_2lmenu_first, &m2_2lmenu_cnt);
-M2_LIST(list_2lmenu) = { &el_2lmenu, &el_space, &el_vsb };
-M2_HLIST(el_hlist, NULL, list_2lmenu);
-M2_ALIGN(top_el_expandable_menu, "-1|1W64H64", &el_hlist);
+M2_LIST(list) = { &el_l1, &el_u1, &el_l2, &el_u2 };
+M2_GRIDLIST(el_gridlist, "c2", list);
+M2_ALIGN(top_menu, "-1|1W64H64", &el_gridlist);
 
 // m2 object and constructor
-M2tk m2(&top_el_expandable_menu, m2_es_arduino, m2_eh_4bs, m2_gh_u8g_ffs);
-//M2tk m2(&top_el_expandable_menu, m2_es_arduino_rotary_encoder, m2_eh_4bs, m2_gh_u8g_ffs);
-//M2tk m2(&top_el_expandable_menu, m2_es_arduino, m2_eh_4bs, m2_gh_arduino_serial);
+// Note: Use the "m2_eh_4bd" handler, which fits better to the "m2_es_arduino_rotary_encoder" 
+M2tk m2(&top_menu, m2_es_arduino_rotary_encoder, m2_eh_4bd, m2_gh_u8g_fb);
 
 //=================================================
 // Draw procedure, Arduino Setup & Loop
@@ -127,20 +103,18 @@ void setup(void) {
   // Assign u8g font to index 0
   m2.setFont(0, u8g_font_6x13r);
 
-  // Assign icon font to index 3
-  m2.setFont(3, u8g_font_m2icon_7);
-
   // Setup keys
+  /*
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_EXIT, uiKeyExitPin);    
-  
-  /*
-  m2.setPin(M2_KEY_SELECT, 7);
-  m2.setPin(M2_KEY_ROT_ENC_A, 3);
-  m2.setPin(M2_KEY_ROT_ENC_B, 4);
   */
+  
+  // The incremental rotary encoder is conected to these two pins
+  m2.setPin(M2_KEY_SELECT, 7);
+  m2.setPin(M2_KEY_ROT_ENC_A, 2);
+  m2.setPin(M2_KEY_ROT_ENC_B, 3);
 }
 
 void loop() {
@@ -149,6 +123,7 @@ void loop() {
   if ( m2.handleKey() != 0 ) {
     u8g.firstPage();  
     do {
+      // check rotary encoder also inside the picture loop
       m2.checkKey();
       draw();
     } while( u8g.nextPage() );
