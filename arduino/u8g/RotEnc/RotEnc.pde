@@ -51,20 +51,6 @@ U8GLIB_DOGM128 u8g(13, 11, 10, 9);                    // SPI Com: SCK = 13, MOSI
 //U8GLIB_KS0108_128 u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 14, 15, 17, 16); // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, cs1=14, cs2=15,di=17,rw=16
 //U8GLIB_LC7981_160X80 u8g(8, 9, 10, 11, 4, 5, 6, 7,  18, 14, 15, 17, 16); // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, cs=14 ,di=15,rw=17, reset = 16
 
-//=================================================
-// Variables for Menu Process
-
-// DOGS102 shield 
-// uint8_t uiKeyUpPin = 5;
-// uint8_t uiKeyDownPin = 3;
-// uint8_t uiKeySelectPin = 4;
-// uint8_t uiKeyExitPin = 0;
-
-// DOGM132, DOGM128 and DOGXL160 shield
-uint8_t uiKeyUpPin = 7;         
-uint8_t uiKeyDownPin = 3;
-uint8_t uiKeySelectPin = 2;
-uint8_t uiKeyExitPin = 0;
 
 
 //=================================================
@@ -76,9 +62,9 @@ uint8_t n2 = 0;
 
 
 M2_LABEL(el_l1, NULL, "value 1:");
-M2_U8NUM(el_u1, NULL, 0, 99, &n1);
+M2_U8NUM(el_u1, "c2", 0, 99, &n1);
 M2_LABEL(el_l2, NULL, "value 2:");
-M2_U8NUM(el_u2, NULL, 0, 99, &n2);
+M2_U8NUM(el_u2, "c2", 0, 99, &n2);
 
 M2_LIST(list) = { &el_l1, &el_u1, &el_l2, &el_u2 };
 M2_GRIDLIST(el_gridlist, "c2", list);
@@ -86,46 +72,38 @@ M2_ALIGN(top_menu, "-1|1W64H64", &el_gridlist);
 
 // m2 object and constructor
 // Note: Use the "m2_eh_4bd" handler, which fits better to the "m2_es_arduino_rotary_encoder" 
-M2tk m2(&top_menu, m2_es_arduino_rotary_encoder, m2_eh_4bd, m2_gh_u8g_fb);
+M2tk m2(&top_menu, m2_es_arduino_rotary_encoder, m2_eh_4bd, m2_gh_u8g_bf);
 
 //=================================================
 // Draw procedure, Arduino Setup & Loop
 
-
-void draw(void) {
-  m2.draw();
-}
 
 void setup(void) {
   // Connect u8glib with m2tklib
   m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
 
   // Assign u8g font to index 0
-  m2.setFont(0, u8g_font_6x13r);
+  m2.setFont(0, u8g_font_7x13r);
 
-  // Setup keys
-  /*
-  m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
-  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
-  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
-  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);    
-  */
+  // define button for the select message
+  m2.setPin(M2_KEY_SELECT, 7);          // dogm128 shield, 2nd from top
   
   // The incremental rotary encoder is conected to these two pins
-  m2.setPin(M2_KEY_SELECT, 7);
-  m2.setPin(M2_KEY_ROT_ENC_A, 2);
-  m2.setPin(M2_KEY_ROT_ENC_B, 3);
+  m2.setPin(M2_KEY_ROT_ENC_A, 3);
+  m2.setPin(M2_KEY_ROT_ENC_B, 2);
 }
 
 void loop() {
-  // menu management
-  m2.checkKey();
+  // check rotary encoder also inside the picture loop
+  m2.checkKey();  
+  // process events and redraw menu if required
   if ( m2.handleKey() != 0 ) {
     u8g.firstPage();  
     do {
       // check rotary encoder also inside the picture loop
       m2.checkKey();
-      draw();
+      // draw menu
+      m2.draw();
     } while( u8g.nextPage() );
   }
 }

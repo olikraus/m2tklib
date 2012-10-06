@@ -19,6 +19,7 @@ mkdir libraries/M2tklib/examples/FileSelect
 mkdir libraries/M2tklib/examples/Serial
 mkdir libraries/M2tklib/examples/PWMPinList
 mkdir libraries/M2tklib/examples/Bookmarks
+mkdir libraries/M2tklib/examples/RotEnc
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -79,6 +80,8 @@ sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/PWMPinList
 sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 cp ../../arduino/u8g/Bookmarks/*.pde ./libraries/M2tklib/examples/Bookmarks/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/Bookmarks/Bookmarks.pde
+cp ../../arduino/u8g/RotEnc/*.pde ./libraries/M2tklib/examples/RotEnc/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/RotEnc/RotEnc.pde
 
 
 cd libraries 

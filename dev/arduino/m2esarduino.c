@@ -32,7 +32,7 @@
 
 #include "m2.h"
 
-#define M2_ROTARY_ENCODER_STATE_CHANGE_DELAY 20 
+#define M2_ROTARY_ENCODER_STATE_CHANGE_DELAY 1
 
 
 static void m2_arduino_setup_key(uint8_t key) M2_NOINLINE;
