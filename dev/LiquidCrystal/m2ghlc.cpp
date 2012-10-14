@@ -127,6 +127,12 @@ extern "C" uint8_t m2_gh_lc(m2_gfx_arg_p  arg)
       m2_gh_lc_set_cursor(arg->x+arg->w-1, arg->y);
       m2_lc_ptr->print(']');
       return 0;
+    case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:		/* added 14 okt 2012 */
+      m2_gh_lc_set_cursor(arg->x, arg->y);
+      m2_lc_ptr->print('<');
+      m2_gh_lc_set_cursor(arg->x+arg->w-1, arg->y);
+      m2_lc_ptr->print('>');
+      return 0;
     case M2_GFX_MSG_DRAW_GO_UP:
       m2_gh_lc_set_cursor(arg->x-1, arg->y);
       m2_lc_ptr->print('<');

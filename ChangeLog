@@ -36,5 +36,8 @@ M2tklib ChangeLog
 	* Serial console input and/or output (20x4 LCD simulator)
 	* Fixed bug in M2_COMBO (string buffer return)
 	* PWMPinList example
-2012-01-18      v1.08.1	Oliver Kraus <olikraus@gmail.com>
+2012-07-18      v1.08.1	Oliver Kraus <olikraus@gmail.com>
 	* Bugfix: M2_GFX_MSG_GET_NUM_CHAR_WIDTH was not handled for GLCD 
+2012-10-xx      v1.09	Oliver Kraus <olikraus@gmail.com>
+	* Fixed data entry mode for LiquidCrystal (M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY)
+	

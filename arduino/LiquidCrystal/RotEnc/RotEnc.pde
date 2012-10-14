@@ -59,11 +59,11 @@ void setup() {
   m2_SetLiquidCrystal(&lcd, 16, 4);
   
   // define button for the select message
-  m2.setPin(M2_KEY_SELECT, 0); 
+  m2.setPin(M2_KEY_SELECT, 9); 
   
   // The incremental rotary encoder is conected to these two pins
-  m2.setPin(M2_KEY_ROT_ENC_A, 10);
-  m2.setPin(M2_KEY_ROT_ENC_B, 9);
+  m2.setPin(M2_KEY_ROT_ENC_A, A0);
+  m2.setPin(M2_KEY_ROT_ENC_B, A1);
 }
 
 void loop() {
