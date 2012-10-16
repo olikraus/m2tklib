@@ -167,9 +167,9 @@ const char *bm_list_cb(uint8_t idx, uint8_t msg) {
   return bm_name[idx];
 }
 
-M2_LABEL(el_bm_home_label, NULL, "Last Menu:");
+/* M2_LABEL(el_bm_home_label, NULL, "Last Menu:"); */
 M2_BUTTONPTR(el_bm_home_last, "f4", &bm_last_name, bm_return_to_last_menu_cb);
-M2_BUTTON(el_bm_add, "f4", "Add as bookmark", bm_add_bookmark_button_function);
+M2_BUTTON(el_bm_add, "f4", "Bookmark Menu", bm_add_bookmark_button_function);
 
 
 M2_STRLIST(el_bm_list_strlist, "l2W52", &bm_list_first, &bm_list_cnt, bm_list_cb);
@@ -178,14 +178,15 @@ M2_VSB(el_bm_list_vsb, "l2W2r1", &bm_list_first, &bm_list_cnt);
 M2_LIST(list_bm_list) = { &el_bm_list_strlist, &el_bm_list_space, &el_bm_list_vsb };
 M2_HLIST(el_bm_list_hlist, NULL, list_bm_list);
 
-M2_LIST(list_bm_home) = { &el_bm_home_label, &el_bm_home_last, &el_bm_add, &el_bm_list_hlist };
+/* M2_LIST(list_bm_home) = { &el_bm_home_label, &el_bm_home_last, &el_bm_add, &el_bm_list_hlist }; */
+M2_LIST(list_bm_home) = { &el_bm_home_last, &el_bm_add, &el_bm_list_hlist };
 M2_VLIST(el_bm_home_vl, NULL, list_bm_home);
 M2_ALIGN(el_bm_home, "W64H64", &el_bm_home_vl);
 
 
 /*--- Menu 1 ---*/
 M2_LABEL(el_bm_m1_label, NULL, bm_m1_name);
-M2_LABEL(el_bm_m1_home_info, NULL, "Press Home Button");
+M2_LABEL(el_bm_m1_home_info, NULL, "Press HomeButton");
 M2_ROOT(el_bm_m1_b1, "f4", bm_m2_name, &el_bm_m2);
 M2_ROOT(el_bm_m1_b2, "f4", bm_m5_name, &el_bm_m5);
 M2_LIST(list_bm_m1) = { &el_bm_m1_label, &el_bm_m1_home_info, &el_bm_m1_b1, &el_bm_m1_b2 };
@@ -264,10 +265,10 @@ void setup() {
   m2.setRootChangeCallback(bm_root_change_cb);
 
   // Setup keys
-  m2.setPin(M2_KEY_SELECT, 0);
-  m2.setPin(M2_KEY_PREV, 1);
-  m2.setPin(M2_KEY_NEXT, 2);
-  m2.setPin(M2_KEY_HOME, 3);    
+  m2.setPin(M2_KEY_SELECT, 1);
+  m2.setPin(M2_KEY_PREV, 0);
+  m2.setPin(M2_KEY_NEXT, 9);
+  m2.setPin(M2_KEY_HOME, 10); 
 }
 
 void loop() {
