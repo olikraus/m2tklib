@@ -212,6 +212,7 @@ void setup(void)
 
   /* 2. Setup m2 */
   m2_Init(&top_el_pin_list, m2_es_avr_u8g, m2_eh_4bs, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_pin_list, m2_es_avr_rotary_encoder_u8g, m2_eh_4bd, m2_gh_u8g_bfs);
 
   /* 3. Connect u8g display to m2  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);

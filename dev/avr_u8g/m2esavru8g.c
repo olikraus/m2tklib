@@ -92,3 +92,141 @@ uint8_t m2_es_avr_u8g(m2_p ep, uint8_t msg)
   return 0;
 }
 
+/*=================================================================*/
+/* rotary encode with normal button handler (one button per pin) */
+
+static uint8_t m2_avr_rec_enc_next_state_array[] = { 
+0x090, // 10 10 00 00
+0x021, // 00 10 00 10
+0x048, // 10 00 10 00
+0x006, // 00 00 10 10
+  
+0x091, // 10 01 10 01
+0x025, // 10 10 01 01
+0x058, // 01 01 10 10
+0x046, // 01 10 01 10
+
+0x092, // 10 01 00 10
+0x029, // 00 10 10 01
+0x068, // 01 10 10 00
+0x086, // 10 00 01 10
+};
+
+static uint8_t m2_avr_rot_enc_get_input(void)
+{
+  uint8_t in = 0;
+  
+  if ( m2_avr_u8g_check_key(M2_KEY_ROT_ENC_A) != 0 )
+    in |= 1;
+  if ( m2_avr_u8g_check_key(M2_KEY_ROT_ENC_B) != 0 )
+    in |= 2;
+  return in;
+}
+
+/* based on the input, get the initial state */
+static uint8_t m2_avr_rot_enc_init_state(uint8_t in)
+{
+  return (in & 3) | 8;
+}
+
+/* based on the input, calculate the next state */
+static uint8_t m2_avr_rot_enc_next_state(uint8_t state, uint8_t in)
+{
+  uint8_t new_state;
+  if ( state > 12 )
+    state = m2_avr_rot_enc_init_state(in);
+  new_state = m2_avr_rec_enc_next_state_array[state] >> ((in)*2);
+  new_state &= 3;
+  new_state <<= 2;
+  new_state |= in;
+  return new_state;
+}
+
+uint8_t m2_rot_enc_state;
+uint8_t m2_rot_enc_debounce_cnt;
+int8_t m2_rot_enc_div_cnt;
+#define ROT_ENC_DEBOUNCE_VAL 3
+#define ROT_ENC_EVENT_DIVISION 3
+#define M2_ROTARY_ENCODER_STATE_CHANGE_DELAY 1
+
+static uint8_t m2_avr_get_rot_enc_get_key(void)
+{
+  uint8_t new_m2_rot_enc_state;
+  
+  /* calculate the next state */
+  new_m2_rot_enc_state = m2_avr_rot_enc_next_state(m2_rot_enc_state, m2_avr_rot_enc_get_input());
+
+  if ( new_m2_rot_enc_state != m2_rot_enc_state )
+  {
+    /* if state has changed, then reset the debounce counter */
+    m2_rot_enc_debounce_cnt = 0;
+    /* ... and store new state */
+    m2_rot_enc_state = new_m2_rot_enc_state;
+    
+    u8g_Delay(M2_ROTARY_ENCODER_STATE_CHANGE_DELAY);
+  }
+  else
+  {
+    /* only if the direction is known */
+    if ( new_m2_rot_enc_state < 8 ) 
+    {
+      /* increment the debounce counter */
+      if ( m2_rot_enc_debounce_cnt < ROT_ENC_DEBOUNCE_VAL )
+      { 
+        m2_rot_enc_debounce_cnt++;
+        if ( m2_rot_enc_debounce_cnt >= ROT_ENC_DEBOUNCE_VAL )
+        {
+	  if ( new_m2_rot_enc_state & 4 )
+	  {
+	    if ( m2_rot_enc_div_cnt > ROT_ENC_EVENT_DIVISION )
+	    {
+	      m2_rot_enc_div_cnt = 0;
+	      return M2_KEY_EVENT(M2_KEY_NEXT);		/* disable debounce by M2tk algoritm */	      
+	    }
+	    else
+	    {
+	      m2_rot_enc_div_cnt++;
+	    }
+	  }
+	  else
+	  {
+	    if ( m2_rot_enc_div_cnt < -ROT_ENC_EVENT_DIVISION )
+	    {
+	      m2_rot_enc_div_cnt = 0;
+	      return M2_KEY_EVENT(M2_KEY_PREV);		/* disable debounce by M2tk algoritm */
+	    }
+	    else
+	    {
+	      m2_rot_enc_div_cnt--;
+	    }
+	  }
+        }
+      }
+    }
+  }
+  
+  return M2_KEY_NONE;
+}
+
+uint8_t m2_es_avr_rotary_encoder_u8g(m2_p ep, uint8_t msg)
+{
+  uint8_t key, i;
+  switch(msg)
+  {
+    case M2_ES_MSG_GET_KEY:
+      for( i = 0; i < 4; i++ )
+      {
+	key = m2_avr_get_rot_enc_get_key();
+	if ( key != M2_KEY_NONE )
+	  return key;
+      }
+      return m2_avr_u8g_get_key();
+    case M2_ES_MSG_INIT:
+      m2_avr_u8g_setup();
+      m2_avr_rot_enc_init_state(m2_avr_rot_enc_get_input());
+      return 0;
+  }
+  return 0;
+}
+
+
