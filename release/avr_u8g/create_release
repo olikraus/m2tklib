@@ -25,6 +25,8 @@ mkdir m2tk_u8g/m2_examples/pwm_pin_list
 cp Makefile m2tk_u8g/m2_examples/pwm_pin_list
 mkdir m2tk_u8g/m2_examples/bookmarks
 cp Makefile m2tk_u8g/m2_examples/bookmarks
+mkdir m2tk_u8g/m2_examples/rot_enc
+cp Makefile m2tk_u8g/m2_examples/rot_enc
 
 
 
@@ -57,6 +59,7 @@ cp ../../sys/avr_u8g/rapunzel/*.c ./m2tk_u8g/m2_examples/rapunzel/.
 cp ../../sys/avr_u8g/file_select/*.c ./m2tk_u8g/m2_examples/file_select/.
 cp ../../sys/avr_u8g/pwm_pin_list/*.c ./m2tk_u8g/m2_examples/pwm_pin_list/.
 cp ../../sys/avr_u8g/bookmarks/*.c ./m2tk_u8g/m2_examples/bookmarks/.
+cp ../../sys/avr_u8g/rot_enc/*.c ./m2tk_u8g/m2_examples/rot_enc/.
 
 
 cp ../../../../u8g/u8glib/ChangeLog ./m2tk_u8g/doc/u8g/.

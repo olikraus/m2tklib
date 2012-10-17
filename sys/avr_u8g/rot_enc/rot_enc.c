@@ -73,8 +73,8 @@ void setup(void)
   u8g_InitHWSPI(&u8g, &u8g_dev_st7565_dogm132_hw_spi, PN(1, 2), PN(1, 1), U8G_PIN_NONE);
 
   /* 2. Setup m2 */
-  m2_Init(&top_menu, m2_es_avr_u8g, m2_eh_4bs, m2_gh_u8g_bfs);
-  //m2_Init(&top_el_pin_list, m2_es_avr_rotary_encoder_u8g, m2_eh_4bd, m2_gh_u8g_bfs);
+  //m2_Init(&top_menu, m2_es_avr_u8g, m2_eh_4bs, m2_gh_u8g_bfs);
+  m2_Init(&top_menu, m2_es_avr_rotary_encoder_u8g, m2_eh_4bd, m2_gh_u8g_bfs);
 
   /* 3. Connect u8g display to m2  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);
@@ -83,10 +83,15 @@ void setup(void)
   m2_SetFont(0, (const void *)u8g_font_5x8r);
 	
   /* 5. Define keys (PN() description, see http://code.google.com/p/u8glib/wiki/avr#U8glib_Init) */
+  /* normal buttons */
   m2_SetPin(M2_KEY_EXIT, PN(3, 5));
   m2_SetPin(M2_KEY_SELECT, PN(3, 6));
   m2_SetPin(M2_KEY_NEXT, PN(3, 7));
   m2_SetPin(M2_KEY_PREV, PN(1, 7));
+  /* incremental rotary encoder */
+  m2_SetPin(M2_KEY_ROT_ENC_A, PN(2, 2));
+  m2_SetPin(M2_KEY_ROT_ENC_B, PN(2, 3));
+
 }
 
 /*=========================================================================*/

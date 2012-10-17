@@ -53,6 +53,9 @@ static void m2_avr_u8g_setup(void)
   m2_avr_u8g_setup_key(M2_KEY_DATA_UP);  
   m2_avr_u8g_setup_key(M2_KEY_DATA_DOWN);  
   m2_avr_u8g_setup_key(M2_KEY_HOME);  
+  
+  m2_avr_u8g_setup_key(M2_KEY_ROT_ENC_A);  
+  m2_avr_u8g_setup_key(M2_KEY_ROT_ENC_B);  
 }
 
 static uint8_t m2_avr_u8g_check_key(uint8_t key)
