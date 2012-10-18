@@ -140,3 +140,25 @@ M2_EL_FN_DEF(m2_el_xbmrootp_fn)
   return m2_el_fnfmt_fn(fn_arg);
 }
 
+m2_button_fnptr m2_el_xbmbutton_get_callback(m2_el_fnarg_p fn_arg)
+{
+  return (m2_button_fnptr)m2_rom_get_ram_ptr(fn_arg->element, offsetof(m2_el_xbmbutton_t, button_callback));
+}
+
+
+M2_EL_FN_DEF(m2_el_xbmbuttonp_fn)
+{
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_SELECT:
+    {
+      m2_button_fnptr fn;
+      fn = m2_el_xbmbutton_get_callback(fn_arg);
+      if ( fn != NULL )
+	fn(fn_arg);
+      return 1;
+    }
+  }
+  return m2_el_xbmrootp_fn(fn_arg);
+}
+

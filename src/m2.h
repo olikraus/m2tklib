@@ -497,6 +497,18 @@ M2_EL_FN_DEF(m2_el_xbmrootp_fn);
 #define M2_XBMROOTP(el,fmt,w,h,ptr,root) m2_el_xbmroot_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmrootp_fn, (fmt) }, (w), (h), (ptr) }, (root) }
 #define M2_EXTERN_XBMROOTP(el) extern m2_el_xbmroot_t el
 
+struct _m2_el_xbmbutton_struct
+{
+  m2_el_xbm_t xbm;
+  m2_button_fnptr button_callback;
+};
+typedef struct _m2_el_xbmbutton_struct m2_el_xbmbutton_t;
+typedef m2_el_xbmbutton_t *m2_el_xbmbutton_p;
+
+M2_EL_FN_DEF(m2_el_xbmbuttonp_fn);
+#define M2_XBMBUTTONP(el,fmt,w,h,ptr,cb) m2_el_xbmbutton_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmbuttonp_fn, (fmt) }, (w), (h), (ptr) }, (cb) }
+#define M2_EXTERN_XBMBUTTONP(el) extern m2_el_xbmbutton_t el
+
 
 struct _m2_el_str_struct
 {
