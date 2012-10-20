@@ -1288,8 +1288,16 @@ static char tools_28_bits[] U8G_PROGMEM = {
   
 //M2_XBMLABELP(el_xbm_mc, NULL, 28, 28, memory_card_28_bits);
 //M2_XBMLABELP(el_xbm_tools, NULL, 28, 28, tools_28_bits);
-M2_XBMROOTP(el_xbm_mc, "W30H60", 28, 28, memory_card_28_bits, &top_el_tlsm);
-M2_XBMROOTP(el_xbm_tools, "W30H60", 28, 28, tools_28_bits, &top_el_tlsm);
+//M2_XBMROOTP(el_xbm_mc, "W30H60", 28, 28, memory_card_28_bits, &top_el_tlsm);
+//M2_XBMROOTP(el_xbm_tools, "W30H60", 28, 28, tools_28_bits, &top_el_tlsm);
+  
+void fn_xbm_cancel(m2_el_fnarg_p fnarg) {
+  m2_SetRoot(&top_el_tlsm);
+}
+M2_XBMBUTTONP(el_xbm_mc, "W30H60", 28, 28, memory_card_28_bits, fn_xbm_cancel);
+M2_XBMBUTTONP(el_xbm_tools, "W30H60", 28, 28, tools_28_bits, fn_xbm_cancel);
+
+  
 M2_LIST(el_xbm_list) = { &el_xbm_mc, &el_xbm_tools };
 M2_HLIST(el_xbm, NULL, el_xbm_list);
 
