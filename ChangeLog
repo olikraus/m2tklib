@@ -38,7 +38,7 @@ M2tklib ChangeLog
 	* PWMPinList example
 2012-07-18      v1.08.1	Oliver Kraus <olikraus@gmail.com>
 	* Bugfix: M2_GFX_MSG_GET_NUM_CHAR_WIDTH was not handled for GLCD 
-2012-10-xx      v1.09	Oliver Kraus <olikraus@gmail.com>
+2012-11-06      v1.09	Oliver Kraus <olikraus@gmail.com>
 	* Fixed data entry mode for LiquidCrystal (M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY)
 	* Experimental support for incremental rotary encoder (enhancement issue 71)
 	* New event: XBM_KEY_HOME (ienhancement ssue 75)
