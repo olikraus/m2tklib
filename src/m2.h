@@ -442,6 +442,18 @@ M2_EL_FN_DEF(m2_el_space_fn);
 #define M2_SPACE(el,fmt) m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_space_fn, (fmt) } }
 #define M2_EXTERN_SPACE(el) extern m2_el_space_t el
 
+struct _m2_el_spacecb_struct
+{
+  m2_el_space_t el_space;
+  m2_button_fnptr new_dialog_callback;
+};
+typedef struct _m2_el_spacecb_struct m2_el_spacecb_t;
+typedef m2_el_spacecb_t *m2_el_spacecb_p;
+
+M2_EL_FN_DEF(m2_el_spacecb_fn);
+#define M2_SPACECB(el, fmt,callback) m2_el_spacecb_t el M2_SECTION_PROGMEM = { { m2_el_spacecb_fn, (fmt) },  (callback)  }
+#define M2_EXTERN_SPACECB(el) extern m2_el_spacecb_t el
+
 
 
 struct _m2_el_strptr_struct

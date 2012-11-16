@@ -43,3 +43,18 @@ M2_EL_FN_DEF(m2_el_space_fn)
   return m2_el_fnfmt_fn(fn_arg);
 }
 
+m2_button_fnptr m2_el_spacecb_get_new_dialog_fnptr(m2_el_fnarg_p fn_arg)
+{
+  return (m2_button_fnptr)m2_rom_get_fnptr(fn_arg->element, offsetof(m2_el_spacecb_t, new_dialog_callback));
+}
+
+M2_EL_FN_DEF(m2_el_spacecb_fn)
+{
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_NEW_DIALOG:
+      m2_el_spacecb_get_new_dialog_fnptr(fn_arg)(fn_arg);
+      return 1;
+  }  
+  return m2_el_space_fn(fn_arg);
+}
