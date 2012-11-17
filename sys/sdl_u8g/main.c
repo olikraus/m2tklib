@@ -1336,8 +1336,6 @@ m2_menu_entry space_cb_menu_data[] =
   { NULL, NULL },
 };
 
-
-
 uint8_t el_2lspace_first = 0;
 uint8_t el_2lspace_cnt = 3;
 
