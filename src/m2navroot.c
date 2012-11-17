@@ -46,7 +46,9 @@ uint8_t m2_nav_check_and_assign_new_root(m2_nav_p nav)
 {
   if ( nav->new_root_element != NULL )
   {
-    m2_nav_init(nav, nav->new_root_element);
+    m2_rom_void_p new_root = nav->new_root_element;
+    nav->new_root_element = NULL;					// make it zero, so others are allowed to make it none zero again.
+    m2_nav_init(nav, new_root);
     
     while( nav->next_cnt > 0 )
     {
@@ -54,7 +56,6 @@ uint8_t m2_nav_check_and_assign_new_root(m2_nav_p nav)
       nav->next_cnt--;
     }
     
-    nav->new_root_element = NULL;
     return 1;
   }
   return 0;

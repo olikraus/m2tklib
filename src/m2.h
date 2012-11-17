@@ -451,7 +451,7 @@ typedef struct _m2_el_spacecb_struct m2_el_spacecb_t;
 typedef m2_el_spacecb_t *m2_el_spacecb_p;
 
 M2_EL_FN_DEF(m2_el_spacecb_fn);
-#define M2_SPACECB(el, fmt,callback) m2_el_spacecb_t el M2_SECTION_PROGMEM = { { m2_el_spacecb_fn, (fmt) },  (callback)  }
+#define M2_SPACECB(el, fmt,callback) m2_el_spacecb_t el M2_SECTION_PROGMEM = { { { m2_el_spacecb_fn, (fmt) } },  (callback)  }
 #define M2_EXTERN_SPACECB(el) extern m2_el_spacecb_t el
 
 

@@ -1302,6 +1302,58 @@ M2_LIST(el_xbm_list) = { &el_xbm_mc, &el_xbm_tools };
 M2_HLIST(el_xbm, NULL, el_xbm_list);
 
 /*======================================================================*/
+/*=== SPACECB with 2LMENU ===*/
+
+M2_EXTERN_ALIGN(top_el_spacecb_menu);
+
+uint8_t el_space_u8 = 0;
+
+void fn_space_cb_zero(m2_el_fnarg_p fnarg) {
+  el_space_u8 = 0;
+  m2_SetRoot(&top_el_spacecb_menu);
+}
+
+void fn_space_cb_inc(m2_el_fnarg_p fnarg) {
+  puts("inc");
+  el_space_u8++;
+  m2_SetRoot(&top_el_spacecb_menu);
+}
+
+void fn_space_cb_dec(m2_el_fnarg_p fnarg) {
+  el_space_u8--;
+  m2_SetRoot(&top_el_spacecb_menu);
+}
+
+M2_SPACECB(el_space_cb_zero, NULL, fn_space_cb_zero);
+M2_SPACECB(el_space_cb_inc, NULL, fn_space_cb_inc);
+M2_SPACECB(el_space_cb_dec, NULL, fn_space_cb_dec);
+
+m2_menu_entry space_cb_menu_data[] = 
+{
+  { "Zero", &el_space_cb_zero },
+  { "Inc", &el_space_cb_inc },
+  { "Dec", &el_space_cb_dec },
+  { NULL, NULL },
+};
+
+
+
+uint8_t el_2lspace_first = 0;
+uint8_t el_2lspace_cnt = 3;
+
+/* for m2icon fonts, 65: closed folder, 102: open folder */
+M2_U8NUM(el_2lspace_u8, "r1c3", 0, 255, &el_space_u8);
+M2_2LMENU(el_2lspace_strlist, "l3e15F3W47", &el_2lspace_first, &el_2lspace_cnt, space_cb_menu_data, 65, 102, '\0');
+//M2_SPACE(el_2lspace_space, "W1h1");
+//M2_VSB(el_2lspace_vsb, "l4W4r1", &el_2lspace_first, &el_2lspace_cnt);
+M2_LIST(list_2lspace_strlist) = { &el_2lspace_u8, &el_2lspace_strlist };
+M2_VLIST(el_2lspace_hlist, NULL, list_2lspace_strlist);
+M2_ALIGN(top_el_spacecb_menu, "-1|1W64H64", &el_2lspace_hlist);
+
+/*======================================================================*/
+
+
+
 
 /*======================================================================*/
 /* top level sdl menu: tlsm */
@@ -1443,6 +1495,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_xbm);
     }
   }
+  else if ( idx == 22 ) {
+    s = "SPACE CB";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_spacecb_menu);
+    }    
+  }
   
   
   return s;
@@ -1450,7 +1509,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 22;
+uint8_t el_tlsm_cnt = 23;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
