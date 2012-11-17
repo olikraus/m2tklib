@@ -46,4 +46,6 @@ M2tklib ChangeLog
 	* Initial focus changeable (enhancement issue 77)
 	* U8glib: XBM-Icons as label or button: M2_XBMLABEL, M2_XBMROOT, M2_XBMBUTTON (enhancement issue 80)
 	* More examples: Bookmarks.pde, RotEnc.pde, XBM.pde (u8glib)
-      
+2012-11-xx
+	* M2_COMBOPTR
+	* M2_SPACECB

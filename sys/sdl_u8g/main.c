@@ -1351,7 +1351,20 @@ M2_VLIST(el_2lspace_hlist, NULL, list_2lspace_strlist);
 M2_ALIGN(top_el_spacecb_menu, "-1|1W64H64", &el_2lspace_hlist);
 
 /*======================================================================*/
+/* combo ptr */
 
+uint8_t comboptr_val = 0;
+uint8_t comboptr_cnt = 3;
+const char *comboptr_idx_to_color(uint8_t idx)
+{
+  if ( idx == 0 )
+    return "red";
+  else if (idx == 1 )
+    return "green";
+  return "blue";
+}
+M2_COMBOPTR(el_comboptr, NULL, &comboptr_val, &comboptr_cnt, comboptr_idx_to_color);
+M2_ALIGN(top_el_comboptr_menu, "W64H64", &el_comboptr);
 
 
 
@@ -1502,6 +1515,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_spacecb_menu);
     }    
   }
+  else if ( idx == 23 ) {
+    s = "COMBOPTR";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_comboptr_menu);
+    }    
+  }
   
   
   return s;
@@ -1509,7 +1529,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 23;
+uint8_t el_tlsm_cnt = 24;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

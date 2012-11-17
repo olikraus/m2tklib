@@ -732,6 +732,19 @@ M2_EL_FN_DEF(m2_el_combo_fn);
 #define M2_COMBO(el,fmt,variable,cnt,fnptr) m2_el_combo_t el M2_SECTION_PROGMEM = { { { m2_el_combo_fn, (fmt) }, (variable) }, (cnt), (fnptr) }
 #define M2_EXTERN_COMBO(el) extern m2_el_combo_t el
 
+struct _m2_el_comboptr_struct
+{
+  m2_el_setval_t setval;
+  uint8_t *cnt_ptr;
+  m2_get_str_fnptr get_str_fnptr;
+};
+typedef struct _m2_el_comboptr_struct m2_el_comboptr_t;
+typedef m2_el_comboptr_t *m2_el_comboptr_p;
+
+M2_EL_FN_DEF(m2_el_comboptr_fn);
+#define M2_COMBOPTR(el,fmt,variable,cntptr,fnptr) m2_el_comboptr_t el M2_SECTION_PROGMEM = { { { m2_el_comboptr_fn, (fmt) }, (variable) }, (cntptr), (fnptr) }
+#define M2_EXTERN_COMBOPTR(el) extern m2_el_comboptr_t el
+
 uint8_t m2_el_combo_get_len(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 m2_get_str_fnptr m2_el_combo_get_str_fnptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 const char *m2_el_combo_get_str(m2_el_fnarg_p fn_arg, uint8_t idx) M2_NOINLINE;
