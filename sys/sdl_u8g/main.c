@@ -1310,18 +1310,18 @@ uint8_t el_space_u8 = 0;
 
 void fn_space_cb_zero(m2_el_fnarg_p fnarg) {
   el_space_u8 = 0;
-  m2_SetRoot(&top_el_spacecb_menu);
+  m2_SetRootExtended(&top_el_spacecb_menu, 0, 0);
 }
 
 void fn_space_cb_inc(m2_el_fnarg_p fnarg) {
   puts("inc");
   el_space_u8++;
-  m2_SetRoot(&top_el_spacecb_menu);
+  m2_SetRootExtended(&top_el_spacecb_menu, 1, 0);
 }
 
 void fn_space_cb_dec(m2_el_fnarg_p fnarg) {
   el_space_u8--;
-  m2_SetRoot(&top_el_spacecb_menu);
+  m2_SetRootExtended(&top_el_spacecb_menu, 2, 0);
 }
 
 M2_SPACECB(el_space_cb_zero, NULL, fn_space_cb_zero);
