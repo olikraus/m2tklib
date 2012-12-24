@@ -1,4 +1,7 @@
 
+Idea:
+Use http://www.enlightenment.org/
+
 Specificaton
 
 Prefix: mn

@@ -790,7 +790,7 @@ extern uint8_t m2_strlist_menu_cnt;
 struct _m2_el_2lmenu_struct
 {
   m2_el_slbase_t slbase;
-  m2_menu_entry *menu_entries;
+  void *menu_entries; /* m2_menu_entry * or m2_xmenu_entry * */  
   uint8_t menu_char;
   uint8_t expanded_char;
   uint8_t submenu_char;
@@ -802,6 +802,19 @@ M2_EL_FN_DEF(m2_el_2lmenu_fn);
 
 #define M2_2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
 #define M2_EXTERN_2LMENU(el) extern m2_el_2lmenu_t el
+
+struct _m2_xmenu_entry
+{
+  const char *label;
+  m2_rom_void_p element;
+  m2_strlist_cb_fnptr cb;
+};
+typedef struct _m2_xmenu_entry m2_xmenu_entry;
+
+M2_EL_FN_DEF(m2_el_x2lmenu_fn);
+
+#define M2_X2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_x2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
+#define M2_EXTERN_X2LMENU(el) extern m2_el_2lmenu_t el
 
 
 struct _m2_el_infobase_struct

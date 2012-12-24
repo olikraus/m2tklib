@@ -44,6 +44,10 @@ m2_menu_entry *m2_el_2lmenu_get_menu_data_ptr(m2_rom_void_p element)
   return (m2_menu_entry *)m2_rom_get_ram_ptr(element, offsetof(m2_el_2lmenu_t, menu_entries));
 }
 
+m2_xmenu_entry *m2_el_x2lmenu_get_menu_data_ptr(m2_rom_void_p element)
+{
+  return (m2_xmenu_entry *)m2_rom_get_ram_ptr(element, offsetof(m2_el_2lmenu_t, menu_entries));
+}
 
 uint8_t m2_el_2lmenu_get_menu_char(m2_rom_void_p element)
 {
@@ -64,6 +68,7 @@ uint8_t m2_el_2lmenu_get_submenu_char(m2_rom_void_p element)
 /* cache variables */
 
 m2_menu_entry *m2_el_2lmenu_data;
+m2_xmenu_entry *m2_el_x2lmenu_data;
 uint8_t m2_el_2lmenu_expanded_position = 255;
 char m2_2lmenu_main_menu;
 char m2_2lmenu_expanded_menu;
@@ -71,7 +76,7 @@ char m2_2lmenu_submenu;
 
 
 /*==============================================================*/
-/* 2lmenu procedures */
+/* 2lmenu list procedures */
 
 static m2_rom_void_p m2_2lmenu_get_label(uint8_t defidx)
 {
@@ -84,6 +89,32 @@ static m2_rom_void_p m2_2lmenu_get_element(uint8_t defidx)
   return m2_el_2lmenu_data[defidx].element;
   //return m2_rom_get_rom_ptr(m2_2lmenu_data+defidx, offsetof(m2_menu_entry, element));
 }
+
+/*==============================================================*/
+/* x2lmenu list procedures */
+
+static m2_rom_void_p m2_x2lmenu_get_label(uint8_t defidx)
+{
+  return m2_el_x2lmenu_data[defidx].label;
+  // return m2_rom_get_rom_ptr(m2_2lmenu_data+defidx, offsetof(m2_menu_entry, label));
+}
+
+static m2_rom_void_p m2_x2lmenu_get_element(uint8_t defidx)
+{
+  return m2_el_x2lmenu_data[defidx].element;
+  //return m2_rom_get_rom_ptr(m2_2lmenu_data+defidx, offsetof(m2_menu_entry, element));
+}
+
+static m2_strlist_cb_fnptr m2_x2lmenu_get_cb(uint8_t defidx)
+{
+  return m2_el_x2lmenu_data[defidx].cb;
+  //return m2_rom_get_rom_ptr(m2_2lmenu_data+defidx, offsetof(m2_menu_entry, element));
+}
+
+
+/*==============================================================*/
+/* 2lmenu procedures */
+
 
 static uint8_t m2_2lmenu_is_submenu(uint8_t defidx)
 {
@@ -171,6 +202,95 @@ static void m2_2lmenu_update_cnt(m2_rom_void_p element)
   *m2_el_slbase_get_len_ptr(element) = m2_2lmenu_get_defidx_by_strlistidx(255);
 }
 
+/*==============================================================*/
+/* x2lmenu procedures */
+
+
+static uint8_t m2_x2lmenu_is_submenu(uint8_t defidx)
+{
+  const char *label = (const char *)m2_x2lmenu_get_label(defidx);
+  if ( label == NULL )
+    return 0;
+  // if ( m2_rom_low_level_get_byte(label) != '.' )
+  if ( label[0]   != '.' )
+    return 0;
+  return 1;
+}
+
+static uint8_t m2_x2lmenu_has_submenu(uint8_t defidx)
+{
+  const char *label = (const char *)m2_x2lmenu_get_label(defidx);
+  if ( label == NULL )
+    return 0;
+  //if ( m2_rom_low_level_get_byte(label) == '.' )
+  if ( label[0]   == '.' )
+    return 0;
+  return m2_x2lmenu_is_submenu(defidx+1);
+}
+
+static uint8_t m2_x2lmenu_get_submenu_cnt(uint8_t defidx)
+{
+  uint8_t cnt = 0;
+  for(;;)
+  {
+    defidx++;
+    if ( m2_x2lmenu_is_submenu(defidx) == 0 )
+      break;
+    cnt++;
+  }
+  return cnt;
+}
+
+static uint8_t m2_x2lmenu_get_defidx_by_strlistidx(uint8_t strlistidx)
+{
+  uint8_t strlistcnt = 0;
+  uint8_t defidx = 0;
+  for(;;)
+  {
+    if ( strlistidx == strlistcnt )
+      break;
+    if ( m2_x2lmenu_get_label(defidx) == NULL )
+      break;
+    if ( m2_x2lmenu_has_submenu(defidx) != 0 )
+    {
+      if ( defidx == m2_el_2lmenu_expanded_position )
+      {
+	defidx++;
+	strlistcnt++;
+	while(m2_x2lmenu_is_submenu(defidx))
+	{
+	  if ( strlistidx == strlistcnt )
+	    break;
+	  defidx++;
+	  strlistcnt++;
+	}
+      }
+      else
+      {
+	defidx++;
+	strlistcnt++;
+	while(m2_x2lmenu_is_submenu(defidx))
+	{
+	  defidx++;
+	}
+      }
+    }
+    else
+    {
+      defidx++;
+      strlistcnt++;
+    }
+  }
+  if ( strlistidx == 255 )
+    return strlistcnt;
+  return defidx;
+}
+
+/* calculate "cnt", based on "expanded" */
+static void m2_x2lmenu_update_cnt(m2_rom_void_p element)
+{
+  *m2_el_slbase_get_len_ptr(element) = m2_x2lmenu_get_defidx_by_strlistidx(255);
+}
 
 
 /*==============================================================*/
@@ -180,7 +300,7 @@ static void m2_2lmenu_update_cnt(m2_rom_void_p element)
 
 
 /*==============================================================*/
-/* strline */
+/* 2lmenu line */
 
 M2_EL_FN_DEF(m2_el_2lmenu_line_fn)
 {
@@ -288,24 +408,141 @@ M2_EL_FN_DEF(m2_el_2lmenu_line_fn)
   return 0;
 }
 
+/*==============================================================*/
+/* 2lmenu line */
+
+M2_EL_FN_DEF(m2_el_x2lmenu_line_fn)
+{
+  m2_rom_void_p parent_el = m2_nav_get_parent_element(fn_arg->nav);
+  uint8_t font;
+  uint8_t pos;
+
+  font = m2_el_parent_get_font(fn_arg->nav);
+  pos = m2_nav_get_child_pos(fn_arg->nav);
+  
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_GET_LIST_LEN:
+        return 0;  /* not a list, return 0 */
+    case M2_EL_MSG_GET_HEIGHT:
+      return m2_gfx_get_char_height_with_normal_border(font);
+    case M2_EL_MSG_GET_WIDTH:
+      /* width is defined only be the eE and wW options */
+      return m2_el_slbase_calc_width(parent_el);
+    case M2_EL_MSG_NEW_FOCUS:
+      /* adjust the top value, if required */
+      m2_el_slbase_adjust_top_to_focus(parent_el, pos);
+      return 1;
+    case M2_EL_MSG_SELECT:
+      {
+	uint8_t defidx;
+	defidx = m2_x2lmenu_get_defidx_by_strlistidx(pos);
+	m2_el_x2lmenu_data = m2_el_x2lmenu_get_menu_data_ptr(parent_el);
+	if ( m2_x2lmenu_has_submenu(defidx) != 0 )
+	{
+	  if ( m2_el_2lmenu_expanded_position == defidx )
+	  {
+	    m2_el_2lmenu_expanded_position = 255;
+	    m2_2lmenu_update_cnt(parent_el);
+	  }
+	  else
+	  {
+	    if ( m2_el_2lmenu_expanded_position < defidx )
+	    {
+	      uint8_t cnt = m2_x2lmenu_get_submenu_cnt(m2_el_2lmenu_expanded_position);
+	      m2_el_2lmenu_expanded_position = defidx;
+	      m2_x2lmenu_update_cnt(parent_el);
+	      while( cnt > 0 )
+	      {
+		cnt--;
+		m2_HandleKey();				/* first, handle the existing keys */
+		m2_SetKey(M2_KEY_PREV);		/* put new key into queue, leave last added key in the queue */
+	      }
+	    }
+	    else
+	    {
+	      m2_el_2lmenu_expanded_position = defidx;
+	      m2_2lmenu_update_cnt(parent_el);
+	    }
+	  }
+	}
+	else
+	{
+	  {
+	    m2_strlist_cb_fnptr cb = m2_x2lmenu_get_cb(defidx);
+	    if ( cb != (m2_strlist_cb_fnptr)NULL )
+	      cb(defidx, M2_STRLIST_MSG_SELECT);
+	  }
+	  {
+	    m2_rom_void_p el = m2_x2lmenu_get_element(defidx);
+	    if ( el != NULL )
+	      m2_SetRoot(el);
+	  }
+	}
+      }
+      return 1;
+#ifdef M2_EL_MSG_DBG_SHOW
+    case M2_EL_MSG_DBG_SHOW:
+      {
+	uint8_t width, height;
+	m2_pos_p b = (m2_pos_p)(fn_arg->data);
+	width = m2_el_slbase_calc_width((fn_arg->element));
+	height = m2_el_slbase_calc_height((fn_arg->element));
+	printf("strline w:%d h:%d arg:%d x:%d y:%d\n", width, height, 
+	    (fn_arg->arg), b->x, b->y);
+      }
+      return 0;
+#endif
+    case M2_EL_MSG_SHOW:
+      m2_el_x2lmenu_data = m2_el_x2lmenu_get_menu_data_ptr(parent_el);
+     {
+       char extra_str[2] = " ";
+	uint8_t defidx  = m2_x2lmenu_get_defidx_by_strlistidx(pos);
+	const char *ptr = m2_x2lmenu_get_label(defidx);
+       
+	if ( m2_x2lmenu_is_submenu(defidx) != 0 )
+	  ptr++;
+	
+	if ( ptr[0] == '\0' )
+	{
+	    m2_strlist_cb_fnptr cb = m2_x2lmenu_get_cb(defidx);
+	    if ( cb != (m2_strlist_cb_fnptr)NULL )
+	      ptr = cb(defidx, M2_STRLIST_MSG_GET_STR);
+	}
+       
+        if ( m2_opt_get_val( m2_el_fnfmt_get_fmt_by_element(parent_el), 'e') != M2_OPT_NOT_FOUND ||
+          m2_opt_get_val( m2_el_fnfmt_get_fmt_by_element(parent_el), 'E') != M2_OPT_NOT_FOUND )
+        {
+	  if ( m2_el_2lmenu_expanded_position == defidx )
+	  {
+	    extra_str[0] = m2_el_2lmenu_get_expanded_char(parent_el);
+	  }
+	  else if ( m2_2lmenu_has_submenu(defidx) != 0 )
+	  {
+	    extra_str[0] = m2_el_2lmenu_get_menu_char(parent_el);
+	  }
+	  else if ( m2_2lmenu_is_submenu(defidx) != 0 )
+	  {
+	    extra_str[0] = m2_el_2lmenu_get_submenu_char(parent_el);
+	  }
+        }
+        m2_el_slbase_show(fn_arg, extra_str, ptr);
+      }
+      return 1;
+  }
+  return 0;
+}
+
 
 /*==============================================================*/
-/* strlist function */
+/* common procedure */
 
-m2_el_fnfmt_t m2_el_virtual_2lmenu_line M2_SECTION_PROGMEM = 
-{
-  m2_el_2lmenu_line_fn, NULL
-};
-
-M2_EL_FN_DEF(m2_el_2lmenu_fn)
+M2_EL_FN_DEF(m2_el_2lmenu_common_fn)
 {
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_LIST_LEN:
       return m2_el_slbase_get_len(fn_arg->element);
-    case M2_EL_MSG_GET_LIST_ELEMENT:
-      *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_2lmenu_line;
-      return 1;
     case M2_EL_MSG_IS_AUTO_SKIP:
       return 1;
     case M2_EL_MSG_GET_OPT:
@@ -354,5 +591,47 @@ M2_EL_FN_DEF(m2_el_2lmenu_fn)
   return m2_el_fnfmt_fn(fn_arg);
 }
 
+
+
+/*==============================================================*/
+/* m2_el_2lmenu_fn function */
+
+m2_el_fnfmt_t m2_el_virtual_2lmenu_line M2_SECTION_PROGMEM = 
+{
+  m2_el_2lmenu_line_fn, NULL
+};
+
+M2_EL_FN_DEF(m2_el_2lmenu_fn)
+{
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_GET_LIST_ELEMENT:
+      *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_2lmenu_line;
+      return 1;
+  }
+  /* rest is done on the common procedure */
+  return m2_el_2lmenu_common_fn(fn_arg);
+}
+
+
+/*==============================================================*/
+/* x2lmenu function */
+
+m2_el_fnfmt_t m2_el_virtual_x2lmenu_line M2_SECTION_PROGMEM = 
+{
+  m2_el_x2lmenu_line_fn, NULL
+};
+
+M2_EL_FN_DEF(m2_el_x2lmenu_fn)
+{
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_GET_LIST_ELEMENT:
+      *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_x2lmenu_line;
+      return 1;
+  }
+  /* rest is done on the common procedure */
+  return m2_el_2lmenu_common_fn(fn_arg);
+}
 
 

@@ -1364,6 +1364,91 @@ const char *comboptr_idx_to_color(uint8_t idx)
 M2_COMBOPTR(el_comboptr, NULL, &comboptr_val, &comboptr_cnt, comboptr_idx_to_color);
 M2_ALIGN(top_el_comboptr_menu, "W64H64", &el_comboptr);
 
+/*======================================================================*/
+/* similar submenus with different inputs */
+
+
+/*--- variables to store user input ---*/
+uint8_t sisu_w;
+uint8_t sisu_x;
+uint8_t sisu_y;
+uint8_t sisu_z;
+
+/*--- forward declaration of the top menu */
+M2_EXTERN_ALIGN(top_el_sisu);
+
+/*--- labels end entry fields for user input ---*/
+/*--- w ---*/
+M2_LABEL(el_sisu_label_w, NULL, "w:");
+M2_U8NUM(el_sisu_field_w, "c2", 0,99,&sisu_w);
+/*--- x ---*/
+M2_LABEL(el_sisu_label_x, NULL, "x:");
+M2_U8NUM(el_sisu_field_x, "c2", 0,99,&sisu_x);
+/*--- y ---*/
+M2_LABEL(el_sisu_label_y, NULL, "y:");
+M2_U8NUM(el_sisu_field_y, "c2", 0,99,&sisu_y);
+/*--- z ---*/
+M2_LABEL(el_sisu_label_z, NULL, "z:");
+M2_U8NUM(el_sisu_field_z, "c2", 0,99,&sisu_z);
+
+/*--- global buttons ---*/
+M2_ROOT(el_sisu_cancel, "f4", "Cancel", &top_el_sisu);
+
+/*--- submenu: w, y, z ---*/
+void fn_sisu_b1(m2_el_fnarg_p fnarg) {
+  sisu_x = 0;	// default value for "w"
+  // process values here
+  m2_SetRoot(&top_el_sisu);
+}
+M2_BUTTON(el_sisu_b1, "f4", " ok ", fn_sisu_b1);
+M2_LIST(list_sisu_m1) = { 
+  &el_sisu_label_w, &el_sisu_field_w, 
+  &el_sisu_label_y, &el_sisu_field_y, 
+  &el_sisu_label_z, &el_sisu_field_z, 
+  &el_sisu_cancel, &el_sisu_b1
+  };
+M2_GRIDLIST(el_sisu_grid_m1, "c2",list_sisu_m1);
+M2_ALIGN(top_el_sisu_m1, "W64H64", &el_sisu_grid_m1);
+
+/*--- submenu: x, y, z ---*/
+void fn_sisu_b2(m2_el_fnarg_p fnarg) {
+  sisu_w = 0;	// default value for "w"
+  // process values here
+  m2_SetRoot(&top_el_sisu);
+}
+M2_BUTTON(el_sisu_b2, "f4", " ok ", fn_sisu_b2);
+M2_LIST(list_sisu_m2) = { 
+  &el_sisu_label_x, &el_sisu_field_x, 
+  &el_sisu_label_y, &el_sisu_field_y, 
+  &el_sisu_label_z, &el_sisu_field_z, 
+  &el_sisu_cancel, &el_sisu_b2
+  };
+M2_GRIDLIST(el_sisu_grid_m2, "c2",list_sisu_m2);
+M2_ALIGN(top_el_sisu_m2, "W64H64", &el_sisu_grid_m2);
+  
+/*--- submenu: w, x, y, z ---*/
+void fn_sisu_b3(m2_el_fnarg_p fnarg) {
+  sisu_z = 0;	// default value for "z"
+  // process values here
+  m2_SetRoot(&top_el_sisu);
+}
+M2_BUTTON(el_sisu_b3, "f4", " ok ", fn_sisu_b3);
+M2_LIST(list_sisu_m3) = { 
+  &el_sisu_label_w, &el_sisu_field_w, 
+  &el_sisu_label_x, &el_sisu_field_x, 
+  &el_sisu_label_y, &el_sisu_field_y, 
+  &el_sisu_cancel, &el_sisu_b3
+  };
+M2_GRIDLIST(el_sisu_grid_m3, "c2",list_sisu_m3);
+M2_ALIGN(top_el_sisu_m3, "W64H64", &el_sisu_grid_m3);
+  
+/*--- main menu ---*/
+M2_ROOT(el_sisu_c1, "f4", "Menu 1", &top_el_sisu_m1);
+M2_ROOT(el_sisu_c2, "f4", "Menu 2", &top_el_sisu_m2);
+M2_ROOT(el_sisu_c3, "f4", "Menu 3", &top_el_sisu_m3);
+M2_LIST(list_sisu) = { &el_sisu_c1, &el_sisu_c2, &el_sisu_c3};
+M2_VLIST(el_sisu_vl, NULL, list_sisu);
+M2_ALIGN(top_el_sisu, "W64H64", &el_sisu_vl);
 
 
 /*======================================================================*/
@@ -1520,6 +1605,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_comboptr_menu);
     }    
   }
+  else if ( idx == 24 ) {
+    s = "SiSu";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_sisu);
+    }    
+  }
   
   
   return s;
@@ -1527,7 +1619,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 24;
+uint8_t el_tlsm_cnt = 25;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
