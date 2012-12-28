@@ -8,18 +8,27 @@
 #include "mn.h"
 #include <stdlib.h>
 
-mn_type mn_Open(void)
+mn_type mn_OpenWithFn(mn_fn fn)
 {
   mn_type mn = (mn_type)malloc(sizeof(struct _mn_struct));
   if ( mn != NULL )
   {
     mn->d = NULL;
     mn->n = NULL;
-    mn->fn = mn_fn_empty;
+    mn->fn = fn;
     mn->data = NULL;
-    return mn;
+    if ( mn->fn(mn, MN_MSG_OPEN, NULL) != 0 )
+    {      
+      return mn;
+    }
+    free(mn);
   }
   return NULL;
+}
+
+mn_type mn_Open(void)
+{
+  return mn_OpenWithFn(mn_fn_empty);
 }
 
 /*
@@ -27,6 +36,7 @@ mn_type mn_Open(void)
 */
 void mn_Close(mn_type mn)
 {
+  mn->fn(mn, MN_MSG_CLOSE, NULL);
   mn->d = NULL;
   mn->n = NULL;
   free(mn);
