@@ -4,6 +4,7 @@
 
 */
 
+#include <stddef.h>
 #include "mn.h"
 
 /* return number of sub elements */
@@ -16,6 +17,6 @@ int mn_GetCnt(mn_type n)
     cnt++;
     n = n->n;
   }
-  return n;
+  return cnt;
 }
 

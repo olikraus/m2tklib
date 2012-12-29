@@ -15,6 +15,7 @@ mn_type mn_OpenWithFn(mn_fn fn)
   {
     mn->d = NULL;
     mn->n = NULL;
+    mn->seq_nr = 0;
     mn->fn = fn;
     mn->data = NULL;
     if ( mn->fn(mn, MN_MSG_OPEN, NULL) != 0 )

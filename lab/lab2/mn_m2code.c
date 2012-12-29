@@ -4,7 +4,14 @@
   
 */
   
+#include "stddef.h"
 #include "mn.h"
+
+
+void mn_BuildCodeStr(const char *s)
+{
+}
+
 
 /* build M2_LIST with all sub elements */
 int mn_BuildCodeList(mn_type n, char *name)

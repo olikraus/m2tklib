@@ -25,6 +25,7 @@ struct _mn_struct
   mn_type n;
   mn_type d;
   mn_fn fn;
+  unsigned seq_nr;
   void *data;
 };
 
@@ -55,6 +56,8 @@ void mn_AppendSubtree(mn_type n, mn_type s);			/* mn_add.c */
 void mn_PasteSubtree(mn_type n, int pos, mn_type s);		/* mn_add.c */
 
 int mn_GetCnt(mn_type n);							/* mn_cnt.c */
+
+unsigned mn_BuildSeqNr(mn_type n, unsigned start_nr);	/* mn_seqnr.c */
 
 void mn_Show(mn_type n);							/* mn_show.c */
 
