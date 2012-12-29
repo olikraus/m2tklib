@@ -14,7 +14,7 @@ void mn_BuildCodeStr(const char *s)
 
 
 /* build M2_LIST with all sub elements */
-int mn_BuildCodeList(mn_type n, char *name)
+void mn_BuildCodeList(mn_type n, char *name)
 {
   n = n->d;
   mn_BuildCodeStr("M2_LIST(");
@@ -22,5 +22,6 @@ int mn_BuildCodeList(mn_type n, char *name)
   mn_BuildCodeStr(") = {");
   while( n != NULL )
   {
+    
   }
 }

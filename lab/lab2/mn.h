@@ -17,7 +17,8 @@ typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
 #define MN_MSG_CLOSE 2
 #define MN_MSG_COPY 3
 #define MN_MSG_GET_DISPLAY_STRING 4
-#define MN_MSG_C_CODE 5
+#define MN_MSG_GET_LABEL_STRING 5
+#define MN_MSG_C_CODE 6
 
 
 struct _mn_struct

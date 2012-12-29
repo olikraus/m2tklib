@@ -23,6 +23,9 @@ int mn_fn_empty(mn_type mn, int msg, void *arg)
     case MN_MSG_GET_DISPLAY_STRING:
       *(char **)arg = "empty";
       return 1;
+    case MN_MSG_GET_LABEL_STRING:
+      *(char **)arg = "";
+      return 1;
   }
   return 1;
 }
