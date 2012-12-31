@@ -1,7 +1,4 @@
 
-Idea:
-Use http://www.enlightenment.org/
-
 Specificaton
 
 Prefix: mn
@@ -31,3 +28,19 @@ struct me
   int int_arg_1;  
   int int_arg_2;  
 }
+
+
+Idea:
+Use http://www.enlightenment.org/
+
+ubuntu: package "e17-dev", "libelementary-dev", "libelementary-bin", "libelementary-data"
+
+http://trac.enlightenment.org/e/wiki/Elementary
+http://docs.enlightenment.org/stable/elementary/
+
+/usr/share/doc/enlightenment/html/documentation.html
+/usr/include/elementary-0/Elementary.h
+
+gcc hello.c -o hello `pkg-config elementary --cflags --libs`
+/usr/bin/elementary_quicklaunch
+/usr/bin/elementary_run

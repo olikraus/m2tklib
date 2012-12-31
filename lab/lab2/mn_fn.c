@@ -8,6 +8,9 @@
 #include "mn.h"
 #include <stdlib.h>
 
+/*================================================*/
+/* default callback */
+
 int mn_fn_empty(mn_type mn, int msg, void *arg)
 {
   switch(msg)
@@ -28,5 +31,15 @@ int mn_fn_empty(mn_type mn, int msg, void *arg)
       return 1;
   }
   return 1;
+}
+
+/*================================================*/
+/* API procedures */
+
+const char *mn_GetLabelString(mn_type mn)
+{
+  const char *s = ""; 
+  mn->fn(mn, MN_MSG_GET_LABEL_STRING, (void *)&s);
+  return s;
 }
 

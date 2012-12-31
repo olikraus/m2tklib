@@ -65,5 +65,7 @@ void mn_Show(mn_type n);							/* mn_show.c */
 /*================================================*/
 
 int mn_fn_empty(mn_type mn, int msg, void *arg);		/* mn_fn.c */
+const char *mn_GetLabelString(mn_type mn);			/* mn_fn.c */
+
 
 #endif
