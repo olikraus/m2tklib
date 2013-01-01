@@ -44,3 +44,8 @@ http://docs.enlightenment.org/stable/elementary/
 gcc hello.c -o hello `pkg-config elementary --cflags --libs`
 /usr/bin/elementary_quicklaunch
 /usr/bin/elementary_run
+
+1.1.20133
+ToDo
+- mr needs list of format strings
+

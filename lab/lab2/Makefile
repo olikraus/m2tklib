@@ -31,8 +31,6 @@ CFLAGS = $(COMMON_FLAGS) -std=gnu99
 LDLIBS = `pkg-config --cflags --libs gtk+-2.0`
 
 M2SRC = $(shell ls $(M2PATH)/*.c)
-
-
 LABSRC = $(shell ls *.c)
 
 SRC = $(M2SRC) $(LABSRC)

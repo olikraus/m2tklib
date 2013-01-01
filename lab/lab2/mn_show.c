@@ -21,7 +21,7 @@ void mn_ShowRecur(mn_type n, int depth)
   
   for( i = 0; i < depth; i++ )
     printf("  ");
-  printf("%p %s\n", n, name);
+  printf("%p %s arg_cnt:%d\n", n, name, n->arg_cnt);
   
   mn_Show(n->d);
   mn_Show(n->n);

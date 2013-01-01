@@ -18,6 +18,12 @@ mn_type mn_OpenWithFn(mn_fn fn)
     mn->seq_nr = 0;
     mn->fn = fn;
     mn->data = NULL;
+    mn->arg_cnt = 0;
+    mn->arg_list = NULL;
+    mn->mr_list_pos = -1;
+    mn->mr_list_len = 0;
+    mn->mr_element_pos = -1;
+    
     if ( mn->fn(mn, MN_MSG_OPEN, NULL) != 0 )
     {      
       return mn;

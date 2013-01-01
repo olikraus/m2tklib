@@ -10,6 +10,7 @@
 #define _MN_H
 
 typedef struct _mn_struct *mn_type;
+typedef struct _mn_arg_struct mn_arg_struct;
 typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
 
 #define MN_MSG_NONE 0
@@ -17,9 +18,33 @@ typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
 #define MN_MSG_CLOSE 2
 #define MN_MSG_COPY 3
 #define MN_MSG_GET_DISPLAY_STRING 4
+
+/* arg: char ** */
 #define MN_MSG_GET_LABEL_STRING 5
+
+/* arg: not used */
 #define MN_MSG_C_CODE 6
 
+/* arg: int *, pointer to an int value  to store/return element position within mr */
+#define MN_MSG_RTE 7
+
+/* must return 2 for a value M2 element (note: 1 is default) */
+#define MN_MSG_IS_M2_ELEMENT 8
+
+#define MN_ARG_NAME_LEN 64
+#define MN_ARG_T_BOOL 0
+#define MN_ARG_T_U8 1
+#define MN_ARG_T_STR 2
+struct _mn_arg_struct
+{
+  char name[MN_ARG_NAME_LEN];
+  int t;						/* Variable type: MN_ARG_T_BOOL, MN_ARG_T_U8, MN_ARG_T_STR */
+  unsigned long user_val;
+  char *user_str;
+  unsigned long default_val;		/* probably obsolete */
+  unsigned int is_fmt:1;
+  unsigned int is_enable:1;		/* used only if is_fmt != 0 */
+};
 
 struct _mn_struct
 {
@@ -28,6 +53,13 @@ struct _mn_struct
   mn_fn fn;
   unsigned seq_nr;
   void *data;
+  
+  unsigned arg_cnt;
+  mn_arg_struct *arg_list;
+  
+  int mr_list_pos;				/* if this node is a M2 container, then this member value contains the list position for the runtime environment */
+  int mr_list_len;
+  int mr_element_pos;			/* for an M2 element, this is the position of the element in the runtime environment */
 };
 
 mn_type mn_OpenWithFn(mn_fn fn);			/* mn_init.c */
@@ -62,10 +94,28 @@ unsigned mn_BuildSeqNr(mn_type n, unsigned start_nr);	/* mn_seqnr.c */
 
 void mn_Show(mn_type n);							/* mn_show.c */
 
+
+int mn_FindArgByName(mn_type n, const char *name);										/* mn_arg.c */
+const char *mn_GetArgStrByName(mn_type n, const char *name);							/* mn_arg.c */
+
+void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long default_val, int is_fmt); /* mn_arg.c */
+int mn_AddArg(mn_type n, int t, const char *name, unsigned long default_val, int is_fmt); 		/* mn_arg.c */
+const char *mn_GetFmtStr(mn_type n);													/* mn_arg.c */
+
+
 /*================================================*/
 
 int mn_fn_empty(mn_type mn, int msg, void *arg);		/* mn_fn.c */
 const char *mn_GetLabelString(mn_type mn);			/* mn_fn.c */
+
+void mn_BuildCodeStr(const char *s);					/* mn_m2code.c */
+void mn_BuildCodeLabel(mn_type n);					/* mn_m2code.c */
+void mn_BuildCodeListLabel(mn_type n);					/* mn_m2code.c */
+void mn_BuildCodeListStatement(mn_type n);				/* mn_m2code.c */
+void mn_BuildCode(mn_type n);						/* mn_m2code.c */
+
+/*================================================*/
+int mn_fn_m2_vlist(mn_type mn, int msg, void *arg);
 
 
 #endif
