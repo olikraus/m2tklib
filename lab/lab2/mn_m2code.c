@@ -40,13 +40,18 @@ void mn_BuildCodeListStatement(mn_type n)
   n = n->d;
   while( n != NULL )
   {
-    if ( is_first == 0 )
+    if ( n->fn(n, MN_MSG_IS_M2_ELEMENT, NULL) == 2)
     {
-      mn_BuildCodeStr(",");
+      
+      if ( is_first == 0 )
+      {
+	mn_BuildCodeStr(",");
+      }
+      is_first = 0;
+      mn_BuildCodeStr("&");
+      mn_BuildCodeLabel(n);
     }
-    is_first = 0;
-    mn_BuildCodeStr("&");
-    mn_BuildCodeLabel(n);
+    n = n->n;
   }
   mn_BuildCodeStr("};\n");
 }

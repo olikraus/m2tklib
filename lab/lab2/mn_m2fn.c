@@ -166,10 +166,11 @@ int mn_fn_m2_vlist(mn_type n, int msg, void *arg)
 
 int mn_fn_m2_label(mn_type n, int msg, void *arg)
 {
+  static const char arg_name[] = "Label";
   switch(msg)
   {
     case MN_MSG_OPEN:
-      mn_AddArg(n, MN_ARG_T_STR, "Label", 0, 0);
+      mn_AddArg(n, MN_ARG_T_STR, arg_name, 0, 0);
       break;
     case MN_MSG_GET_DISPLAY_STRING:
       sprintf(mn_m2_buf, "LABEL");
@@ -181,11 +182,17 @@ int mn_fn_m2_label(mn_type n, int msg, void *arg)
       mn_BuildCodeStr(", ");
       mn_BuildCodeStr(mn_GetFmtStr(n));
       mn_BuildCodeStr(", \"");
-      mn_BuildCodeStr(mn_GetArgStrByName(n, "Label"));
+      mn_BuildCodeStr(mn_GetArgStrByName(n, arg_name));
       mn_BuildCodeStr("\");\n");
       return 1;
     case MN_MSG_RTE:
-      return mn_BuildRTEListElement(n, m2_el_vlist_fn);
+      if ( mn_BuildRTEElement(n, sizeof(m2_el_str_t), m2_el_label_fn, mn_GetFmtStr(n)) == 0 )
+	return 0;
+      {
+	m2_el_str_t *el = (m2_el_str_t *)mrg_GetM2Element(n->mr_element_pos);
+	el->str = mrg_StoreStr(mn_GetArgStrByName(n, arg_name));
+      }      
+      return 1;
   }
   return mn_fn_m2_base(n, msg, arg);
 }

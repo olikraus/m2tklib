@@ -11,6 +11,8 @@ int main(void)
     return 1;
   
   n = mn_OpenWithFn(mn_fn_m2_vlist);
+  mn_AppendSubtree(n, mn_OpenWithFn(mn_fn_m2_label));
+  mn_AppendSubtree(n, mn_OpenWithFn(mn_fn_m2_label));
   mn_Show(n);
   mn_BuildCode(n);
   return 0;

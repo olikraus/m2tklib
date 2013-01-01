@@ -31,7 +31,7 @@ void mn_AppendSubtree(mn_type n, mn_type s)
 
 /*
   paste subtree s into tree n.
-  s should be at postion pos
+  s should be at position pos
 */
 void mn_PasteSubtree(mn_type n, int pos, mn_type s)
 {
