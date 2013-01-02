@@ -48,10 +48,12 @@ gcc hello.c -o hello `pkg-config elementary --cflags --libs`
 1.1.2013
 ToDo
 - mr needs list of format strings
+  --> DONE
 
 2.1.2013
 ToDo
 - GetFmtStr must not return "NULL", instead always return "" 
   -->  Reason is that this is also used for the RTE, whcih interprets "NULL"
+  --> DONE
   
   
