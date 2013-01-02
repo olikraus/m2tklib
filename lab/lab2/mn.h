@@ -25,7 +25,7 @@ typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
 /* arg: not used */
 #define MN_MSG_C_CODE 6
 
-/* arg: int *, pointer to an int value  to store/return element position within mr */
+/* arg: not used, n->mr_element_pos must be updated correctly */
 #define MN_MSG_RTE 7
 
 /* must return 2 for a value M2 element (note: 1 is default) */

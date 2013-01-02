@@ -10,12 +10,14 @@
 char mn_m2_buf[1024];
 
 
+/*
 int mn_GetRTEPos(mn_type n)
 {
   int pos = -1;
   n->fn(n, MN_MSG_RTE, &pos);
   return pos;
 }
+*/
 
 /*
   returns n->mr_list_pos if this is >= 0, otherwise rebuild list and assign it to n->mr_list_pos
@@ -58,9 +60,10 @@ int mn_BuildRTEList(mn_type n)
   {
     if ( d->fn(d, MN_MSG_IS_M2_ELEMENT, NULL) == 2)
     {
-      if ( d->fn(d, MN_MSG_RTE, &el_pos) == 0 )
+      if ( d->fn(d, MN_MSG_RTE, NULL) == 0 )
 	return -1;
-      el_ptr = mrg_GetM2List(el_pos);
+      el_pos = d->mr_element_pos;
+      el_ptr = mrg_GetM2Element(el_pos);
       mrg_SetListElement(pos, cnt, el_ptr);
       cnt++;
     }
@@ -80,7 +83,7 @@ int mn_BuildRTEElement(mn_type n, size_t element_size, m2_el_fnptr fn, const cha
   if ( n == NULL )
     return -1;
   
-  if ( n->mr_list_pos >= 0 )
+  if ( n->mr_element_pos >= 0 )
     return n->mr_element_pos;
   
   /* create object for the element */
@@ -102,7 +105,7 @@ int mn_BuildRTEListElement(mn_type n, m2_el_fnptr fn)
 {
     if ( mn_BuildRTEList(n) < 0 )
       return 0;
-    if ( mn_BuildRTEElement(n, sizeof(m2_el_list_t), fn, mn_GetFmtStr(n)) == 0 )
+    if ( mn_BuildRTEElement(n, sizeof(m2_el_list_t), fn, mn_GetFmtStr(n)) < 0 )
       return 0;
     {
       m2_el_list_t *el = (m2_el_list_t *)mrg_GetM2Element(n->mr_element_pos);
@@ -116,9 +119,9 @@ int mn_BuildRTE(mn_type n)
 {
   int el_pos;
   mrg_Clear();
-  if ( n->fn(n, MN_MSG_RTE, &el_pos) == 0 )
+  if ( n->fn(n, MN_MSG_RTE, NULL) == 0 )
     return -1;
-  return el_pos;
+  return n->mr_element_pos;
 }
 
 
@@ -195,7 +198,7 @@ int mn_fn_m2_label(mn_type n, int msg, void *arg)
       mn_BuildCodeStr("\");\n");
       return 1;
     case MN_MSG_RTE:
-      if ( mn_BuildRTEElement(n, sizeof(m2_el_str_t), m2_el_label_fn, mn_GetFmtStr(n)) == 0 )
+      if ( mn_BuildRTEElement(n, sizeof(m2_el_str_t), m2_el_label_fn, mn_GetFmtStr(n)) < 0 )
 	return 0;
       {
 	m2_el_str_t *el = (m2_el_str_t *)mrg_GetM2Element(n->mr_element_pos);

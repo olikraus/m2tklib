@@ -154,7 +154,11 @@ void mr_SetListElement(mr_type mr, int pos, int el_idx, void *element)
 int mr_AddStr(mr_type mr, const char *str)
 {
   int pos;
-  char *s = strdup(str);
+  char *s;
+  
+  if ( str == NULL )
+    str = "";
+  s = strdup(str);
   if ( s != NULL )
   {
     pos = b_pl_Add(mr->m2_str_pool, s);
