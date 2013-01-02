@@ -101,6 +101,7 @@ const char *mn_GetArgStrByName(mn_type n, const char *name);							/* mn_arg.c *
 void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long default_val, int is_fmt); /* mn_arg.c */
 int mn_AddArg(mn_type n, int t, const char *name, unsigned long default_val, int is_fmt); 		/* mn_arg.c */
 const char *mn_GetFmtStr(mn_type n);													/* mn_arg.c */
+const char *mn_GetRTEFmtStr(mn_type n);												/* mn_arg.c */
 
 
 /*================================================*/

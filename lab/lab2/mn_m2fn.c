@@ -105,7 +105,7 @@ int mn_BuildRTEListElement(mn_type n, m2_el_fnptr fn)
 {
     if ( mn_BuildRTEList(n) < 0 )
       return 0;
-    if ( mn_BuildRTEElement(n, sizeof(m2_el_list_t), fn, mn_GetFmtStr(n)) < 0 )
+    if ( mn_BuildRTEElement(n, sizeof(m2_el_list_t), fn, mn_GetRTEFmtStr(n)) < 0 )
       return 0;
     {
       m2_el_list_t *el = (m2_el_list_t *)mrg_GetM2Element(n->mr_element_pos);
@@ -198,7 +198,7 @@ int mn_fn_m2_label(mn_type n, int msg, void *arg)
       mn_BuildCodeStr("\");\n");
       return 1;
     case MN_MSG_RTE:
-      if ( mn_BuildRTEElement(n, sizeof(m2_el_str_t), m2_el_label_fn, mn_GetFmtStr(n)) < 0 )
+      if ( mn_BuildRTEElement(n, sizeof(m2_el_str_t), m2_el_label_fn, mn_GetRTEFmtStr(n)) < 0 )
 	return 0;
       {
 	m2_el_str_t *el = (m2_el_str_t *)mrg_GetM2Element(n->mr_element_pos);

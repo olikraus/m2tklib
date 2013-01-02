@@ -123,3 +123,22 @@ const char *mn_GetFmtStr(mn_type n)
     return "NULL";
   return buf;
 }
+
+const char *mn_GetRTEFmtStr(mn_type n)
+{
+  static char buf[1024];
+  int i;
+  strcpy(buf, "");
+  for( i = 0; i < n->arg_cnt; i++ )
+  {
+    if ( n->arg_list[i].is_fmt == 0 )
+    {
+      if ( n->arg_list[i].is_enable != 0 )
+      {
+	strcat(buf, n->arg_list[i].name);
+	sprintf(buf+strlen(buf), "%d", (int)(n->arg_list[i].user_val));
+      }
+    }
+  }
+  return buf;
+}
