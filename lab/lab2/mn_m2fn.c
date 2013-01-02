@@ -112,6 +112,15 @@ int mn_BuildRTEListElement(mn_type n, m2_el_fnptr fn)
     return 1;
 }
 
+int mn_BuildRTE(mn_type n)
+{
+  int el_pos;
+  mrg_Clear();
+  if ( n->fn(n, MN_MSG_RTE, &el_pos) == 0 )
+    return -1;
+  return el_pos;
+}
+
 
 int mn_fn_m2_base(mn_type mn, int msg, void *arg)
 {

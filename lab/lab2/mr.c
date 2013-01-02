@@ -186,6 +186,12 @@ void mrg_Destroy(void)
   mr_global = NULL;
 }
 
+void mrg_Clear(void)
+{
+  if ( mr_global != NULL )
+    mr_Clear(mr_global);
+}
+
 int mrg_AddElement(size_t size)
 {
   return mr_AddElement(mr_global, size);
@@ -214,3 +220,4 @@ const char *mrg_StoreStr(const char *s)
     return NULL;
   return mrg_GetM2Str(pos);
 }
+

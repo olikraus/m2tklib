@@ -21,8 +21,9 @@
 #
 
 M2PATH = ../../src
+TTYPATH = ../../dev/tty
 
-COMMON_INCLUDES = -I. `pkg-config --cflags gtk+-2.0` -I$(M2PATH)
+COMMON_INCLUDES = -I. `pkg-config --cflags gtk+-2.0` -I$(M2PATH) -I$(TTYPATH)
 
 COMMON_FLAGS = -g -Wall 
 COMMON_FLAGS += $(COMMON_INCLUDES)
@@ -30,7 +31,7 @@ COMMON_FLAGS += $(COMMON_INCLUDES)
 CFLAGS = $(COMMON_FLAGS) -std=gnu99
 LDLIBS = `pkg-config --cflags --libs gtk+-2.0`
 
-M2SRC = $(shell ls $(M2PATH)/*.c)
+M2SRC = $(shell ls $(M2PATH)/*.c) $(shell ls $(TTYPATH)/*.c)
 LABSRC = $(shell ls *.c)
 
 SRC = $(M2SRC) $(LABSRC)

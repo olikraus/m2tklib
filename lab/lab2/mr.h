@@ -46,6 +46,7 @@ extern mr_type mr_global;
 
 int mrg_Init(void);
 void mrg_Destroy(void);
+void mrg_Clear(void);
 
 int mrg_AddElement(size_t size);
 int mrg_AddList(int list_entries);

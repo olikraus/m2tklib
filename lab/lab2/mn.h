@@ -115,6 +115,9 @@ void mn_BuildCodeListStatement(mn_type n);				/* mn_m2code.c */
 void mn_BuildCode(mn_type n);						/* mn_m2code.c */
 
 /*================================================*/
+
+int mn_BuildRTE(mn_type n);
+
 int mn_fn_m2_vlist(mn_type mn, int msg, void *arg);
 int mn_fn_m2_label(mn_type n, int msg, void *arg);
 
