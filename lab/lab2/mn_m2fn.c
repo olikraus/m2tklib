@@ -311,3 +311,41 @@ int mn_fn_m2_u8num(mn_type n, int msg, void *arg)
   return mn_fn_m2_base(n, msg, arg);
 }
 
+/*================================================*/
+/* fn list */
+
+struct _mn_fn_struct
+{
+  int16_t code;
+  mn_fn fn;
+};
+typedef struct _mn_fn_struct mn_fn_struct;
+
+mn_fn_struct mn_fn_list[] = 
+{
+  { 1000, mn_fn_m2_vlist },
+  { 2000, mn_fn_m2_label },
+  { 2010, mn_fn_m2_root },
+  { 2020, mn_fn_m2_u8num }
+};
+
+int16_t mn_GetCodeByFn(mn_fn fn)
+{
+  int i, cnt;
+  cnt = sizeof(mn_fn_list) / sizeof(mn_fn_struct);
+  for( i = 0; i < cnt; i++ )
+    if ( mn_fn_list[i].fn == fn )
+      return mn_fn_list[i].code;
+  return -1;
+}
+
+mn_fn mn_GetFnByCode(int16_t code)
+{
+  int i, cnt;
+  cnt = sizeof(mn_fn_list) / sizeof(mn_fn_struct);
+  for( i = 0; i < cnt; i++ )
+    if ( mn_fn_list[i].code == code )
+      return mn_fn_list[i].fn;
+  return (mn_fn)0;
+}
+

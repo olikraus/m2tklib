@@ -45,7 +45,7 @@ struct _mn_arg_struct
 {
   char name[MN_ARG_NAME_LEN];
   int t;						/* Variable type: MN_ARG_T_BOOL, MN_ARG_T_U8, MN_ARG_T_STR */
-  unsigned long user_val;
+  uint32_t user_val;
   char *user_str;				/* MN_ARG_T_STR */
   mn_type user_mn;				/* MN_ARG_T_MN */
   unsigned long default_val;		/* probably obsolete */
@@ -59,7 +59,7 @@ struct _mn_struct
   mn_type d;
   mn_fn fn;
   unsigned seq_nr;
-  void *data;
+  //void *data;
   
   unsigned arg_cnt;
   mn_arg_struct *arg_list;
@@ -147,5 +147,7 @@ int mn_fn_m2_label(mn_type n, int msg, void *arg);
 int mn_fn_m2_root(mn_type n, int msg, void *arg);
 int mn_fn_m2_u8num(mn_type n, int msg, void *arg);
 
+int16_t mn_GetCodeByFn(mn_fn fn);
+mn_fn mn_GetFnByCode(int16_t code);
 
 #endif

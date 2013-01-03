@@ -22,8 +22,8 @@ int main(void)
   
   mn_SetArgStrByName(n->d, "Label", "abc");
   mn_SetArgStrByName(n->d->n, "Label", "xyz");
-  mn_SetArgStrByName(n->d->n->n, "Label", "ok");
-  mn_SetArgNodeByName(n->d->n->n, "Element",  n);
+  mn_SetArgStrByName(n->d->n->n->n, "Label", "ok");
+  mn_SetArgNodeByName(n->d->n->n->n, "Element",  n);
   
   mn_Show(n);
   mn_BuildCode(n);

@@ -17,7 +17,7 @@ mn_type mn_OpenWithFn(mn_fn fn)
     mn->n = NULL;
     mn->seq_nr = 0;
     mn->fn = fn;
-    mn->data = NULL;
+    //mn->data = NULL;
     mn->arg_cnt = 0;
     mn->arg_list = NULL;
     mn->mr_list_pos = -1;
