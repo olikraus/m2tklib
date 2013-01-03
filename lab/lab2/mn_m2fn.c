@@ -266,4 +266,48 @@ int mn_fn_m2_root(mn_type n, int msg, void *arg)
   return mn_fn_m2_base(n, msg, arg);
 }
 
+int mn_fn_m2_u8num(mn_type n, int msg, void *arg)
+{
+  static const char arg_variable[] = "Variable";
+  static const char arg_min[] = "Min";
+  static const char arg_max[] = "Max";
+  switch(msg)
+  {
+    case MN_MSG_OPEN:
+      mn_AddArg(n, MN_ARG_T_STR, arg_variable, 0, 0);
+      mn_AddArg(n, MN_ARG_T_U8, arg_min, 0, 0);
+      mn_AddArg(n, MN_ARG_T_U8, arg_max, 0, 0);
+      break;
+    case MN_MSG_GET_DISPLAY_STRING:
+      sprintf(mn_m2_buf, "U8NUM");
+      *(char **)arg = mn_m2_buf;
+      return 1;
+    case MN_MSG_C_CODE:
+      mn_BuildCodeStr("M2_U8NUM(");
+      mn_BuildCodeLabel(n);
+      mn_BuildCodeStr(", ");
+      mn_BuildCodeStr(mn_GetFmtStr(n));
+      mn_BuildCodeStr(", ");
+      mn_BuildCodeNum(mn_GetArgU8ByName(n, arg_min));
+      mn_BuildCodeStr(", ");
+      mn_BuildCodeNum(mn_GetArgU8ByName(n, arg_max));
+      mn_BuildCodeStr(", &");
+      mn_BuildCodeStr(mn_GetArgStrByName(n, arg_variable));
+      mn_BuildCodeStr(");\n");
+      return 1;
+    case MN_MSG_RTE:
+      if ( mn_BuildRTEElement(n, sizeof(m2_el_u8_ptr_t), m2_el_u8num_fn, mn_GetRTEFmtStr(n)) < 0 )
+	return 0;
+      {
+	m2_el_u8_ptr_t *el = (m2_el_u8_ptr_t *)mrg_GetM2Element(n->mr_element_pos);
+	el->u8.min = mn_GetArgU8ByName(n, arg_min);
+	el->u8.max = mn_GetArgU8ByName(n, arg_max);
+	el->val = mrg_AddU8();
+	if ( el->val != NULL )
+	  *(el->val) = 0;
+      }      
+      return 1;
+  }
+  return mn_fn_m2_base(n, msg, arg);
+}
 

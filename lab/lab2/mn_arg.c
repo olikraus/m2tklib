@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include "mn.h"
 
+/*===============================================================*/
+/* add/init arg */
+
 void mn_arg_init(mn_arg_struct *a)
 {
   a->name[0] = '\0';
@@ -55,6 +58,35 @@ int mn_AddArgPlain(mn_type n)
   return n->arg_cnt - 1;
 }
 
+void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long default_val, int is_fmt)
+{
+  strncpy(n->arg_list[pos].name, name, MN_ARG_NAME_LEN);
+  n->arg_list[pos].name[MN_ARG_NAME_LEN-1] = '\0';	
+  n->arg_list[pos].user_val = default_val;
+  n->arg_list[pos].user_str = NULL;
+  n->arg_list[pos].default_val = default_val;
+  n->arg_list[pos].is_enable = 0;
+  n->arg_list[pos].is_fmt = is_fmt;
+  n->arg_list[pos].t = t;
+}
+
+/*
+  name: The short name for the argument, a signle char for options of the format string
+*/
+int mn_AddArg(mn_type n, int t, const char *name, unsigned long default_val, int is_fmt)
+{
+  int pos;
+  pos = mn_AddArgPlain(n);
+  if ( pos < 0 )
+    return pos;
+  mn_SetArg(n, pos, t, name, default_val, is_fmt);
+  return pos;
+}
+
+/*===============================================================*/
+/* generic find */
+
+
 int mn_FindArgByName(mn_type n, const char *name)
 {
   int pos;
@@ -66,15 +98,8 @@ int mn_FindArgByName(mn_type n, const char *name)
   return -1;
 }
 
-const char *mn_GetArgStrByName(mn_type n, const char *name)
-{
-  int pos = mn_FindArgByName(n, name);
-  if ( pos < 0 )
-    return NULL;
-  if ( n->arg_list[pos].t != MN_ARG_T_STR )
-    return NULL;
-  return n->arg_list[pos].user_str;
-}
+/*===============================================================*/
+/* MN_ARG_T_STR */
 
 int mn_SetArgStr(mn_type n, int pos, const char *str)
 {
@@ -101,15 +126,18 @@ int mn_SetArgStrByName(mn_type n, const char *name, const char *str)
   return mn_SetArgStr(n, pos, str);  
 }
 
-mn_type mn_GetArgNodeByName(mn_type n, const char *name)
+const char *mn_GetArgStrByName(mn_type n, const char *name)
 {
   int pos = mn_FindArgByName(n, name);
   if ( pos < 0 )
     return NULL;
-  if ( n->arg_list[pos].t != MN_ARG_T_MN )
+  if ( n->arg_list[pos].t != MN_ARG_T_STR )
     return NULL;
-  return n->arg_list[pos].user_mn;
+  return n->arg_list[pos].user_str;
 }
+
+/*===============================================================*/
+/* MN_ARG_T_MN */
 
 int mn_SetArgNode(mn_type n, int pos, mn_type ref)
 {
@@ -127,31 +155,48 @@ int mn_SetArgNodeByName(mn_type n, const char *name, mn_type ref)
   return mn_SetArgNode(n, pos, ref);
 }
 
-void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long default_val, int is_fmt)
+mn_type mn_GetArgNodeByName(mn_type n, const char *name)
 {
-  strncpy(n->arg_list[pos].name, name, MN_ARG_NAME_LEN);
-  n->arg_list[pos].name[MN_ARG_NAME_LEN-1] = '\0';	
-  n->arg_list[pos].user_val = default_val;
-  n->arg_list[pos].user_str = NULL;
-  n->arg_list[pos].default_val = default_val;
-  n->arg_list[pos].is_enable = 0;
-  n->arg_list[pos].is_fmt = is_fmt;
-  n->arg_list[pos].t = t;
-}
-
-/*
-  name: The short name for the argument, a signle char for options of the format string
-*/
-int mn_AddArg(mn_type n, int t, const char *name, unsigned long default_val, int is_fmt)
-{
-  int pos;
-  pos = mn_AddArgPlain(n);
+  int pos = mn_FindArgByName(n, name);
   if ( pos < 0 )
-    return pos;
-  mn_SetArg(n, pos, t, name, default_val, is_fmt);
-  return pos;
+    return NULL;
+  if ( n->arg_list[pos].t != MN_ARG_T_MN )
+    return NULL;
+  return n->arg_list[pos].user_mn;
 }
 
+/*===============================================================*/
+/* MN_ARG_T_U8 */
+
+int mn_SetArgU8(mn_type n, int pos, uint8_t u8)
+{
+  if ( n->arg_list[pos].t != MN_ARG_T_U8 )
+    return 0;
+  n->arg_list[pos].user_val = u8;
+  return 1;
+}
+
+int mn_SetArgU8ByName(mn_type n, const char *name, uint8_t u8)
+{
+  int pos = mn_FindArgByName(n, name);
+  if ( pos < 0 )
+    return 0;
+  return mn_SetArgU8(n, pos, u8);
+}
+
+uint8_t mn_GetArgU8ByName(mn_type n, const char *name)
+{
+  int pos = mn_FindArgByName(n, name);
+  if ( pos < 0 )
+    return 0;
+  if ( n->arg_list[pos].t != MN_ARG_T_U8 )
+    return 0;
+  return n->arg_list[pos].user_val;
+}
+
+
+/*===============================================================*/
+/* build m2 format string */
 const char *mn_GetFmtStr(mn_type n)
 {
   static char buf[1024];

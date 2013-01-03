@@ -18,6 +18,13 @@ void mn_BuildCodeStr(const char *s)
   printf("%s", s);
 }
 
+void mn_BuildCodeNum(uint32_t v)
+{
+  static char buf[32];
+  sprintf(buf, "%lu", (unsigned long int)v);
+  mn_BuildCodeStr(buf);
+}
+
 void mn_BuildCodeLabel(mn_type n)
 {
   mn_BuildCodeStr(mn_GetLabelString(n));  

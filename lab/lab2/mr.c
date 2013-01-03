@@ -34,6 +34,7 @@ mr_type mr_Open(void)
 	mr->m2_str_pool = b_pl_Open();
 	if ( mr->m2_str_pool != NULL )
 	{
+	  mr->u8_list = NULL;
 	  return mr;
 	}
 	b_pl_Close(mr->m2_list_list);
@@ -77,6 +78,11 @@ void mr_Clear(mr_type mr)
     }
   }
   b_pl_Clear(mr->m2_str_pool);
+  
+  if ( mr->u8_list != NULL )
+    free(mr->u8_list);
+  mr->u8_list = NULL;
+  mr->u8_cnt = 0;
 }
 
 void mr_Close(mr_type mr)
@@ -172,6 +178,30 @@ int mr_AddStr(mr_type mr, const char *str)
 }
 
 /*================================================================*/
+/* u8 */
+
+uint8_t *mr_AddU8(mr_type mr)
+{
+  if ( mr->u8_list == NULL )
+  {
+    mr->u8_list = (uint8_t *)malloc(sizeof(uint8_t) * 1);
+    mr->u8_cnt = 1;
+  }
+  else
+  {
+    void *ptr;
+    ptr = realloc(mr->u8_list, mr->u8_cnt+1);
+    if ( ptr == NULL )
+      return NULL;
+    mr->u8_list = (uint8_t *)ptr;
+    mr->u8_cnt++;    
+  }
+  mr->u8_list[mr->u8_cnt-1] = 0;
+  return &(mr->u8_list[mr->u8_cnt-1]);
+}
+
+
+/*================================================================*/
 /* mr global API */
 
 int mrg_Init(void)
@@ -223,5 +253,10 @@ const char *mrg_StoreStr(const char *s)
   if ( pos < 0 )
     return NULL;
   return mrg_GetM2Str(pos);
+}
+
+uint8_t *mrg_AddU8(void)
+{
+  return mr_AddU8(mr_global);
 }
 

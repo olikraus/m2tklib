@@ -17,6 +17,7 @@ int main(void)
   n = mn_OpenWithFn(mn_fn_m2_vlist);
   mn_AppendSubtree(n, mn_OpenWithFn(mn_fn_m2_label));
   mn_AppendSubtree(n, mn_OpenWithFn(mn_fn_m2_label));
+  mn_AppendSubtree(n, mn_OpenWithFn(mn_fn_m2_u8num));
   mn_AppendSubtree(n, mn_OpenWithFn(mn_fn_m2_root));
   
   mn_SetArgStrByName(n->d, "Label", "abc");

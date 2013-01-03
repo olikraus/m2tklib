@@ -9,6 +9,8 @@
 #ifndef _MN_H
 #define _MN_H
 
+#include <stdint.h>
+
 typedef struct _mn_struct *mn_type;
 typedef struct _mn_arg_struct mn_arg_struct;
 typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
@@ -101,17 +103,23 @@ void mn_Show(mn_type n);							/* mn_show.c */
 
 
 int mn_FindArgByName(mn_type n, const char *name);										/* mn_arg.c */
-const char *mn_GetArgStrByName(mn_type n, const char *name);							/* mn_arg.c */
 
 void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long default_val, int is_fmt); /* mn_arg.c */
 int mn_AddArg(mn_type n, int t, const char *name, unsigned long default_val, int is_fmt); 		/* mn_arg.c */
 const char *mn_GetFmtStr(mn_type n);													/* mn_arg.c */
 const char *mn_GetRTEFmtStr(mn_type n);												/* mn_arg.c */
+
 int mn_SetArgStr(mn_type n, int pos, const char *str);										/* mn_arg.c */
 int mn_SetArgStrByName(mn_type n, const char *name, const char *str);						/* mn_arg.c */
-mn_type mn_GetArgNodeByName(mn_type n, const char *name);								/* mn_arg.c */
+const char *mn_GetArgStrByName(mn_type n, const char *name);							/* mn_arg.c */
+
 int mn_SetArgNode(mn_type n, int pos, mn_type ref);										/* mn_arg.c */
 int mn_SetArgNodeByName(mn_type n, const char *name, mn_type ref);						/* mn_arg.c */
+mn_type mn_GetArgNodeByName(mn_type n, const char *name);								/* mn_arg.c */
+
+int mn_SetArgU8(mn_type n, int pos, uint8_t u8);											/* mn_arg.c */
+int mn_SetArgU8ByName(mn_type n, const char *name, uint8_t u8);							/* mn_arg.c */
+uint8_t mn_GetArgU8ByName(mn_type n, const char *name);								/* mn_arg.c */
 
 
 /*================================================*/
@@ -120,6 +128,7 @@ int mn_fn_empty(mn_type mn, int msg, void *arg);		/* mn_fn.c */
 const char *mn_GetLabelString(mn_type mn);			/* mn_fn.c */
 
 void mn_BuildCodeStr(const char *s);					/* mn_m2code.c */
+void mn_BuildCodeNum(uint32_t v);					/* mn_m2code.c */
 void mn_BuildCodeLabel(mn_type n);					/* mn_m2code.c */
 void mn_BuildCodeListLabel(mn_type n);					/* mn_m2code.c */
 void mn_BuildCodeListStatement(mn_type n);				/* mn_m2code.c */
@@ -136,6 +145,7 @@ void mn_BuildRTEPost(mn_type n);
 int mn_fn_m2_vlist(mn_type mn, int msg, void *arg);
 int mn_fn_m2_label(mn_type n, int msg, void *arg);
 int mn_fn_m2_root(mn_type n, int msg, void *arg);
+int mn_fn_m2_u8num(mn_type n, int msg, void *arg);
 
 
 #endif
