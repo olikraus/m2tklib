@@ -117,11 +117,19 @@ int mn_BuildRTEListElement(mn_type n, m2_el_fnptr fn)
 
 int mn_BuildRTE(mn_type n)
 {
-  int el_pos;
   mrg_Clear();
   if ( n->fn(n, MN_MSG_RTE, NULL) == 0 )
     return -1;
   return n->mr_element_pos;
+}
+
+void mn_BuildRTEPost(mn_type n)
+{
+  if ( n != NULL )
+    return;
+  n->fn(n, MN_MSG_RTE_POST, NULL);
+  mn_BuildRTEPost(n->d);
+  mn_BuildRTEPost(n->n);
 }
 
 
@@ -178,11 +186,11 @@ int mn_fn_m2_vlist(mn_type n, int msg, void *arg)
 
 int mn_fn_m2_label(mn_type n, int msg, void *arg)
 {
-  static const char arg_name[] = "Label";
+  static const char arg_label[] = "Label";
   switch(msg)
   {
     case MN_MSG_OPEN:
-      mn_AddArg(n, MN_ARG_T_STR, arg_name, 0, 0);
+      mn_AddArg(n, MN_ARG_T_STR, arg_label, 0, 0);
       break;
     case MN_MSG_GET_DISPLAY_STRING:
       sprintf(mn_m2_buf, "LABEL");
@@ -194,7 +202,7 @@ int mn_fn_m2_label(mn_type n, int msg, void *arg)
       mn_BuildCodeStr(", ");
       mn_BuildCodeStr(mn_GetFmtStr(n));
       mn_BuildCodeStr(", \"");
-      mn_BuildCodeStr(mn_GetArgStrByName(n, arg_name));
+      mn_BuildCodeStr(mn_GetArgStrByName(n, arg_label));
       mn_BuildCodeStr("\");\n");
       return 1;
     case MN_MSG_RTE:
@@ -202,12 +210,60 @@ int mn_fn_m2_label(mn_type n, int msg, void *arg)
 	return 0;
       {
 	m2_el_str_t *el = (m2_el_str_t *)mrg_GetM2Element(n->mr_element_pos);
-	el->str = mrg_StoreStr(mn_GetArgStrByName(n, arg_name));
+	el->str = mrg_StoreStr(mn_GetArgStrByName(n, arg_label));
       }      
       return 1;
   }
   return mn_fn_m2_base(n, msg, arg);
 }
 
+int mn_fn_m2_root(mn_type n, int msg, void *arg)
+{
+  static const char arg_label[] = "Label";
+  static const char arg_element[] = "Element";
+  switch(msg)
+  {
+    case MN_MSG_OPEN:
+      mn_AddArg(n, MN_ARG_T_STR, arg_label, 0, 0);
+      mn_AddArg(n, MN_ARG_T_MN, arg_element, 0, 0);
+      break;
+    case MN_MSG_GET_DISPLAY_STRING:
+      sprintf(mn_m2_buf, "ROOT");
+      *(char **)arg = mn_m2_buf;
+      return 1;
+    case MN_MSG_C_CODE:
+      mn_BuildCodeStr("M2_ROOT(");
+      mn_BuildCodeLabel(n);
+      mn_BuildCodeStr(", ");
+      mn_BuildCodeStr(mn_GetFmtStr(n));
+      mn_BuildCodeStr(", \"");
+      mn_BuildCodeStr(mn_GetArgStrByName(n, arg_label));
+      mn_BuildCodeStr("\", &");
+      mn_BuildCodeLabel(mn_GetArgNodeByName(n, arg_element));
+      mn_BuildCodeStr(");\n");
+      return 1;
+    case MN_MSG_RTE:
+      if ( mn_BuildRTEElement(n, sizeof(m2_el_root_t), m2_el_root_fn, mn_GetRTEFmtStr(n)) < 0 )
+	return 0;
+      {
+	m2_el_root_t *el = (m2_el_root_t *)mrg_GetM2Element(n->mr_element_pos);
+	el->el_str.str = mrg_StoreStr(mn_GetArgStrByName(n, arg_label));
+	el->element = NULL;
+      }      
+      return 1;
+    case MN_MSG_RTE_POST:
+      if ( n->mr_element_pos >= 0 )
+      {
+	mn_type ref;
+	m2_el_root_t *el = (m2_el_root_t *)mrg_GetM2Element(n->mr_element_pos);
+	ref = mn_GetArgNodeByName(n, arg_element); 
+	if ( ref != NULL )
+	  el->element = mrg_GetM2Element(ref->mr_element_pos);
+      }  
+      
+      return 1;
+  }
+  return mn_fn_m2_base(n, msg, arg);
+}
 
 

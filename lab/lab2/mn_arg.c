@@ -76,6 +76,56 @@ const char *mn_GetArgStrByName(mn_type n, const char *name)
   return n->arg_list[pos].user_str;
 }
 
+int mn_SetArgStr(mn_type n, int pos, const char *str)
+{
+  if ( n->arg_list[pos].t != MN_ARG_T_STR )
+    return 0;
+  if ( n->arg_list[pos].user_str != NULL )
+    free(n->arg_list[pos].user_str);
+  if ( str == NULL )
+    n->arg_list[pos].user_str = NULL;
+  else
+  {
+    n->arg_list[pos].user_str = strdup(str);
+    if ( n->arg_list[pos].user_str == NULL )
+      return 0;
+  }
+  return 1;
+}
+
+int mn_SetArgStrByName(mn_type n, const char *name, const char *str)
+{
+  int pos = mn_FindArgByName(n, name);
+  if ( pos < 0 )
+    return 0;
+  return mn_SetArgStr(n, pos, str);  
+}
+
+mn_type mn_GetArgNodeByName(mn_type n, const char *name)
+{
+  int pos = mn_FindArgByName(n, name);
+  if ( pos < 0 )
+    return NULL;
+  if ( n->arg_list[pos].t != MN_ARG_T_MN )
+    return NULL;
+  return n->arg_list[pos].user_mn;
+}
+
+int mn_SetArgNode(mn_type n, int pos, mn_type ref)
+{
+  if ( n->arg_list[pos].t != MN_ARG_T_MN )
+    return 0;
+  n->arg_list[pos].user_mn = ref;
+  return 1;
+}
+
+int mn_SetArgNodeByName(mn_type n, const char *name, mn_type ref)
+{
+  int pos = mn_FindArgByName(n, name);
+  if ( pos < 0 )
+    return 0;
+  return mn_SetArgNode(n, pos, ref);
+}
 
 void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long default_val, int is_fmt)
 {

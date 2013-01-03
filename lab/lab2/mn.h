@@ -28,19 +28,24 @@ typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
 /* arg: not used, n->mr_element_pos must be updated correctly */
 #define MN_MSG_RTE 7
 
+/* resolve RTE references (e.g. for M2_ROOT) */
+#define MN_MSG_RTE_POST 8
+
 /* must return 2 for a value M2 element (note: 1 is default) */
-#define MN_MSG_IS_M2_ELEMENT 8
+#define MN_MSG_IS_M2_ELEMENT 9
 
 #define MN_ARG_NAME_LEN 64
 #define MN_ARG_T_BOOL 0
 #define MN_ARG_T_U8 1
 #define MN_ARG_T_STR 2
+#define MN_ARG_T_MN 3
 struct _mn_arg_struct
 {
   char name[MN_ARG_NAME_LEN];
   int t;						/* Variable type: MN_ARG_T_BOOL, MN_ARG_T_U8, MN_ARG_T_STR */
   unsigned long user_val;
-  char *user_str;
+  char *user_str;				/* MN_ARG_T_STR */
+  mn_type user_mn;				/* MN_ARG_T_MN */
   unsigned long default_val;		/* probably obsolete */
   unsigned int is_fmt:1;
   unsigned int is_enable:1;		/* used only if is_fmt != 0 */
@@ -102,6 +107,11 @@ void mn_SetArg(mn_type n, int pos, int t, const char *name, unsigned long defaul
 int mn_AddArg(mn_type n, int t, const char *name, unsigned long default_val, int is_fmt); 		/* mn_arg.c */
 const char *mn_GetFmtStr(mn_type n);													/* mn_arg.c */
 const char *mn_GetRTEFmtStr(mn_type n);												/* mn_arg.c */
+int mn_SetArgStr(mn_type n, int pos, const char *str);										/* mn_arg.c */
+int mn_SetArgStrByName(mn_type n, const char *name, const char *str);						/* mn_arg.c */
+mn_type mn_GetArgNodeByName(mn_type n, const char *name);								/* mn_arg.c */
+int mn_SetArgNode(mn_type n, int pos, mn_type ref);										/* mn_arg.c */
+int mn_SetArgNodeByName(mn_type n, const char *name, mn_type ref);						/* mn_arg.c */
 
 
 /*================================================*/
@@ -117,10 +127,15 @@ void mn_BuildCode(mn_type n);						/* mn_m2code.c */
 
 /*================================================*/
 
+/* build dynamic elements for the m2 runtime environment */
 int mn_BuildRTE(mn_type n);
+
+/* resolve references */
+void mn_BuildRTEPost(mn_type n);
 
 int mn_fn_m2_vlist(mn_type mn, int msg, void *arg);
 int mn_fn_m2_label(mn_type n, int msg, void *arg);
+int mn_fn_m2_root(mn_type n, int msg, void *arg);
 
 
 #endif
