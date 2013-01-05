@@ -257,6 +257,8 @@ void m2_check_xy(m2_pos_p pos)
   uint8_t x = m2_check_x;
   uint8_t y = m2_check_y;
   uint16_t p;
+  uint8_t ro_flag;
+  uint8_t t_flag;
   
   /* box is now pos->x, pos->y, w, h; pos->x,pos->y is lower left edge */
   
@@ -272,9 +274,28 @@ void m2_check_xy(m2_pos_p pos)
     return;
   if ( y > h )
     return;
+
+  /* check for read only flag */
+  ro_flag = 0;
+  m2_fn_arg_set_element(element);
+  m2_fn_arg_set_arg_data('r', &ro_flag);
+  m2_fn_arg_call(M2_EL_MSG_GET_OPT);
+
+  /* check for touch screen flag flag */
+  t_flag = 0;
+  m2_fn_arg_set_element(element);
+  m2_fn_arg_set_arg_data('t', &t_flag);
+  m2_fn_arg_call(M2_EL_MSG_GET_OPT);
+
+    printf("check: element %p ro %d t %d\n", element, ro_flag, t_flag);
+
+  if ( ro_flag != 0 )
+    return;  /* read only flag is set */
+
+  if ( t_flag == 0 )
+    return;  /* touch screen flag is NOT set, so ignore this element */
   
   p = w*h;
-  // printf("check: %d %d\n", m2_check_result_min_wh_product, p);
   if ( m2_check_result_min_wh_product >= p )
   {
     m2_check_result_min_wh_product = p;

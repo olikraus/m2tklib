@@ -1760,7 +1760,7 @@ int main(void)
       if ( is_motion )
       {
 	u8g_SetCursorPos(&u8g, mouse_x, 63-mouse_y);
-	// printf("%p\n", m2_FindByXY(mouse_x, mouse_y, 0, 0));
+	m2_FindByXY(mouse_x, mouse_y, 0, 0);
       }
       is_motion = 0;
       u8g_FirstPage(&u8g);
