@@ -27,7 +27,7 @@
 
 #define M2_DEBOUNCE_CNT 3
 
-uint8_t m2_GetKeyFromQueue(m2_p m2)
+uint8_t m2_GetKeyFromQueue(m2_p m2, uint8_t *arg1, uint8_t *arg2)
 {
   uint8_t key;
   if ( m2->key_queue_len == 0 )
@@ -40,6 +40,11 @@ uint8_t m2_GetKeyFromQueue(m2_p m2)
 #endif
 
     key = m2->key_queue_array[m2->key_queue_pos];
+    if ( arg1 != NULL )
+      *arg1 = m2->key_queue_arg1[m2->key_queue_pos];
+    if ( arg2 != NULL )
+      *arg2 = m2->key_queue_arg2[m2->key_queue_pos];    
+    
     m2->key_queue_pos++;
     m2->key_queue_pos &= (M2_KEY_QUEUE_LEN-1);
     m2->key_queue_len--;
@@ -51,7 +56,7 @@ uint8_t m2_GetKeyFromQueue(m2_p m2)
   return key;
 }
 
-void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
+void m2_PutKeyIntoQueueWithArgs(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2)
 {
   uint8_t pos;
   
@@ -68,6 +73,8 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
     pos += m2->key_queue_len;
     pos &= (M2_KEY_QUEUE_LEN-1);
     m2->key_queue_array[pos] = key_code;
+    m2->key_queue_arg1[pos] = arg1;
+    m2->key_queue_arg2[pos] = arg2;
     
     if ( m2->key_queue_len >= M2_KEY_QUEUE_LEN ) 
       m2->key_queue_pos++;
@@ -80,6 +87,10 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
   }
 }
 
+void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
+{
+  m2_PutKeyIntoQueueWithArgs(m2, key_code, 0, 0);
+}
 
 /*
   debounce key and put key into queue

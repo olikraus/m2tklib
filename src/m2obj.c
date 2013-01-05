@@ -143,7 +143,7 @@ static uint8_t m2_check_and_assign_new_root(m2_p m2)
 uint8_t m2_HandleKeyM2(m2_p m2)
 {
   uint8_t is_redraw_required = 0;
-  uint8_t key;
+  uint8_t key, arg1, arg2;
   
   if ( m2_check_and_assign_new_root(m2) != 0 ) 		/* m2navroot.c */
     return 1;	/* break and let redraw */
@@ -157,7 +157,7 @@ uint8_t m2_HandleKeyM2(m2_p m2)
     if ( m2_check_and_assign_new_root(m2) != 0 )		/* m2navroot.c */
       return 1;	/* break and let redraw */
 
-    key = m2_GetKeyFromQueue(m2);
+    key = m2_GetKeyFromQueue(m2, &arg1, &arg2);
     
     /* if there are no more keys, break out of the loop */
     if ( key == M2_KEY_NONE )

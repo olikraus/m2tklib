@@ -84,7 +84,7 @@ void m2_SetKey(uint8_t key)
 // Usually you do not want to call this, use m2_HandleKey() instead 
 uint8_t m2_GetKey(void)
 {
-  return m2_GetKeyFromQueue(&m2_global_object);
+  return m2_GetKeyFromQueue(&m2_global_object, NULL, NULL);
 }
 
 void m2_InitEventSource(void)

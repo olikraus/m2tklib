@@ -287,7 +287,7 @@ void m2_check_xy(m2_pos_p pos)
   m2_fn_arg_set_arg_data('t', &t_flag);
   m2_fn_arg_call(M2_EL_MSG_GET_OPT);
 
-    printf("check: element %p ro %d t %d\n", element, ro_flag, t_flag);
+  // printf("check: element %p ro %d t %d\n", element, ro_flag, t_flag);
 
   if ( ro_flag != 0 )
     return;  /* read only flag is set */

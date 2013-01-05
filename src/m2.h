@@ -387,7 +387,8 @@ uint8_t m2_opt_get_val_any_default(m2_rom_char_p str, char cmd, uint8_t default_
 
 
 /*==============================================================*/
-uint8_t m2_GetKeyFromQueue(m2_p m2);														/* m2key.c */
+uint8_t m2_GetKeyFromQueue(m2_p m2, uint8_t *arg1, uint8_t *arg2);									/* m2key.c */
+void m2_PutKeyIntoQueueWithArgs(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2) M2_NOINLINE;		/* m2key.c */
 void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code);												/* m2key.c */
 void m2_SetDetectedKey(m2_p m2, uint8_t key_code);												/* m2key.c */
 
@@ -997,6 +998,8 @@ struct _m2_struct
   
   /* key queue */
   uint8_t key_queue_array[M2_KEY_QUEUE_LEN];
+  uint8_t key_queue_arg1[M2_KEY_QUEUE_LEN];
+  uint8_t key_queue_arg2[M2_KEY_QUEUE_LEN];
   uint8_t key_queue_pos;
   uint8_t key_queue_len;
   
