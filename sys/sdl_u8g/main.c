@@ -16,6 +16,9 @@
 int u8g_sdl_get_key(void);
 void screenshot(void);
 void screenshot100(void);
+int mouse_x;
+int mouse_y;
+int is_motion = 0;
 
 /* 
   event source for SDL
@@ -38,6 +41,12 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 	        case SDL_QUIT:
 		        exit(0);
 		        break;
+		case SDL_MOUSEMOTION:
+			mouse_x = event.motion.x/2;
+			mouse_y = 63 - event.motion.y/2;
+			is_motion = 1;
+			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
+			break;
 	        case SDL_KEYDOWN:
 		        switch( event.key.keysym.sym )
 		        {
@@ -1715,6 +1724,10 @@ int main(void)
   
   /* 1. Setup and create device access */
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
+  u8g_SetCursorFont(&u8g, u8g_font_cursor);
+  u8g_SetCursorColor(&u8g, 1, 0);
+  u8g_SetCursorStyle(&u8g, 66);
+  u8g_EnableCursor(&u8g);
   
   /* 2. Now, setup m2 */
   m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
@@ -1734,6 +1747,7 @@ int main(void)
   // m2_SetU8gAdditionalReadOnlyXBorder(0);  
   /* set the font for the multi selection */
   m2_SetFont(3, (const void *)u8g_font_m2icon_7);
+  
 
   mas_Init(mas_device_sim, 0);
 
@@ -1742,7 +1756,13 @@ int main(void)
   for(;;)
   {
     m2_CheckKey();
-    if ( m2_HandleKey() ) {
+    if ( m2_HandleKey() || is_motion) {
+      if ( is_motion )
+      {
+	u8g_SetCursorPos(&u8g, mouse_x, 63-mouse_y);
+	// printf("%p\n", m2_FindByXY(mouse_x, mouse_y, 0, 0));
+      }
+      is_motion = 0;
       u8g_FirstPage(&u8g);
       do{
         //u8g_SetFont(&u8g, u8g_font_unifont);

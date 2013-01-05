@@ -212,3 +212,169 @@ void m2_DrawM2(m2_p ep)
   m2_gfx_end();
 }
 
+/*=========================================================================*/
+/* find element which covers x/y */
+
+uint8_t m2_check_x;
+uint8_t m2_check_y;
+
+uint16_t m2_check_result_min_wh_product;
+m2_rom_void_p m2_check_result_element; 
+uint8_t m2_check_result_x;
+uint8_t m2_check_result_y;
+uint8_t m2_check_result_w;
+uint8_t m2_check_result_h;
+uint8_t m2_check_action_copy_focus;
+
+void m2_nav_copy_element_stack(m2_nav_p dest, m2_nav_p src)
+{
+  uint8_t i;
+  for( i = 0; i < M2_DEPTH_MAX; i++)
+  {
+    dest->pos[i] = src->pos[i];
+    dest->element_list[i] = src->element_list[i];
+  }
+  dest->depth = src->depth;
+}
+
+static uint8_t m2_check_fn_get_wh(m2_rom_void_p element, uint8_t msg) M2_NOINLINE;
+
+static uint8_t m2_check_fn_get_wh(m2_rom_void_p element, uint8_t msg)
+{
+  m2_el_fnarg_t arg;
+  arg.msg = msg;
+  arg.element = element;
+  arg.nav = &m2_draw_current;
+  return m2_rom_get_el_fnptr(arg.element)(&arg);
+}
+
+
+void m2_check_xy(m2_pos_p pos)
+{
+  m2_rom_void_p element = m2_nav_get_current_element(&m2_draw_current);
+  uint8_t w = m2_check_fn_get_wh(element, M2_EL_MSG_GET_WIDTH);
+  uint8_t h = m2_check_fn_get_wh(element, M2_EL_MSG_GET_HEIGHT);
+  uint8_t x = m2_check_x;
+  uint8_t y = m2_check_y;
+  uint16_t p;
+  
+  /* box is now pos->x, pos->y, w, h; pos->x,pos->y is lower left edge */
+  
+  if ( x < pos->x )
+    return;
+  if ( y < pos->y )
+    return;
+  
+  x -= pos->x;
+  y -= pos->y;
+
+  if ( x > w )
+    return;
+  if ( y > h )
+    return;
+  
+  p = w*h;
+  // printf("check: %d %d\n", m2_check_result_min_wh_product, p);
+  if ( m2_check_result_min_wh_product >= p )
+  {
+    m2_check_result_min_wh_product = p;
+    m2_check_result_element = element;
+    m2_nav_copy_element_stack(m2_draw_focus, &m2_draw_current);
+  }
+}
+
+
+void m2_find_by_xy_sub(m2_pos_p box)
+{
+  m2_pcbox_t pcbox;
+  pcbox.p = *box;
+  uint8_t draw_without_focus = 0;
+  uint8_t is_focus = 0;
+  uint8_t is_auto_skip = 0;
+  
+    /* try to go down, if there are children */
+    if ( m2_nav_down(&m2_draw_current, 0) != 0 )
+    {
+      
+      for(;;)
+      {
+
+	/* request child position from the parent */
+	m2_nav_prepare_fn_arg_parent_element(&m2_draw_current);
+	m2_fn_arg_set_arg_data(m2_draw_current.pos[m2_draw_current.depth-2], &pcbox);
+	
+	/* position and size (?) are available in pcbox */
+	
+	if ( m2_fn_arg_call(M2_EL_MSG_GET_LIST_BOX) )
+	{
+	  
+	  /* request down flag from the child */
+	  m2_fn_arg_set_element(m2_nav_get_current_element(&m2_draw_current));
+	  m2_fn_arg_set_arg_data('d', &draw_without_focus);
+	  m2_fn_arg_call(M2_EL_MSG_GET_OPT);
+
+	  /* request auto down from child */
+	  is_auto_skip = m2_fn_arg_call(M2_EL_MSG_IS_AUTO_SKIP);
+	  
+	  is_focus = 0;
+	  if ( m2_draw_current.depth <= m2_draw_focus->depth )
+	    if ( m2_draw_current.pos[m2_draw_current.depth-2]  == m2_draw_focus->pos[m2_draw_current.depth-2] )
+	      is_focus = 1;
+
+	  m2_check_xy(&(pcbox.c));
+	  
+	    
+	  if ( (draw_without_focus == 1) || is_focus != 0 || is_auto_skip != 0 )
+	  {
+	    m2_find_by_xy_sub(&(pcbox.c));
+	  }
+	  
+	} /* M2_EL_MSG_GET_LIST_BOX successfull */
+        if ( m2_nav_next(&m2_draw_current) == 0 )
+          break;
+        
+      } /* for(;;) */
+      
+      
+      /* go up one level */
+      m2_nav_up(&m2_draw_current);
+    }
+}
+
+static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8_t is_send_select)
+{
+  m2_pos_t box;
+  
+  m2_draw_focus = nav;
+
+  m2_check_x = x;
+  m2_check_y = y;
+
+  m2_check_result_min_wh_product = 0x0ffff;
+  m2_check_result_element = NULL; 
+  m2_check_result_x=255;
+  m2_check_result_y=255;
+  m2_check_result_w=0;
+  m2_check_result_h=0;
+  m2_check_action_copy_focus = 1;
+
+  
+  box.x = 0;
+  box.y = 0;
+  
+  if ( nav->depth <= 0 )
+    return NULL;
+  
+  m2_draw_current.element_list[0] = nav->element_list[0];
+  m2_draw_current.depth = 1;
+  m2_check_xy(&box);
+  m2_find_by_xy_sub(&box);
+  
+  return m2_check_result_element;
+}
+
+m2_rom_void_p m2_FindByXYM2(m2_p ep, uint8_t x, uint8_t y, uint8_t is_change_focus, uint8_t is_send_select)
+{
+  return m2_nav_find_by_xy(m2_get_nav(ep), x, y, is_send_select);
+}
+

@@ -65,6 +65,11 @@ void m2_Draw(void)
   m2_DrawM2(&m2_global_object);
 }
 
+m2_rom_void_p m2_FindByXY(uint8_t x, uint8_t y, uint8_t is_change_focus, uint8_t is_send_select)
+{
+  return m2_FindByXYM2(&m2_global_object, x, y, is_change_focus, is_send_select);
+}
+
 void m2_SetFont(uint8_t font_idx, const void *font_ptr)
 {
   m2_SetFontM2(&m2_global_object, font_idx, font_ptr);

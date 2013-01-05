@@ -175,6 +175,7 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
 void m2_CheckKeyM2(m2_p m2) M2_NOINLINE;
 uint8_t m2_HandleKeyM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
 void m2_DrawM2(m2_p m2) M2_NOINLINE;													/* m2draw.c */
+m2_rom_void_p m2_FindByXYM2(m2_p ep, uint8_t x, uint8_t y, uint8_t is_change_focus, uint8_t is_send_select);	/* m2draw.c */
 void m2_SetFontM2(m2_p m2, uint8_t font_idx, const void *font_ptr) M2_NOINLINE;					/* m2obj.c */
 void m2_SetEventSourceHandlerM2(m2_p m2, m2_es_fnptr es) M2_NOINLINE;						/* m2obj.c */
 void m2_SetRootM2(m2_p m2, m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value) M2_NOINLINE;								/* m2obj.c */
@@ -190,6 +191,7 @@ void m2_Init(m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr
 void m2_CheckKey(void);
 uint8_t m2_HandleKey(void);
 void m2_Draw(void);
+m2_rom_void_p m2_FindByXY(uint8_t x, uint8_t y, uint8_t is_change_focus, uint8_t is_send_select);
 void m2_SetKey(uint8_t key);
 uint8_t m2_GetKey(void);                /* usually you do not want to use this function, use m2_HandleKey() instead, see the tutorials */
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
