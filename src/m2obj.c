@@ -145,6 +145,9 @@ uint8_t m2_HandleKeyM2(m2_p m2)
   uint8_t is_redraw_required = 0;
   uint8_t key, arg1, arg2;
   
+  arg1 = 0;
+  arg2 = 0;
+  
   if ( m2_check_and_assign_new_root(m2) != 0 ) 		/* m2navroot.c */
     return 1;	/* break and let redraw */
   
@@ -172,7 +175,7 @@ uint8_t m2_HandleKeyM2(m2_p m2)
     else if ( m2->eh != NULL )
     {
       /* handle all keys except HOME key */
-      m2->eh(m2, key, 0);
+      m2->eh(m2, key, arg1, arg2);
     }
     
     is_redraw_required = 1;

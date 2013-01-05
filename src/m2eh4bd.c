@@ -45,7 +45,7 @@
 
 #include "m2.h"
 
-uint8_t m2_eh_4bd(m2_p ep, uint8_t msg, uint8_t arg)
+uint8_t m2_eh_4bd(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
 {
   m2_nav_p nav = m2_get_nav(ep);
   switch(msg)
