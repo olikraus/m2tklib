@@ -231,6 +231,7 @@ uint8_t m2_eh_2bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh2bs
 uint8_t m2_eh_4bd(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bd.c */		
 uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT */
 uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN */
+uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c touch screen handler with select on release */
 
 /* graphics handler */
 uint8_t m2_gh_dummy(m2_gfx_arg_p arg);
@@ -257,8 +258,10 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_KEY_ROT_ENC_B 9
 #define M2_KEY_ANALOG 10
 #define M2_KEY_REFRESH 11
+#define M2_KEY_TOUCH_PRESS 12
+#define M2_KEY_TOUCH_RELEASE 13
 
-#define M2_KEY_CNT 11
+#define M2_KEY_CNT 13
 
 /* mark key as event */
 /* if the EVENT bit is set, then the key is directly passed to the queue */
@@ -1027,6 +1030,8 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 #define M2_EP_MSG_EXIT M2_KEY_EXIT
 #define M2_EP_MSG_DATA_UP M2_KEY_DATA_UP
 #define M2_EP_MSG_DATA_DOWN M2_KEY_DATA_DOWN
+#define M2_EP_MSG_TOUCH_PRESS M2_KEY_TOUCH_PRESS
+#define M2_EP_MSG_TOUCH_RELEASE M2_KEY_TOUCH_RELEASE
 
 /* messages for the event source callback procedure */
 /* request to return a key value */
