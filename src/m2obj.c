@@ -74,9 +74,12 @@ void m2_root_change_default_cb(m2_rom_void_p new_root, m2_rom_void_p old_root, u
 */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh)
 {
+  m2->arg1 = 0;
+  m2->arg2 = 0;
   m2->is_frame_draw_at_end = 0;
   m2->key_queue_len = 0;
   m2->key_queue_pos = 0;
+  m2->is_last_key_touch_screen_press = 0;
   m2->eh = eh;
   m2->gh = gh;
   m2->root_change_callback = m2_root_change_default_cb;  /* called in m2navinit.c */
@@ -89,6 +92,12 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2_nav_init(m2_get_nav(m2),  element);
   m2_get_nav(m2)->root_change_value = 0;
   m2_SetEventSourceHandlerM2(m2, es);
+}
+
+void m2_SetEventSourceArgsM2(m2_p m2, uint8_t arg1, uint8_t arg2)
+{
+  m2->arg1 = arg1;
+  m2->arg2 = arg2;
 }
 
 void m2_CheckKeyM2(m2_p m2)
@@ -112,6 +121,23 @@ void m2_CheckKeyM2(m2_p m2)
     if ( m2->es != NULL )
     {
       key = m2->es(m2, M2_ES_MSG_GET_KEY);
+      
+      /* this code automatically generates the M2_KEY_TOUCH_RELEASE message once */
+      if ( key == M2_KEY_TOUCH_PRESS )
+      {
+	m2->is_last_key_touch_screen_press = 1;
+      }
+      else if ( key == M2_KEY_TOUCH_RELEASE )
+      {
+	m2->is_last_key_touch_screen_press = 0;
+      }
+      else if ( m2->is_last_key_touch_screen_press != 0 && key == M2_KEY_NONE )
+      {
+	m2->is_last_key_touch_screen_press = 0;
+	key = M2_KEY_TOUCH_RELEASE;  			/* M2_KEY_EVENT is already set, debounce is off */
+      }
+	
+      /* store the key in the queue */
       m2_SetDetectedKey(m2, key);
     }
     else

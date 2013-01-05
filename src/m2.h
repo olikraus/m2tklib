@@ -172,6 +172,7 @@ typedef uint32_t (*m2_u32fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint32_t 
 void m2_SetHomeM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;	/* m2obj.c */
 void m2_SetRootChangeCallbackM2(m2_p m2, m2_root_change_fnptr cb) M2_NOINLINE;	/* m2obj.c */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
+void m2_SetEventSourceArgsM2(m2_p m2, uint8_t arg1, uint8_t arg2) M2_NOINLINE;						/* m2draw.c */
 void m2_CheckKeyM2(m2_p m2) M2_NOINLINE;
 uint8_t m2_HandleKeyM2(m2_p m2) M2_NOINLINE;													/* m2obj.c */
 void m2_DrawM2(m2_p m2) M2_NOINLINE;													/* m2draw.c */
@@ -245,6 +246,15 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 /* Define the maximum depth of  the menu tree */
 #define M2_DEPTH_MAX 7
 
+/* mark key as event */
+/* if the EVENT bit is set, then the key is directly passed to the queue */
+/* if the EVENT bit is not set, then it is assumed, that this value has to be debounced */
+/* this is only important for the event source */
+#define M2_KEY_EVENT_MASK (64)
+#define M2_KEY_EVENT(k) ((k)|M2_KEY_EVENT_MASK)
+#define M2_IS_KEY_EVENT(k) ((k)&M2_KEY_EVENT_MASK)
+
+
 /* Key values */
 #define M2_KEY_NONE 0
 #define M2_KEY_SELECT 1
@@ -257,19 +267,17 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_KEY_ROT_ENC_A 8
 #define M2_KEY_ROT_ENC_B 9
 #define M2_KEY_ANALOG 10
+
+/* number of key, which might have a pin connected */
+#define M2_KEY_CNT 11
+
+/* virtual messages without a physical pin */
 #define M2_KEY_REFRESH 11
+/* this message can be returned by the event source */
 #define M2_KEY_TOUCH_PRESS 12
-#define M2_KEY_TOUCH_RELEASE 13
+/* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
+#define M2_KEY_TOUCH_RELEASE M2_KEY_EVENT(13)
 
-#define M2_KEY_CNT 13
-
-/* mark key as event */
-/* if the EVENT bit is set, then the key is directly passed to the queue */
-/* if the EVENT bit is not set, then it is assumed, that this value has to be debounced */
-/* this is only important for the event source */
-#define M2_KEY_EVENT_MASK (64)
-#define M2_KEY_EVENT(k) ((k)|M2_KEY_EVENT_MASK)
-#define M2_IS_KEY_EVENT(k) ((k)&M2_KEY_EVENT_MASK)
 
 /* Messages to the element callback procedures, see documentation */
 #define M2_EL_MSG_GET_LIST_LEN 2
@@ -988,7 +996,9 @@ struct _m2_struct
   m2_nav_t nav;		/* current focus */
   m2_eh_fnptr eh;		/* event handler, processes a key pressed event */
   m2_es_fnptr es;		/* event source, produces and returnes an event */
+  uint8_t arg1, arg2;		/* used for the touch screen x/y data */
   m2_gfx_fnptr gh;		/* graphics handler */
+  uint8_t is_last_key_touch_screen_press;
   uint8_t forced_key; 	/* additional key, which will be processed by the next call to m2_Step() */
   uint8_t is_frame_draw_at_end;
   

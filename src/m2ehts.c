@@ -29,20 +29,15 @@
 
 uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
 {
-  static uint8_t is_pressed = 0;
   m2_nav_p nav = m2_get_nav(ep);
   switch(msg)
   {
     case M2_EP_MSG_TOUCH_PRESS:
-      is_pressed = 1;
       m2_FindByXYM2(ep, arg1, arg2, 1 /* is_change_focus */,  0 /* is_send_select*/ );    
       return 1;
     
     case M2_EP_MSG_TOUCH_RELEASE:
-      if ( is_pressed != 0 )
-      {
-	m2_FindByXYM2(ep, arg1, arg2, 1 /* is_change_focus */,  1 /* is_send_select*/ );    
-      }
+      m2_FindByXYM2(ep, arg1, arg2, 1 /* is_change_focus */,  1 /* is_send_select*/ );    
       return 1;
   }
   return 0;

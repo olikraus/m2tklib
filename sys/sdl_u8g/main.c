@@ -20,6 +20,26 @@ int mouse_x;
 int mouse_y;
 int is_motion = 0;
 
+/* event source for touch screens */
+uint8_t m2_es_ts(m2_p ep, uint8_t msg)
+{
+  switch(msg)
+  {
+    case M2_ES_MSG_GET_KEY:
+      if ( 1 /* touch detected */ )
+      {
+	m2_SetEventSourceArgsM2(ep, 0 /* x */, 0 /* y */);
+      }
+      return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+      
+    case M2_ES_MSG_INIT:
+      break;
+  }
+  return 0;
+  
+}
+
+
 /* 
   event source for SDL
   this has been copied from m2ghsdl.c
@@ -46,7 +66,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			mouse_y = 63 - event.motion.y/2;
 			is_motion = 1;
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
-			break;
+			m2_SetEventSourceArgsM2(ep, 0 /* x */, 0 /* y */);
+			return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
 	        case SDL_KEYDOWN:
 		        switch( event.key.keysym.sym )
 		        {
