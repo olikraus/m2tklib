@@ -138,7 +138,7 @@ void m2_CheckKeyM2(m2_p m2)
       }
 	
       /* store the key in the queue */
-      m2_SetDetectedKey(m2, key);
+      m2_SetDetectedKey(m2, key, m2->arg1, m2->arg2);
     }
     else
       key = M2_KEY_NONE;

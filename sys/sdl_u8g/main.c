@@ -66,7 +66,7 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			mouse_y = 63 - event.motion.y/2;
 			is_motion = 1;
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
-			m2_SetEventSourceArgsM2(ep, 0 /* x */, 0 /* y */);
+			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
 			return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
 	        case SDL_KEYDOWN:
 		        switch( event.key.keysym.sym )
@@ -1751,7 +1751,7 @@ int main(void)
   u8g_EnableCursor(&u8g);
   
   /* 2. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
   //m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
 
@@ -1781,7 +1781,7 @@ int main(void)
       if ( is_motion )
       {
 	u8g_SetCursorPos(&u8g, mouse_x, 63-mouse_y);
-	m2_FindByXY(mouse_x, mouse_y, 0, 0);
+	//m2_FindByXY(mouse_x, mouse_y, 0, 0);
       }
       is_motion = 0;
       u8g_FirstPage(&u8g);

@@ -233,6 +233,7 @@ uint8_t m2_eh_4bd(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bd
 uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT */
 uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN */
 uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c touch screen handler with select on release */
+uint8_t m2_eh_4bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c combined 4bs + touch screen handler */
 
 /* graphics handler */
 uint8_t m2_gh_dummy(m2_gfx_arg_p arg);
@@ -401,7 +402,7 @@ uint8_t m2_opt_get_val_any_default(m2_rom_char_p str, char cmd, uint8_t default_
 uint8_t m2_GetKeyFromQueue(m2_p m2, uint8_t *arg1, uint8_t *arg2);									/* m2key.c */
 void m2_PutKeyIntoQueueWithArgs(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2) M2_NOINLINE;		/* m2key.c */
 void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code);												/* m2key.c */
-void m2_SetDetectedKey(m2_p m2, uint8_t key_code);												/* m2key.c */
+void m2_SetDetectedKey(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2);							/* m2key.c */
 
 
 /*==============================================================*/

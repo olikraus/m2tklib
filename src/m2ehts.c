@@ -29,7 +29,7 @@
 
 uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
 {
-  m2_nav_p nav = m2_get_nav(ep);
+  // m2_nav_p nav = m2_get_nav(ep);
   switch(msg)
   {
     case M2_EP_MSG_TOUCH_PRESS:
@@ -42,3 +42,12 @@ uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
   }
   return 0;
 }
+
+
+uint8_t m2_eh_4bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
+{
+  if ( m2_eh_ts(ep, msg, arg1, arg2) != 0 )
+    return 1;
+  return m2_eh_4bs(ep, msg, arg1, arg2);
+}
+

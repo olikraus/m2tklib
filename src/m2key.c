@@ -95,7 +95,7 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
 /*
   debounce key and put key into queue
 */
-void m2_SetDetectedKey(m2_p m2, uint8_t key_code)
+void m2_SetDetectedKey(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2)
 {
   
   /* if event source has set the EVENT bit, then directly pass this value to the queue */
@@ -103,7 +103,7 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code)
   if ( M2_IS_KEY_EVENT(key_code) )
   {
     key_code &= ~M2_KEY_EVENT_MASK;
-    m2_PutKeyIntoQueue(m2, key_code);
+    m2_PutKeyIntoQueueWithArgs(m2, key_code, arg1, arg2);
     return;
   }
   
@@ -177,7 +177,7 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code)
       else if ( m2->detected_key_timer == 0 )
       { 
 	m2->debounce_state = M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS;
-	m2_PutKeyIntoQueue(m2, m2->detected_key_code);
+	m2_PutKeyIntoQueueWithArgs(m2, m2->detected_key_code, arg1, arg2);
       }
       else if ( key_code != M2_KEY_NONE && m2->detected_key_code != key_code )
       {
