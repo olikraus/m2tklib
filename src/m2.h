@@ -257,6 +257,7 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 
 
 /* Key values */
+/* values 1-7 (select..home) are fixed, they are used by M2_TSK() */
 #define M2_KEY_NONE 0
 #define M2_KEY_SELECT 1
 #define M2_KEY_EXIT 2
