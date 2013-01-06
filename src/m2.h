@@ -278,8 +278,7 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 /* this message can be returned by the event source */
 #define M2_KEY_TOUCH_PRESS 12
 /* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
-#define M2_KEY_TOUCH_RELEASE M2_KEY_EVENT(13)
-
+#define M2_KEY_TOUCH_RELEASE 13
 
 /* Messages to the element callback procedures, see documentation */
 #define M2_EL_MSG_GET_LIST_LEN 2
@@ -1001,6 +1000,9 @@ struct _m2_struct
   uint8_t arg1, arg2;		/* used for the touch screen x/y data */
   m2_gfx_fnptr gh;		/* graphics handler */
   uint8_t is_last_key_touch_screen_press;
+  m2_rom_void_p element_focus;	/* touch screen focus */
+  
+  
   uint8_t forced_key; 	/* additional key, which will be processed by the next call to m2_Step() */
   uint8_t is_frame_draw_at_end;
   
@@ -1069,6 +1071,7 @@ uint8_t m2_nav_user_next(m2_nav_p nav) M2_NOINLINE;					/* m2usrsnext.c */
 /* Note: These functions are not reentrant: Do not use within field functions */
 void m2_fn_arg_clear(void) M2_NOINLINE;
 void m2_fn_arg_set_element(m2_rom_void_p element) M2_NOINLINE;
+m2_rom_void_p m2_fn_arg_get_element(void) M2_NOINLINE;
 void m2_fn_arg_set_arg_data(uint8_t arg, void *data) M2_NOINLINE;
 void m2_fn_arg_set_pos(uint8_t pos) M2_NOINLINE;
 void m2_fn_arg_set_nav(m2_nav_p nav) M2_NOINLINE;

@@ -65,6 +65,11 @@ void m2_fn_arg_set_element(m2_rom_void_p element)
   m2_fn_arg.element = element;
 }
 
+m2_rom_void_p m2_fn_arg_get_element(void)
+{
+  return m2_fn_arg.element;
+}
+
 void m2_fn_arg_set_arg_data(uint8_t arg, void *data)
 {
   m2_fn_arg.arg = arg;

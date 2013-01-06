@@ -97,7 +97,7 @@ void m2_PutKeyIntoQueue(m2_p m2, uint8_t key_code)
 */
 void m2_SetDetectedKey(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2)
 {
-  
+    
   /* if event source has set the EVENT bit, then directly pass this value to the queue */
   
   if ( M2_IS_KEY_EVENT(key_code) )

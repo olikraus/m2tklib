@@ -19,6 +19,7 @@ void screenshot100(void);
 int mouse_x;
 int mouse_y;
 int is_motion = 0;
+int is_mouse_down = 0;
 
 /* event source for touch screens */
 uint8_t m2_es_ts(m2_p ep, uint8_t msg)
@@ -68,6 +69,23 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
 			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
 			return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+		case SDL_MOUSEBUTTONDOWN:
+			mouse_x = event.button.x/2;
+			mouse_y = 63 - event.button.y/2;
+			is_motion = 1;
+			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
+			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
+			is_mouse_down = 1;
+			return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+		case SDL_MOUSEBUTTONUP:
+			mouse_x = event.button.x/2;
+			mouse_y = 63 - event.button.y/2;
+			is_motion = 1;
+			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
+			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
+			is_mouse_down = 0;
+			/* the will be no debounce for this event, so M2_KEY_EVENT is not required */		
+			return M2_KEY_TOUCH_RELEASE;
 	        case SDL_KEYDOWN:
 		        switch( event.key.keysym.sym )
 		        {
@@ -1747,7 +1765,6 @@ int main(void)
   u8g_Init(&u8g, &u8g_dev_sdl_1bit);
   u8g_SetCursorFont(&u8g, u8g_font_cursor);
   u8g_SetCursorColor(&u8g, 1, 0);
-  u8g_SetCursorStyle(&u8g, 66);
   u8g_EnableCursor(&u8g);
   
   /* 2. Now, setup m2 */
@@ -1782,6 +1799,13 @@ int main(void)
       {
 	u8g_SetCursorPos(&u8g, mouse_x, 63-mouse_y);
 	//m2_FindByXY(mouse_x, mouse_y, 0, 0);
+
+      if ( is_mouse_down )
+	u8g_SetCursorStyle(&u8g, 66);
+      else
+	u8g_SetCursorStyle(&u8g, 62);
+	
+	
       }
       is_motion = 0;
       u8g_FirstPage(&u8g);

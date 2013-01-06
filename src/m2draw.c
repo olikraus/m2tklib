@@ -33,7 +33,7 @@
 /* draw procedure */
 
 /* a reference to the object which describes the focus on the current widget */
-m2_nav_p m2_draw_focus;
+m2_nav_p m2_draw_focus;	/* could be replaced by m2_draw_p->nav */
 
 /* a temporary object which holds the draw cursor */
 m2_nav_t m2_draw_current;
@@ -41,6 +41,9 @@ m2_nav_t m2_draw_current;
 /* 0: frame is drawn before the text or other content */
 /* 1: frame is drawn last */
 uint8_t m2_is_frame_draw_at_end;
+
+/* reference to the current m2 object */
+m2_p m2_draw_p;
 
 /*
   This procedure draws (renders) the current object by sending the M2_EL_MSG_SHOW
@@ -88,6 +91,9 @@ void m2_draw_visit_node(m2_pos_p box, uint8_t msg)
   }
   
   m2_nav_prepare_fn_arg_current_element(&m2_draw_current);
+  if ( arg == 0 )
+    if ( m2_fn_arg_get_element() == m2_draw_p->element_focus )
+      arg = 2;
   m2_fn_arg_set_arg_data(arg, box);
   
 #ifdef M2_EL_MSG_DBG_SHOW
@@ -206,6 +212,7 @@ static void m2_nav_draw(m2_nav_p nav)
 
 void m2_DrawM2(m2_p ep)
 {
+  m2_draw_p = ep;
   m2_is_frame_draw_at_end = ep->is_frame_draw_at_end;
   m2_gfx_start(ep->gh);
   m2_nav_draw(m2_get_nav(ep));
@@ -220,11 +227,12 @@ uint8_t m2_check_y;
 
 uint16_t m2_check_result_min_wh_product;
 m2_rom_void_p m2_check_result_element; 
+uint8_t m2_check_result_k_flag;
 uint8_t m2_check_result_x;
 uint8_t m2_check_result_y;
 uint8_t m2_check_result_w;
 uint8_t m2_check_result_h;
-uint8_t m2_check_action_copy_focus;
+uint8_t m2_check_action_copy_focus;  /* for normal m2 menu operation, this is always true */
 
 void m2_nav_copy_element_stack(m2_nav_p dest, m2_nav_p src)
 {
@@ -259,6 +267,7 @@ void m2_check_xy(m2_pos_p pos)
   uint16_t p;
   uint8_t ro_flag;
   uint8_t t_flag;
+  uint8_t k_flag;
   
   /* box is now pos->x, pos->y, w, h; pos->x,pos->y is lower left edge */
   
@@ -281,26 +290,36 @@ void m2_check_xy(m2_pos_p pos)
   m2_fn_arg_set_arg_data('r', &ro_flag);
   m2_fn_arg_call(M2_EL_MSG_GET_OPT);
 
-  /* check for touch screen flag flag */
+  /* check for touch screen flag */
   t_flag = 0;
   m2_fn_arg_set_element(element);
   m2_fn_arg_set_arg_data('t', &t_flag);
   m2_fn_arg_call(M2_EL_MSG_GET_OPT);
+
+  /* check for key flag (of touch screens) */
+  k_flag = 0;
+  m2_fn_arg_set_element(element);
+  m2_fn_arg_set_arg_data('k', &k_flag);
+  m2_fn_arg_call(M2_EL_MSG_GET_OPT);
+
 
   // printf("check: element %p ro %d t %d\n", element, ro_flag, t_flag);
 
   if ( ro_flag != 0 )
     return;  /* read only flag is set */
 
-  if ( t_flag == 0 )
-    return;  /* touch screen flag is NOT set, so ignore this element */
+  if ( t_flag == 0 && k_flag == 0 )
+    return;  /* touch screen flags are NOT set, so ignore this element */
   
   p = w*h;
   if ( m2_check_result_min_wh_product >= p )
   {
     m2_check_result_min_wh_product = p;
+    m2_check_result_k_flag = k_flag;
     m2_check_result_element = element;
-    m2_nav_copy_element_stack(m2_draw_focus, &m2_draw_current);
+    if ( t_flag != 0 )
+      if ( m2_check_action_copy_focus != 0 )
+	m2_nav_copy_element_stack(m2_draw_focus, &m2_draw_current);
   }
 }
 
@@ -362,7 +381,7 @@ void m2_find_by_xy_sub(m2_pos_p box)
     }
 }
 
-static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8_t is_send_select)
+static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8_t is_change_focus, uint8_t is_send_select)
 {
   m2_pos_t box;
   
@@ -372,12 +391,13 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
   m2_check_y = y;
 
   m2_check_result_min_wh_product = 0x0ffff;
+  m2_check_result_k_flag = 0;
   m2_check_result_element = NULL; 
   m2_check_result_x=255;
   m2_check_result_y=255;
   m2_check_result_w=0;
   m2_check_result_h=0;
-  m2_check_action_copy_focus = 1;
+  m2_check_action_copy_focus = is_change_focus;
 
   
   box.x = 0;
@@ -391,11 +411,36 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
   m2_check_xy(&box);
   m2_find_by_xy_sub(&box);
   
+  if ( m2_check_result_element != NULL )
+  {
+      /* set the element focus for elements with k format option */
+      if ( m2_check_action_copy_focus )
+	if ( m2_check_result_k_flag != 0 )
+	  m2_draw_p->element_focus = m2_check_result_element;
+      if ( is_send_select )
+      {
+	m2_nav_prepare_fn_arg_current_element(nav);
+	/* if the focus is not copied (disabled or k-option but no t-option set), overwrite the element from the nav object */
+	/* this may lead to some problems, because now, the nav object does not always contain the element */
+	m2_fn_arg_set_element(m2_check_result_element);
+	m2_fn_arg_set_arg_data(0, (void *)nav);
+	m2_fn_arg_call(M2_EL_MSG_SELECT);    
+      }
+  }
+  else
+  {
+    /* always clear the element focus */
+    if ( m2_check_action_copy_focus )
+      m2_draw_p->element_focus = NULL;
+  }
+
+  
   return m2_check_result_element;
 }
 
 m2_rom_void_p m2_FindByXYM2(m2_p ep, uint8_t x, uint8_t y, uint8_t is_change_focus, uint8_t is_send_select)
 {
-  return m2_nav_find_by_xy(m2_get_nav(ep), x, y, is_send_select);
+  m2_draw_p = ep;
+  return m2_nav_find_by_xy(m2_get_nav(ep), x, y, is_change_focus, is_send_select);
 }
 

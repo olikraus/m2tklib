@@ -80,6 +80,7 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2->key_queue_len = 0;
   m2->key_queue_pos = 0;
   m2->is_last_key_touch_screen_press = 0;
+  m2->element_focus = NULL;
   m2->eh = eh;
   m2->gh = gh;
   m2->root_change_callback = m2_root_change_default_cb;  /* called in m2navinit.c */
@@ -127,14 +128,15 @@ void m2_CheckKeyM2(m2_p m2)
       {
 	m2->is_last_key_touch_screen_press = 1;
       }
-      else if ( key == M2_KEY_TOUCH_RELEASE )
+      else if ( key == M2_KEY_TOUCH_RELEASE || key == M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE) )
       {
 	m2->is_last_key_touch_screen_press = 0;
+	key = M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE);
       }
       else if ( m2->is_last_key_touch_screen_press != 0 && key == M2_KEY_NONE )
       {
 	m2->is_last_key_touch_screen_press = 0;
-	key = M2_KEY_TOUCH_RELEASE;  			/* M2_KEY_EVENT is already set, debounce is off */
+	key = M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE);
       }
 	
       /* store the key in the queue */
