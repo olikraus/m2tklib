@@ -332,6 +332,21 @@ M2_LIST(num_list) = {
 };
 M2_GRIDLIST(el_num_menu, "c2", num_list);
 
+/*======================================================================*/
+/* number entry with TSK buttons*/
+
+
+M2_TSK(el_tsnum_select, "k1", "select");
+M2_TSK(el_tsnum_next, "k3", "next");
+M2_TSK(el_tsnum_prev, "k4", "prev");
+
+M2_LIST(tsnum_list) = { 
+    &el_tsnum_select, &el_num_label1, &el_num_1, 
+    &el_tsnum_next, &el_num_label2, &el_num_2,  
+    &el_tsnum_prev, &el_num_zero, &el_num_goto_top
+};
+M2_GRIDLIST(el_tsnum_menu, "c3", tsnum_list);
+
 
 /*======================================================================*/
 /* gfx handler selection: gfx */
@@ -1660,6 +1675,16 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_sisu);
     }    
   }
+  else if ( idx == 25 ) {
+    s = "TSK Num";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_tsnum_menu);
+    }    
+  }
+  
+  
+  
   
   
   return s;
@@ -1667,7 +1692,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 25;
+uint8_t el_tlsm_cnt = 26;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

@@ -41,14 +41,6 @@ M2_EL_FN_DEF(m2_el_tsk_fn)
 {
   switch(fn_arg->msg)
   {
-    case M2_EL_MSG_GET_OPT:
-	if ( fn_arg->arg == 'r' )
-	{
-	  *(uint8_t *)(fn_arg->data) = 1;		/* read only, so that these bottons are skiped by the key events */
-	  return 1;
-	}
-	/* else... break out of the switch and let the base class do the rest of the work */
-	break;
     case M2_EL_MSG_SELECT:
     {
       //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);
@@ -60,6 +52,23 @@ M2_EL_FN_DEF(m2_el_tsk_fn)
       return 1;
     }
   }
-  return m2_el_str_fn(fn_arg);
+  return m2_el_label_fn(fn_arg);
 }
 
+M2_EL_FN_DEF(m2_el_tskp_fn)
+{
+  switch(fn_arg->msg)
+  {
+    case M2_EL_MSG_SELECT:
+    {
+      //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);
+      uint8_t key_code = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'k');
+      if ( key_code > 0 )
+      {
+	m2_SetKey(key_code);		/* use global m2 object */
+      }
+      return 1;
+    }
+  }
+  return m2_el_labelp_fn(fn_arg);
+}

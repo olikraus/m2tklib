@@ -546,6 +546,7 @@ typedef struct _m2_el_str_struct m2_el_str_t;
 typedef m2_el_str_t *m2_el_str_p;
 
 M2_EL_FN_DEF(m2_el_str_fn);
+
 M2_EL_FN_DEF(m2_el_str_up_fn);
 #define M2_STR_UP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_str_up_fn, (fmt) }, (str) }
 #define M2_EXTERN_STR_UP(el) extern m2_el_str_t el
@@ -557,6 +558,14 @@ M2_EL_FN_DEF(m2_el_label_fn);
 M2_EL_FN_DEF(m2_el_labelp_fn);
 #define M2_LABELP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_labelp_fn, (fmt) }, (str) }
 #define M2_EXTERN_LABELP(el) extern m2_el_str_t el
+
+M2_EL_FN_DEF(m2_el_tsk_fn);
+#define M2_TSK(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_tsk_fn, (fmt) }, (str) }
+#define M2_EXTERN_TSK(el) extern m2_el_str_t el
+
+M2_EL_FN_DEF(m2_el_tskp_fn);
+#define M2_TSKP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_tskp_fn, (fmt) }, (str) }
+#define M2_EXTERN_TSKP(el) extern m2_el_str_t el
 
 struct _m2_el_labelfn_struct
 {
