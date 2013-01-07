@@ -627,16 +627,16 @@ const char *el_muse_strlist_cb(uint8_t idx, uint8_t msg) {
   }
   if ( msg == M2_STRLIST_MSG_GET_EXTENDED_STR ) {
     if ( multi_select_status[idx] == 0 ) {
-      s = "\x15";
+      s = " ";
     }
     else {
-      s = "\x14";
+      s = "*";
     }
   }
   return s;  
 }
 
-M2_STRLIST(el_muse_strlist, "l3F3E10W46", &el_muse_first, &el_muse_cnt, el_muse_strlist_cb);
+M2_STRLIST(el_muse_strlist, "l3F0E10W46", &el_muse_first, &el_muse_cnt, el_muse_strlist_cb);
 M2_ROOT(el_muse_goto_top, "f4", "Goto Top Menu", &top_el_tlsm);
 
 M2_LIST(muse_list) = { 
