@@ -349,6 +349,37 @@ M2_GRIDLIST(el_tsnum_menu, "c3", tsnum_list);
 
 
 /*======================================================================*/
+
+
+M2_ROOT(el_ts_mnu1_sel, "t1", "Menu 1 selected", &top_el_tlsm);
+M2_ALIGN(top_el_ts_mnu1_sel, "-1|1W64H64", &el_ts_mnu1_sel);
+M2_ROOT(el_ts_mnu2_sel, "t1", "Menu 2 selected", &top_el_tlsm);
+M2_ALIGN(top_el_ts_mnu2_sel, "-1|1W64H64", &el_ts_mnu2_sel);
+M2_ROOT(el_ts_mnu3_sel, "t1", "Menu 3 selected", &top_el_tlsm);
+M2_ALIGN(top_el_ts_mnu3_sel, "-1|1W64H64", &el_ts_mnu3_sel);
+
+
+M2_ROOT(el_ts_mnu1, "t1w60f8", "menu 1", &top_el_ts_mnu1_sel);
+M2_ROOT(el_ts_mnu2, "t1w60f8", "menu 2", &top_el_ts_mnu2_sel);
+M2_ROOT(el_ts_mnu3, "t1w60f8", "menu 3", &top_el_ts_mnu3_sel);
+
+M2_LIST(list_ts_mnu) = { 
+    &el_ts_mnu1, 
+    &el_ts_mnu2, 
+    &el_ts_mnu3
+};
+
+M2_VLIST(el_ts_mnu_vlist, NULL, list_ts_mnu);
+M2_ALIGN(top_el_ts_mnu, "-1|1W64H64", &el_ts_mnu_vlist);
+
+
+
+/*======================================================================*/
+/* number entry with TSK buttons*/
+
+
+
+/*======================================================================*/
 /* gfx handler selection: gfx */
 
 const char *el_gfx_strlist_cb(uint8_t idx, uint8_t msg) {
@@ -1676,12 +1707,20 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     }    
   }
   else if ( idx == 25 ) {
-    s = "TSK Num";
+    s = "TSK U8 U32";
     if ( msg == M2_STRLIST_MSG_SELECT )
     {
       m2_SetRoot(&el_tsnum_menu);
     }    
   }
+  else if ( idx == 26 ) {
+    s = "TS Menu";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_ts_mnu);
+    }    
+  }
+  
   
   
   
@@ -1692,7 +1731,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 26;
+uint8_t el_tlsm_cnt = 27;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1795,7 +1834,7 @@ int main(void)
   /* 2. Now, setup m2 */
   m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
-  //m2_Init(&el_top_fs, m2_es_sdl, m2_eh_6bs, m2_gh_u8g_bfs);
+  //m2_Init(&el_ts_mnu1_sel, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
 
   /* 3. Connect the u8g display to m2.  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);
