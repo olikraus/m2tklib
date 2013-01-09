@@ -349,7 +349,7 @@ M2_GRIDLIST(el_tsnum_menu, "c3", tsnum_list);
 
 
 /*======================================================================*/
-
+/* single focus mode */
 
 M2_ROOT(el_ts_mnu1_sel, "t1", "Menu 1 selected", &top_el_tlsm);
 M2_ALIGN(top_el_ts_mnu1_sel, "-1|1W64H64", &el_ts_mnu1_sel);
@@ -372,10 +372,40 @@ M2_LIST(list_ts_mnu) = {
 M2_VLIST(el_ts_mnu_vlist, NULL, list_ts_mnu);
 M2_ALIGN(top_el_ts_mnu, "-1|1W64H64", &el_ts_mnu_vlist);
 
+/*======================================================================*/
+/* double focus mode */
+/* 
+  number entry with TSK buttons 
+
+  Num: 000000
+  . up .
+  left ok right
+  . down .
+*/
+
+uint32_t u32val = 0;
+M2_LABEL(el_tsk_num_label, NULL, "U32:");
+M2_U32NUM(el_tsk_num_u32, "a1c5", &u32val);
+
+
+M2_TSK(el_tsk_up, "f1k5", " \xdd ");		// data up
+M2_TSK(el_tsk_down, "f1k6", " \xdf ");		// data down
+M2_TSK(el_tsk_left, "f1k4", " \xdc ");		// left
+M2_TSK(el_tsk_right, "f1k3", " \xde ");		// right
+M2_ROOT(el_tsk_enter, "f1r1", " \xbf ", &top_el_tlsm);		// enter
+
+
+
+M2_LIST(tsk_list) = { 
+    &el_tsk_num_label, &m2_null_element, &el_tsk_up,    &m2_null_element, 
+    &el_tsk_num_u32,  &el_tsk_left,            &el_tsk_enter, &el_tsk_right, 
+    &m2_null_element, &m2_null_element, &el_tsk_down, &m2_null_element, 
+};
+M2_GRIDLIST(el_tsk_num_menu, "c4", tsk_list);
+M2_ALIGN(top_el_tsk_num_menu, "-1|1W64H64", &el_tsk_num_menu);
 
 
 /*======================================================================*/
-/* number entry with TSK buttons*/
 
 
 
@@ -1720,6 +1750,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_ts_mnu);
     }    
   }
+  else if ( idx == 27 ) {
+    s = "TSK U32 Input";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_tsk_num_menu);
+    }    
+  }
   
   
   
@@ -1731,7 +1768,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 27;
+uint8_t el_tlsm_cnt = 28;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1832,7 +1869,8 @@ int main(void)
   u8g_EnableCursor(&u8g);
   
   /* 2. Now, setup m2 */
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
   //m2_Init(&el_ts_mnu1_sel, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
 
@@ -1841,6 +1879,7 @@ int main(void)
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
   m2_SetFont(0, (const void *)u8g_font_7x13);
+  m2_SetFont(1, (const void *)u8g_font_symb12);
   m2_SetFont(2, (const void *)u8g_font_fub25);
 
   m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);

@@ -234,6 +234,7 @@ uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bs
 uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN */
 uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c touch screen handler with select on release */
 uint8_t m2_eh_4bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c combined 4bs + touch screen handler */
+uint8_t m2_eh_6bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c combined 6bs + touch screen handler */
 
 /* graphics handler */
 uint8_t m2_gh_dummy(m2_gfx_arg_p arg);

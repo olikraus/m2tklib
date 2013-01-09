@@ -305,8 +305,8 @@ void m2_check_xy(m2_pos_p pos)
 
   // printf("check: element %p ro %d t %d\n", element, ro_flag, t_flag);
 
-  if ( ro_flag != 0 )
-    return;  /* read only flag is set */
+  if ( t_flag == 0 && ro_flag != 0 )	
+    return;  /* read only flag is set (but only if this is not a touch screen element */
 
   if ( t_flag == 0 && k_flag == 0 )
     return;  /* touch screen flags are NOT set, so ignore this element */
@@ -317,7 +317,7 @@ void m2_check_xy(m2_pos_p pos)
     m2_check_result_min_wh_product = p;
     m2_check_result_k_flag = k_flag;
     m2_check_result_element = element;
-    if ( t_flag != 0 )
+    if ( t_flag != 0 && ro_flag == 0 )				// never copy focus for read only elements 
       if ( m2_check_action_copy_focus != 0 )
 	m2_nav_copy_element_stack(m2_draw_focus, &m2_draw_current);
   }
