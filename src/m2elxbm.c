@@ -108,14 +108,6 @@ M2_EL_FN_DEF(m2_el_xbmrootp_fn)
       return m2_gfx_add_normal_border_height(font, m2_align_get_max_height(fn_arg, m2_el_xbm_get_h(fn_arg)));
     case M2_EL_MSG_GET_WIDTH:
       return m2_gfx_add_normal_border_width(font, m2_align_get_max_width(fn_arg, m2_el_xbm_get_w(fn_arg)));
-    case M2_EL_MSG_GET_OPT:
-	if ( fn_arg->arg == 't' )
-	{
-	  *(uint8_t *)(fn_arg->data) = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 't', 1);		/* touch screen allowed by default*/
-	  return 1;
-	}
-	/* else... break out of the switch and let the base class do the rest of the work */
-	break;
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       return 0;
@@ -158,14 +150,6 @@ M2_EL_FN_DEF(m2_el_xbmbuttonp_fn)
 {
   switch(fn_arg->msg)
   {
-    case M2_EL_MSG_GET_OPT:
-	if ( fn_arg->arg == 't' )
-	{
-	  *(uint8_t *)(fn_arg->data) = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 't', 1);		/* touch screen allowed by default*/
-	  return 1;
-	}
-	/* else... break out of the switch and let the base class do the rest of the work */
-	break;
     case M2_EL_MSG_SELECT:
     {
       m2_button_fnptr fn;

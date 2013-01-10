@@ -37,14 +37,6 @@ M2_EL_FN_DEF(m2_el_buttonptr_fn)
 {
   switch(fn_arg->msg)
   {
-    case M2_EL_MSG_GET_OPT:
-	if ( fn_arg->arg == 't' )
-	{
-	  *(uint8_t *)(fn_arg->data) = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 't', 1);		/* touch screen allowed by default*/
-	  return 1;
-	}
-	/* else... break out of the switch and let the base class do the rest of the work */
-	break;
     case M2_EL_MSG_SELECT:
     {
       m2_button_fnptr fn;

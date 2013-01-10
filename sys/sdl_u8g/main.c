@@ -419,6 +419,36 @@ M2_LIST(tsk_list) = {
 M2_GRIDLIST(el_tsk_num_menu, "c4", tsk_list);
 M2_ALIGN(top_el_tsk_num_menu, "-1|1W64H64", &el_tsk_num_menu);
 
+/*======================================================================*/
+/* single focus mode */
+/* 
+  number entry with TSK buttons 
+
+  Num: left 00 right ok
+*/
+
+uint8_t u8val = 0;
+M2_LABEL(el_ts_u8_label, NULL, "U8: ");
+
+void fn_ts_dec(m2_el_fnarg_p fnarg) { u8val--; }
+M2_BUTTON(el_ts_dec, "f1r1t1", " \xdc ", fn_ts_dec);
+
+M2_U8NUM(el_ts_u8_num, "r1c3", 0, 255, &u8val);
+
+void fn_ts_inc(m2_el_fnarg_p fnarg) { u8val++; }
+M2_BUTTON(el_ts_inc, "f1r1t1", " \xde ", fn_ts_inc);
+
+
+M2_ROOT(el_ts_enter, "f1r1t1", " \xbf ", &top_el_tlsm);		// enter
+
+
+
+M2_LIST(ts_u8_list) = { 
+    &el_ts_u8_label, &el_ts_dec, &el_ts_u8_num, &el_ts_inc, &el_ts_enter
+};
+M2_HLIST(el_ts_u8_menu, "", ts_u8_list);
+M2_ALIGN(top_el_ts_u8_menu, "-1|1W64H64", &el_ts_u8_menu);
+
 
 /*======================================================================*/
 
@@ -1772,6 +1802,14 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_tsk_num_menu);
     }    
   }
+  else if ( idx == 28 ) {
+    s = "TSK U8 Input";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_ts_u8_menu);
+    }    
+  }
+
   
   
   
@@ -1783,7 +1821,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 28;
+uint8_t el_tlsm_cnt = 29;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1830,7 +1868,12 @@ void screenshot(void)
   
 }
 
-/* create video: avconv -i u8g%05d.jpg -r 5 u8g.avi */
+/* create video: 
+avconv -i u8g%05d.jpg -r 5 u8g.avi
+then create gif animation
+avconv -i u8g.avi -pix_fmt rgb24 -vf scale=256:128 -s qcif -loop 0 output.gif
+
+*/
 void screenshot_n(int x)
 {
   u8g_t screenshot_u8g;
