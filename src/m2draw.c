@@ -227,7 +227,7 @@ uint8_t m2_check_y;
 
 uint16_t m2_check_result_min_wh_product;
 m2_rom_void_p m2_check_result_element; 
-uint8_t m2_check_result_k_flag;
+//uint8_t m2_check_result_k_or_t_flag;
 uint8_t m2_check_result_x;
 uint8_t m2_check_result_y;
 uint8_t m2_check_result_w;
@@ -315,7 +315,7 @@ void m2_check_xy(m2_pos_p pos)
   if ( m2_check_result_min_wh_product >= p )
   {
     m2_check_result_min_wh_product = p;
-    m2_check_result_k_flag = k_flag;
+    //m2_check_result_k_or_t_flag = k_flag | t_flag;
     m2_check_result_element = element;
     if ( t_flag != 0 && ro_flag == 0 )				// never copy focus for read only elements 
       if ( m2_check_action_copy_focus != 0 )
@@ -391,7 +391,7 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
   m2_check_y = y;
 
   m2_check_result_min_wh_product = 0x0ffff;
-  m2_check_result_k_flag = 0;
+  // m2_check_result_k_or_t_flag = 0;
   m2_check_result_element = NULL; 
   m2_check_result_x=255;
   m2_check_result_y=255;
@@ -415,7 +415,7 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
   {
       /* set the element focus for elements with k format option */
       if ( m2_check_action_copy_focus )
-	if ( m2_check_result_k_flag != 0 )
+	// if ( m2_check_result_k_or_t_flag != 0 )
 	  m2_draw_p->element_focus = m2_check_result_element;
       if ( is_send_select )
       {

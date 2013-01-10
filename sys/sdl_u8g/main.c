@@ -15,11 +15,14 @@
 
 int u8g_sdl_get_key(void);
 void screenshot(void);
+void screenshot_n(int x);
 void screenshot100(void);
 int mouse_x;
 int mouse_y;
 int is_motion = 0;
 int is_mouse_down = 0;
+int is_record = 0;
+int pic_num = 0;
 
 /* event source for touch screens */
 uint8_t m2_es_ts(m2_p ep, uint8_t msg)
@@ -113,6 +116,18 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		            puts("SDLK_o (screenshOt)");
                             screenshot();
                             //screenshot100();
+                            break;
+		          case SDLK_r:                  // record
+			    if ( is_record != 0 )
+			    {
+			      puts("SDLK_r (record off)");
+			      is_record = 0;
+			    }
+			    else
+			    {
+			      puts("SDLK_r (record on)");
+			      is_record = 1;
+			    }
                             break;
 		          case SDLK_q:
 		            exit(0);
@@ -1815,6 +1830,46 @@ void screenshot(void)
   
 }
 
+/* create video: avconv -i u8g%05d.jpg -r 5 u8g.avi */
+void screenshot_n(int x)
+{
+  u8g_t screenshot_u8g;
+  /* 1. Setup and create device access */
+  u8g_Init(&screenshot_u8g, &u8g_dev_pbm);
+  /* 2. Connect the u8g display to m2. Note: M2 is setup later */
+  m2_SetU8g(&screenshot_u8g, m2_u8g_font_icon);
+  
+  u8g_SetCursorFont(&screenshot_u8g, u8g_font_cursor);
+  u8g_SetCursorColor(&screenshot_u8g, 1, 0);
+  u8g_EnableCursor(&screenshot_u8g);
+      u8g_SetCursorPos(&screenshot_u8g, mouse_x, 63-mouse_y);
+
+    if ( is_mouse_down )
+      u8g_SetCursorStyle(&screenshot_u8g, 66);
+    else
+      u8g_SetCursorStyle(&screenshot_u8g, 62);
+
+  u8g_FirstPage(&screenshot_u8g);
+  do{
+    m2_Draw();
+  } while( u8g_NextPage(&screenshot_u8g) );
+
+  m2_SetU8g(&u8g, m2_u8g_font_icon);
+
+  {
+    char cmd[256*4];
+    sprintf(cmd, "convert u8g.pbm -trim -scale '200%%' %s.png", "u8g" );
+
+    sprintf(cmd, "convert u8g.pbm -crop '128x64+0+704' -extent '130x66-1-1' -draw 'line 0 0 129 0' -draw 'line 0 65 129 65'  -scale '200%%' %s.png", "u8g" );
+    sprintf(cmd, "convert u8g.pbm -extent '130x66-1-1' -draw 'line 0 0 3 0' -draw 'line 126 0 129 0' -draw 'line 0 65 3 65' -draw 'line 126 65 129 65'  -draw 'line 0 0 0 3' -draw 'line 129 0 129 3'  -draw 'line 0 62 0 65' -draw 'line 129 62 129 65' -scale '200%%' %s.png", "u8g" );
+
+    sprintf(cmd, "convert u8g.pbm -extent '128x64-0-0' -fill orange -opaque white  -scale '200%%' %s%05d.jpg", "u8g", x );
+    
+    system(cmd);
+  }
+  
+}
+
 void screenshot100(void)
 {
   static int cnt = 0;
@@ -1918,6 +1973,13 @@ int main(void)
         m2_CheckKey();
         m2_Draw();
       } while( u8g_NextPage(&u8g) );
+      
+      if ( is_record != 0 )
+      {
+	screenshot_n(pic_num);
+	pic_num++;
+	printf("."); fflush(stdout);
+      }
     }
   }
   return 0;
