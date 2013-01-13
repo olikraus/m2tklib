@@ -1619,6 +1619,12 @@ M2_LIST(list_sisu) = { &el_sisu_c1, &el_sisu_c2, &el_sisu_c3};
 M2_VLIST(el_sisu_vl, NULL, list_sisu);
 M2_ALIGN(top_el_sisu, "W64H64", &el_sisu_vl);
 
+/*======================================================================*/
+
+M2_ROOT(el_align_check, "f4", "Back", &top_el_tlsm);
+//M2_ALIGN(top_el_align_check, "-0|0w128h64", &el_align_check);
+
+M2_ROOT(top_el_align_check, "f4", "Back", &top_el_tlsm);
 
 /*======================================================================*/
 /* top level sdl menu: tlsm */
@@ -1809,6 +1815,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_ts_u8_menu);
     }    
   }
+  else if ( idx == 29 ) {
+    s = "Align (Issue 95)";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_align_check);
+    }    
+  }
 
   
   
@@ -1821,7 +1834,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 29;
+uint8_t el_tlsm_cnt = 30;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -1968,7 +1981,9 @@ int main(void)
   
   /* 2. Now, setup m2 */
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
-  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
+  m2_Init(&top_el_align_check, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
+  
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
   //m2_Init(&el_ts_mnu1_sel, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
 
