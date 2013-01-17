@@ -89,6 +89,7 @@ void m2_u8g_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   y = m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
+  y++;			/* 13 Jan 2013: Issue 95 */
   u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
   u8g_DrawFrame(m2_u8g, x0, y, w, h);
   /*
@@ -102,6 +103,7 @@ void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   y = m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
+  y++;			/* 13 Jan 2013: Issue 95 */
   w--;
   h--;
   u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
@@ -119,6 +121,7 @@ void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   y = m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
+  y++;			/* 13 Jan 2013: Issue 95 */
   u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
   u8g_DrawBox(m2_u8g, x0, y, w, h);
 }
@@ -196,6 +199,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         }
         y = m2_u8g_height_minus_one;
         y -= arg->y;
+	y++;			/* 13 Jan 2013: Issue 95, problem 2 */
         x -= u8g_GetStrX(m2_u8g, arg->s);
         //x += m2_gh_u8g_additional_text_border_x_size;
         u8g_DrawStr(m2_u8g, x, y, arg->s);
@@ -225,16 +229,19 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       	y -= arg->y;
         x -= u8g_GetStrXP(m2_u8g, (const u8g_pgm_uint8_t *)arg->s);
         //x += m2_gh_u8g_additional_text_border_x_size;
+	y++;			/* 13 Jan 2013: Issue 95, problem 2 */
       	u8g_DrawStrP(m2_u8g, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
       break;
     case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
       m2_u8g_current_text_color = m2_u8g_fg_text_color;
-      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
+      //u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y , arg->w); 	/* 13 Jan 2013: Issue 95, problem 2 */
       break;
     case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
       m2_u8g_current_text_color = m2_u8g_fg_text_color;
-      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
+      // u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
+      u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y , arg->w); 	/* 13 Jan 2013: Issue 95, problem 2 */
       break;
     case M2_GFX_MSG_SET_FONT:
       {
@@ -331,6 +338,7 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
         y = m2_u8g_height_minus_one;
       	y -= arg->y;
 	y -= arg->h;
+	y++;			/* 13 Jan 2013: Issue 95 */
       	u8g_DrawXBMP(m2_u8g, x, y, arg->w, arg->h, (const char *)arg->s);
       }
   }

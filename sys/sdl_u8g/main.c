@@ -407,7 +407,7 @@ M2_TSK(el_tsk_up, "f1k5", " \xdd ");		// data up
 M2_TSK(el_tsk_down, "f1k6", " \xdf ");		// data down
 M2_TSK(el_tsk_left, "f1k4", " \xdc ");		// left
 M2_TSK(el_tsk_right, "f1k3", " \xde ");		// right
-M2_ROOT(el_tsk_enter, "f1r1", " \xbf ", &top_el_tlsm);		// enter
+M2_ROOT(el_tsk_enter, "f1t1r1", " \xbf ", &top_el_tlsm);		// enter
 
 
 
@@ -1622,9 +1622,13 @@ M2_ALIGN(top_el_sisu, "W64H64", &el_sisu_vl);
 /*======================================================================*/
 
 M2_ROOT(el_align_check, "f4", "Back", &top_el_tlsm);
-//M2_ALIGN(top_el_align_check, "-0|0w128h64", &el_align_check);
+M2_ALIGN(top_el_align_check, "-0|0w128h64", &el_align_check);
 
-M2_ROOT(top_el_align_check, "f4", "Back", &top_el_tlsm);
+//M2_ROOT(top_el_align_check, "f4", "Back", &top_el_tlsm);
+
+uint8_t el_align_check_first = 0;
+uint8_t el_align_check_cnt = 10;
+//M2_VSB(top_el_align_check, "l3w6r1", &el_align_check_first, &el_align_check_cnt);
 
 /*======================================================================*/
 /* top level sdl menu: tlsm */
@@ -1981,8 +1985,8 @@ int main(void)
   
   /* 2. Now, setup m2 */
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
-  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
-  m2_Init(&top_el_align_check, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
+  m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_align_check, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
   
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
   //m2_Init(&el_ts_mnu1_sel, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);

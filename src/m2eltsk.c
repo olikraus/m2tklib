@@ -41,6 +41,14 @@ M2_EL_FN_DEF(m2_el_tsk_fn)
 {
   switch(fn_arg->msg)
   {
+    case M2_EL_MSG_GET_OPT:
+	if ( fn_arg->arg == 't' || fn_arg->arg == 'r' )
+	{
+	  *(uint8_t *)(fn_arg->data) = 1;
+	  return 1;
+	}
+	/* else... break out of the switch and let the base class do the rest of the work */
+	break;
     case M2_EL_MSG_SELECT:
     {
       //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);
@@ -59,6 +67,14 @@ M2_EL_FN_DEF(m2_el_tskp_fn)
 {
   switch(fn_arg->msg)
   {
+    case M2_EL_MSG_GET_OPT:
+	if ( fn_arg->arg == 't' || fn_arg->arg == 'r' )
+	{
+	  *(uint8_t *)(fn_arg->data) = 1;
+	  return 1;
+	}
+	/* else... break out of the switch and let the base class do the rest of the work */
+	break;
     case M2_EL_MSG_SELECT:
     {
       //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);

@@ -61,6 +61,7 @@ void m2_SetU8gRadioFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint
 void m2_u8g_draw_font_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
 {
   y = m2_u8g_height_minus_one - y;
+  y++;			/* 13 Jan 2013: Issue 95 */
   
   u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
   
