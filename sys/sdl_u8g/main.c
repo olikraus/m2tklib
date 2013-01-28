@@ -1630,6 +1630,79 @@ uint8_t el_align_check_first = 0;
 uint8_t el_align_check_cnt = 10;
 //M2_VSB(top_el_align_check, "l3w6r1", &el_align_check_first, &el_align_check_cnt);
 
+
+
+
+
+
+/*======================================================================*/
+/*=== Extended 2L Menu ===*/
+
+M2_EXTERN_ALIGN(top_el_x2l_menu);
+
+const char *xmenu_cb(uint8_t idx, uint8_t msg)
+{
+	printf("xmenu cb idx:%d msg:%d\n", idx, msg);
+	if ( msg == M2_STRLIST_MSG_GET_STR && idx == 0 )
+	{
+		return "cb top label 0";
+	}
+	if ( msg == M2_STRLIST_MSG_SELECT && idx == 1 )
+	{
+		m2_SetRoot(&top_el_x2l_menu);
+	}
+	if ( msg == M2_STRLIST_MSG_GET_STR && idx == 1 )
+	{
+		return " cb label 1";
+	}
+	if ( msg == M2_STRLIST_MSG_SELECT && idx == 2 )
+	{
+		m2_SetRoot(&top_el_x2l_menu);
+	}
+	if ( msg == M2_STRLIST_MSG_GET_STR && idx == 3 )
+	{
+		return "=Menu 2=";
+	}
+	return "";
+}
+
+m2_xmenu_entry xmenu_data[] = 
+{
+  { "", NULL, xmenu_cb },	/* menu label for this line is returned by xmenu_cb */
+  { ".", &top_el_tlsm, xmenu_cb },		/* menu label for this line is returned by xmenu_cb */
+  { ". Sub 1-2", &top_el_tlsm, xmenu_cb },
+  { "", &top_el_tlsm, xmenu_cb },	/* menu label for this line is returned by xmenu_cb */
+  { "Menu 3", NULL, xmenu_cb },
+  { ". Sub 3-1", &top_el_tlsm, xmenu_cb },
+  { ". Sub 3-2", &top_el_tlsm, xmenu_cb },
+  { "Menu 4", &top_el_tlsm, xmenu_cb },
+  { "Menu 5", NULL, xmenu_cb },
+  { ". Sub 5-1", &top_el_tlsm, xmenu_cb },
+  { ". Sub 5-2", &top_el_tlsm, xmenu_cb },
+  { ". Sub 5-3", &top_el_tlsm, xmenu_cb },
+  { NULL, NULL, NULL },
+};
+
+uint8_t el_x2l_first = 0;
+uint8_t el_x2l_cnt = 3;
+
+/* for m2icon fonts, 65: closed folder, 102: open folder */
+M2_X2LMENU(el_x2l_strlist, "l4e15F3W47", &el_x2l_first, &el_x2l_cnt, xmenu_data, 65, 102, '\0');
+M2_SPACE(el_x2l_space, "W1h1");
+M2_VSB(el_x2l_vsb, "l4W4r1", &el_x2l_first, &el_x2l_cnt);
+M2_LIST(list_x2l) = { &el_x2l_strlist, &el_x2l_space, &el_x2l_vsb };
+M2_HLIST(el_x2l_hlist, NULL, list_x2l);
+M2_ALIGN(top_el_x2l_menu, "-1|1W64H64", &el_x2l_hlist);
+
+
+
+
+
+
+
+
+
+
 /*======================================================================*/
 /* top level sdl menu: tlsm */
 
@@ -1826,6 +1899,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_align_check);
     }    
   }
+  else if ( idx == 30 ) {
+    s = "X2LMENU";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_x2l_menu);
+    }    
+  }
 
   
   
@@ -1838,7 +1918,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 30;
+uint8_t el_tlsm_cnt = 31;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -2020,11 +2100,14 @@ int main(void)
 	u8g_SetCursorPos(&u8g, mouse_x, 63-mouse_y);
 	//m2_FindByXY(mouse_x, mouse_y, 0, 0);
 
-      if ( is_mouse_down )
-	u8g_SetCursorStyle(&u8g, 66);
-      else
-	u8g_SetCursorStyle(&u8g, 62);
-	
+	      if ( is_mouse_down )
+	      {
+		u8g_SetCursorStyle(&u8g, 66);
+	      }
+	      else
+	      {
+		u8g_SetCursorStyle(&u8g, 62);
+	      }
 	
       }
       is_motion = 0;
@@ -2034,6 +2117,7 @@ int main(void)
         //u8g_DrawStr(&u8g, 0, 20, "Hello World!");
         m2_CheckKey();
         m2_Draw();
+	//u8g_DrawPixel(&u8g, mouse_x, 63-mouse_y);
       } while( u8g_NextPage(&u8g) );
       
       if ( is_record != 0 )

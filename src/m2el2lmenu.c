@@ -26,7 +26,46 @@
   strlist specific options:
     w:		Width of the strlist box (required!)
     l:			Number of lines (defaults to 1)
-  
+
+
+	struct _m2_menu_entry
+	{
+	  const char *label;
+	  m2_rom_void_p element;
+	};
+	typedef struct _m2_menu_entry m2_menu_entry;
+	
+	label:
+		Name of the element. Treated as submenu if there is a '.' at
+		the beginning of the string.
+	element:
+		This element is assigned as root element if the (sub-) menu 
+		element is selected.
+
+
+	struct _m2_xmenu_entry
+	{
+	  const char *label;
+	  m2_rom_void_p element;
+	  m2_strlist_cb_fnptr cb;
+	};
+	typedef struct _m2_xmenu_entry m2_xmenu_entry;
+
+	label:
+		Name of the element. Treated as submenu if there is a '.' at
+		the beginning of the string.
+		If label is the empty string "" or equal to "." then the callback
+		procedure is called with a M2_STRLIST_MSG_GET_STR msg
+		
+	element
+		Once selected, "element" is assigned as root element. 
+		This root element can be overwritten by the callback 
+		procedure cb
+		
+	cb:
+		If cb is not NULL and the menu entry is selected, then 
+		the the callback procedure cb is called with a 
+		M2_STRLIST_MSG_SELECT message.
 
 */
 
@@ -443,7 +482,7 @@ M2_EL_FN_DEF(m2_el_x2lmenu_line_fn)
 	  if ( m2_el_2lmenu_expanded_position == defidx )
 	  {
 	    m2_el_2lmenu_expanded_position = 255;
-	    m2_2lmenu_update_cnt(parent_el);
+	    m2_x2lmenu_update_cnt(parent_el);
 	  }
 	  else
 	  {
@@ -462,21 +501,21 @@ M2_EL_FN_DEF(m2_el_x2lmenu_line_fn)
 	    else
 	    {
 	      m2_el_2lmenu_expanded_position = defidx;
-	      m2_2lmenu_update_cnt(parent_el);
+	      m2_x2lmenu_update_cnt(parent_el);
 	    }
 	  }
 	}
 	else
 	{
 	  {
-	    m2_strlist_cb_fnptr cb = m2_x2lmenu_get_cb(defidx);
-	    if ( cb != (m2_strlist_cb_fnptr)NULL )
-	      cb(defidx, M2_STRLIST_MSG_SELECT);
-	  }
-	  {
 	    m2_rom_void_p el = m2_x2lmenu_get_element(defidx);
 	    if ( el != NULL )
 	      m2_SetRoot(el);
+	  }
+	  {
+	    m2_strlist_cb_fnptr cb = m2_x2lmenu_get_cb(defidx);
+	    if ( cb != (m2_strlist_cb_fnptr)NULL )
+	      cb(defidx, M2_STRLIST_MSG_SELECT);
 	  }
 	}
       }
@@ -496,14 +535,15 @@ M2_EL_FN_DEF(m2_el_x2lmenu_line_fn)
     case M2_EL_MSG_SHOW:
       m2_el_x2lmenu_data = m2_el_x2lmenu_get_menu_data_ptr(parent_el);
      {
-       char extra_str[2] = " ";
+        char extra_str[2] = " ";
 	uint8_t defidx  = m2_x2lmenu_get_defidx_by_strlistidx(pos);
 	const char *ptr = m2_x2lmenu_get_label(defidx);
        
-	if ( m2_x2lmenu_is_submenu(defidx) != 0 )
-	  ptr++;
+	if ( ptr != NULL )
+	  if ( m2_x2lmenu_is_submenu(defidx) != 0 )
+	    ptr++; 
 	
-	if ( ptr[0] == '\0' )
+	if ( ptr == NULL || ptr[0] == '\0' )
 	{
 	    m2_strlist_cb_fnptr cb = m2_x2lmenu_get_cb(defidx);
 	    if ( cb != (m2_strlist_cb_fnptr)NULL )
@@ -517,11 +557,11 @@ M2_EL_FN_DEF(m2_el_x2lmenu_line_fn)
 	  {
 	    extra_str[0] = m2_el_2lmenu_get_expanded_char(parent_el);
 	  }
-	  else if ( m2_2lmenu_has_submenu(defidx) != 0 )
+	  else if ( m2_x2lmenu_has_submenu(defidx) != 0 )
 	  {
 	    extra_str[0] = m2_el_2lmenu_get_menu_char(parent_el);
 	  }
-	  else if ( m2_2lmenu_is_submenu(defidx) != 0 )
+	  else if ( m2_x2lmenu_is_submenu(defidx) != 0 )
 	  {
 	    extra_str[0] = m2_el_2lmenu_get_submenu_char(parent_el);
 	  }
@@ -560,8 +600,9 @@ M2_EL_FN_DEF(m2_el_2lmenu_common_fn)
     case M2_EL_MSG_GET_WIDTH:
       return m2_el_slbase_calc_width((fn_arg->element));
     case M2_EL_MSG_NEW_DIALOG:
-      m2_el_2lmenu_data = m2_el_2lmenu_get_menu_data_ptr(fn_arg->element);
-      m2_2lmenu_update_cnt(fn_arg->element);
+      /* moved to the specific menu procedures */
+      /*  m2_el_2lmenu_data = m2_el_2lmenu_get_menu_data_ptr(fn_arg->element); */
+      /* m2_2lmenu_update_cnt(fn_arg->element); */
       break;
     case M2_EL_MSG_NEW_FOCUS:
       /* obsolete, replaced by M2_EL_MSG_NEW_DIALOG */
@@ -608,6 +649,10 @@ M2_EL_FN_DEF(m2_el_2lmenu_fn)
     case M2_EL_MSG_GET_LIST_ELEMENT:
       *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_2lmenu_line;
       return 1;
+    case M2_EL_MSG_NEW_DIALOG:
+      m2_el_2lmenu_data = m2_el_2lmenu_get_menu_data_ptr(fn_arg->element);
+      m2_2lmenu_update_cnt(fn_arg->element);
+      break;
   }
   /* rest is done on the common procedure */
   return m2_el_2lmenu_common_fn(fn_arg);
@@ -629,6 +674,10 @@ M2_EL_FN_DEF(m2_el_x2lmenu_fn)
     case M2_EL_MSG_GET_LIST_ELEMENT:
       *((m2_rom_void_p *)(fn_arg->data)) = &m2_el_virtual_x2lmenu_line;
       return 1;
+    case M2_EL_MSG_NEW_DIALOG:
+      m2_el_x2lmenu_data = m2_el_x2lmenu_get_menu_data_ptr(fn_arg->element);
+      m2_x2lmenu_update_cnt(fn_arg->element);
+      break;
   }
   /* rest is done on the common procedure */
   return m2_el_2lmenu_common_fn(fn_arg);
