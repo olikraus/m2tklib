@@ -351,9 +351,9 @@ M2_GRIDLIST(el_num_menu, "c2", num_list);
 /* number entry with TSK buttons*/
 
 
-M2_TSK(el_tsnum_select, "k1", "select");
-M2_TSK(el_tsnum_next, "k3", "next");
-M2_TSK(el_tsnum_prev, "k4", "prev");
+M2_TSK(el_tsnum_select, "", "select", M2_KEY_SELECT);
+M2_TSK(el_tsnum_next, "", "next", M2_KEY_NEXT);
+M2_TSK(el_tsnum_prev, "", "prev", M2_KEY_PREV);
 
 M2_LIST(tsnum_list) = { 
     &el_tsnum_select, &el_num_label1, &el_num_1, 
@@ -403,10 +403,10 @@ M2_LABEL(el_tsk_num_label, NULL, "U32:");
 M2_U32NUM(el_tsk_num_u32, "a1c5", &u32val);
 
 
-M2_TSK(el_tsk_up, "f1k5", " \xdd ");		// data up
-M2_TSK(el_tsk_down, "f1k6", " \xdf ");		// data down
-M2_TSK(el_tsk_left, "f1k4", " \xdc ");		// left
-M2_TSK(el_tsk_right, "f1k3", " \xde ");		// right
+M2_TSK(el_tsk_up, "f1", " \xdd ", M2_KEY_DATA_UP);		// data up
+M2_TSK(el_tsk_down, "f1", " \xdf ", M2_KEY_DATA_DOWN);		// data down
+M2_TSK(el_tsk_left, "f1", " \xdc ", M2_KEY_PREV);		// left
+M2_TSK(el_tsk_right, "f1", " \xde ", M2_KEY_NEXT);		// right
 M2_ROOT(el_tsk_enter, "f1t1r1", " \xbf ", &top_el_tlsm);		// enter
 
 

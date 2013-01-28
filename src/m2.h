@@ -258,7 +258,6 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 
 
 /* Key values */
-/* values 1-7 (select..home) are fixed, they are used by M2_TSK() */
 #define M2_KEY_NONE 0
 #define M2_KEY_SELECT 1
 #define M2_KEY_EXIT 2
@@ -560,12 +559,20 @@ M2_EL_FN_DEF(m2_el_labelp_fn);
 #define M2_LABELP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_labelp_fn, (fmt) }, (str) }
 #define M2_EXTERN_LABELP(el) extern m2_el_str_t el
 
+struct _m2_el_tsk_struct
+{
+  m2_el_str_t str;
+  uint8_t key;
+};
+typedef struct _m2_el_tsk_struct m2_el_tsk_t;
+typedef m2_el_tsk_t *m2_el_tsk_p;
+
 M2_EL_FN_DEF(m2_el_tsk_fn);
-#define M2_TSK(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_tsk_fn, (fmt) }, (str) }
-#define M2_EXTERN_TSK(el) extern m2_el_str_t el
+#define M2_TSK(el,fmt,str,key) m2_el_tsk_t el M2_SECTION_PROGMEM = { { { m2_el_tsk_fn, (fmt) }, (str) }, (key)}
+#define M2_EXTERN_TSK(el) extern m2_el_tsk_t el
 
 M2_EL_FN_DEF(m2_el_tskp_fn);
-#define M2_TSKP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_tskp_fn, (fmt) }, (str) }
+#define M2_TSKP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { { m2_el_tskp_fn, (fmt) }, (str) }, (key)}
 #define M2_EXTERN_TSKP(el) extern m2_el_str_t el
 
 struct _m2_el_labelfn_struct

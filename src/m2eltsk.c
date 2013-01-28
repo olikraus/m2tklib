@@ -22,20 +22,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-  Available options:
-  k1	Select
-  k2	Exit
-  k3	Next
-  k4	Prev
-  k5	Data Up
-  k6	Data Down
-  k7	Home
+  Available arguments for key:
+  M2_KEY_NONE
+  M2_KEY_SELECT
+  M2_KEY_EXIT
+  M2_KEY_NEXT
+  M2_KEY_PREV
+  M2_KEY_DATA_UP
+  M2_KEY_DATA_DOWN
+  M2_KEY_HOME
 
   
 */
 
 #include <stddef.h>
 #include "m2.h"
+
+uint8_t m2_el_tsk_get_key(m2_el_fnarg_p fn_arg)
+{
+  return m2_rom_get_u8(fn_arg->element, offsetof(m2_el_tsk_t, key));
+}
+
 
 M2_EL_FN_DEF(m2_el_tsk_fn)
 {
@@ -52,7 +59,8 @@ M2_EL_FN_DEF(m2_el_tsk_fn)
     case M2_EL_MSG_SELECT:
     {
       //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);
-      uint8_t key_code = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'k');
+      //uint8_t key_code = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'k');
+      uint8_t key_code = m2_el_tsk_get_key(fn_arg);
       if ( key_code > 0 )
       {
 	m2_SetKey(key_code);		/* use global m2 object */
@@ -78,7 +86,8 @@ M2_EL_FN_DEF(m2_el_tskp_fn)
     case M2_EL_MSG_SELECT:
     {
       //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);
-      uint8_t key_code = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'k');
+      //uint8_t key_code = m2_el_fmfmt_opt_get_val_zero_default(fn_arg, 'k');
+      uint8_t key_code = m2_el_tsk_get_key(fn_arg);
       if ( key_code > 0 )
       {
 	m2_SetKey(key_code);		/* use global m2 object */
