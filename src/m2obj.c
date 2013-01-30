@@ -104,7 +104,6 @@ void m2_SetEventSourceArgsM2(m2_p m2, uint8_t arg1, uint8_t arg2)
 void m2_CheckKeyM2(m2_p m2)
 {
   uint8_t key;
-  
   /* step 1: get raw key */
   
   /* check if a key should be forced */
@@ -122,19 +121,23 @@ void m2_CheckKeyM2(m2_p m2)
     if ( m2->es != NULL )
     {
       key = m2->es(m2, M2_ES_MSG_GET_KEY);
+      //printf("key: %d   is_last_key_touch_screen_press:%d\n", key, m2->is_last_key_touch_screen_press);
       
       /* this code automatically generates the M2_KEY_TOUCH_RELEASE message once */
-      if ( key == M2_KEY_TOUCH_PRESS )
+      if ( key == M2_KEY_TOUCH_PRESS || key == M2_KEY_EVENT(M2_KEY_TOUCH_PRESS) )
       {
 	m2->is_last_key_touch_screen_press = 1;
+	//puts("key == M2_KEY_TOUCH_PRESS");
       }
       else if ( key == M2_KEY_TOUCH_RELEASE || key == M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE) )
       {
+	//puts("key == M2_KEY_TOUCH_RELEASE || key == M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE)");
 	m2->is_last_key_touch_screen_press = 0;
 	key = M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE);
       }
       else if ( m2->is_last_key_touch_screen_press != 0 && key == M2_KEY_NONE )
       {
+	//puts("m2->is_last_key_touch_screen_press != 0 && key == M2_KEY_NONE");
 	m2->is_last_key_touch_screen_press = 0;
 	key = M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE);
       }

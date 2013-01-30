@@ -71,7 +71,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			is_motion = 1;
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
 			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
-			return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+			//return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+			return M2_KEY_NONE;
 		case SDL_MOUSEBUTTONDOWN:
 			mouse_x = event.button.x/2;
 			mouse_y = 63 - event.button.y/2;
@@ -88,7 +89,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
 			is_mouse_down = 0;
 			/* the will be no debounce for this event, so M2_KEY_EVENT is not required */		
-			return M2_KEY_TOUCH_RELEASE;
+			//return M2_KEY_TOUCH_RELEASE;
+			return M2_KEY_NONE;
 	        case SDL_KEYDOWN:
 		        switch( event.key.keysym.sym )
 		        {
