@@ -121,7 +121,27 @@ void m2_CheckKeyM2(m2_p m2)
     if ( m2->es != NULL )
     {
       key = m2->es(m2, M2_ES_MSG_GET_KEY);
-      //printf("key: %d   is_last_key_touch_screen_press:%d\n", key, m2->is_last_key_touch_screen_press);
+      /*
+      if ( key == 0 )
+	printf(".");
+      else
+	printf("key: %d   is_last_key_touch_screen_press:%d\n", key, m2->is_last_key_touch_screen_press);
+      */
+      
+      if ( key == M2_KEY_EVENT(M2_KEY_TOUCH_PRESS) )
+      {
+	/* event without debounce */
+	m2->is_last_key_touch_screen_press = 1;
+      }
+      /* the case where key == M2_KEY_TOUCH_PRESS is handled inside the deboucne algorithm */
+      
+      if ( m2->is_last_key_touch_screen_press != 0 && key == M2_KEY_NONE )
+      {
+	m2->is_last_key_touch_screen_press = 0;
+	key = M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE);
+      }
+      
+#ifdef OBSOLTE
       
       /* this code automatically generates the M2_KEY_TOUCH_RELEASE message once */
       if ( key == M2_KEY_TOUCH_PRESS || key == M2_KEY_EVENT(M2_KEY_TOUCH_PRESS) )
@@ -141,6 +161,7 @@ void m2_CheckKeyM2(m2_p m2)
 	m2->is_last_key_touch_screen_press = 0;
 	key = M2_KEY_EVENT(M2_KEY_TOUCH_RELEASE);
       }
+#endif
 	
       /* store the key in the queue */
       m2_SetDetectedKey(m2, key, m2->arg1, m2->arg2);

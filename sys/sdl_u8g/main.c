@@ -52,6 +52,7 @@ uint8_t m2_es_ts(m2_p ep, uint8_t msg)
 */
 uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 {
+  
   switch(msg)
   {
     case M2_ES_MSG_GET_KEY:
@@ -72,6 +73,11 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
 			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
 			//return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+			if ( is_mouse_down != 0 )
+			{
+			  return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+			  //return M2_KEY_TOUCH_PRESS;
+			}
 			return M2_KEY_NONE;
 		case SDL_MOUSEBUTTONDOWN:
 			mouse_x = event.button.x/2;
@@ -80,7 +86,8 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
 			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
 			is_mouse_down = 1;
-			return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+			//return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
+			return M2_KEY_NONE;
 		case SDL_MOUSEBUTTONUP:
 			mouse_x = event.button.x/2;
 			mouse_y = 63 - event.button.y/2;
@@ -140,6 +147,11 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		        break;
 	        }
       	}
+      }
+      if ( is_mouse_down != 0 )
+      {
+	m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
+	return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
       }
       return M2_KEY_NONE;
     case M2_ES_MSG_INIT:

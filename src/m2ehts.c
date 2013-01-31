@@ -33,10 +33,12 @@ uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
   switch(msg)
   {
     case M2_EP_MSG_TOUCH_PRESS:
+      //puts("M2_EP_MSG_TOUCH_PRESS");
       m2_FindByXYM2(ep, arg1, arg2, 1 /* is_change_focus */,  0 /* is_send_select*/ );    
       return 1;
     
     case M2_EP_MSG_TOUCH_RELEASE:
+      //puts("M2_EP_MSG_TOUCH_RELEASE");
       m2_FindByXYM2(ep, arg1, arg2, 1 /* is_change_focus */,  1 /* is_send_select*/ );    
       return 1;
   }
