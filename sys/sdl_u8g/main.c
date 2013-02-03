@@ -24,25 +24,31 @@ int is_mouse_down = 0;
 int is_record = 0;
 int pic_num = 0;
 
+#ifdef EXAMPLE
 /* event source for touch screens */
-uint8_t m2_es_ts(m2_p ep, uint8_t msg)
+uint8_t m2_es_touch_screen(m2_p ep, uint8_t msg)
 {
   switch(msg)
   {
     case M2_ES_MSG_GET_KEY:
-      if ( 1 /* touch detected */ )
+      /* check, if the touch screen is pressed */ 
+      if ( check_for_touch_screen_press()  )
       {
-	m2_SetEventSourceArgsM2(ep, 0 /* x */, 0 /* y */);
+	/* set x and y position of the touch screen */
+	/* (x,y) is a M2 position: (0,0) is lower left */
+	m2_SetEventSourceArgsM2(ep, get_touch_screen_x_position(), get_touch_screen_y_position() );
+	/* no debounce: return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS); */
+	/* with debounce: return M2_KEY_TOUCH_PRESS; */
+	return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
       }
-      return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
-      
+      break;      
     case M2_ES_MSG_INIT:
       break;
   }
-  return 0;
-  
+  /* return 0 or call other event source */
+  return 0;  
 }
-
+#endif
 
 /* 
   event source for SDL
@@ -50,6 +56,12 @@ uint8_t m2_es_ts(m2_p ep, uint8_t msg)
   u8glib only replaces the graphics part, but not the event handling for sdl
   it is assumed, that SDL has been setup
 */
+
+/* if TOUCHKEY is set to M2_KEY_EVENT(M2_KEY_TOUCH_PRESS), then debounce is bypassed */
+//#define TOUCHKEY M2_KEY_EVENT(M2_KEY_TOUCH_PRESS)
+
+/* if TOUCHKEY is set to M2_KEY_TOUCH_PRESS, then debounce is used */
+#define TOUCHKEY M2_KEY_TOUCH_PRESS
 uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 {
   
@@ -75,8 +87,7 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			//return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
 			if ( is_mouse_down != 0 )
 			{
-			  return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
-			  //return M2_KEY_TOUCH_PRESS;
+			  return TOUCHKEY;
 			}
 			return M2_KEY_NONE;
 		case SDL_MOUSEBUTTONDOWN:
@@ -86,8 +97,7 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 			//printf("Mouse: %d %d\n", event.motion.x, event.motion.y);
 			m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
 			is_mouse_down = 1;
-			//return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
-			return M2_KEY_NONE;
+			return TOUCHKEY;
 		case SDL_MOUSEBUTTONUP:
 			mouse_x = event.button.x/2;
 			mouse_y = 63 - event.button.y/2;
@@ -145,14 +155,21 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		            break;
 		        }
 		        break;
+		  
 	        }
-      	}
+	    }
+	    else
+	    {
+			if ( is_mouse_down != 0 )
+			{
+			  m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
+			  return TOUCHKEY;
+			}
+	      
+	    }
       }
-      if ( is_mouse_down != 0 )
-      {
-	m2_SetEventSourceArgsM2(ep, mouse_x /* x */, mouse_y /* y */);
-	return M2_KEY_EVENT(M2_KEY_TOUCH_PRESS);
-      }
+      
+      
       return M2_KEY_NONE;
     case M2_ES_MSG_INIT:
       break;

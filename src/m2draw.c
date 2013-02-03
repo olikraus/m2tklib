@@ -91,8 +91,9 @@ void m2_draw_visit_node(m2_pos_p box, uint8_t msg)
   }
   
   m2_nav_prepare_fn_arg_current_element(&m2_draw_current);
+  /* if there is no focus, then check if the touch screen has set the focus ("element_focus") */
   if ( arg == 0 )
-    if ( m2_fn_arg_get_element() == m2_draw_p->element_focus )
+    if ( m2_fn_arg_get_element() == m2_draw_p->element_focus )	
       arg = 2;
   m2_fn_arg_set_arg_data(arg, box);
   

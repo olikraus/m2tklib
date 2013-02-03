@@ -133,8 +133,7 @@ void m2_CheckKeyM2(m2_p m2)
 	/* event without debounce */
 	m2->is_last_key_touch_screen_press = 1;
       }
-      /* the case where key == M2_KEY_TOUCH_PRESS is handled inside the deboucne algorithm */
-      
+      /* the case where key == M2_KEY_TOUCH_PRESS is handled inside the deboucne algorithm */      
       if ( m2->is_last_key_touch_screen_press != 0 && key == M2_KEY_NONE )
       {
 	m2->is_last_key_touch_screen_press = 0;

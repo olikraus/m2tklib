@@ -1017,7 +1017,7 @@ struct _m2_struct
   uint8_t arg1, arg2;		/* used for the touch screen x/y data */
   m2_gfx_fnptr gh;		/* graphics handler */
   uint8_t is_last_key_touch_screen_press;
-  m2_rom_void_p element_focus;	/* touch screen focus */
+  m2_rom_void_p element_focus;	/* touch screen focus, can be set to NULL to disable touch screen focus */
   
   
   uint8_t forced_key; 	/* additional key, which will be processed by the next call to m2_Step() */

@@ -168,10 +168,14 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2)
       else if ( m2->detected_key_code != key_code )
       {
 	m2->debounce_state = M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS;
-      }      
-      if ( m2->detected_key_code == M2_KEY_TOUCH_PRESS )
-	m2_PutKeyIntoQueueWithArgs(m2, M2_EP_MSG_TOUCH_PRESS, arg1, arg2);
-      break;
+      }
+      else
+      {
+	/* Special handling for touch screens: Repeat sending the touch press event */
+	if ( m2->detected_key_code == M2_KEY_TOUCH_PRESS )
+	  m2_PutKeyIntoQueueWithArgs(m2, M2_EP_MSG_TOUCH_PRESS, arg1, arg2);
+      }
+     break;
     case M2_DEBOUNCE_STATE_RELEASE:
       if ( m2->detected_key_code == key_code )
       {
