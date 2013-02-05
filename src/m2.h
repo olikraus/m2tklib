@@ -512,6 +512,20 @@ M2_EL_FN_DEF(m2_el_xbmlabelp_fn);
 #define M2_XBMLABELP(el,fmt,w,h,ptr) m2_el_xbm_t el M2_SECTION_PROGMEM = { { m2_el_xbmlabelp_fn, (fmt) }, (w), (h), (ptr) }
 #define M2_EXTERN_XBMLABELP(el) extern m2_el_xbm_t el
 
+
+struct _m2_el_xbmtsk_struct
+{
+  m2_el_xbm_t xbm;
+  uint8_t key;
+};
+typedef struct _m2_el_xbmtsk_struct m2_el_xbmtsk_t;
+typedef m2_el_xbmtsk_t *m2_el_xbmtsk_p;
+
+M2_EL_FN_DEF(m2_el_xbmtsk_fn);
+#define M2_XBMTSKP(el,fmt,w,h,ptr,key) m2_el_xbmtsk_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmtsk_fn, (fmt) }, (w), (h), (ptr) }, (key) }
+#define M2_EXTERN_XBMTSKP(el) extern m2_el_xbmtsk_t el
+
+
 struct _m2_el_xbmroot_struct
 {
   m2_el_xbm_t xbm;
