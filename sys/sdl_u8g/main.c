@@ -355,18 +355,23 @@ M2_ALIGN(top_el_speed, "-1|1W64H64", &el_speed);
 /* number entry */
 
 uint8_t u8num = 0;
+int8_t s8num = 120;
 uint32_t u32num = 0;
 
 void fn_num_zero(m2_el_fnarg_p fnarg) {
   u8num = 0;
+  s8num = 0;
   u32num = 0;
 }
 
 M2_LABEL(el_num_label1, NULL, "U8:");
 M2_U8NUM(el_num_1, NULL, 0, 255, &u8num);
 
-M2_LABEL(el_num_label2, NULL, "U32:");
-M2_U32NUM(el_num_2, "c5", &u32num);
+M2_LABEL(el_num_label2, NULL, "S8:");
+M2_S8NUM(el_num_2, "+1c3", -128, 127, &s8num);
+
+M2_LABEL(el_num_label3, NULL, "U32:");
+M2_U32NUM(el_num_3, "c5", &u32num);
 
 M2_BUTTON(el_num_zero, "f4", " zero ", fn_num_zero);
 M2_ROOT(el_num_goto_top, "f4", " back ", &top_el_tlsm);
@@ -374,6 +379,7 @@ M2_ROOT(el_num_goto_top, "f4", " back ", &top_el_tlsm);
 M2_LIST(num_list) = { 
     &el_num_label1, &el_num_1, 
     &el_num_label2, &el_num_2,  
+    &el_num_label3, &el_num_3,  
     &el_num_zero, &el_num_goto_top
 };
 M2_GRIDLIST(el_num_menu, "c2", num_list);

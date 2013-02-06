@@ -89,6 +89,11 @@ uint8_t m2_rom_get_u8(m2_rom_void_p base, uint8_t offset)
   return m2_rom_low_level_get_byte(((m2_rom_char_p)base)+offset);
 }
 
+int8_t m2_rom_get_s8(m2_rom_void_p base, uint8_t offset)
+{
+  return (int8_t)m2_rom_low_level_get_byte(((m2_rom_char_p)base)+offset);
+}
+
 uint32_t m2_rom_get_u32(m2_rom_void_p base, uint8_t offset)
 {
   m2_rom_low_level_copy(&(m2_rom_tmp_area.u32),  ((m2_rom_char_p)base)+offset, sizeof(uint32_t));

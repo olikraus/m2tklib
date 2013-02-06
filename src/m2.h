@@ -158,6 +158,11 @@ typedef uint8_t (*m2_u8fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint8_t val
 #define M2_U8_MSG_GET_VALUE 0
 #define M2_U8_MSG_SET_VALUE 1
 
+/* s8fn procedure */
+typedef int8_t (*m2_s8fn_fnptr)(m2_rom_void_p element, uint8_t msg, int8_t val);
+#define M2_S8_MSG_GET_VALUE 0
+#define M2_S8_MSG_SET_VALUE 1
+
 /* u32fn procedure */
 typedef uint32_t (*m2_u32fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint32_t val);
 #define M2_U32_MSG_GET_VALUE 0
@@ -382,6 +387,7 @@ uint8_t m2_rom_low_level_get_byte(m2_rom_void_p ptr) M2_NOINLINE;									/* m2r
 void m2_rom_low_level_copy(void *dest, m2_rom_void_p src, uint8_t cnt) M2_NOINLINE;					/* m2rom.c */
 void m2_rom_low_level_strncpy(void *dest, m2_rom_void_p src, uint8_t cnt) M2_NOINLINE;					/* m2rom.c */
 uint8_t m2_rom_get_u8(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;								/* m2rom.c */
+int8_t m2_rom_get_s8(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;								/* m2rom.c */
 uint32_t m2_rom_get_u32(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;							/* m2rom.c */
 m2_rom_void_p m2_rom_get_rom_ptr(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;					/* m2rom.c */
 void *m2_rom_get_ram_ptr(m2_rom_void_p base, uint8_t offset) M2_NOINLINE;							/* m2rom.c */
@@ -625,6 +631,45 @@ typedef m2_el_button_t *m2_el_button_p;
 M2_EL_FN_DEF(m2_el_button_fn);
 #define M2_BUTTON(el, fmt, str, callback) m2_el_button_t el M2_SECTION_PROGMEM = { { { m2_el_button_fn, (fmt) }, (str) },  (callback)  }
 #define M2_EXTERN_BUTTON(el) extern m2_el_button_t el
+
+
+struct _m2_el_s8_struct
+{
+  m2_el_fnfmt_t ff;
+  int8_t min;
+  int8_t max;
+};
+typedef struct _m2_el_s8_struct m2_el_s8_t;
+typedef m2_el_s8_t *m2_el_s8_p;
+
+struct _m2_el_s8_ptr_struct
+{
+  m2_el_s8_t s8;
+  int8_t *val;		/* data, which should be modified */
+};
+typedef struct _m2_el_s8_ptr_struct m2_el_s8_ptr_t;
+typedef m2_el_s8_ptr_t *m2_el_s8_ptr_p;
+
+struct _m2_el_s8_fn_struct
+{
+  m2_el_s8_t s8;
+  m2_u8fn_fnptr s8_callback;		/* callback procedure */
+};
+typedef struct _m2_el_s8_fn_struct m2_el_s8_fn_t;
+typedef m2_el_s8_fn_t *m2_el_s8_fn_p;
+
+
+
+M2_EL_FN_DEF(m2_el_s8base_fn);												/* m2els8base.c */
+M2_EL_FN_DEF(m2_el_s8num_fn);
+#define M2_S8NUM(el,fmt,min,max,variable) m2_el_s8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_s8num_fn, (fmt) }, (min), (max) }, (variable) }
+#define M2_EXTERN_S8NUM(el) extern m2_el_s8_ptr_t el
+
+M2_EL_FN_DEF(m2_el_s8numfn_fn);
+#define M2_S8NUMFN(el,fmt,min,max,cb) m2_el_s8_fn_t el M2_SECTION_PROGMEM = { { { m2_el_s8numfn_fn, (fmt) }, (min), (max) }, (cb) }
+#define M2_EXTERN_S8NUMFN(el) extern m2_el_s8_fn_t el
+
+
 
 
 struct _m2_el_u8_struct
@@ -1132,6 +1177,13 @@ m2_u8fn_fnptr m2_el_u8_get_callback(m2_el_fnarg_p fn_arg) M2_NOINLINE;						/* m
 uint8_t m2_el_u8_get_val(m2_el_fnarg_p fn_arg) M2_NOINLINE;				                		/* m2elu8base.c */
 void m2_el_u8_set_val(m2_el_fnarg_p fn_arg, uint8_t val) M2_NOINLINE;					        	/* m2elu8base.c */
 
+/*==============================================================*/
+int8_t m2_el_s8_get_max(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2els8base.c */
+int8_t m2_el_s8_get_min(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2els8base.c */
+int8_t *m2_el_s8_get_val_ptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;								/* m2els8base.c */
+m2_s8fn_fnptr m2_el_s8_get_callback(m2_el_fnarg_p fn_arg) M2_NOINLINE;						/* m2els8base.c */
+int8_t m2_el_s8_get_val(m2_el_fnarg_p fn_arg) M2_NOINLINE;				                			/* m2els8base.c */
+void m2_el_s8_set_val(m2_el_fnarg_p fn_arg, int8_t val) M2_NOINLINE;					        	/* m2els8base.c */
 
 /*==============================================================*/
 char *m2_el_str_get_str(m2_el_fnarg_p fn_arg) M2_NOINLINE;									/* m2elstr.c */
@@ -1321,6 +1373,7 @@ uint8_t m2_get_center_line_offset(uint8_t bigger_len, uint8_t smaler_len);	/* m2
 extern char m2_utl_string_conversion_data[UTL_STRING_CONVERSION_DATA_LEN];
 const char *m2_utl_u8dp(char *dest, uint8_t v);
 const char *m2_utl_u8d(uint8_t v, uint8_t d);
+const char *m2_utl_s8d(int8_t v, uint8_t d, uint8_t is_plus);
 
 
 #ifdef __cplusplus
