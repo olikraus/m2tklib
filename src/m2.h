@@ -1079,7 +1079,7 @@ struct _m2_struct
   m2_rom_void_p element_focus;	/* touch screen focus, can be set to NULL to disable touch screen focus */
   
   
-  uint8_t forced_key; 	/* additional key, which will be processed by the next call to m2_Step() */
+  /* uint8_t forced_key; */ 	/* additional key, which will be processed by the next call to m2_Step(), Feb 9, 2013: OBSOLETE */
   uint8_t is_frame_draw_at_end;
   
   /* internal values for the debounce algorithm */

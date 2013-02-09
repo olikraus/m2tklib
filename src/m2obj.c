@@ -86,11 +86,12 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2->root_change_callback = m2_root_change_default_cb;  /* called in m2navinit.c */
   m2_gfx_init(gh);
   m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
-  m2->forced_key = M2_KEY_REFRESH;
+  //m2->forced_key = M2_KEY_REFRESH;
   m2->debounce_state = M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS;
   m2_SetHomeM2(m2, element);
-  m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
   m2_nav_init(m2_get_nav(m2),  element);
+  if ( m2_GetRootM2(m2) != &m2_null_element )	/* only refresh screen for none empty menues, issue 97 */
+    m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
   m2_get_nav(m2)->root_change_value = 0;
   m2_SetEventSourceHandlerM2(m2, es);
 }
