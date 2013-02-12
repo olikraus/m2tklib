@@ -46,45 +46,45 @@ cp ../../dev/sdfat/*.cpp ./libraries/M2tklib/addon/.
 
 
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/utility/m2ghnlc.h
-cp ../../arduino/LiquidCrystal/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
+cp ../../arduino/NewLiquidCrystal/HelloWorld/*.pde ./libraries/M2tklib/examples/HelloWorld/.
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/HelloWorld/HelloWorld.pde
-cp ../../arduino/LiquidCrystal/Combo/*.pde ./libraries/M2tklib/examples/Combo/.
+cp ../../arduino/NewLiquidCrystal/Combo/*.pde ./libraries/M2tklib/examples/Combo/.
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Combo/Combo.pde
-#cp ../../arduino/LiquidCrystal/DataEntry/*.pde ./libraries/M2tklib/examples/DataEntry/.
+#cp ../../arduino/NewLiquidCrystal/DataEntry/*.pde ./libraries/M2tklib/examples/DataEntry/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/DataEntry/DataEntry.pde
-cp ../../arduino/LiquidCrystal/FindNum/*.pde ./libraries/M2tklib/examples/FindNum/.
+cp ../../arduino/NewLiquidCrystal/FindNum/*.pde ./libraries/M2tklib/examples/FindNum/.
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/FindNum/FindNum.pde
-#cp ../../arduino/LiquidCrystal/Radio/*.pde ./libraries/M2tklib/examples/Radio/.
+#cp ../../arduino/NewLiquidCrystal/Radio/*.pde ./libraries/M2tklib/examples/Radio/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Radio/Radio.pde
-#cp ../../arduino/LiquidCrystal/Text/*.pde ./libraries/M2tklib/examples/Text/.
+#cp ../../arduino/NewLiquidCrystal/Text/*.pde ./libraries/M2tklib/examples/Text/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Text/Text.pde
-#cp ../../arduino/LiquidCrystal/U32/*.pde ./libraries/M2tklib/examples/U32/.
+#cp ../../arduino/NewLiquidCrystal/U32/*.pde ./libraries/M2tklib/examples/U32/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/U32/U32.pde
-#cp ../../arduino/LiquidCrystal/U32Plain/*.pde ./libraries/M2tklib/examples/U32Plain/.
+#cp ../../arduino/NewLiquidCrystal/U32Plain/*.pde ./libraries/M2tklib/examples/U32Plain/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/U32Plain/U32Plain.pde
 
-#cp ../../arduino/LiquidCrystal/LEDFlash/*.pde ./libraries/M2tklib/examples/LEDFlash/.
+#cp ../../arduino/NewLiquidCrystal/LEDFlash/*.pde ./libraries/M2tklib/examples/LEDFlash/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/LEDFlash/LEDFlash.pde
-cp ../../arduino/LiquidCrystal/Rapunzel/*.pde ./libraries/M2tklib/examples/Rapunzel/.
+cp ../../arduino/NewLiquidCrystal/Rapunzel/*.pde ./libraries/M2tklib/examples/Rapunzel/.
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Rapunzel/Rapunzel.pde
-cp ../../arduino/LiquidCrystal/StrList/*.pde ./libraries/M2tklib/examples/StrList/.
+cp ../../arduino/NewLiquidCrystal/StrList/*.pde ./libraries/M2tklib/examples/StrList/.
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/StrList/StrList.pde
 
-#cp ../../arduino/LiquidCrystal/Menu2L/*.pde ./libraries/M2tklib/examples/Menu2L/.
+#cp ../../arduino/NewLiquidCrystal/Menu2L/*.pde ./libraries/M2tklib/examples/Menu2L/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Menu2L/Menu2L.pde
-#cp ../../arduino/LiquidCrystal/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
+#cp ../../arduino/NewLiquidCrystal/FileSelect/*.pde ./libraries/M2tklib/examples/FileSelect/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 #sed -i 's|mas.h|utility/mas.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
 #sed -i 's|pff.h|utility/pff.h|g' ./libraries/M2tklib/examples/FileSelect/FileSelect.pde
-#cp ../../arduino/LiquidCrystal/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
+#cp ../../arduino/NewLiquidCrystal/Serial/*.pde ./libraries/M2tklib/examples/Serial/.
 ##sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Serial/Serial.pde
-cp ../../arduino/LiquidCrystal/PWMPinList/*.pde ./libraries/M2tklib/examples/PWMPinList/.
+cp ../../arduino/NewLiquidCrystal/PWMPinList/*.pde ./libraries/M2tklib/examples/PWMPinList/.
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWMPinList.pde
 
-#cp ../../arduino/LiquidCrystal/RotEnc/*.pde ./libraries/M2tklib/examples/RotEnc/.
+#cp ../../arduino/NewLiquidCrystal/RotEnc/*.pde ./libraries/M2tklib/examples/RotEnc/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/RotEnc/RotEnc.pde
-#cp ../../arduino/LiquidCrystal/Bookmarks/*.pde ./libraries/M2tklib/examples/Bookmarks/.
+#cp ../../arduino/NewLiquidCrystal/Bookmarks/*.pde ./libraries/M2tklib/examples/Bookmarks/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Bookmarks/Bookmarks.pde
 
 

@@ -10,6 +10,7 @@ Install instructions for the Arduino environment.
       b) "u8g": u8g library, http://code.google.com/p/u8glib/
       c) "glcd": glcd library, http://code.google.com/p/glcd-arduino/
       d) "dogm128": dogm128 library, http://code.google.com/p/dogm128/
+      e) "nlc": NewLiquidCrystal: https://bitbucket.org/fmalpartida/new-liquidcrystal/
 2. Unzip m2tklib_arduino_..._X.XX.zip into the "libraries" folder
 3. Start Arduino IDE
 
