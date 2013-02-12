@@ -6,7 +6,7 @@
 
   m2tklib = Mini Interative Interface Toolkit Library
   
-  Copyright (C) 2011  olikraus@gmail.com
+  Copyright (C) 2013  olikraus@gmail.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@
 */
 
 /*
+    New LiquidCrystal 
+    https://bitbucket.org/fmalpartida/new-liquidcrystal/
+  
     Constructor				Include
     
     LiquidCrystal			#include <LiquidCrystal.h>
