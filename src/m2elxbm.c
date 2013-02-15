@@ -159,7 +159,7 @@ M2_EL_FN_DEF(m2_el_xbmbuttonp_fn)
       return 1;
     }
   }
-  return m2_el_xbmrootp_fn(fn_arg);
+  return m2_el_xbmlabelp_fn(fn_arg);
 }
 
 uint8_t m2_el_xbmtsk_get_key(m2_el_fnarg_p fn_arg)
@@ -179,6 +179,8 @@ M2_EL_FN_DEF(m2_el_xbmtsk_fn)
 	}
 	/* else... break out of the switch and let the base class do the rest of the work */
 	break;
+     case M2_EL_MSG_IS_READ_ONLY:
+      return 1;
     case M2_EL_MSG_SELECT:
     {
       //uint8_t msg = m2_el_fmfmt_opt_get_val_any_default(fn_arg, 'k', 0);

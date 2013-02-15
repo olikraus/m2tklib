@@ -457,6 +457,63 @@ M2_GRIDLIST(el_tsk_num_menu, "c4", tsk_list);
 M2_ALIGN(top_el_tsk_num_menu, "-1|1W64H64", &el_tsk_num_menu);
 
 /*======================================================================*/
+/* double focus mode */
+/* 
+  number entry with XBMTSK buttons 
+
+  Num: 000000
+  . up .
+  left ok right
+  . down .
+*/
+
+
+static unsigned char down_bits[] U8G_PROGMEM = {
+   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41,
+   0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0xf2, 0x4f, 0xe2, 0x47, 0xc2, 0x43,
+   0x82, 0x41, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
+static unsigned char enter_bits[] U8G_PROGMEM  = {
+   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x02, 0x40, 0x02, 0x4c,
+   0x02, 0x4c, 0x22, 0x4c, 0x32, 0x4c, 0xfa, 0x4f, 0xfa, 0x4f, 0x32, 0x40,
+   0x22, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
+static unsigned char left_bits[] U8G_PROGMEM  = {
+   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x42, 0x40, 0x62, 0x40,
+   0x72, 0x40, 0xfa, 0x5f, 0xfa, 0x5f, 0x72, 0x40, 0x62, 0x40, 0x42, 0x40,
+   0x02, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
+static unsigned char right_bits[] U8G_PROGMEM  = {
+   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x02, 0x42, 0x02, 0x46,
+   0x02, 0x4e, 0xfa, 0x5f, 0xfa, 0x5f, 0x02, 0x4e, 0x02, 0x46, 0x02, 0x42,
+   0x02, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
+static unsigned char up_bits[] U8G_PROGMEM  = {
+   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x82, 0x41, 0xc2, 0x43, 0xe2, 0x47,
+   0xf2, 0x4f, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41,
+   0x82, 0x41, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
+
+
+uint32_t xu32val = 0;
+M2_LABEL(el_xtsk_num_label, NULL, "U32:");
+M2_U32NUM(el_xtsk_num_u32, "a1c5", &xu32val);
+
+
+M2_XBMTSKP(el_xtsk_up, "f1w16h16r1", 16, 16, up_bits, M2_KEY_DATA_UP);		// data up
+M2_XBMTSKP(el_xtsk_down, "f1w16h16", 16, 16, down_bits, M2_KEY_DATA_DOWN);		// data down
+M2_XBMTSKP(el_xtsk_left, "f1w16h16", 16, 16, left_bits, M2_KEY_PREV);		// left
+M2_XBMTSKP(el_xtsk_right, "f1w16h16", 16, 16, right_bits, M2_KEY_NEXT);		// right
+M2_XBMROOTP(el_xtsk_enter, "f1t1r1w16h16", 16, 16, enter_bits, &top_el_tlsm);		// enter
+
+
+
+M2_LIST(xtsk_list) = { 
+    &el_xtsk_num_label, &m2_null_element, &el_xtsk_up,    &m2_null_element, 
+    &el_xtsk_num_u32,  &el_xtsk_left,            &el_xtsk_enter, &el_xtsk_right, 
+    &m2_null_element, &m2_null_element, &el_xtsk_down, &m2_null_element, 
+};
+M2_GRIDLIST(el_xtsk_num_menu, "c4", xtsk_list);
+M2_ALIGN(top_el_xtsk_num_menu, "-1|1W64H64", &el_xtsk_num_menu);
+
+
+
+/*======================================================================*/
 /* single focus mode */
 /* 
   number entry with TSK buttons 
@@ -1943,6 +2000,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_x2l_menu);
     }    
   }
+  else if ( idx == 31 ) {
+    s = "XBMTSK";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_xtsk_num_menu);
+    }    
+  }
 
   
   
@@ -1955,7 +2019,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 31;
+uint8_t el_tlsm_cnt = 32;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
