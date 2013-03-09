@@ -463,6 +463,11 @@ M2_EL_FN_DEF(m2_el_space_fn);
 #define M2_SPACE(el,fmt) m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_space_fn, (fmt) } }
 #define M2_EXTERN_SPACE(el) extern m2_el_space_t el
 
+M2_EL_FN_DEF(m2_el_box_fn);
+
+#define M2_BOX(el,fmt) m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_box_fn, (fmt) } }
+#define M2_EXTERN_BOX(el) extern m2_el_space_t el
+
 struct _m2_el_spacecb_struct
 {
   m2_el_space_t el_space;
