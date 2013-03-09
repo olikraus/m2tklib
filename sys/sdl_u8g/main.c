@@ -511,6 +511,20 @@ M2_LIST(xtsk_list) = {
 M2_GRIDLIST(el_xtsk_num_menu, "c4", xtsk_list);
 M2_ALIGN(top_el_xtsk_num_menu, "-1|1W64H64", &el_xtsk_num_menu);
 
+/*=================================b=====================================*/
+
+M2_LIST(xtsk2_list) = { &el_xtsk_num_label, &el_xtsk_num_u32 };
+M2_GRIDLIST(el_xtsk2_num_menu, "c2", xtsk2_list);
+
+M2_BOX(xtsk_box, "w128h2");
+
+M2_LIST(xtsk3_list) = { &el_xtsk_left,  &el_xtsk_up, &el_xtsk_enter, &el_xtsk_down, &el_xtsk_right, };
+M2_GRIDLIST(el_xtsk3_num_menu, "c5", xtsk3_list);
+
+M2_LIST(xtsk_vlist) = { &el_xtsk2_num_menu, &xtsk_box, &el_xtsk3_num_menu };
+M2_VLIST(el_xtsk_vlist, "", xtsk_vlist);
+M2_ALIGN(top_el_xtsk_num_box_menu, "-1|1W64H64", &el_xtsk_vlist);
+
 
 
 /*======================================================================*/
@@ -2007,6 +2021,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_xtsk_num_menu);
     }    
   }
+  else if ( idx == 32 ) {
+    s = "XBMTSK BOX";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_xtsk_num_box_menu);
+    }    
+  }
 
   
   
@@ -2019,7 +2040,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 32;
+uint8_t el_tlsm_cnt = 33;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
