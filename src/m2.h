@@ -792,9 +792,25 @@ struct _m2_el_align_struct
 typedef struct _m2_el_align_struct m2_el_align_t;
 typedef m2_el_align_t *m2_el_align_p;
 
+m2_rom_void_p m2_el_align_get_element(m2_el_fnarg_p fn_arg);	/* m2elalign.c */
+uint8_t m2_el_align_get_child_size(m2_el_fnarg_p fn_arg, uint8_t is_height);	/* m2elalign.c */
+
 M2_EL_FN_DEF(m2_el_align_fn);
 #define M2_ALIGN(el, fmt, element) m2_el_align_t el M2_SECTION_PROGMEM = {{ m2_el_align_fn, (fmt) }, (element) }
 #define M2_EXTERN_ALIGN(el) extern m2_el_align_t el
+
+/* derived from el_align */
+struct _m2_el_hide_struct
+{
+  m2_el_align_t align;
+  uint8_t *val;		/* 0: visible, 1: hide, but size is calculated, 2: hide with zero size */
+};
+typedef struct _m2_el_hide_struct m2_el_hide_t;
+typedef m2_el_hide_t *m2_el_hide_p;
+
+M2_EL_FN_DEF(m2_el_hide_fn);
+#define M2_HIDE(el, fmt, hideptr, element) m2_el_hide_t el M2_SECTION_PROGMEM = { {{ m2_el_align_fn, (fmt) }, (element) }, hideptr }
+#define M2_EXTERN_HIDE(el) extern m2_el_hide_t el
 
 /* used for toggle and radio buttons */
 struct _m2_el_setval_struct
