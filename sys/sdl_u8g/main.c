@@ -439,14 +439,11 @@ uint32_t u32val = 0;
 M2_LABEL(el_tsk_num_label, NULL, "U32:");
 M2_U32NUM(el_tsk_num_u32, "a1c5", &u32val);
 
-
 M2_TSK(el_tsk_up, "f1", " \xdd ", M2_KEY_DATA_UP);		// data up
 M2_TSK(el_tsk_down, "f1", " \xdf ", M2_KEY_DATA_DOWN);		// data down
 M2_TSK(el_tsk_left, "f1", " \xdc ", M2_KEY_PREV);		// left
 M2_TSK(el_tsk_right, "f1", " \xde ", M2_KEY_NEXT);		// right
 M2_ROOT(el_tsk_enter, "f1t1r1", " \xbf ", &top_el_tlsm);		// enter
-
-
 
 M2_LIST(tsk_list) = { 
     &el_tsk_num_label, &m2_null_element, &el_tsk_up,    &m2_null_element, 
@@ -1805,8 +1802,27 @@ M2_ALIGN(top_el_x2l_menu, "-1|1W64H64", &el_x2l_hlist);
 
 
 
+/*======================================================================*/
+/* hide example */
+
+uint8_t hide_on = 0;
+int8_t hide_u8num = 0;
 
 
+M2_LABEL(el_hide_label, NULL, "Hide: ");
+M2_TOGGLE(el_hide_toggle, "", &hide_on);
+
+M2_LABEL(el_hide_num_label, NULL, "Num: ");
+M2_HIDE(h_el_hide_num_label, NULL, &hide_on, &el_hide_num_label);
+M2_U8NUM(el_hide_num_u8, "c2", 0, 99, &hide_u8num);
+M2_HIDE(h_el_hide_num_u8, NULL, &hide_on, &el_hide_num_u8);
+
+M2_LIST(hide_example_list) = { 
+    &el_hide_label, &el_hide_toggle, 
+    &h_el_hide_num_label, &h_el_hide_num_u8
+};
+M2_GRIDLIST(el_hide_example, "c2", hide_example_list);
+M2_ALIGN(el_top_hide_example, "-1|1W64H64", &el_hide_example);
 
 
 
@@ -2028,8 +2044,15 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_xtsk_num_box_menu);
     }    
   }
+  else if ( idx == 33 ) {
+    s = "HIDE";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_top_hide_example );
+    }    
+  }
 
-  
+ 
   
   
   
@@ -2040,7 +2063,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 33;
+uint8_t el_tlsm_cnt = 34;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

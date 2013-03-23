@@ -40,22 +40,21 @@ uint8_t m2_el_hide_fn(m2_el_fnarg_p fn_arg)
   switch(fn_arg->msg)
   {
     case M2_EL_MSG_GET_LIST_LEN:
-      return 1;
+      return 1; 
     case M2_EL_MSG_IS_AUTO_SKIP:
       if ( val >= 1 )
         return 0;
       return 1; 
+    case M2_EL_MSG_IS_READ_ONLY:
+      return 1;
     case M2_EL_MSG_GET_OPT:
-	if ( fn_arg->arg == 'd' )
-	{
-	  if ( val == 0 )
-	    *(uint8_t *)(fn_arg->data) = 1;
-	  else
-	    *(uint8_t *)(fn_arg->data) = 0;
-	  return 1;
-	}
-	/* else... break out of the switch and let the base class do the rest of the work */
+	/* d option is not working... */
+	/* break out of the switch and let the base class do the rest of the work */
 	break;
+    case M2_EL_MSG_GET_LIST_BOX:
+      ((m2_pcbox_p)(fn_arg->data))->c.y = ((m2_pcbox_p)(fn_arg->data))->p.y; 
+      ((m2_pcbox_p)(fn_arg->data))->c.x = ((m2_pcbox_p)(fn_arg->data))->p.x; 
+      return 1; /* always visible, visibility is controlled by 'd' option */
     case M2_EL_MSG_GET_LIST_ELEMENT:
      /* reuse from m2elalign.c */
       *((m2_rom_void_p *)(fn_arg->data)) = m2_el_align_get_element(fn_arg);
@@ -68,6 +67,8 @@ uint8_t m2_el_hide_fn(m2_el_fnarg_p fn_arg)
       if ( val >= 2 ) 
         return 0;
       return m2_el_align_get_child_size(fn_arg, 0);	        
+    case M2_EL_MSG_SHOW:
+      return 1;
   }
   return m2_el_fnfmt_fn(fn_arg);
 }

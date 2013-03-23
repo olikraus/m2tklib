@@ -809,7 +809,7 @@ typedef struct _m2_el_hide_struct m2_el_hide_t;
 typedef m2_el_hide_t *m2_el_hide_p;
 
 M2_EL_FN_DEF(m2_el_hide_fn);
-#define M2_HIDE(el, fmt, hideptr, element) m2_el_hide_t el M2_SECTION_PROGMEM = { {{ m2_el_align_fn, (fmt) }, (element) }, hideptr }
+#define M2_HIDE(el, fmt, hideptr, element) m2_el_hide_t el M2_SECTION_PROGMEM = { {{ m2_el_hide_fn, (fmt) }, (element) }, hideptr }
 #define M2_EXTERN_HIDE(el) extern m2_el_hide_t el
 
 /* used for toggle and radio buttons */
