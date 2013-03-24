@@ -1,6 +1,6 @@
 /*
 
-  TouchPanel.pde
+  TouchMenu.pde
 
   Example for touch panel
   
@@ -485,51 +485,33 @@ void updateTouchPanel(void)
 // m2tklib forward declarations
 
 extern M2tk m2;
-M2_EXTERN_ALIGN(top_el_xtsk_num_menu);
+M2_EXTERN_ALIGN(top_el_ts_mnu);
 
 //================================================================
-static char down_bits[] U8G_PROGMEM = {
-   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41,
-   0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0xf2, 0x4f, 0xe2, 0x47, 0xc2, 0x43,
-   0x82, 0x41, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static char enter_bits[] U8G_PROGMEM  = {
-   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x02, 0x40, 0x02, 0x4c,
-   0x02, 0x4c, 0x22, 0x4c, 0x32, 0x4c, 0xfa, 0x4f, 0xfa, 0x4f, 0x32, 0x40,
-   0x22, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static char left_bits[] U8G_PROGMEM  = {
-   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x42, 0x40, 0x62, 0x40,
-   0x72, 0x40, 0xfa, 0x5f, 0xfa, 0x5f, 0x72, 0x40, 0x62, 0x40, 0x42, 0x40,
-   0x02, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static char right_bits[] U8G_PROGMEM  = {
-   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x02, 0x42, 0x02, 0x46,
-   0x02, 0x4e, 0xfa, 0x5f, 0xfa, 0x5f, 0x02, 0x4e, 0x02, 0x46, 0x02, 0x42,
-   0x02, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static char up_bits[] U8G_PROGMEM  = {
-   0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x82, 0x41, 0xc2, 0x43, 0xe2, 0x47,
-   0xf2, 0x4f, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41,
-   0x82, 0x41, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
+
+// note: for all selectable elements the read only flag is set, so that the element focus only appears for the
+// touch panel focus.
+
+M2_ROOT(el_ts_mnu1_sel, "r1t1", "Menu 1 selected", &top_el_ts_mnu);
+M2_ALIGN(top_el_ts_mnu1_sel, "-1|1W64H64", &el_ts_mnu1_sel);
+M2_ROOT(el_ts_mnu2_sel, "r1t1", "Menu 2 selected", &top_el_ts_mnu);
+M2_ALIGN(top_el_ts_mnu2_sel, "-1|1W64H64", &el_ts_mnu2_sel);
+M2_ROOT(el_ts_mnu3_sel, "r1t1", "Menu 3 selected", &top_el_ts_mnu);
+M2_ALIGN(top_el_ts_mnu3_sel, "-1|1W64H64", &el_ts_mnu3_sel);
 
 
-uint32_t xu32val = 0;
-M2_LABEL(el_xtsk_num_label, NULL, "U32:");
-M2_U32NUM(el_xtsk_num_u32, "a1c5", &xu32val);
+M2_ROOT(el_ts_mnu1, "r1t1w60f8", "menu 1", &top_el_ts_mnu1_sel);
+M2_ROOT(el_ts_mnu2, "r1t1w60f8", "menu 2", &top_el_ts_mnu2_sel);
+M2_ROOT(el_ts_mnu3, "r1t1w60f8", "menu 3", &top_el_ts_mnu3_sel);
 
-
-M2_XBMTSKP(el_xtsk_up, "f1w16h16r1", 16, 16, up_bits, M2_KEY_DATA_UP);		// data up
-M2_XBMTSKP(el_xtsk_down, "f1w16h16", 16, 16, down_bits, M2_KEY_DATA_DOWN);		// data down
-M2_XBMTSKP(el_xtsk_left, "f1w16h16", 16, 16, left_bits, M2_KEY_PREV);		// left
-M2_XBMTSKP(el_xtsk_right, "f1w16h16", 16, 16, right_bits, M2_KEY_NEXT);		// right
-M2_XBMROOTP(el_xtsk_enter, "f1t1r1w16h16", 16, 16, enter_bits, &top_el_xtsk_num_menu);		// enter
-
-
-
-M2_LIST(xtsk_list) = { 
-    &el_xtsk_num_label, &m2_null_element, &el_xtsk_up,    &m2_null_element, 
-    &el_xtsk_num_u32,  &el_xtsk_left,            &el_xtsk_enter, &el_xtsk_right, 
-    &m2_null_element, &m2_null_element, &el_xtsk_down, &m2_null_element, 
+M2_LIST(list_ts_mnu) = { 
+    &el_ts_mnu1, 
+    &el_ts_mnu2, 
+    &el_ts_mnu3
 };
-M2_GRIDLIST(el_xtsk_num_menu, "c4", xtsk_list);
-M2_ALIGN(top_el_xtsk_num_menu, "-1|1W64H64", &el_xtsk_num_menu);
+
+M2_VLIST(el_ts_mnu_vlist, NULL, list_ts_mnu);
+M2_ALIGN(top_el_ts_mnu, "-1|1W64H64", &el_ts_mnu_vlist);
 
 
 
@@ -564,7 +546,7 @@ uint8_t m2_es_touch_screen(m2_p ep, uint8_t msg)
 }
 
 
-M2tk m2(&top_el_xtsk_num_menu, m2_es_touch_screen, m2_eh_6bsts, m2_gh_u8g_ffs);
+M2tk m2(&top_el_ts_mnu, m2_es_touch_screen, m2_eh_6bsts, m2_gh_u8g_ffs);
 
 //================================================================
 // overall draw procedure for u8glib, includes touch panel calibration
@@ -611,7 +593,7 @@ void setup(void) {
   m2_SetU8g(u8g.getU8g(), m2_u8g_box_icon);
 
   // Assign u8g font to index 0
-  m2.setFont(0, u8g_font_6x10r);
+  m2.setFont(0, u8g_font_helvR10r);
 
   // Setup keys
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
