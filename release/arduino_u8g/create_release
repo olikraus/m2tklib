@@ -21,6 +21,9 @@ mkdir libraries/M2tklib/examples/PWMPinList
 mkdir libraries/M2tklib/examples/Bookmarks
 mkdir libraries/M2tklib/examples/RotEnc
 mkdir libraries/M2tklib/examples/XBM
+mkdir libraries/M2tklib/examples/HideS8Num
+mkdir libraries/M2tklib/examples/TouchPanel
+mkdir libraries/M2tklib/examples/TouchMenu
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -85,6 +88,12 @@ cp ../../arduino/u8g/RotEnc/*.pde ./libraries/M2tklib/examples/RotEnc/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/RotEnc/RotEnc.pde
 cp ../../arduino/u8g/XBM/*.pde ./libraries/M2tklib/examples/XBM/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/XBM/XBM.pde
+cp ../../arduino/u8g/HideS8Num/*.pde ./libraries/M2tklib/examples/HideS8Num/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/HideS8Num/HideS8Num.pde
+cp ../../arduino/u8g/TouchPanel/*.pde ./libraries/M2tklib/examples/TouchPanel/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/TouchPanel/TouchPanel.pde
+cp ../../arduino/u8g/TouchMenu/*.pde ./libraries/M2tklib/examples/TouchMenu/.
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/TouchMenu/TouchMenu.pde
 
 
 cd libraries 
