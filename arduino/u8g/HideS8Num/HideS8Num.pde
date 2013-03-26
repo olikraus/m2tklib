@@ -1,6 +1,6 @@
 /*
 
-  HideS8Int.pde
+  HideS8Num.pde
 
   Demonstration of M2_HIDE and M2_S8NUM
   

@@ -29,10 +29,10 @@
 #include "fonts/fixednums7x15.h"
 #include "fonts/fixednums15x31.h"
 
-void *m2_Arial14 = Arial14;
-void *m2_System5x7 = System5x7;
-void *m2_fixednums7x15 = fixednums7x15;
-void *m2_fixednums15x31 = fixednums15x31;
+void *m2_Arial14 = (void *)Arial14;
+void *m2_System5x7 = (void *)System5x7;
+void *m2_fixednums7x15 = (void *)fixednums7x15;
+void *m2_fixednums15x31 = (void *)fixednums15x31;
 
 uint8_t m2_is_glcd_init = 0;
 
