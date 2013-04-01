@@ -25,6 +25,7 @@ mkdir libraries/M2tklib/examples/PWMPinList
 mkdir libraries/M2tklib/examples/RotEnc
 mkdir libraries/M2tklib/examples/Bookmarks
 mkdir libraries/M2tklib/examples/HideS8Num
+mkdir libraries/M2tklib/examples/MenuX2L
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -97,6 +98,10 @@ sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/Bookmark
 
 cp ../../arduino/glcd/HideS8Num/*.pde ./libraries/M2tklib/examples/HideS8Num/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/HideS8Num/HideS8Num.pde
+
+cp ../../arduino/glcd/MenuX2L/*.pde ./libraries/M2tklib/examples/MenuX2L/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/MenuX2L/MenuX2L.pde
+
 
 
 cd libraries 
