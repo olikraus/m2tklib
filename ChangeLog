@@ -46,6 +46,13 @@ M2tklib ChangeLog
 	* Initial focus changeable (enhancement issue 77)
 	* U8glib: XBM-Icons as label or button: M2_XBMLABEL, M2_XBMROOT, M2_XBMBUTTON (enhancement issue 80)
 	* More examples: Bookmarks.pde, RotEnc.pde, XBM.pde (u8glib)
-2012-11-xx
-	* M2_COMBOPTR
-	* M2_SPACECB
+2013-04-xx
+	* M2_COMBOPTR (enhancement issue 85)
+	* M2_SPACECB (enhancement issue 86)
+	* M2_X2LMENU (enhancement issue 88)
+	* M2_HIDE (enhancement issue 88)
+	* M2_S8NUM (enhancement issue 96)
+	* M2_HLINE (enhancement issue 90)
+	* Support for New LiquidCrystal Library (enhancement issue 98)
+	* Support for Touch Screen (including TSK elements, issue 91)
+	
