@@ -27,7 +27,6 @@
 #include <stdlib.h>		// for itoa
 #include <glcd.h>		// inform Arduino IDE that we will use GLCD library
 #include "M2tk.h"
-//#include "utility/m2ghglcd.h"
 #include "m2ghglcd.h"
 
 uint8_t uiKeySelectPin = 3;
@@ -54,11 +53,10 @@ M2_ALIGN(top_el_mnu3_sel, "-1|1W64H64", &el_mnu3_sel);
 
 
 //=================================================
-// define a callback procedure, which returns a value
-
 uint8_t value = 0;
 char buf[20];
 
+// define callback procedure, which returns a menu entry with a value
 const char *xmenu_value(uint8_t idx, uint8_t msg)
 {  
   if ( msg == M2_STRLIST_MSG_GET_STR ) {
@@ -69,6 +67,7 @@ const char *xmenu_value(uint8_t idx, uint8_t msg)
   return "";
 }
 
+// define callback procedures which increment and decrement a value
 const char *xmenu_inc(uint8_t idx, uint8_t msg) {
   if ( msg == M2_STRLIST_MSG_SELECT  ) {
       value++;
@@ -83,6 +82,8 @@ const char *xmenu_dec(uint8_t idx, uint8_t msg) {
   return "";
 }
 
+//=================================================
+// this is the overall menu structure for the X2L Menu
 
 m2_xmenu_entry xmenu_data[] = 
 {
@@ -97,6 +98,9 @@ m2_xmenu_entry xmenu_data[] =
   { NULL, NULL, NULL },
 };
 
+//=================================================
+// This is the main menu dialog box
+
 // The first visible line and the total number of visible lines.
 // Both values are written by M2_X2LMENU and read by M2_VSB
 uint8_t el_x2l_first = 0;
@@ -106,7 +110,6 @@ uint8_t el_x2l_cnt = 3;
 // Option l4 = four visible lines
 // Option e15 = first column has a width of 15 pixel
 // Option W43 = second column has a width of 43/64 of the display width
-
 M2_X2LMENU(el_x2l_strlist, "l4e15W43", &el_x2l_first, &el_x2l_cnt, xmenu_data, '+','-','\0');
 M2_SPACE(el_x2l_space, "W1h1");
 M2_VSB(el_x2l_vsb, "l4W2r1", &el_x2l_first, &el_x2l_cnt);
@@ -115,9 +118,12 @@ M2_HLIST(el_x2l_hlist, NULL, list_x2l);
 M2_ALIGN(top_el_x2l_menu, "-1|1W64H64", &el_x2l_hlist);
 
 
+//=================================================
 // m2 object and constructor
 M2tk m2(&top_el_x2l_menu, m2_es_arduino, m2_eh_4bs, m2_gh_glcd_ffs);
 
+//=================================================
+// arduino setup and loop
 void setup() {
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
@@ -131,3 +137,5 @@ void loop() {
       m2.draw();
   }
 }
+
+

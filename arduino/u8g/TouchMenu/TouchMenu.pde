@@ -290,16 +290,7 @@ uint8_t m2_es_touch_screen(m2_p ep, uint8_t msg)
 M2tk m2(&top_el_ts_mnu, m2_es_touch_screen, m2_eh_6bsts, m2_gh_u8g_ffs);
 
 //================================================================
-// overall draw procedure for u8glib, includes touch panel calibration
-
-void center(u8g_uint_t y, const char *str)
-{
-  u8g_uint_t x;
-  x = u8g.getWidth();
-  x -= u8g.getStrWidth(str);
-  x /= 2;
-  u8g.drawStr(x, y, str);
-}
+// overall draw procedure for u8glib
 
 
 void draw(void) {
