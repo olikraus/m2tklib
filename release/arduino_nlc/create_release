@@ -22,6 +22,8 @@ mkdir libraries/M2tklib/examples/StrList
 mkdir libraries/M2tklib/examples/PWMPinList
 #mkdir libraries/M2tklib/examples/RotEnc
 #mkdir libraries/M2tklib/examples/Bookmarks
+mkdir libraries/M2tklib/examples/HideS8Num
+mkdir libraries/M2tklib/examples/MenuX2L
 mkdir libraries/M2tklib/utility
 cp ../../ChangeLog ./libraries/M2tklib/.
 cp ../../license.txt ./libraries/M2tklib/.
@@ -86,6 +88,12 @@ sed -i 's|m2utl.h|utility/m2utl.h|g' ./libraries/M2tklib/examples/PWMPinList/PWM
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/RotEnc/RotEnc.pde
 #cp ../../arduino/NewLiquidCrystal/Bookmarks/*.pde ./libraries/M2tklib/examples/Bookmarks/.
 #sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/Bookmarks/Bookmarks.pde
+
+cp ../../arduino/NewLiquidCrystal/HideS8Num/*.pde ./libraries/M2tklib/examples/HideS8Num/.
+sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/HideS8Num/HideS8Num.pde
+
+cp ../../arduino/NewLiquidCrystal/MenuX2L/*.pde ./libraries/M2tklib/examples/MenuX2L/.
+sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/MenuX2L/MenuX2L.pde
 
 
 cd libraries 
