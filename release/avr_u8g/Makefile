@@ -48,7 +48,7 @@
 
 # User defined values
 TARGETNAME = u8m2
-MCU:=atmega168
+MCU:=atmega328p
 F_CPU:=8000000
 WORKDIR:=.
 U8GM2DIR:=../../src

@@ -22,6 +22,7 @@
   
 */
 
+#include <stdlib.h>
 #include "u8g.h"
 #include "m2.h"
 #include "m2ghu8g.h"

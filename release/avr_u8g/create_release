@@ -27,6 +27,10 @@ mkdir m2tk_u8g/m2_examples/bookmarks
 cp Makefile m2tk_u8g/m2_examples/bookmarks
 mkdir m2tk_u8g/m2_examples/rot_enc
 cp Makefile m2tk_u8g/m2_examples/rot_enc
+mkdir m2tk_u8g/m2_examples/hide_s8num
+cp Makefile m2tk_u8g/m2_examples/hide_s8num
+mkdir m2tk_u8g/m2_examples/menu_x2l
+cp Makefile m2tk_u8g/m2_examples/menu_x2l
 
 
 
@@ -60,6 +64,8 @@ cp ../../sys/avr_u8g/file_select/*.c ./m2tk_u8g/m2_examples/file_select/.
 cp ../../sys/avr_u8g/pwm_pin_list/*.c ./m2tk_u8g/m2_examples/pwm_pin_list/.
 cp ../../sys/avr_u8g/bookmarks/*.c ./m2tk_u8g/m2_examples/bookmarks/.
 cp ../../sys/avr_u8g/rot_enc/*.c ./m2tk_u8g/m2_examples/rot_enc/.
+cp ../../sys/avr_u8g/hide_s8num/*.c ./m2tk_u8g/m2_examples/hide_s8num/.
+cp ../../sys/avr_u8g/menu_x2l/*.c ./m2tk_u8g/m2_examples/menu_x2l/.
 
 
 cp ../../../../u8g/u8glib/ChangeLog ./m2tk_u8g/doc/u8g/.
