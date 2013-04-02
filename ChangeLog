@@ -52,7 +52,7 @@ M2tklib ChangeLog
 	* M2_X2LMENU (enhancement issue 88)
 	* M2_HIDE (enhancement issue 88)
 	* M2_S8NUM (enhancement issue 96)
-	* M2_HLINE (enhancement issue 90)
+	* M2_BOX (enhancement issue 90)
 	* Support for New LiquidCrystal Library (enhancement issue 98)
 	* Support for Touch Screen (including TSK elements, issue 91)
 	
