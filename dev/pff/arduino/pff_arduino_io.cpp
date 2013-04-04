@@ -3,6 +3,7 @@
   pff_arduino_io.cpp
   
   arduino low level procedures for pff
+  THIS FILE DOES NOT WORK WITH ARDUINO DUE
 
   part of m2tklib (Mini Interative Interface Toolkit Library)
   
@@ -23,9 +24,11 @@
 
 */
 
+#if defined(__AVR__)
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#endif
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -77,6 +80,7 @@ uint8_t pff_arduino_chip_select_pin = PFF_CS_PIN;
 */
 extern "C" void pff_delay_us(uint16_t val)
 {
+#if defined(__AVR__)
   val += 3;
   val >>= 2;
   while( val != 0 )
@@ -84,6 +88,7 @@ extern "C" void pff_delay_us(uint16_t val)
     _delay_loop_2( (F_CPU / 1000000L ) -2);
     val--;
   }
+#endif
 }
 
 extern "C" void pff_chip_select_high(void)
@@ -98,7 +103,7 @@ extern "C" void pff_chip_select_low(void)
 
 extern "C" void pff_spi_init(void)
 {
-	
+#if defined(__AVR__)	
   pinMode(PFF_MOSI_PIN, OUTPUT);
   pinMode(PFF_MISO_PIN, INPUT);
   pinMode(PFF_SCK_PIN, OUTPUT);
@@ -115,11 +120,13 @@ extern "C" void pff_spi_init(void)
   */
   SPCR = 0;
   SPCR =  (1<<SPE) | (1<<MSTR)|(0<<SPR1)|(0<<SPR0)|(0<<CPOL)|(0<<CPHA);
+#endif
 }
 
 
 extern "C" uint8_t pff_spi_out(uint8_t data)
 {
+#if defined(__AVR__)	
   /* send data */
   SPDR = data;
   /* wait for transmission */
@@ -127,5 +134,6 @@ extern "C" uint8_t pff_spi_out(uint8_t data)
     ;
   /* clear the SPIF flag by reading SPDR and return incoming value */
   return  SPDR;
+#endif
 }
 
