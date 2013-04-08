@@ -236,7 +236,9 @@ uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh2bd
 uint8_t m2_eh_2bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh2bs.c simplified 2 Button Handler SELECT, NEXT */
 uint8_t m2_eh_4bd(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bd.c */		
 uint8_t m2_eh_4bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT */
+uint8_t m2_eh_4bks(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT with keypad support */
 uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN */
+uint8_t m2_eh_6bks(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN with keypad support */
 uint8_t m2_eh_ts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c touch screen handler with select on release */
 uint8_t m2_eh_4bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c combined 4bs + touch screen handler */
 uint8_t m2_eh_6bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2ehts.c combined 6bs + touch screen handler */
@@ -285,33 +287,72 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 /* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
 #define M2_KEY_TOUCH_RELEASE 13
 
+/* some keypad values */
+#define M2_KEY_HASH 35
+#define M2_KEY_STAR 42
+#define M2_KEY_0 48
+#define M2_KEY_1 49
+#define M2_KEY_2 50
+#define M2_KEY_3 51
+#define M2_KEY_4 52
+#define M2_KEY_5 53
+#define M2_KEY_6 54
+#define M2_KEY_7 55
+#define M2_KEY_8 56
+#define M2_KEY_9 57
+
+
+
+
 /* Messages to the element callback procedures, see documentation */
 #define M2_EL_MSG_GET_LIST_LEN 2
 #define M2_EL_MSG_GET_LIST_ELEMENT 3
 #define M2_EL_MSG_GET_LIST_BOX 4
 #define M2_EL_MSG_GET_OPT 5
+
+#define M2_EL_MSG_IS_DATA_ENTRY 10
+#define M2_EL_MSG_DATA_UP 11
+#define M2_EL_MSG_DATA_DOWN 12
+#define M2_EL_MSG_DATA_SET_U8 13
+
 #define M2_EL_MSG_IS_AUTO_SKIP 15
 #define M2_EL_MSG_IS_READ_ONLY 16
 #define M2_EL_MSG_GET_HEIGHT 17
 #define M2_EL_MSG_GET_WIDTH 18
-#define M2_EL_MSG_IS_DATA_ENTRY 20
-#define M2_EL_MSG_DATA_UP 21
-#define M2_EL_MSG_DATA_DOWN 22
-#define M2_EL_MSG_DATA_SET_U8 23
-#define M2_EL_MSG_SELECT 30
+
+#define M2_EL_MSG_SELECT 20
 /* new focus is sent only to elements which really get the focus */
 /* escpecially if autoskip is active, there will be not such a message */
-#define M2_EL_MSG_NEW_FOCUS 31
+#define M2_EL_MSG_NEW_FOCUS 21
 /* this msg is sent by m2_nav_init (m2navinit.c), when the root element has been assigned or changed */
-#define M2_EL_MSG_NEW_DIALOG 32
+#define M2_EL_MSG_NEW_DIALOG 22
 
-#define M2_EL_MSG_SHOW 40
+#define M2_EL_MSG_SHOW 25
 #if defined(M2_USE_DBG_SHOW)
-#define M2_EL_MSG_DBG_SHOW 41
+#define M2_EL_MSG_DBG_SHOW 26
 #endif
 /* currently disabled
-#define M2_EL_MSG_POST_SHOW 42
+#define M2_EL_MSG_POST_SHOW 27
 */
+
+/* messages above and including 32 are treated as ascii codes */
+#define M2_EL_MSG_SPACE 32
+/* M2_EL_MSG_HASH and M2_EP_MSG_HASH and ff have same numbers as M2_KEY_HASH ff */
+#define M2_EL_MSG_HASH M2_KEY_HASH
+#define M2_EL_MSG_STAR M2_KEY_STAR
+#define M2_EL_MSG_0 M2_KEY_0
+#define M2_EL_MSG_1 M2_KEY_1
+#define M2_EL_MSG_2 M2_KEY_2
+#define M2_EL_MSG_3 M2_KEY_3
+#define M2_EL_MSG_4 M2_KEY_4
+#define M2_EL_MSG_5 M2_KEY_5
+#define M2_EL_MSG_6 M2_KEY_6
+#define M2_EL_MSG_7 M2_KEY_7
+#define M2_EL_MSG_8 M2_KEY_8
+#define M2_EL_MSG_9 M2_KEY_9
+
+
+
 
 /* Messages to the graphics subsystem */
 #define M2_GFX_MSG_INIT 							0
@@ -1143,6 +1184,20 @@ m2_nav_p m2_get_nav(m2_p m2);											/* m2utl.c */
 #define M2_EP_MSG_DATA_DOWN M2_KEY_DATA_DOWN
 #define M2_EP_MSG_TOUCH_PRESS M2_KEY_TOUCH_PRESS
 #define M2_EP_MSG_TOUCH_RELEASE M2_KEY_TOUCH_RELEASE
+
+#define M2_EP_MSG_HASH M2_KEY_HASH
+#define M2_EP_MSG_STAR M2_KEY_STAR
+#define M2_EP_MSG_0 M2_KEY_0
+#define M2_EP_MSG_1 M2_KEY_1
+#define M2_EP_MSG_2 M2_KEY_2
+#define M2_EP_MSG_3 M2_KEY_3
+#define M2_EP_MSG_4 M2_KEY_4
+#define M2_EP_MSG_5 M2_KEY_5
+#define M2_EP_MSG_6 M2_KEY_6
+#define M2_EP_MSG_7 M2_KEY_7
+#define M2_EP_MSG_8 M2_KEY_8
+#define M2_EP_MSG_9 M2_KEY_9
+
 
 /* messages for the event source callback procedure */
 /* request to return a key value */

@@ -183,6 +183,13 @@ M2_EL_FN_DEF(m2_el_char_fn)
 	      }
       }
       return 1;
+    default:	/* handle ascii codes */
+      if ( fn_arg->msg >= M2_EL_MSG_SPACE ) 
+      {
+	*m2_get_char_ptr(fn_arg->nav) = fn_arg->msg;
+	return 1;
+      }
+      break;
   }
   return 0;
 }

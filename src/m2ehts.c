@@ -52,13 +52,13 @@ uint8_t m2_eh_4bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
 {
   if ( m2_eh_ts(ep, msg, arg1, arg2) != 0 )
     return 1;
-  return m2_eh_4bs(ep, msg, arg1, arg2);
+  return m2_eh_4bks(ep, msg, arg1, arg2);
 }
 
 uint8_t m2_eh_6bsts(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
 {
   if ( m2_eh_ts(ep, msg, arg1, arg2) != 0 )
     return 1;
-  return m2_eh_6bs(ep, msg, arg1, arg2);
+  return m2_eh_6bks(ep, msg, arg1, arg2);
 }
 

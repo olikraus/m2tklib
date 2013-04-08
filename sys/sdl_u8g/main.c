@@ -152,6 +152,11 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		            exit(0);
 		            break;
 		          default:
+			    if ( event.key.keysym.sym >= SDLK_0 && event.key.keysym.sym <= SDLK_9 )
+			    {
+			      puts("Number");
+			      return M2_KEY_EVENT(event.key.keysym.sym - SDLK_0 + '0');
+			    }
 		            break;
 		        }
 		        break;

@@ -80,7 +80,18 @@ uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
 	if ( m2_nav_data_up(nav) == 0 )
           return m2_nav_user_prev(nav);
         return 1;
-
   }
   return 0;
+}
+
+uint8_t m2_eh_6bks(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
+{
+  if ( msg >= M2_EL_MSG_SPACE )
+  {
+    m2_nav_p nav = m2_get_nav(ep);
+    m2_nav_prepare_fn_arg_current_element(nav);
+    m2_fn_arg_call(msg);			// assign the char 
+    return m2_nav_user_next(nav);				// go to next position      
+  }
+  return m2_eh_6bs(ep, msg, arg1, arg2);
 }
