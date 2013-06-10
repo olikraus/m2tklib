@@ -442,7 +442,7 @@ M2_ALIGN(top_el_ts_mnu, "-1|1W64H64", &el_ts_mnu_vlist);
 
 uint32_t u32val = 0;
 M2_LABEL(el_tsk_num_label, NULL, "U32:");
-M2_U32NUM(el_tsk_num_u32, "a1c5", &u32val);
+M2_U32NUM(el_tsk_num_u32, "a1c4.1", &u32val);
 
 M2_TSK(el_tsk_up, "f1", " \xdd ", M2_KEY_DATA_UP);		// data up
 M2_TSK(el_tsk_down, "f1", " \xdf ", M2_KEY_DATA_DOWN);		// data down
@@ -494,7 +494,7 @@ static unsigned char up_bits[] U8G_PROGMEM  = {
 
 uint32_t xu32val = 0;
 M2_LABEL(el_xtsk_num_label, NULL, "U32:");
-M2_U32NUM(el_xtsk_num_u32, "a1c5", &xu32val);
+M2_U32NUM(el_xtsk_num_u32, "a1c4.1", &xu32val);
 
 
 M2_XBMTSKP(el_xtsk_up, "f1w16h16r1", 16, 16, up_bits, M2_KEY_DATA_UP);		// data up
@@ -1830,6 +1830,27 @@ M2_GRIDLIST(el_hide_example, "c2", hide_example_list);
 M2_ALIGN(el_top_hide_example, "-1|1W64H64", &el_hide_example);
 
 
+/*======================================================================*/
+/* issue 111 */
+
+#define i111_u8g_logo_width 38
+#define i111_u8g_logo_height 24
+//static unsigned char u8g_logo_bits[] = {
+static char i111_u8g_logo_bits[] U8G_PROGMEM = {
+0xff, 0xff, 0xff, 0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xe0, 0xe0,
+0xff, 0xff, 0x3f, 0xe3, 0xe1, 0xff, 0xff, 0x3f, 0xf3, 0xf1, 0xff, 0xff,
+0x3f, 0xf3, 0xf1, 0xfe, 0xbf, 0x37, 0xf3, 0x11, 0x1c, 0x1f, 0x30, 0xf3,
+0x01, 0x08, 0x8c, 0x20, 0xf3, 0x01, 0x00, 0xc0, 0x39, 0xf3, 0x81, 0xc7,
+0xc1, 0x39, 0xf3, 0xc1, 0xc7, 0xc9, 0x38, 0xf3, 0xc1, 0xc3, 0x19, 0x3c,
+0xe3, 0x89, 0x01, 0x98, 0x3f, 0xc7, 0x18, 0x00, 0x08, 0x3e, 0x0f, 0x3c,
+0x70, 0x1c, 0x30, 0x3f, 0xff, 0xfc, 0x87, 0x31, 0xff, 0xff, 0xbf, 0xc7,
+0x23, 0x01, 0x00, 0x00, 0xc6, 0x23, 0x03, 0x00, 0x00, 0x0e, 0x30, 0xff,
+0xff, 0x3f, 0x1f, 0x3c, 0xff, 0xff, 0x3f, 0xff, 0x3f, 0xff, 0xff, 0x3f,
+0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0x3f };
+
+M2_XBMLABELP(i111_hello_world_label, "x64y32", i111_u8g_logo_width, i111_u8g_logo_height, i111_u8g_logo_bits);
+M2_LIST(i111_list) = {&i111_hello_world_label};
+M2_XYLIST(i111_list_element, NULL,i111_list);
 
 
 /*======================================================================*/
@@ -2056,6 +2077,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_top_hide_example );
     }    
   }
+  else if ( idx == 34 ) {
+    s = "Issue 111";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&i111_list_element );
+    }    
+  }
 
  
   
@@ -2068,7 +2096,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 34;
+uint8_t el_tlsm_cnt = 35;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

@@ -75,10 +75,10 @@ M2_EL_FN_DEF(m2_el_xbmlabelp_fn)
 	
 	m2_gfx_draw_xbm_p_add_readonly_border_offset(
 	  m2_el_fmfmt_opt_get_val_zero_default( fn_arg, 'b' ), 
+	  m2_el_fnfmt_get_wW(fn_arg),			/* 7 Jun 2013, issue 111 */
+	  m2_el_fnfmt_get_hH(fn_arg),
 	  b->x, 
 	  b->y, 
-	  m2_el_fnfmt_get_wW(fn_arg),
-	  m2_el_fnfmt_get_hH(fn_arg),
 	  m2_el_xbm_get_w(fn_arg),
 	  m2_el_xbm_get_h(fn_arg),
 	  m2_el_xbm_get_ptr(fn_arg));
