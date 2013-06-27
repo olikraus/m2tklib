@@ -110,7 +110,6 @@ void m2_u8g_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
   u8g_DrawFrame(m2_u8g, x0, y, w, h);
   u8g_DrawVLine(m2_u8g, x0+w, y+1, h);
   u8g_DrawHLine(m2_u8g, x0+1, y+h, w);
-  
 }
 
 /* origin is low left */

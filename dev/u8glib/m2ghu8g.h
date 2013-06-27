@@ -106,6 +106,11 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg);
 */
 uint8_t m2_gh_u8g_ffs(m2_gfx_arg_p  arg);
 
+/*
+  cffs
+*/
+uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg);
+
 
 /* icon procedures */
 
