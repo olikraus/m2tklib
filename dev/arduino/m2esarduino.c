@@ -59,6 +59,11 @@ static void m2_arduino_setup_key(uint8_t key)
 
 static void m2_arduino_setup(void) 
 {
+  uint8_t i;
+  for( i = M2_KEY_LOOP_START; i <= M2_KEY_LOOP_END; i++ )
+    m2_arduino_setup_key(i);
+
+  /*
   m2_arduino_setup_key(M2_KEY_SELECT);
   m2_arduino_setup_key(M2_KEY_EXIT);
   m2_arduino_setup_key(M2_KEY_NEXT);
@@ -68,6 +73,7 @@ static void m2_arduino_setup(void)
   m2_arduino_setup_key(M2_KEY_HOME);  
   m2_arduino_setup_key(M2_KEY_ROT_ENC_A);  
   m2_arduino_setup_key(M2_KEY_ROT_ENC_B);  
+  */
 }
 
 static uint8_t m2_arduino_check_key(uint8_t key)
@@ -84,6 +90,7 @@ static uint8_t m2_arduino_check_key(uint8_t key)
 
 static uint8_t m2_arduino_get_key(void)
 {
+  uint8_t i;
   if ( m2_arduino_check_key(M2_KEY_SELECT) ) return M2_KEY_SELECT;
   if ( m2_arduino_check_key(M2_KEY_EXIT) ) return M2_KEY_EXIT;
   if ( m2_arduino_check_key(M2_KEY_NEXT) ) return M2_KEY_NEXT;
@@ -91,6 +98,9 @@ static uint8_t m2_arduino_get_key(void)
   if ( m2_arduino_check_key(M2_KEY_DATA_UP) ) return M2_KEY_DATA_UP;
   if ( m2_arduino_check_key(M2_KEY_DATA_DOWN) ) return M2_KEY_DATA_DOWN;
   if ( m2_arduino_check_key(M2_KEY_HOME) ) return M2_KEY_HOME;
+  for( i = M2_KEY_Q1; i <= M2_KEY_Q8; i++ )
+    if ( m2_arduino_check_key(i) ) return i;
+  
   return M2_KEY_NONE;
 }
 

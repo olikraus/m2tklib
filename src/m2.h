@@ -266,6 +266,8 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 
 /* Key values */
 #define M2_KEY_NONE 0
+
+#define M2_KEY_LOOP_START 1
 #define M2_KEY_SELECT 1
 #define M2_KEY_EXIT 2
 #define M2_KEY_NEXT 3
@@ -275,17 +277,28 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_KEY_HOME 7
 #define M2_KEY_ROT_ENC_A 8
 #define M2_KEY_ROT_ENC_B 9
-#define M2_KEY_ANALOG 10
+#define M2_KEY_Q1 10
+#define M2_KEY_Q2 11
+#define M2_KEY_Q3 12
+#define M2_KEY_Q4 13
+#define M2_KEY_Q5 14
+#define M2_KEY_Q6 15
+#define M2_KEY_Q7 16
+#define M2_KEY_Q8 17
+#define M2_KEY_LOOP_END 17
+
+
+#define M2_KEY_ANALOG 18
 
 /* number of key, which might have a pin connected */
-#define M2_KEY_CNT 11
+#define M2_KEY_CNT 19
 
 /* virtual messages without a physical pin */
-#define M2_KEY_REFRESH 11
-/* this message can be returned by the event source */
-#define M2_KEY_TOUCH_PRESS 12
+#define M2_KEY_REFRESH 19
+/* this message can be returned by the event source */3
+#define M2_KEY_TOUCH_PRESS 20
 /* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
-#define M2_KEY_TOUCH_RELEASE 13
+#define M2_KEY_TOUCH_RELEASE 21
 
 /* some keypad values */
 #define M2_KEY_HASH 35
