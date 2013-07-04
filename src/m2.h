@@ -175,6 +175,7 @@ typedef uint32_t (*m2_u32fn_fnptr)(m2_rom_void_p element, uint8_t msg, uint32_t 
 
 /* object interface */
 void m2_SetHomeM2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;	/* m2obj.c */
+void m2_SetHome2M2(m2_p m2, m2_rom_void_p element) M2_NOINLINE;	/* m2obj.c */
 void m2_SetRootChangeCallbackM2(m2_p m2, m2_root_change_fnptr cb) M2_NOINLINE;	/* m2obj.c */
 void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m2_gfx_fnptr gh) M2_NOINLINE;	/* m2obj.c */
 void m2_SetEventSourceArgsM2(m2_p m2, uint8_t arg1, uint8_t arg2) M2_NOINLINE;						/* m2draw.c */
@@ -203,6 +204,7 @@ uint8_t m2_GetKey(void);                /* usually you do not want to use this f
 void m2_SetFont(uint8_t font_idx, const void *font_ptr);
 void m2_InitEventSource(void);
 void m2_SetHome(m2_rom_void_p element);
+void m2_SetHome2(m2_rom_void_p element);
 void m2_SetRootChangeCallback(m2_root_change_fnptr cb);
 void m2_SetRoot(m2_rom_void_p element);
 void m2_SetRootExtended(m2_rom_void_p element, uint8_t next_cnt, uint8_t change_value);
@@ -275,30 +277,27 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 #define M2_KEY_DATA_UP 5
 #define M2_KEY_DATA_DOWN 6
 #define M2_KEY_HOME 7
-#define M2_KEY_ROT_ENC_A 8
-#define M2_KEY_ROT_ENC_B 9
-#define M2_KEY_Q1 10
-#define M2_KEY_Q2 11
-#define M2_KEY_Q3 12
-#define M2_KEY_Q4 13
-#define M2_KEY_Q5 14
-#define M2_KEY_Q6 15
-#define M2_KEY_Q7 16
-#define M2_KEY_Q8 17
-#define M2_KEY_LOOP_END 17
+#define M2_KEY_HOME2 8
+#define M2_KEY_ROT_ENC_A 9
+#define M2_KEY_ROT_ENC_B 10
+#define M2_KEY_Q1 11
+#define M2_KEY_Q2 12
+#define M2_KEY_Q3 13
+#define M2_KEY_Q4 14
+#define M2_KEY_LOOP_END 14
 
 
-#define M2_KEY_ANALOG 18
+#define M2_KEY_ANALOG 15
 
 /* number of key, which might have a pin connected */
-#define M2_KEY_CNT 19
+#define M2_KEY_CNT 16
 
 /* virtual messages without a physical pin */
-#define M2_KEY_REFRESH 19
+#define M2_KEY_REFRESH 16
 /* this message can be returned by the event source */
-#define M2_KEY_TOUCH_PRESS 20
+#define M2_KEY_TOUCH_PRESS 17
 /* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
-#define M2_KEY_TOUCH_RELEASE 21
+#define M2_KEY_TOUCH_RELEASE 18
 
 /* some keypad values */
 #define M2_KEY_HASH 35
@@ -1177,6 +1176,9 @@ struct _m2_struct
   
   /* home menue for the HOME key */
   m2_rom_void_p home;
+  
+  /* home menue for the HOME2 key */
+  m2_rom_void_p home2;
 
   /* will be called when there is a change of the root menu (by m2_SetRoot or M2_ROOT) */
   m2_root_change_fnptr root_change_callback;

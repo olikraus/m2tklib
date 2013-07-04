@@ -131,6 +131,9 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		          case SDLK_h:
 		            puts("SDLK_h");
 		            return M2_KEY_EVENT(M2_KEY_HOME);
+		          case SDLK_j:
+		            puts("SDLK_j (Home2)");
+		            return M2_KEY_EVENT(M2_KEY_HOME2);
 		          case SDLK_F1:
 		            puts("SDLK_F1");
 		            return M2_KEY_EVENT(M2_KEY_Q1);
@@ -2018,6 +2021,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
     {
       m2_SetFont(0, (const void *)u8g_font_6x10);
       m2_SetHome(&el_bm_home);
+      m2_SetHome2(&el_bm_home);
       m2_SetRootChangeCallback(bm_root_change_cb);
       m2_SetRoot(&el_bm_m1);
     }

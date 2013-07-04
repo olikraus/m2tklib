@@ -55,6 +55,11 @@ void m2_SetHomeM2(m2_p m2, m2_rom_void_p element)
   m2->home = element;
 }
 
+void m2_SetHome2M2(m2_p m2, m2_rom_void_p element)
+{
+  m2->home2 = element;
+}
+
 void m2_SetRootChangeCallbackM2(m2_p m2, m2_root_change_fnptr cb)
 {
   m2->root_change_callback = cb;
@@ -88,7 +93,9 @@ void m2_InitM2(m2_p m2, m2_rom_void_p element, m2_es_fnptr es, m2_eh_fnptr eh, m
   m2->is_frame_draw_at_end = m2_gfx_is_frame_draw_at_end();
   //m2->forced_key = M2_KEY_REFRESH;
   m2->debounce_state = M2_DEBOUNCE_STATE_WAIT_FOR_KEY_PRESS;
-  m2_SetHomeM2(m2, element);
+  m2->home = element;
+  m2->home2 = element;
+  /* m2_SetHomeM2(m2, element); */
   m2_nav_init(m2_get_nav(m2),  element);
   if ( m2_GetRootM2(m2) != &m2_null_element )	/* only refresh screen for none empty menues, issue 97 */
     m2_PutKeyIntoQueue(m2, M2_KEY_REFRESH);
@@ -222,6 +229,10 @@ uint8_t m2_HandleKeyM2(m2_p m2)
     if ( key == M2_KEY_HOME ) /* aways process the HOME key */
     {
       m2_SetRootM2(m2, m2->home, 0, 0);
+    }
+    else if ( key == M2_KEY_HOME2 ) /* aways process the HOME2 key */
+    {
+      m2_SetRootM2(m2, m2->home2, 0, 0);
     }
     /* note, that key numbers are equal to message numbers */
     else if ( m2->eh != NULL )

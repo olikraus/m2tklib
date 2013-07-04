@@ -102,6 +102,11 @@ void m2_SetHome(m2_rom_void_p element)
   m2_SetHomeM2(&m2_global_object, element);
 }
 
+void m2_SetHome2(m2_rom_void_p element)
+{
+  m2_SetHome2M2(&m2_global_object, element);
+}
+
 void m2_SetRootChangeCallback(m2_root_change_fnptr cb)
 {
   m2_SetRootChangeCallbackM2(&m2_global_object, cb);

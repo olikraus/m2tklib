@@ -36,6 +36,7 @@ class M2tk
     void setPin(uint8_t key, uint8_t pin) { m2_SetPin(key, pin); }
     void setRoot(m2_rom_void_p element, uint8_t next_cnt = 0, uint8_t cv = 0) { m2_SetRootExtended(element, next_cnt, cv); }
     void setHome(m2_rom_void_p element) { m2_SetHome(element); }
+    void setHome2(m2_rom_void_p element) { m2_SetHome2(element); }
     void setRootChangeCallback(m2_root_change_fnptr cb) { m2_SetRootChangeCallback(cb); }
 
     void clear(void) { m2_Clear(); }
