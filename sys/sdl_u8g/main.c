@@ -131,6 +131,12 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		          case SDLK_h:
 		            puts("SDLK_h");
 		            return M2_KEY_EVENT(M2_KEY_HOME);
+		          case SDLK_F1:
+		            puts("SDLK_F1");
+		            return M2_KEY_EVENT(M2_KEY_Q1);
+		          case SDLK_F2:
+		            puts("SDLK_F2");
+		            return M2_KEY_EVENT(M2_KEY_Q2);
 		          case SDLK_o:                  // screenshot
 		            puts("SDLK_o (screenshOt)");
                             screenshot();
@@ -370,7 +376,7 @@ void fn_num_zero(m2_el_fnarg_p fnarg) {
 }
 
 M2_LABEL(el_num_label1, NULL, "U8:");
-M2_U8NUM(el_num_1, NULL, 0, 255, &u8num);
+M2_U8NUM(el_num_1, "q2", 0, 255, &u8num);
 
 M2_LABEL(el_num_label2, NULL, "S8:");
 M2_S8NUM(el_num_2, "+1c3", -128, 127, &s8num);
@@ -378,8 +384,8 @@ M2_S8NUM(el_num_2, "+1c3", -128, 127, &s8num);
 M2_LABEL(el_num_label3, NULL, "U32:");
 M2_U32NUM(el_num_3, "c5", &u32num);
 
-M2_BUTTON(el_num_zero, "f4", " zero ", fn_num_zero);
-M2_ROOT(el_num_goto_top, "f4", " back ", &top_el_tlsm);
+M2_BUTTON(el_num_zero, "f4q1", "1:zero", fn_num_zero);
+M2_ROOT(el_num_goto_top, "f4", "back", &top_el_tlsm);
 
 M2_LIST(num_list) = { 
     &el_num_label1, &el_num_1, 
@@ -1854,6 +1860,36 @@ M2_XYLIST(i111_list_element, NULL,i111_list);
 
 
 /*======================================================================*/
+/* quick key menues */
+
+M2_LABEL(el_qknum_label, NULL, "q1:");
+M2_U8NUM(el_qknum_val, "q1", 0, 255, &u8num);
+M2_LIST(list_qknum) = { &el_qknum_label, &el_qknum_val };
+M2_HLIST(el_qknum_hlist, "", list_qknum);
+M2_ROOT(el_qknum_goto_top, "f4q2", "q2: main menu", &top_el_tlsm);
+M2_LIST(list_qknum_v) = { &el_qknum_hlist, &el_qknum_goto_top };
+M2_VLIST(el_qknum_vlist, NULL, list_qknum_v);
+M2_ALIGN(top_el_qknum, "-1|1W64H64", &el_qknum_vlist);
+
+uint8_t qktoggle_val = 0;
+M2_LABEL(el_qktoggle_label, NULL, "q1:");
+M2_TOGGLE(el_qktoggle_val, "q1", &qktoggle_val);
+M2_LIST(list_qktoggle) = { &el_qktoggle_label, &el_qktoggle_val };
+M2_HLIST(el_qktoggle_hlist, "", list_qktoggle);
+M2_ROOT(el_qktoggle_goto_top, "f4q2", "q2: main menu", &top_el_tlsm);
+M2_LIST(list_qktoggle_v) = { &el_qktoggle_hlist, &el_qktoggle_goto_top };
+M2_VLIST(el_qktoggle_vlist, NULL, list_qktoggle_v);
+M2_ALIGN(top_el_qktoggle, "-1|1W64H64", &el_qktoggle_vlist);
+
+
+M2_ROOT(el_qk_menu1, "f4q1", "q1:U8NUM", &top_el_qknum);
+M2_ROOT(el_qk_menu2, "f4q2", "q2:TOGGLE", &top_el_qktoggle);
+M2_LIST(list_qk_menu) = { &el_qk_menu1, &el_qk_menu2 };
+M2_VLIST(el_qk_menu_vlist, NULL, list_qk_menu);
+M2_ALIGN(top_el_quick_key, "-1|1W64H64", &el_qk_menu_vlist);
+
+
+/*======================================================================*/
 /* top level sdl menu: tlsm */
 
 
@@ -2084,7 +2120,15 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&i111_list_element );
     }    
   }
+  else if ( idx == 35 ) {
+    s = "Quick Key";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_quick_key);
+    }    
+  }
 
+  
  
   
   
@@ -2096,7 +2140,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 35;
+uint8_t el_tlsm_cnt = 36;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

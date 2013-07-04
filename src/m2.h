@@ -295,7 +295,7 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 
 /* virtual messages without a physical pin */
 #define M2_KEY_REFRESH 19
-/* this message can be returned by the event source */3
+/* this message can be returned by the event source */
 #define M2_KEY_TOUCH_PRESS 20
 /* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
 #define M2_KEY_TOUCH_RELEASE 21
@@ -1111,6 +1111,10 @@ uint8_t m2_el_parent_get_font(m2_nav_p nav) M2_NOINLINE;				/* m2elsubutl.c */
 /* dfs handler (callback procedure) */
 typedef uint8_t (*m2_dfs_fnptr)(m2_nav_p nav);
 void m2_nav_dfs(m2_nav_p nav, m2_dfs_fnptr cb);		/* m2dfs.c */
+
+/*==============================================================*/
+/* m2qk.c */
+uint8_t m2_nav_quick_key(m2_nav_p nav, uint8_t quick_key_value);
 
 
 /*==============================================================*/

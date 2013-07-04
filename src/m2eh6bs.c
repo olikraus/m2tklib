@@ -81,6 +81,15 @@ uint8_t m2_eh_6bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2)
           return m2_nav_user_prev(nav);
         return 1;
   }
+  if ( msg >= M2_KEY_Q1 && msg <= M2_KEY_Q8 )
+  {
+    if ( m2_nav_quick_key(nav, msg - M2_KEY_Q1 + 1) != 0 )
+    {
+      if ( m2_nav_is_data_entry(nav) )
+	return m2_nav_data_up(m2_get_nav(ep));
+      return m2_nav_user_down(nav, 1);
+    }
+  }
   return 0;
 }
 
