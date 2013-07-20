@@ -26,16 +26,21 @@
 #include "m2.h"
 #include "m2ghu8g.h"
 
+#define BG_COLOR (0x0e0 | 0x010 | 0x000)
+
+uint8_t m2_u8g_highlight_shadow_color = 0x0c0 | 0x000 | 0x000;
+uint8_t m2_u8g_highlight_frame_color =  0x0e0 | 0x000 | 0x000;
+uint8_t m2_u8g_highlight_bg_color =  0x0e0 | 0x010 | 0x000;
+
 uint8_t m2_u8g_highlight_focus_shadow_color = 0x080 | 0x02;
 uint8_t m2_u8g_highlight_focus_frame_color =  0x080 | 0x27;
 uint8_t m2_u8g_highlight_focus_bg_color =  0x080 | 0x37;
 
-uint8_t m2_u8g_normal_focus_shadow_color = 0x02;
-uint8_t m2_u8g_normal_focus_frame_color =  0x27;
-uint8_t m2_u8g_normal_focus_bg_color =  0x37;
+uint8_t m2_u8g_normal_focus_shadow_color = 0x080 | 0x02;
+uint8_t m2_u8g_normal_focus_frame_color =  0x080 | 0x27;
+uint8_t m2_u8g_normal_focus_bg_color =  0x080 | 0x37;
 
-uint8_t m2_u8g_background_color = 0x0e0 | 0x010 | 0x000;
-uint8_t m2_u8g_normal_field_focus_color = 0x000 | 0x010 | 0x003;
+uint8_t m2_u8g_background_color = BG_COLOR;
 
 void m2_u8g_draw_color_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t frame_color, uint8_t shadow_color)
 {
@@ -81,11 +86,11 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
   switch(arg->msg)
   {
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
-      //m2_u8g_draw_color_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2, m2_u8g_normal_field_focus_color);
       if ( (arg->font & 4) != 0 )
       {
         /* highlight flag is set, draw frame with shadow */
-      	m2_u8g_draw_color_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_normal_focus_frame_color, m2_u8g_normal_focus_shadow_color);
+        m2_u8g_draw_color_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2, m2_u8g_highlight_bg_color);
+      	m2_u8g_draw_color_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_highlight_frame_color, m2_u8g_highlight_shadow_color);
       }
 
       m2_u8g_current_text_color = m2_u8g_fg_text_color;
