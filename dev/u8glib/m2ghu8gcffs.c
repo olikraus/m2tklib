@@ -111,7 +111,8 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
 	
         //m2_u8g_current_text_color = m2_u8g_bg_text_color;
         m2_u8g_current_text_color = m2_u8g_fg_text_color;
-        m2_u8g_draw_color_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2, m2_u8g_highlight_focus_bg_color);
+        m2_u8g_draw_color_box(arg->x+1, arg->
+	y+1, arg->w-2, arg->h-2, m2_u8g_highlight_focus_bg_color);
       	m2_u8g_draw_color_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_highlight_focus_frame_color, m2_u8g_highlight_focus_shadow_color);
         // m2_gh_u8g_invert_at_depth = m2_gh_u8g_current_depth;
       }

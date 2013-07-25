@@ -98,6 +98,7 @@ static uint8_t m2_arduino_get_key(void)
   if ( m2_arduino_check_key(M2_KEY_DATA_UP) ) return M2_KEY_DATA_UP;
   if ( m2_arduino_check_key(M2_KEY_DATA_DOWN) ) return M2_KEY_DATA_DOWN;
   if ( m2_arduino_check_key(M2_KEY_HOME) ) return M2_KEY_HOME;
+  if ( m2_arduino_check_key(M2_KEY_HOME2) ) return M2_KEY_HOME2;
   for( i = M2_KEY_Q1; i <= M2_KEY_Q4; i++ )
     if ( m2_arduino_check_key(i) ) return i;
   
