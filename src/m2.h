@@ -233,6 +233,9 @@ uint8_t m2_es_arduino_rotary_encoder(m2_p ep, uint8_t msg); /* m2esarduino.c */
 uint8_t m2_es_avr_u8g(m2_p ep, uint8_t msg);	/* m2esavru8g.c: Event handler for m2tklib for avr (based on u8glib) */
 uint8_t m2_es_avr_rotary_encoder_u8g(m2_p ep, uint8_t msg);	/* m2esavru8g.c: Event handler for m2tklib for avr (based on u8glib) */
 
+uint8_t m2_es_arm_u8g(m2_p ep, uint8_t msg);	/* m2esarmu8g.c Event handler for m2tklib for arm (based on u8glib) */
+
+
 /* event handler */
 uint8_t m2_eh_2bd(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh2bd.c 2 Button Handler with data entry mode SELECT, NEXT */
 uint8_t m2_eh_2bs(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh2bs.c simplified 2 Button Handler SELECT, NEXT */
