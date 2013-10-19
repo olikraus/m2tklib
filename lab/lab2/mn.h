@@ -15,10 +15,37 @@ typedef struct _mn_struct *mn_type;
 typedef struct _mn_arg_struct mn_arg_struct;
 typedef int (*mn_fn)(mn_type mn, int msg, void *arg);
 
+/*================================================*/
+/* messages sent to the node function (mn_fn) */
+/* see also mn_m2fn.c */
+
 #define MN_MSG_NONE 0
+/*
+  Message: 	MN_MSG_OPEN
+  Description:	New node must be created, create arguments if required
+  arg:		-
+*/
 #define MN_MSG_OPEN 1
+
+/*
+  Message: 	MN_MSG_CLOSE
+  Description:	Node will be destroyed
+  arg:		-
+*/
 #define MN_MSG_CLOSE 2
+
+/*
+  Message: 	MN_MSG_COPY
+  Description:	NOT USED AT THE MOMENT
+  arg:		-
+*/
 #define MN_MSG_COPY 3
+
+/*
+  Message: 	MN_MSG_GET_DISPLAY_STRING
+  Description:	Return the name of the node. Copy adr of string buffer to arg.
+  arg:		char **
+*/
 #define MN_MSG_GET_DISPLAY_STRING 4
 
 /* arg: char ** */
@@ -137,10 +164,12 @@ void mn_BuildCode(mn_type n);						/* mn_m2code.c */
 /*================================================*/
 
 /* build dynamic elements for the m2 runtime environment */
-int mn_BuildRTE(mn_type n);
+int mn_BuildRTE(mn_type n); 	/* mn_m2fn.c */
 
 /* resolve references */
-void mn_BuildRTEPost(mn_type n);
+void mn_BuildRTEPost(mn_type n); /* mn_m2fn.c */
+
+/* mn_m2fn.c */
 
 int mn_fn_m2_vlist(mn_type mn, int msg, void *arg);
 int mn_fn_m2_label(mn_type n, int msg, void *arg);
