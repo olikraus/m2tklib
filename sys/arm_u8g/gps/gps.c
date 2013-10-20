@@ -28,6 +28,26 @@
 #include "u8g_arm.h"
 #include "m2.h"
 #include "m2ghu8g.h"
+#include "adc.h"
+
+/*========================================================================*/
+/* variables of the gps tracker device */
+struct {
+  uint16_t adc_battery;
+} gps_tracker_variables;
+
+uint8_t update_gps_tracker_variables(void)
+{
+  uint16_t tmp16;
+  uint8_t is_changed = 0;
+  tmp16 = adc_get_value(2);
+  if ( gps_tracker_variables.adc_battery != tmp16 )
+  {
+    is_changed = 1;
+    gps_tracker_variables.adc_battery = tmp16;
+  }
+  return is_changed;
+}
 
 /*========================================================================*/
 /* SystemInit & SysTick Interrupt */
@@ -47,6 +67,7 @@ void SystemInit()
 void __attribute__ ((interrupt)) SysTick_Handler(void)
 {
 }
+
 
 /*=========================================================================*/
 /* menu definitions */
@@ -90,19 +111,25 @@ M2_ROOT(el_goto_home, NULL, "Home", &el_home);
 
 /*=== test gps ===*/
 
-M2_ALIGN(el_test_gps, NULL, &el_goto_home);
+M2_ALIGN(el_test_gps, "|0", &el_goto_home);
 
 /*=== test compass ===*/
 
-M2_ALIGN(el_test_compass, NULL, &el_goto_home);
+M2_ALIGN(el_test_compass, "|0", &el_goto_home);
+
+/*=== show battery ===*/
+
+M2_ALIGN(el_show_battery, "|0", &el_goto_home);
 
 /*=== toplevel menu ===*/
 
 M2_ROOT(el_home_test_gps, NULL, "GPS" , &el_test_gps);
 M2_ROOT(el_home_test_compass, NULL, "Compass", &el_test_compass);
+M2_ROOT(el_home_show_battery, NULL, "Battery", &el_show_battery);
 M2_LIST(list_home) = {
   &el_home_test_gps,
-  &el_home_test_compass
+  &el_home_test_compass,
+  &el_home_show_battery
 };
 M2_VLIST(el_home_vlist, NULL, list_home);
 M2_ALIGN(el_home, NULL, &el_home_vlist);
@@ -160,11 +187,6 @@ void setup(void)
 
 void sys_init(void)
 {
-#if defined(__AVR__)
-  /* select minimal prescaler (max system speed) */
-  CLKPR = 0x80;
-  CLKPR = 0x00;
-#endif
 }
 
 /*=========================================================================*/
@@ -173,15 +195,30 @@ void sys_init(void)
 /* draw procedure of the u8g picture loop */
 void draw(void)
 {	
+  if ( m2_GetRoot() == &el_show_battery )
+  {
+    u8g_SetFont(&u8g, u8g_font_helvB08r);
+    u8g_SetDefaultForegroundColor(&u8g);
+    u8g_DrawStr(&u8g,  0, 12, "Battery Status");
+    u8g_DrawStr(&u8g,  0, 12*2, "Raw: ");
+    u8g_DrawStr(&u8g,  30, 12*2, u8g_u16toa(gps_tracker_variables.adc_battery, 4));
+    u8g_DrawStr(&u8g,  0, 12*3, "mV: ");
+    u8g_DrawStr(&u8g,  30, 12*3, u8g_u16toa((gps_tracker_variables.adc_battery*3300UL)/1024, 4));    
+    
+  }
+  
+  
   /* call the m2 draw procedure */
   m2_Draw();
 }
+
 
 /*=========================================================================*/
 /* main procedure with u8g picture loop */
 
 int main(void)
 {
+  uint8_t is_changed;
   /* setup controller */
   sys_init();
 	
@@ -190,9 +227,12 @@ int main(void)
 
   /* application main loop */
   for(;;)
-  {  
+  {
+
+    is_changed = update_gps_tracker_variables();
+    
     m2_CheckKey();
-    if ( m2_HandleKey() ) 
+    if ( m2_HandleKey() || is_changed ) 
     {
       /* picture loop */
       u8g_FirstPage(&u8g);
