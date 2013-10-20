@@ -80,7 +80,32 @@ M2_LIST(list) = {
     &el_cancel, &el_ok 
 };
 M2_GRIDLIST(el_top, "c2",list);
-M2_ALIGN(el_home, NULL, &el_top);
+
+/*=== extern declarations ===*/
+M2_EXTERN_ALIGN(el_home);
+
+/*=== reuseable elements ===*/
+
+M2_ROOT(el_goto_home, NULL, "Home", &el_home);
+
+/*=== test gps ===*/
+
+M2_ALIGN(el_test_gps, NULL, &el_goto_home);
+
+/*=== test compass ===*/
+
+M2_ALIGN(el_test_compass, NULL, &el_goto_home);
+
+/*=== toplevel menu ===*/
+
+M2_ROOT(el_home_test_gps, NULL, "GPS" , &el_test_gps);
+M2_ROOT(el_home_test_compass, NULL, "Compass", &el_test_compass);
+M2_LIST(list_home) = {
+  &el_home_test_gps,
+  &el_home_test_compass
+};
+M2_VLIST(el_home_vlist, NULL, list_home);
+M2_ALIGN(el_home, NULL, &el_home_vlist);
 
 
 /*=========================================================================*/
@@ -107,7 +132,8 @@ void setup(void)
   u8g_pin_rst = PIN(0,6);
   
   /* 1. Setup and create u8g device */
-   u8g_InitComFn(&u8g, &u8g_dev_uc1701_dogs102_hw_spi, u8g_com_hw_spi_fn);
+  u8g_InitComFn(&u8g, &u8g_dev_uc1701_dogs102_hw_spi, u8g_com_hw_spi_fn);
+  u8g_SetFontRefHeightAll(&u8g);
 
   /* 2. Setup m2 */
   m2_Init(&el_home, m2_es_arm_u8g, m2_eh_4bs, m2_gh_u8g_bfs);
@@ -116,7 +142,8 @@ void setup(void)
   m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. Set a font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_6x10r);
+  //m2_SetFont(0, (const void *)u8g_font_6x10r);
+  m2_SetFont(0, (const void *)u8g_font_helvB08r);
 	
   /* 5. Define keys */
     
