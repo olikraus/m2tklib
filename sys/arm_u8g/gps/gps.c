@@ -1,6 +1,8 @@
 /*
 
-  radio.c 
+  gps.c 
+  
+  Main file of the GPS tracker device.
   
   m2tklib - Mini Interative Interface Toolkit Library
   u8glib - Universal 8bit Graphics Library
@@ -156,7 +158,7 @@ void setup(void)
   m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. Set a font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_5x8r);
+  m2_SetFont(0, (const void *)u8g_font_6x10r);
 	
   /* 5. Define keys */
   
