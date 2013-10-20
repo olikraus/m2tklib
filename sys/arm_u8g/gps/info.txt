@@ -1,0 +1,7 @@
+Implementation Plan
+
+1) Menu Structure
+2) Track-Point DB Design
+    Initial List with tracks (128?), then double linked list with track points
+3) Various main display modes
+4) Math for compass module

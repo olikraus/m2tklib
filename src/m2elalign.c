@@ -72,10 +72,14 @@ uint8_t m2_align_get_new_size(m2_el_fnarg_p fn_arg, uint8_t is_height)
   if ( is_height != 0 )
   {
     max = m2_el_fnfmt_get_hH(fn_arg);
+    if ( max == 0 )
+      max = m2_gfx_get_display_height();
   }
   else
   {
     max = m2_el_fnfmt_get_wW(fn_arg);
+    if ( max == 0 )
+      max = m2_gfx_get_display_width();
   }
   val = m2_el_align_get_child_size(fn_arg, is_height);
   if ( max < val )
