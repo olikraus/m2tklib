@@ -1,0 +1,102 @@
+
+
+============
+issue 108
+============
+new handler:
+uint8_t m2_eh_4bks(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh4bs.c simplified 4 Button Handler SELECT, EXIT, PREV, NEXT with keypad support */
+uint8_t m2_eh_6bks(m2_p ep, uint8_t msg, uint8_t arg1, uint8_t arg2);		/* m2eh6bs.c simplified 6 Button Handler SELECT, EXIT, PREV, NEXT, DATA_UP, DATA_DOWN with keypad support */
+
+new keys: 
+#define M2_KEY_HASH 35
+#define M2_KEY_STAR 42
+#define M2_KEY_0 48
+#define M2_KEY_1 49
+#define M2_KEY_2 50
+#define M2_KEY_3 51
+#define M2_KEY_4 52
+#define M2_KEY_5 53
+#define M2_KEY_6 54
+#define M2_KEY_7 55
+#define M2_KEY_8 56
+#define M2_KEY_9 57
+
+
+M2_TEXT supports these key values 
+
+experimental implementation done
+
+update dokumentation for the event handler.
+note: also 4bsts and 6bsts do support the keypad extension
+
+ToDo:
+check status, 
+update documentation
+
+
+
+============
+issue 112
+============
+ Issue 112: 	Support touch screen for STRLIST and VSB
+ Inherit "t1" to the elements of STRLIST. Not a perfect solution, but might help...
+ VSB: could be split into upper and lower part
+ 
+ 
+============
+issue 113
+============
+ cffs : color graphics handler
+ continue work on color graphics handler
+ 
+============
+issue 114 & 120
+============
+Expand quick keys to 6
+
+todo
+check QuickKey with nlc and u8glib
+add QuickKey example to release creation script
+
+
+============
+issue 115 & 118
+============
+add second home button
+add second select button
+
+after a delay, repeat char as long as the key is pressed.
+
+============
+issue 117
+============
+
+key auto repeat
+
+this could be moved to event handler, create reference implementation
+delay_time
+repeat_time
+
+Algorithm:
+as long as button is pressed
+1. send press button for delay_time/2
+2. send no button pressed for delay_time/2
+3. send press button for repeat_time/2
+4. send no button pressed for repeat_time/2
+5. goto 3
+
+============
+issue 121
+============
+Center element with M2_ALIGN
+add some test code to the sdl example
+ 
+
+============
+issue 122
+============
+Implement M2_COMBOFN, similar to  M2_U8NUMFN
+same callback? Import is, that there is a set procedure.
+
+ 
+ 
