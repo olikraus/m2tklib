@@ -85,6 +85,12 @@ as long as button is pressed
 4. send no button pressed for repeat_time/2
 5. goto 3
 
+new tutorial
+1) positive logic
+2) analog input on one pin
+3) auto repeat
+
+
 ============
 issue 121
 ============
