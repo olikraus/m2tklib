@@ -228,6 +228,23 @@ static void __m2_el_u32_dec_digit(uint8_t pos)
   m2_el_u32_sub(m2_el_u32_pow10[pos]);
 }
 
+static void m2_el_u32_set_digit(uint8_t pos, uint8_t val)
+{
+  uint8_t d;
+  d = m2_el_u32_get_digit(pos);
+  while( val < d )
+  {
+    __m2_el_u32_dec_digit(pos);
+    d--;
+  }
+  while( val > d )
+  {
+    __m2_el_u32_inc_digit(pos);
+    d++;
+  }
+
+}
+
 static void m2_el_u32_inc_digit(uint8_t pos)
 {
   uint8_t d;
@@ -302,6 +319,22 @@ static void m2_el_u32_data_down(m2_nav_p nav)
   m2_el_u32_put_accumulator_to_parent(nav);
 }
 
+static void m2_el_u32_data_set(m2_nav_p nav, uint8_t msg)
+{
+  if ( msg >= '0' && msg <= '9' )
+  {
+    if ( m2_el_u32_is_dot(nav) )
+      return;
+    if ( m2_el_u32_is_exit_digit(nav) != 0 )
+      return;
+    msg -= '0';
+    m2_el_u32_set_accumulator_by_parent(nav);
+    m2_el_u32_set_digit(m2_el_u32_get_digit_pos(nav), msg);
+    m2_el_u32_put_accumulator_to_parent(nav);
+  }
+}
+
+
 M2_EL_FN_DEF(m2_el_digit_fn)
 {
   uint8_t font;
@@ -312,16 +345,16 @@ M2_EL_FN_DEF(m2_el_digit_fn)
     case M2_EL_MSG_GET_LIST_LEN:
       return 0;  /* not a list, return 0 */
     case M2_EL_MSG_SELECT:
-	m2_nav_user_up((m2_nav_p)(fn_arg->data));
-	return 1;
+      m2_nav_user_up((m2_nav_p)(fn_arg->data));
+      return 1;
     case M2_EL_MSG_IS_READ_ONLY:
       if ( m2_el_u32_is_dot(fn_arg->nav) )
-	return 1;
+        return 1;
       return 0;
     case M2_EL_MSG_IS_DATA_ENTRY:
       /* if this is the exit char, do not enter data entry mode */
       if ( m2_el_u32_is_exit_digit(fn_arg->nav) != 0 )
-	return 0;
+        return 0;
       /* otherwise, enter data entry mode */
       return 1;
     case M2_EL_MSG_DATA_UP:
@@ -391,6 +424,8 @@ M2_EL_FN_DEF(m2_el_digit_fn)
 	}
       }
       return 1;
+    default: /* handle numeric keys (KEY_0 ...) */
+      m2_el_u32_data_set(fn_arg->nav, fn_arg->msg);
   }
   return 0;
 }

@@ -33,7 +33,15 @@ ToDo:
 check status, 
 update documentation
 
+::::::::::::::::::
+U32 does not support key pads at the moment
+--> implemented
+ToDo
+Dokumentation: 
+- Supported by M2_TEXT and M2_U32NUM
+- Special handler required 
 
+::::::::::::::::::
 
 ============
 issue 112

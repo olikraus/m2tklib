@@ -185,7 +185,9 @@ M2_EL_FN_DEF(m2_el_char_fn)
       return 1;
     default:	/* handle ascii codes */
       if ( fn_arg->msg >= M2_EL_MSG_SPACE ) 
-      {
+      {	
+	/* Handle ascii codes including M2_KEY_0 ... */
+	/* The message code is identical to the ASCII code of the char */ 
 	*m2_get_char_ptr(fn_arg->nav) = fn_arg->msg;
 	return 1;
       }
