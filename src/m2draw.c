@@ -417,16 +417,17 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
   {
       /* set the element focus for elements with k format option */
       if ( m2_check_action_copy_focus )
-	// if ( m2_check_result_k_or_t_flag != 0 )
-	  m2_draw_p->element_focus = m2_check_result_element;
+      {
+        m2_draw_p->element_focus = m2_check_result_element;
+      }
       if ( is_send_select )
       {
-	m2_nav_prepare_fn_arg_current_element(nav);
-	/* if the focus is not copied (disabled or k-option but no t-option set), overwrite the element from the nav object */
-	/* this may lead to some problems, because now, the nav object does not always contain the element */
-	m2_fn_arg_set_element(m2_check_result_element);
-	m2_fn_arg_set_arg_data(0, (void *)nav);
-	m2_fn_arg_call(M2_EL_MSG_SELECT);    
+        m2_nav_prepare_fn_arg_current_element(nav);
+        /* if the focus is not copied (disabled or k-option but no t-option set), overwrite the element from the nav object */
+        /* this may lead to some problems, because now, the nav object does not always contain the element */
+        m2_fn_arg_set_element(m2_check_result_element);
+        m2_fn_arg_set_arg_data(0, (void *)nav);
+        m2_fn_arg_call(M2_EL_MSG_SELECT);    
       }
   }
   else

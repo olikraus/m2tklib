@@ -49,7 +49,12 @@ issue 112
  Issue 112: 	Support touch screen for STRLIST and VSB
  Inherit "t1" to the elements of STRLIST. Not a perfect solution, but might help...
  VSB: could be split into upper and lower part
- 
+
+
+::::::::::::::::::
+M2_STRLIST receives M2_EL_MSG_NEW_FOCUS if the cursor key is pressed
+key_queue_len can have 5, which is larger than M2_KEY_QUEUE_LEN --> this is 
+a bug
  
 ============
 issue 113
