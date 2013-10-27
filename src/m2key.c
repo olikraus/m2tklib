@@ -77,9 +77,16 @@ void m2_PutKeyIntoQueueWithArgs(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t
     m2->key_queue_arg2[pos] = arg2;
     
     if ( m2->key_queue_len >= M2_KEY_QUEUE_LEN ) 
+    {
       m2->key_queue_pos++;
+      /* 2013-10-27 added the following two lines */
+      if ( m2->key_queue_pos >= M2_KEY_QUEUE_LEN )
+        m2->key_queue_pos = 0;
+    }
     else
+    {
       m2->key_queue_len++;
+    }
     
 #ifdef __AVR__
     SREG = status_reg;

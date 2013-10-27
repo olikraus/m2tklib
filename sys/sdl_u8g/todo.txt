@@ -55,6 +55,8 @@ issue 112
 M2_STRLIST receives M2_EL_MSG_NEW_FOCUS if the cursor key is pressed
 key_queue_len can have 5, which is larger than M2_KEY_QUEUE_LEN --> this is 
 a bug
+also m2->key_queue_pos seems to be 4 --> also a bug
+::::::::::::::::::
  
 ============
 issue 113
