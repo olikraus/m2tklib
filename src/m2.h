@@ -1154,11 +1154,12 @@ struct _m2_struct
   m2_nav_t nav;		/* current focus */
   m2_eh_fnptr eh;		/* event handler, processes a key pressed event */
   m2_es_fnptr es;		/* event source, produces and returnes an event */
-  uint8_t arg1, arg2;		/* used for the touch screen x/y data */
   m2_gfx_fnptr gh;		/* graphics handler */
-  uint8_t is_last_key_touch_screen_press;
   m2_rom_void_p element_focus;	/* touch screen focus, can be set to NULL to disable touch screen focus */
-  
+  uint8_t pos_element_focus; /* list position of the focus element */
+
+  uint8_t arg1, arg2;		/* used for the touch screen x/y data */
+  uint8_t is_last_key_touch_screen_press;
   
   /* uint8_t forced_key; */ 	/* additional key, which will be processed by the next call to m2_Step(), Feb 9, 2013: OBSOLETE */
   uint8_t is_frame_draw_at_end;

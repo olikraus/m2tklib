@@ -32,11 +32,11 @@
 /*=========================================================================*/
 /* draw procedure */
 
-/* a reference to the object which describes the focus on the current widget */
-m2_nav_p m2_draw_focus;	/* could be replaced by m2_draw_p->nav */
-
 /* a temporary object which holds the draw cursor */
 m2_nav_t m2_draw_current;
+
+/* a reference to the object which describes the focus on the current widget */
+m2_nav_p m2_draw_focus;	/* could be replaced by m2_draw_p->nav */
 
 /* 0: frame is drawn before the text or other content */
 /* 1: frame is drawn last */
@@ -71,21 +71,23 @@ void m2_draw_visit_node(m2_pos_p box, uint8_t msg)
       /* this is: check if the current element is equal to the focus element */
       for(;;)
       {
-	d--;
-	if ( m2_draw_current.pos[d] != m2_draw_focus->pos[d] )
-	  break;
-	if ( d == 0 )
-	{
-	  /* root has been reached and all positions are equal: FOCUS EQUALS ELEMENT */
-	  arg = 1;
-	  if ( m2_draw_current.depth == m2_draw_focus->depth )
-	  {
-	    arg = 2;
-	    if ( m2_draw_focus->is_data_entry_active != 0 )
-	      arg = 3;
-	  }
-	  break;
-	}
+        d--;
+        if ( m2_draw_current.pos[d] != m2_draw_focus->pos[d] )
+          break;
+          
+        /* printf("visit node depth=%d curr_pos=%d | focus_pos=%d\n", d, m2_draw_current.pos[d], m2_draw_focus->pos[d]); */
+        if ( d == 0 )
+        {
+          /* root has been reached and all positions are equal: FOCUS EQUALS ELEMENT */
+          arg = 1;
+          if ( m2_draw_current.depth == m2_draw_focus->depth )
+          {
+            arg = 2;
+            if ( m2_draw_focus->is_data_entry_active != 0 )
+              arg = 3;
+          }
+          break;
+        }
       }
     }
   }
@@ -93,16 +95,27 @@ void m2_draw_visit_node(m2_pos_p box, uint8_t msg)
   m2_nav_prepare_fn_arg_current_element(&m2_draw_current);
   /* if there is no focus, then check if the touch screen has set the focus ("element_focus") */
   if ( arg == 0 )
-    if ( m2_fn_arg_get_element() == m2_draw_p->element_focus )	
-      arg = 2;
+    if ( m2_fn_arg_get_element() == m2_draw_p->element_focus )
+    {
+      if ( m2_draw_current.depth >= 2 )
+      {
+        if ( m2_draw_current.pos[m2_draw_current.depth-2] == m2_draw_p->pos_element_focus )
+        {
+          arg = 2;
+        }
+      }
+      else
+      {
+        arg = 2;
+      }
+    }
   m2_fn_arg_set_arg_data(arg, box);
   
 #ifdef M2_EL_MSG_DBG_SHOW
   if ( msg == M2_EL_MSG_SHOW )
     m2_fn_arg_call(M2_EL_MSG_DBG_SHOW);
 #endif
-  m2_fn_arg_call(msg);
-  
+  m2_fn_arg_call(msg);  
 }
 
 
@@ -227,6 +240,7 @@ uint8_t m2_check_x;
 uint8_t m2_check_y;
 
 uint16_t m2_check_result_min_wh_product;
+uint8_t m2_check_result_pos_element;
 m2_rom_void_p m2_check_result_element; 
 //uint8_t m2_check_result_k_or_t_flag;
 uint8_t m2_check_result_x;
@@ -319,9 +333,13 @@ void m2_check_xy(m2_pos_p pos)
     m2_check_result_min_wh_product = p;
     //m2_check_result_k_or_t_flag = k_flag | t_flag;
     m2_check_result_element = element;
+    m2_check_result_pos_element = m2_draw_current.pos[m2_draw_current.depth-2];
     if ( t_flag != 0 && ro_flag == 0 )				// never copy focus for read only elements 
       if ( m2_check_action_copy_focus != 0 )
-	m2_nav_copy_element_stack(m2_draw_focus, &m2_draw_current);
+      {
+        m2_nav_copy_element_stack(m2_draw_focus, &m2_draw_current);
+        /* printf("focus: %p : %d\n", &m2_draw_current, m2_draw_focus->pos[m2_draw_focus->depth-2]); */
+      }
   }
 }
 
@@ -395,6 +413,7 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
   m2_check_result_min_wh_product = 0x0ffff;
   // m2_check_result_k_or_t_flag = 0;
   m2_check_result_element = NULL; 
+  m2_check_result_pos_element = 255; 
   m2_check_result_x=255;
   m2_check_result_y=255;
   m2_check_result_w=0;
@@ -419,6 +438,7 @@ static m2_rom_void_p m2_nav_find_by_xy(m2_nav_p nav, uint8_t x, uint8_t y, uint8
       if ( m2_check_action_copy_focus )
       {
         m2_draw_p->element_focus = m2_check_result_element;
+        m2_draw_p->pos_element_focus = m2_check_result_pos_element;
       }
       if ( is_send_select )
       {

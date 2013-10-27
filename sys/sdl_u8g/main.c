@@ -2146,7 +2146,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 uint8_t el_tlsm_first = 0;
 uint8_t el_tlsm_cnt = 36;
 
-M2_STRLIST(el_tlsm_strlist, "l3W56", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
+M2_STRLIST(el_tlsm_strlist, "l3W56t1", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
 M2_VSB(el_tlsm_vsb, "l3W4r1", &el_tlsm_first, &el_tlsm_cnt);
 M2_LIST(list_tlsm_strlist) = { &el_tlsm_strlist, &el_tlsm_space, &el_tlsm_vsb };

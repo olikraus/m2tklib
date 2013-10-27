@@ -99,6 +99,14 @@ M2_EL_FN_DEF(m2_el_strline_fn)
     case M2_EL_MSG_GET_WIDTH:
       /* width is defined only be the eE and wW options */
       return m2_el_slbase_calc_width(parent_el);
+    case M2_EL_MSG_GET_OPT:
+      if ( fn_arg->arg == 't' )
+      {
+        /* child is touch sensitive if the parent is touch sensitive */
+        *(uint8_t *)(fn_arg->data) = m2_el_fmfmt_opt_get_val_any_by_element(parent_el, fn_arg->arg, 0);
+        return 1;
+      }
+      break;
     case M2_EL_MSG_NEW_FOCUS:
       /* adjust the top value, if required */
       m2_el_slbase_adjust_top_to_focus(parent_el, pos);
@@ -110,12 +118,12 @@ M2_EL_FN_DEF(m2_el_strline_fn)
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
-	uint8_t width, height;
-	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	width = m2_el_slbase_calc_width((fn_arg->element));
-	height = m2_el_slbase_calc_height((fn_arg->element));
-	printf("strline w:%d h:%d arg:%d x:%d y:%d\n", width, height, 
-	    (fn_arg->arg), b->x, b->y);
+        uint8_t width, height;
+        m2_pos_p b = (m2_pos_p)(fn_arg->data);
+        width = m2_el_slbase_calc_width((fn_arg->element));
+        height = m2_el_slbase_calc_height((fn_arg->element));
+        printf("strline w:%d h:%d arg:%d x:%d y:%d\n", width, height, 
+          (fn_arg->arg), b->x, b->y);
       }
       return 0;
 #endif
@@ -155,13 +163,13 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
     case M2_EL_MSG_IS_AUTO_SKIP:
       return 1;
     case M2_EL_MSG_GET_OPT:
-	if ( fn_arg->arg == 'd' )
-	{
-	  *(uint8_t *)(fn_arg->data) = 1;
-	  return 1;
-	}
-	/* else... break out of the switch and let the base class do the rest of the work */
-	break;
+      if ( fn_arg->arg == 'd' )
+      {
+        *(uint8_t *)(fn_arg->data) = 1;
+        return 1;
+      }
+      /* else... break out of the switch and let the base class do the rest of the work */
+      break;
     case M2_EL_MSG_GET_LIST_BOX:
       return m2_el_slbase_calc_box(fn_arg->element, fn_arg->arg, ((m2_pcbox_p)(fn_arg->data)));
     case M2_EL_MSG_GET_HEIGHT:
@@ -171,23 +179,24 @@ M2_EL_FN_DEF(m2_el_strlist_fn)
 #ifdef M2_EL_MSG_DBG_SHOW
     case M2_EL_MSG_DBG_SHOW:
       {
-	uint8_t width, height;
-	m2_pos_p b = (m2_pos_p)(fn_arg->data);
-	width = m2_el_slbase_calc_width((fn_arg->element));
-	height = m2_el_slbase_calc_height((fn_arg->element));
-	printf("strlist w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
-	    (fn_arg->arg), b->x, b->y, m2_el_slbase_get_len(fn_arg->element));
+        uint8_t width, height;
+        m2_pos_p b = (m2_pos_p)(fn_arg->data);
+        width = m2_el_slbase_calc_width((fn_arg->element));
+        height = m2_el_slbase_calc_height((fn_arg->element));
+        printf("strlist w:%d h:%d arg:%d x:%d y:%d len:%d\n", width, height, 
+            (fn_arg->arg), b->x, b->y, m2_el_slbase_get_len(fn_arg->element));
       }
       return 0;
 #endif
       case M2_EL_MSG_SHOW:
-	/* MSG_SHOW: parent is drawn before the sub elements */
-	/* adjust top element to total size, if required */
-	m2_el_slbase_adjust_top_to_cnt(fn_arg->element);
-	break;
+        /* MSG_SHOW: parent is drawn before the sub elements */
+        /* adjust top element to total size, if required */
+        m2_el_slbase_adjust_top_to_cnt(fn_arg->element);
+        //fn_arg->arg = 0;  /* never draw focus for the parent element */
+        break;
       case M2_EL_MSG_NEW_DIALOG:
-	m2_el_strlist_cb_fnptr(fn_arg->element)(255, M2_STRLIST_MSG_NEW_DIALOG);
-	return 0;
+        m2_el_strlist_cb_fnptr(fn_arg->element)(255, M2_STRLIST_MSG_NEW_DIALOG);
+        return 0;
   }
   return m2_el_fnfmt_fn(fn_arg);
 }

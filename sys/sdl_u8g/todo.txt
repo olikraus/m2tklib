@@ -56,6 +56,28 @@ M2_STRLIST receives M2_EL_MSG_NEW_FOCUS if the cursor key is pressed
 key_queue_len can have 5, which is larger than M2_KEY_QUEUE_LEN --> this is 
 a bug
 also m2->key_queue_pos seems to be 4 --> also a bug
+In some cases m2->key_queue_pos is incremented to 4 --> fixed
+
+> Inherit "t1" to the elements of STRLIST. Not a perfect solution, but might help...
+The problem is, that the list elements are only virual. The element can not be 
+compared. The position should be compared also.
+In the m2 struct, not only "element_focus" is required but also "element_pos_focus"
+--> added "m2->element_pos_focus"
+
+--> not so simple, the element_pos_focus should not be required, because element_focus 
+is the complete nav structure. It should include the child position.
+--> WRONG element_focus is a single element.
+
+observing m2draw.c lines 70-90 (compare with focus) position values are always 0.
+this probably the wrong part,
+correct part seems to be here:
+  if ( arg == 0 )
+    if ( m2_fn_arg_get_element() == m2_draw_p->element_focus )	
+      arg = 2;
+
+added pos information again --> not selection is posible with strlist: t1 is 
+supported
+
 ::::::::::::::::::
  
 ============
