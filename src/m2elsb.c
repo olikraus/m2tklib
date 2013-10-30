@@ -35,6 +35,27 @@ M2_EL_FN_DEF(m2_el_vsb_fn)
   {
     case M2_EL_MSG_IS_READ_ONLY:
       return 1; /* if this is ever replaced, then it should default to r1 */
+    case M2_EL_MSG_SELECT:
+      /* usualy this is a read only element, but touch will send this msg */
+      {
+		uint8_t len, top, visible;
+		len = m2_el_slbase_get_len(fn_arg->element);
+	    top = m2_el_slbase_get_top(fn_arg->element); 
+	    visible = m2_el_slbase_get_visible_lines(fn_arg->element);
+	    if ( len > visible ) 
+	    {
+			if ( top >= len-visible )
+			{
+				top = 0;
+			}
+			else
+			{
+				top += visible;
+			}
+			*m2_el_slbase_get_top_ptr(fn_arg->element) = top;
+		}
+	  }
+      return m2_el_slbase_calc_height(fn_arg->element);
     case M2_EL_MSG_GET_HEIGHT:
       return m2_el_slbase_calc_height(fn_arg->element);
     case M2_EL_MSG_GET_WIDTH:

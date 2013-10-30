@@ -41,7 +41,7 @@ Dokumentation:
 - Supported by M2_TEXT and M2_U32NUM
 - Special handler required 
 
-::::::::::::::::::
+:::::::::::::::::: --> ISSUE 108 updated
 
 ============
 issue 112
@@ -78,7 +78,9 @@ correct part seems to be here:
 added pos information again --> not selection is posible with strlist: t1 is 
 supported
 
-::::::::::::::::::
+VSB -> supported, t1 on VSB will do a page down on the strlist
+
+:::::::::::::::::: --> issue 112 updated
  
 ============
 issue 113
