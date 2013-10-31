@@ -93,9 +93,14 @@ issue 114 & 120
 ============
 Expand quick keys to 6
 
+
 todo
 check QuickKey with nlc and u8glib
 add QuickKey example to release creation script
+
+::::::::::::::::::
+expanded to 6 --> done
+::::::::::::::::::
 
 
 ============

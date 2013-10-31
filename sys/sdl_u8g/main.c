@@ -140,6 +140,18 @@ uint8_t m2_es_sdl(m2_p ep, uint8_t msg)
 		          case SDLK_F2:
 		            puts("SDLK_F2");
 		            return M2_KEY_EVENT(M2_KEY_Q2);
+		          case SDLK_F3:
+		            puts("SDLK_F3");
+		            return M2_KEY_EVENT(M2_KEY_Q3);
+		          case SDLK_F4:
+		            puts("SDLK_F4");
+		            return M2_KEY_EVENT(M2_KEY_Q4);
+		          case SDLK_F5:
+		            puts("SDLK_F5");
+		            return M2_KEY_EVENT(M2_KEY_Q5);
+		          case SDLK_F6:
+		            puts("SDLK_F6");
+		            return M2_KEY_EVENT(M2_KEY_Q6);
 		          case SDLK_o:                  // screenshot
 		            puts("SDLK_o (screenshOt)");
                             screenshot();
@@ -1869,7 +1881,7 @@ M2_LABEL(el_qknum_label, NULL, "q1:");
 M2_U8NUM(el_qknum_val, "q1", 0, 255, &u8num);
 M2_LIST(list_qknum) = { &el_qknum_label, &el_qknum_val };
 M2_HLIST(el_qknum_hlist, "", list_qknum);
-M2_ROOT(el_qknum_goto_top, "f4q2", "q2: main menu", &top_el_tlsm);
+M2_ROOT(el_qknum_goto_top, "f4q6", "q6: main menu", &top_el_tlsm);
 M2_LIST(list_qknum_v) = { &el_qknum_hlist, &el_qknum_goto_top };
 M2_VLIST(el_qknum_vlist, NULL, list_qknum_v);
 M2_ALIGN(top_el_qknum, "-1|1W64H64", &el_qknum_vlist);
