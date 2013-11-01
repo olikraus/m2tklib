@@ -75,6 +75,7 @@ static uint8_t m2_arm_u8g_get_key(void)
 {
   uint8_t i;
   if ( m2_arm_u8g_check_key(M2_KEY_SELECT) ) return M2_KEY_SELECT;
+  if ( m2_arm_u8g_check_key(M2_KEY_SELECT2) ) return M2_KEY_SELECT;		/* map to normal SELECT */
   if ( m2_arm_u8g_check_key(M2_KEY_EXIT) ) return M2_KEY_EXIT;
   if ( m2_arm_u8g_check_key(M2_KEY_NEXT) ) return M2_KEY_NEXT;
   if ( m2_arm_u8g_check_key(M2_KEY_PREV) ) return M2_KEY_PREV;

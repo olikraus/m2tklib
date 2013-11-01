@@ -1748,7 +1748,7 @@ M2_ROOT(el_sisu_c2, "f4", "Menu 2", &top_el_sisu_m2);
 M2_ROOT(el_sisu_c3, "f4", "Menu 3", &top_el_sisu_m3);
 M2_LIST(list_sisu) = { &el_sisu_c1, &el_sisu_c2, &el_sisu_c3};
 M2_VLIST(el_sisu_vl, NULL, list_sisu);
-M2_ALIGN(top_el_sisu, "W64H64", &el_sisu_vl);
+M2_ALIGN(top_el_sisu, NULL, &el_sisu_vl);
 
 /*======================================================================*/
 

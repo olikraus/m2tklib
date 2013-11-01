@@ -111,6 +111,12 @@ add second select button
 
 after a delay, repeat char as long as the key is pressed.
 
+
+::::::::::::::::::
+M2_KEY_HOME2 --> exists
+M2_KEY_SELECT2 --> implemented, but needs testing (arduino M2_KEY_SELECT2)
+::::::::::::::::::
+
 ============
 issue 117
 ============
@@ -140,13 +146,17 @@ issue 121
 ============
 Center element with M2_ALIGN
 add some test code to the sdl example
+
+::::::::::::::::::
+--> SiSu example --> all ok
+::::::::::::::::::
  
 
 ============
 issue 122
 ============
 Implement M2_COMBOFN, similar to  M2_U8NUMFN
-same callback? Import is, that there is a set procedure.
+same callback? Important is, that there is a set procedure.
 
  
  

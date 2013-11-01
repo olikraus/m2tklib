@@ -274,35 +274,37 @@ uint8_t m2_gh_arduino_serial(m2_gfx_arg_p  arg);			/* m2ghserial.cpp */
 
 #define M2_KEY_LOOP_START 1
 #define M2_KEY_SELECT 1
-#define M2_KEY_EXIT 2
-#define M2_KEY_NEXT 3
-#define M2_KEY_PREV 4
-#define M2_KEY_DATA_UP 5
-#define M2_KEY_DATA_DOWN 6
-#define M2_KEY_HOME 7
-#define M2_KEY_HOME2 8
-#define M2_KEY_ROT_ENC_A 9
-#define M2_KEY_ROT_ENC_B 10
-#define M2_KEY_Q1 11
-#define M2_KEY_Q2 12
-#define M2_KEY_Q3 13
-#define M2_KEY_Q4 14
-#define M2_KEY_Q5 15
-#define M2_KEY_Q6 16
-#define M2_KEY_LOOP_END 16
+#define M2_KEY_SELECT2 2		/* must not be used as message, map to M2_KEY_SELECT */
+#define M2_KEY_EXIT 3
+#define M2_KEY_NEXT 4
+#define M2_KEY_PREV 5
+#define M2_KEY_DATA_UP 6
+#define M2_KEY_DATA_DOWN 7
+#define M2_KEY_HOME 8
+#define M2_KEY_HOME2 9
+#define M2_KEY_ROT_ENC_A 10
+#define M2_KEY_ROT_ENC_B 11
+#define M2_KEY_Q1 12
+#define M2_KEY_Q2 13
+#define M2_KEY_Q3 14
+#define M2_KEY_Q4 15
+#define M2_KEY_Q5 16
+#define M2_KEY_Q6 17
+/* last quick key number must be identical to M2_KEY_LOOP_END */
+#define M2_KEY_LOOP_END 17
 
 
-#define M2_KEY_ANALOG 17
+#define M2_KEY_ANALOG 18
 
 /* number of key, which might have a pin connected */
-#define M2_KEY_CNT 16
+#define M2_KEY_CNT 17
 
 /* virtual messages without a physical pin */
-#define M2_KEY_REFRESH 18
+#define M2_KEY_REFRESH 19
 /* this message can be returned by the event source */
-#define M2_KEY_TOUCH_PRESS 19
+#define M2_KEY_TOUCH_PRESS 20
 /* this message is automatically generated as soon as M2_KEY_NONE is returned after M2_KEY_TOUCH_PRESS */
-#define M2_KEY_TOUCH_RELEASE 20
+#define M2_KEY_TOUCH_RELEASE 21
 
 /* some keypad values */
 #define M2_KEY_HASH 35

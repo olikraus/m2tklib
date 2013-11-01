@@ -92,6 +92,7 @@ static uint8_t m2_arduino_get_key(void)
 {
   uint8_t i;
   if ( m2_arduino_check_key(M2_KEY_SELECT) ) return M2_KEY_SELECT;
+  if ( m2_arduino_check_key(M2_KEY_SELECT2) ) return M2_KEY_SELECT;	/* map to first select */
   if ( m2_arduino_check_key(M2_KEY_EXIT) ) return M2_KEY_EXIT;
   if ( m2_arduino_check_key(M2_KEY_NEXT) ) return M2_KEY_NEXT;
   if ( m2_arduino_check_key(M2_KEY_PREV) ) return M2_KEY_PREV;
