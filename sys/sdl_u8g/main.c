@@ -1905,7 +1905,72 @@ M2_ALIGN(top_el_quick_key, "-1|1W64H64", &el_qk_menu_vlist);
 
 
 /*======================================================================*/
-/* top level sdl menu: tlsm */
+/* combofn */
+
+uint8_t combofn_color = 0;
+uint8_t combofn_priority = 0;
+
+const char *combofn_color_cb(m2_rom_void_p element, uint8_t msg, uint8_t *valptr)
+{
+	switch(msg)
+	{
+		case M2_COMBOFN_MSG_GET_VALUE:
+			*valptr = combofn_color;
+			break;
+		case M2_COMBOFN_MSG_SET_VALUE:
+			combofn_color = *valptr;
+			break;
+		case M2_COMBOFN_MSG_GET_STRING:
+			if ( *valptr == 0 )
+				return "orange";
+			else if (*valptr == 1 )
+				return "yellow";
+			return "cyan";
+	}
+	return NULL;
+}
+
+const char *combofn_priority_cb(m2_rom_void_p element, uint8_t msg, uint8_t *valptr)
+{
+	switch(msg)
+	{
+		case M2_COMBOFN_MSG_GET_VALUE:
+			*valptr = combofn_priority;
+			break;
+		case M2_COMBOFN_MSG_SET_VALUE:
+			combofn_priority = *valptr;
+			break;
+		case M2_COMBOFN_MSG_GET_STRING:
+			switch(*valptr)
+			{
+				case 0: return "lowest";
+				case 1: return "low";
+				case 2: return "medium";
+				case 3: return "high";
+				case 4: return "highest";
+			}
+			return "";
+	}
+	return NULL;
+}
+
+
+M2_LABEL(el_labelcombofn1, NULL, "Color:");
+M2_COMBOFN(el_combofn1, NULL, 3, combofn_color_cb);
+
+M2_LABEL(el_labelcombofn2, NULL, "Priority: ");
+M2_COMBOFN(el_combofn2, "v1", 5, combofn_priority_cb);
+
+M2_LIST(list_combofn) = { 
+    &el_labelcombofn1, &el_combofn1, 
+    &el_labelcombofn2, &el_combofn2,  
+    &el_cancel, &el_ok 
+};
+M2_GRIDLIST(el_top_combofn, "c2", list_combofn);
+
+
+/*======================================================================*/
+/* top level sdl menu: top_el_tlsm */
 
 
 const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
@@ -2143,6 +2208,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&top_el_quick_key);
     }    
   }
+  else if ( idx == 36 ) {
+    s = "COMBOFN";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&el_top_combofn);
+    }    
+  }
 
   
  
@@ -2156,7 +2228,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 36;
+uint8_t el_tlsm_cnt = 37;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56t1", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");

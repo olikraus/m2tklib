@@ -476,6 +476,7 @@ void m2_SetDetectedKey(m2_p m2, uint8_t key_code, uint8_t arg1, uint8_t arg2);		
 /* combo box (callback procedure) */
 typedef const char *(*m2_get_str_fnptr)(uint8_t idx);
 
+
 /*==============================================================*/
 
 /* strlist element (callback procedure) */
@@ -900,9 +901,29 @@ struct _m2_el_combo_struct
 typedef struct _m2_el_combo_struct m2_el_combo_t;
 typedef m2_el_combo_t *m2_el_combo_p;
 
-M2_EL_FN_DEF(m2_el_combo_fn);
+M2_EL_FN_DEF(m2_el_combo_fn);		/* m2elcombofn.c */
 #define M2_COMBO(el,fmt,variable,cnt,fnptr) m2_el_combo_t el M2_SECTION_PROGMEM = { { { m2_el_combo_fn, (fmt) }, (variable) }, (cnt), (fnptr) }
 #define M2_EXTERN_COMBO(el) extern m2_el_combo_t el
+
+
+/* combofn box (callback procedure) */
+typedef const char * (*m2_combofn_fnptr)(m2_rom_void_p element, uint8_t msg, uint8_t *valptr);
+#define M2_COMBOFN_MSG_GET_VALUE 0
+#define M2_COMBOFN_MSG_SET_VALUE 1
+#define M2_COMBOFN_MSG_GET_STRING 2
+	
+struct _m2_el_combofn_struct
+{
+  m2_el_fnfmt_t ff;
+  uint8_t cnt;
+  m2_get_str_fnptr fnptr;
+};
+typedef struct _m2_el_combofn_struct m2_el_combofn_t;
+typedef m2_el_combofn_t *m2_el_combofn_p;
+
+M2_EL_FN_DEF(m2_el_combofn_fn);
+#define M2_COMBOFN(el,fmt,cnt,fnptr) m2_el_combofn_t el M2_SECTION_PROGMEM = { { m2_el_combofn_fn, (fmt) }, (cnt), (fnptr) }
+#define M2_EXTERN_COMBOFN(el) extern m2_el_combofn_t el
 
 struct _m2_el_comboptr_struct
 {

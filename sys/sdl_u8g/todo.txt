@@ -158,5 +158,19 @@ issue 122
 Implement M2_COMBOFN, similar to  M2_U8NUMFN
 same callback? Important is, that there is a set procedure.
 
- 
+::::::::::::::::::
+   Element:
+    M2_COMBOFN(el,fmt,cnt,fnptr)
+
+  fnptr:
+    const char *m2_combofn_fnptr(m2_rom_void_p element, uint8_t msg, uint8_t *valptr)
+
+  msg:
+	M2_COMBOFN_MSG_GET_VALUE
+	M2_COMBOFN_MSG_SET_VALUE
+	M2_COMBOFN_MSG_GET_STRING
+	
+--> implemented, create example	
+::::::::::::::::::
+
  
