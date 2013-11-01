@@ -87,6 +87,27 @@ issue 113
 ============
  cffs : color graphics handler
  continue work on color graphics handler
+
+::::::::::::::::::
+--> implemented
+
+Colors (only support for u8g 332 mode)
+m2_u8g_bg_text_color
+m2_u8g_fg_text_color
+m2_u8g_highlight_shadow_color
+m2_u8g_highlight_frame_color
+m2_u8g_highlight_bg_color
+m2_u8g_highlight_focus_shadow_color
+m2_u8g_highlight_focus_frame_color
+m2_u8g_highlight_focus_bg_color
+m2_u8g_normal_focus_shadow_color
+m2_u8g_normal_focus_frame_color
+m2_u8g_normal_focus_bg_color
+m2_u8g_small_focus_bg_color
+m2_u8g_exit_data_entry_color
+m2_u8g_background_color
+
+::::::::::::::::::
  
 ============
 issue 114 & 120

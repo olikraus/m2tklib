@@ -40,6 +40,9 @@ uint8_t m2_u8g_normal_focus_shadow_color = 0x080 | 0x02;
 uint8_t m2_u8g_normal_focus_frame_color =  0x080 | 0x27;
 uint8_t m2_u8g_normal_focus_bg_color =  0x080 | 0x37;
 
+uint8_t m2_u8g_small_focus_bg_color = 0x080 | 0x37;		
+uint8_t m2_u8g_exit_data_entry_color = 0x080 | 0x37;		
+
 uint8_t m2_u8g_background_color = BG_COLOR;
 
 void m2_u8g_draw_color_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t frame_color, uint8_t shadow_color)
@@ -129,14 +132,19 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
       // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
+	  /*
       m2_u8g_current_text_color = m2_u8g_bg_text_color;
       m2_u8g_draw_color_box(arg->x, arg->y, arg->w, arg->h, m2_u8g_fg_text_color);
+      */
+
+      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      m2_u8g_draw_color_box(arg->x, arg->y, arg->w, arg->h, m2_u8g_small_focus_bg_color);
       break;
     case M2_GFX_MSG_DRAW_GO_UP:
       /* does not work because of missing xor...
          also: can not be fixed with FRAME_DRAW_AT_END
        m2_u8g_current_text_color = m2_u8g_bg_text_color; */
-      m2_u8g_draw_color_box(arg->x, arg->y, arg->w, arg->h/2, m2_u8g_fg_text_color);
+      m2_u8g_draw_color_box(arg->x, arg->y, arg->w, arg->h/2, m2_u8g_exit_data_entry_color);
       break;
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
       return 3;
