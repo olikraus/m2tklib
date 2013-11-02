@@ -107,7 +107,7 @@ m2_u8g_small_focus_bg_color
 m2_u8g_exit_data_entry_color
 m2_u8g_background_color
 
-::::::::::::::::::
+:::::::::::::::::: issue updated
  
 ============
 issue 114 & 120
@@ -121,7 +121,7 @@ add QuickKey example to release creation script
 
 ::::::::::::::::::
 expanded to 6 --> done
-::::::::::::::::::
+:::::::::::::::::: issue 114 updated, issue 120 closed
 
 
 ============
@@ -136,7 +136,7 @@ after a delay, repeat char as long as the key is pressed.
 ::::::::::::::::::
 M2_KEY_HOME2 --> exists
 M2_KEY_SELECT2 --> implemented, but needs testing (arduino M2_KEY_SELECT2)
-::::::::::::::::::
+:::::::::::::::::: --> issues updated
 
 ============
 issue 117

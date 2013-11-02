@@ -48,7 +48,7 @@
 //U8GLIB_NHD31OLED_2X_GR u8g(13, 11, 10, 9);	// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGS102 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGM132 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
-//U8GLIB_DOGM128 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+U8GLIB_DOGM128 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_ST7920_128X64_1X u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64_4X u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64_1X u8g(18, 16, 17);	// SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
@@ -128,18 +128,18 @@ static char tools_28_bits[] U8G_PROGMEM = {
   0x3C, 0x00, 0xE0, 0x00, };
 
   
-M2_EXTERN_ALIGN(el_xbm);	// forward declaration of the top level element
+M2_EXTERN_ALIGN(el_top);	// forward declaration of the top level element
 
 // tools menu 
 M2_LABEL(el_tools_label, NULL, "Tools selected.");
-M2_ROOT(el_tools_ok, "f4", " Ok ", &el_xbm);
+M2_ROOT(el_tools_ok, "f4", " Ok ", &el_top);
 M2_LIST(list_tools) = { &el_tools_label, &el_tools_ok };
 M2_VLIST(el_tools_vl, NULL, list_tools);
 M2_ALIGN(el_tools, "W64H64", &el_tools_vl);  
   
 // menu for memory card 
 M2_LABEL(el_mc_label, NULL, "Memory card selected.");
-M2_ROOT(el_mc_ok, "f4", " Ok ", &el_xbm);
+M2_ROOT(el_mc_ok, "f4", " Ok ", &el_top);
 M2_LIST(list_mc) = { &el_mc_label, &el_mc_ok };
 M2_VLIST(el_mc_vl, NULL, list_mc);
 M2_ALIGN(el_mc, "W64H64", &el_mc_vl);  
@@ -151,9 +151,33 @@ M2_XBMROOTP(el_xbm_mc, "w30h30", 28, 28, memory_card_28_bits, &el_mc);
 M2_XBMROOTP(el_xbm_tools, "w30h30", 28, 28, tools_28_bits, &el_tools);
 M2_LIST(el_xbm_list) = { &el_xbm_mc, &el_xbm_tools };
 M2_HLIST(el_xbm_hlist, NULL, el_xbm_list);
-M2_ALIGN(el_xbm, "W64H64", &el_xbm_hlist);
+M2_ALIGN(el_xbm, NULL, &el_xbm_hlist);
 
-M2tk m2(&el_xbm, m2_es_arduino, m2_eh_2bs, m2_gh_u8g_ffs);
+void mc_cb(m2_el_fnarg_p fnarg)
+{
+  m2_SetRoot(&el_mc);
+}
+
+void tools_cb(m2_el_fnarg_p fnarg)
+{
+  m2_SetRoot(&el_tools);
+}
+
+M2_XBMBUTTONP(el_buttonxbm_mc, "w30h30", 28, 28, memory_card_28_bits, mc_cb);
+M2_XBMBUTTONP(el_buttonxbm_tools, "w30h30", 28, 28, tools_28_bits, tools_cb);
+M2_LIST(el_buttonxbm_list) = { &el_buttonxbm_mc, &el_buttonxbm_tools };
+M2_HLIST(el_buttonxbm_hlist, NULL, el_buttonxbm_list);
+M2_ALIGN(el_buttonxbm, NULL, &el_buttonxbm_hlist);
+
+M2_LABEL(el_goto_title, NULL, "XBM Example");
+M2_ROOT(el_goto_part1, NULL, "XBMROOT", &el_xbm);
+M2_ROOT(el_goto_part2, NULL, "XBMBUTTON", &el_buttonxbm);
+M2_LIST(list_menu) = {&el_goto_title, &el_goto_part1, &el_goto_part2};
+M2_VLIST(el_menu_vlist, NULL, list_menu);
+M2_ALIGN(el_top, NULL, &el_menu_vlist);
+
+
+M2tk m2(&el_top, m2_es_arduino, m2_eh_2bs, m2_gh_u8g_ffs);
 
 // U8glib draw procedure: Just call the M2tklib draw procedure
 void draw(void) {
