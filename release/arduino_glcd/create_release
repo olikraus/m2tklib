@@ -27,6 +27,7 @@ mkdir libraries/M2tklib/examples/Bookmarks
 mkdir libraries/M2tklib/examples/HideS8Num
 mkdir libraries/M2tklib/examples/MenuX2L
 mkdir libraries/M2tklib/examples/TouchMenu
+mkdir libraries/M2tklib/examples/QuickKey
 mkdir libraries/M2tklib/utility
 mkdir libraries/M2tklib/addon
 cp ../../ChangeLog ./libraries/M2tklib/.
@@ -106,7 +107,11 @@ sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/MenuX2L/
 cp ../../arduino/glcd/TouchMenu/*.pde ./libraries/M2tklib/examples/TouchMenu/.
 sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/TouchMenu/TouchMenu.pde
 
+cp ../../arduino/glcd/QuickKey/*.pde ./libraries/M2tklib/examples/QuickKey/.
+sed -i 's|m2ghglcd.h|utility/m2ghglcd.h|g' ./libraries/M2tklib/examples/QuickKey/QuickKey.pde
 
+# rename to .ino
+find . -name "*.pde" -exec /bin/sh -c 'f={}; mv ${f} ${f%.*}.ino' \;
 
 cd libraries 
 zip -r ../m2tklib_arduino_glcd_`../../print_release`.zip *
