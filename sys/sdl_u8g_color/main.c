@@ -2239,7 +2239,7 @@ int main(void)
   u8g_Init(&u8g, &u8g_dev_sdl_8bit);
   u8g_SetCursorFont(&u8g, u8g_font_cursor);
   u8g_SetCursorColor(&u8g, 0x0c0, 3);
-  u8g_EnableCursor(&u8g);
+  // u8g_EnableCursor(&u8g); 
   
   /* 2. Now, setup m2 */
   //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
@@ -2253,7 +2253,7 @@ int main(void)
   m2_SetU8g(&u8g, m2_u8g_box_icon);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font_7x13);
+  m2_SetFont(0, (const void *)u8g_font_6x13);
   m2_SetFont(1, (const void *)u8g_font_symb12);
   m2_SetFont(2, (const void *)u8g_font_fub25);
 

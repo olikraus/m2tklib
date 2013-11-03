@@ -102,6 +102,7 @@
 uint8_t uiKeyUpPin = 7;         
 uint8_t uiKeyDownPin = 3;
 uint8_t uiKeySelectPin = 2;
+uint8_t uiKeySelectPin2 = 8;
 
 uint8_t select_color = 0;
 uint8_t select_priority = 0;
@@ -152,7 +153,7 @@ M2_LIST(list) = {
     &el_cancel, &el_ok 
 };
 M2_GRIDLIST(list_element, "c2",list);
-M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_u8g_ffs);
+M2tk m2(&list_element, m2_es_arduino, m2_eh_4bs, m2_gh_u8g_ffs);
 
 // U8glib draw procedure: Just call the M2tklib draw procedure
 void draw(void) {
@@ -169,6 +170,7 @@ void setup() {
 
   // Setup keys
   m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
+  m2.setPin(M2_KEY_SELECT2, uiKeySelectPin2);
   m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
   m2.setPin(M2_KEY_PREV, uiKeyUpPin);
 }

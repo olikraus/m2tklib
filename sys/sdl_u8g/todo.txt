@@ -160,6 +160,7 @@ new tutorial
 1) positive logic
 2) analog input on one pin
 3) auto repeat
+4) key pad support
 
 
 ============

@@ -105,9 +105,11 @@ void m2_sdl_init(void)
   
   m2_sdl_color = SDL_MapRGB( m2_sdl_screen->format, 100, 255, 0 );
 
+  /*
   m2_sdl_set_pixel(0,0);
   m2_sdl_set_pixel(1,1);
   m2_sdl_set_pixel(2,2);
+  */
 
     /* update all */
   /* http://www.libsdl.org/cgi/docwiki.cgi/SDL_UpdateRect */
@@ -157,7 +159,6 @@ void m2_sdl_text(int x0, int y0, const char *s, int pos, int style)
       m2_sdl_hline((x0+xs/m2_sdl_multiple), (x0+xe/m2_sdl_multiple), (y0-1));
     if ( style ==2 )
       m2_sdl_hline((x0+xs/m2_sdl_multiple), (x0+xe/m2_sdl_multiple), (y0-2));
-    
   }
 }
 
@@ -364,12 +365,14 @@ void m2_sdlgfx_start(void)
   Uint32 color = SDL_MapRGB( m2_sdl_screen->format, 0, 0, 0 );
   /* http://www.libsdl.org/cgi/docwiki.cgi/SDL_FillRect */
   SDL_FillRect(m2_sdl_screen, NULL, color);
+  /*
   m2_sdl_set_pixel(0,0);
   m2_sdl_set_pixel(10,0);
   m2_sdl_set_pixel(20,0);
   m2_sdl_set_pixel(30,0);
   m2_sdl_set_pixel(40,0);
   m2_sdl_set_pixel(50,0);
+  */
 }
 
 void m2_sdlgfx_end(void)
