@@ -916,7 +916,7 @@ struct _m2_el_combofn_struct
 {
   m2_el_fnfmt_t ff;
   uint8_t cnt;
-  m2_get_str_fnptr fnptr;
+  m2_combofn_fnptr fnptr;
 };
 typedef struct _m2_el_combofn_struct m2_el_combofn_t;
 typedef m2_el_combofn_t *m2_el_combofn_p;
