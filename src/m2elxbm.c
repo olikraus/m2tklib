@@ -1,8 +1,8 @@
 /*
 
-  m2elstr.c
+  m2elxbm.c
   
-  base class for any string elements
+  xbm elements XBMLABEL, XBMBUTTON, XBMROOT
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -159,8 +159,10 @@ M2_EL_FN_DEF(m2_el_xbmbuttonp_fn)
       return 1;
     }
   }
-  return m2_el_xbmlabelp_fn(fn_arg);
+  return m2_el_xbmrootp_fn(fn_arg);
 }
+
+
 
 uint8_t m2_el_xbmtsk_get_key(m2_el_fnarg_p fn_arg)
 {
