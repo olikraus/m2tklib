@@ -139,15 +139,18 @@ void setup() {
 
   // Assign u8g font to index 0
   m2.setFont(0, u8g_font_6x13);
-  
+
+  // Setup keys
   m2.setPin(M2_KEY_Q1, uiKeySelectPin);
   m2.setPin(M2_KEY_Q2, uiKeyDownPin);
 }
 
 void loop() {
   m2.checkKey();
-  m2.checkKey();
-  if ( m2.handleKey() )
-    m2.draw();
-  m2.checkKey();
+  if ( m2.handleKey() ) {
+    u8g.firstPage();  
+    do {
+      m2.draw();
+    } while( u8g.nextPage() );
+  }
 }
