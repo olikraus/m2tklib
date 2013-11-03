@@ -35,8 +35,6 @@ extern "C" {
 
 extern u8g_t *m2_u8g;
 extern u8g_uint_t m2_u8g_height_minus_one;
-extern uint8_t m2_u8g_fg_text_color;
-extern uint8_t m2_u8g_bg_text_color;
 extern uint8_t m2_u8g_current_text_color;
 
 extern uint8_t m2_gh_u8g_current_depth;
@@ -45,6 +43,28 @@ extern uint8_t m2_gh_u8g_invert_at_depth;
 extern uint8_t m2_gh_u8g_invisible_frame_border_x_size;
 extern uint8_t m2_gh_u8g_additional_text_border_x_size;
 extern uint8_t m2_gh_u8g_additional_read_only_border_x_size;
+
+/* bg and fg colors for all modes */
+extern uint8_t m2_u8g_fg_text_color;
+extern uint8_t m2_u8g_bg_text_color;
+
+/* bg and fg colors for 332 color mode */
+extern uint8_t m2_u8g_highlight_shadow_color;
+extern uint8_t m2_u8g_highlight_frame_color;
+extern uint8_t m2_u8g_highlight_bg_color;
+
+extern uint8_t m2_u8g_highlight_focus_shadow_color;
+extern uint8_t m2_u8g_highlight_focus_frame_color;
+extern uint8_t m2_u8g_highlight_focus_bg_color;
+
+extern uint8_t m2_u8g_normal_focus_shadow_color;
+extern uint8_t m2_u8g_normal_focus_frame_color;
+extern uint8_t m2_u8g_normal_focus_bg_color;
+
+extern uint8_t m2_u8g_small_focus_bg_color;		
+extern uint8_t m2_u8g_exit_data_entry_color;
+
+extern uint8_t m2_u8g_background_color;
 
 
 /* graphics handler for the u8glib */
