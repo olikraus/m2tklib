@@ -162,6 +162,8 @@ new tutorial
 3) auto repeat
 4) key pad support
 
+--> issue 117 updated
+
 
 ============
 issue 121
@@ -171,7 +173,7 @@ add some test code to the sdl example
 
 ::::::::::::::::::
 --> SiSu example --> all ok
-::::::::::::::::::
+:::::::::::::::::: --> issue 121 has been updated
  
 
 ============
@@ -193,6 +195,6 @@ same callback? Important is, that there is a set procedure.
 	M2_COMBOFN_MSG_GET_STRING
 	
 --> implemented, create example	
-::::::::::::::::::
+:::::::::::::::::: --> issue 122 has been updated
 
  

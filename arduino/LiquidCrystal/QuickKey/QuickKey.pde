@@ -61,8 +61,8 @@ M2_VLIST(el_qktoggle_vlist, NULL, list_qktoggle_v);
 M2_ALIGN(top_el_qktoggle, "-1|1W64H64", &el_qktoggle_vlist);
 
 
-M2_ROOT(el_qk_menu1, "f4q1", "q1:U8NUM", &top_el_qknum);
-M2_ROOT(el_qk_menu2, "f4q2", "q2:TOGGLE", &top_el_qktoggle);
+M2_ROOT(el_qk_menu1, "f4q1r1", "q1:U8NUM", &top_el_qknum);
+M2_ROOT(el_qk_menu2, "f4q2r1", "q2:TOGGLE", &top_el_qktoggle);
 M2_LIST(list_qk_menu) = { &el_qk_menu1, &el_qk_menu2 };
 M2_VLIST(el_qk_menu_vlist, NULL, list_qk_menu);
 M2_ALIGN(top_el_quick_key, "-1|1W64H64", &el_qk_menu_vlist);
