@@ -49,7 +49,7 @@
 //U8GLIB_NHD31OLED_2X_GR u8g(13, 11, 10, 9);	// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGS102 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_DOGM132 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
-//U8GLIB_DOGM128 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+U8GLIB_DOGM128 u8g(13, 11, 10, 9);		// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
 //U8GLIB_ST7920_128X64_1X u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64_4X u8g(8, 9, 10, 11, 4, 5, 6, 7, 18, 17, 16);   // 8Bit Com: D0..D7: 8,9,10,11,4,5,6,7 en=18, di=17,rw=16
 //U8GLIB_ST7920_128X64_1X u8g(18, 16, 17);	// SPI Com: SCK = en = 18, MOSI = rw = 16, CS = di = 17
@@ -460,7 +460,6 @@ char part2[] M2_SECTION_PROGMEM =
 "contented.\n"
 ;
 
-
 extern M2tk m2;
 M2_EXTERN_ALIGN(el_top);
 
@@ -490,7 +489,8 @@ M2_ROOT(el_goto_part2, NULL, "Part 2", &el_part2);
 M2_LIST(list_menu) = {&el_goto_title, &el_goto_part1, &el_goto_part2};
 M2_VLIST(el_menu_vlist, NULL, list_menu);
 M2_ALIGN(el_top, "W64H64", &el_menu_vlist);
-M2tk m2(&el_top, m2_es_arduino, m2_eh_4bs, m2_gh_u8g_fb);
+M2tk m2(&el_top, m2_es_arduino, m2_eh_4bs, m2_gh_u8g_fb); 
+
 
 
 void draw(void) {
