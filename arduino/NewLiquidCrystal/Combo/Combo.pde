@@ -59,10 +59,12 @@ uint8_t select_priority = 0;
 
 void fn_ok(m2_el_fnarg_p fnarg) {
   /* accept selection */
+  m2.setRoot(&el_top);
 }
 
 void fn_cancel(m2_el_fnarg_p fnarg) {
   /* discard selection */
+  m2.setRoot(&el_top);
 }
 
 const char *fn_idx_to_color(uint8_t idx)
