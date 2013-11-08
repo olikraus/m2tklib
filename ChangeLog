@@ -56,5 +56,13 @@ M2tklib ChangeLog
 	* Support for New LiquidCrystal Library (enhancement issue 98)
 	* Support for Touch Screen (including TSK elements, issue 91)
 	* New examples: MenuX2L, HideS8Num
-	
+2013-11-08	v1.11	Oliver Kraus <olikraus@gmail.com>
+	* Keypad Support for M2_TEXT and M2_U32NUM (Issue 108)
+	* Fixed XBM code (Issues 110, 111)
+	* Touch screen support for M2_STRLIST and M2_VSB (Issue 112)
+	* New color graphics handler for U8glib (Issue 113)
+	* Quick and Home keys (Issues 114 and 115)
+	* Changed default behavioir for M2_ALGIN (Issue 121)
+	* New element: M2_COMBOFN (Issue 122)
+	* New tutorial on event sources (Issues  117 and 123)
 	
