@@ -97,7 +97,7 @@ cp ../../arduino/NewLiquidCrystal/MenuX2L/*.pde ./libraries/M2tklib/examples/Men
 sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/MenuX2L/MenuX2L.pde
 
 cp ../../arduino/NewLiquidCrystal/QuickKey/*.pde ./libraries/M2tklib/examples/QuickKey/.
-sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/MenuX2L/QuickKey.pde
+sed -i 's|m2ghnlc.h|utility/m2ghnlc.h|g' ./libraries/M2tklib/examples/QuickKey/QuickKey.pde
 
 # rename to .ino
 find . -name "*.pde" -exec /bin/sh -c 'f={}; mv ${f} ${f%.*}.ino' \;

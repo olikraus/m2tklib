@@ -101,7 +101,7 @@ cp ../../arduino/u8g/MenuX2L/*.pde ./libraries/M2tklib/examples/MenuX2L/.
 sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/MenuX2L/MenuX2L.pde
 
 cp ../../arduino/u8g/QuickKey/*.pde ./libraries/M2tklib/examples/QuickKey/.
-sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/MenuX2L/QuickKey.pde
+sed -i 's|m2ghu8g.h|utility/m2ghu8g.h|g' ./libraries/M2tklib/examples/QuickKey/QuickKey.pde
 
 # rename to .ino
 find . -name "*.pde" -exec /bin/sh -c 'f={}; mv ${f} ${f%.*}.ino' \;
