@@ -428,7 +428,7 @@ uint8_t pq_ParseSentence(pq_t *pq)
   uint16_t pos_fraction;	0...999 
   uint16_t pos_degree;	temp variable for gps_float_t conversion 
 */
-void pg_FloatToDegreeMinutes(pq_t *pq, gps_float_t f)
+void pq_FloatToDegreeMinutes(pq_t *pq, gps_float_t f)
 {
   float g;
   pq->pos_is_neg = 0;
@@ -444,7 +444,7 @@ void pg_FloatToDegreeMinutes(pq_t *pq, gps_float_t f)
 }
 
 /* writes cnt + 1 chars to s, including '\0' */
-void pg_itoa(char *s, uint16_t x, uint8_t cnt)
+void pq_itoa(char *s, uint16_t x, uint8_t cnt)
 {
   uint16_t c;
   s[cnt] = '\0';
@@ -468,7 +468,7 @@ void pg_itoa(char *s, uint16_t x, uint8_t cnt)
   into a string
   N ddd° mm.fff'   --> 14 chars, 15 with '\0'  
 */
-void pg_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
+void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
 {
   uint8_t cnt;
   if ( is_lat != 0 )
@@ -494,18 +494,18 @@ void pg_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
     }
   }
   s[1] = ' ';
-  pg_itoa(s+2, pq->pos_degree, 3);
+  pq_itoa(s+2, pq->pos_degree, 3);
   s[5] = '°';
   s[6] = ' ';
-  pg_itoa(s+7, pq->pos_minutes, 2);
+  pq_itoa(s+7, pq->pos_minutes, 2);
   s[9] = '.';
-  pg_itoa(s+10, pq->pos_fraction, 3);
+  pq_itoa(s+10, pq->pos_fraction, 3);
   s[13] = '\'';
   s[14] = '\0';
 }
 
 /* s must be at least 10 chars long */
-void pg_FloatToStr(gps_float_t f, char *s)
+void pq_FloatToStr(gps_float_t f, char *s)
 {
   float g;
   if ( f < (gps_float_t)0 )
@@ -515,11 +515,11 @@ void pg_FloatToStr(gps_float_t f, char *s)
     s++;
   }
   f = GPS_MODF(f,&g);
-  pg_itoa(s, g, 3);
+  pq_itoa(s, g, 3);
   f*=10000;
   f = GPS_MODF(f,&g);
   s[3] = '.';
-  pg_itoa(s+4, g, 4);
+  pq_itoa(s+4, g, 4);
   s[8] = '\0';
   
 }

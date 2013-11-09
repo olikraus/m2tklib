@@ -69,6 +69,9 @@ void gps_rx(uint8_t value)
 
 void gps_init(void)
 {
+  
+  gps_tracker_variables.half_map_size = 10;
+  
   /* init gps parser */  
   pq_Init(&pq);
 

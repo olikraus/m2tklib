@@ -115,7 +115,7 @@ CFLAGS:=$(COMMON_FLAGS) -std=gnu99
 GC:=-Wl,--gc-sections
 MAP:=-Wl,-Map=$(MAPNAME)
 LFLAGS:=$(COMMON_FLAGS) $(GC) $(MAP)
-LDLIBS:=--specs=nano.specs -lc -lc -lnosys -L$(LDSCRIPTDIR) -T $(LDSCRIPT)
+LDLIBS:=--specs=nano.specs -lc -lc -lnosys -lm -L$(LDSCRIPTDIR) -T $(LDSCRIPT)
 
 # Additional Suffixes
 .SUFFIXES: .elf .hex .dis
