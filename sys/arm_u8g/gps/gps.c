@@ -29,43 +29,44 @@
 #include "m2.h"
 #include "m2ghu8g.h"
 #include "adc.h"
+#include "init.h"
+#include "util.h"
 
-/*========================================================================*/
-/* variables of the gps tracker device */
-struct {
-  uint16_t adc_battery;
-} gps_tracker_variables;
 
+/*=======================================================================*/
+/* low pass filter with 8 bit resolution, p = 0..255 */
+#define LOW_PASS_BITS 8
+uint32_t low_pass(uint32_t *a, uint32_t x, uint32_t p)
+{
+  uint32_t n;
+  n = ((1<<LOW_PASS_BITS)-p) * (*a) + p * x;
+  n >>= LOW_PASS_BITS;
+  *a = n;
+  return n;
+}
+
+/*=======================================================================*/
 uint8_t update_gps_tracker_variables(void)
 {
   uint16_t tmp16;
   uint8_t is_changed = 0;
+  
   tmp16 = adc_get_value(2);
+  tmp16 = low_pass( &gps_tracker_variables.adc_low_pass_z, tmp16, 7);
+  
   if ( gps_tracker_variables.adc_battery != tmp16 )
   {
     is_changed = 1;
     gps_tracker_variables.adc_battery = tmp16;
   }
-  return is_changed;
-}
-
-/*========================================================================*/
-/* SystemInit & SysTick Interrupt */
-
-#define SYS_TICK_PERIOD_IN_MS 10
-
-void SystemInit()
-{    
-  init_system_clock();		/* SystemCoreClock will be set here */
   
-  /* SysTick is defined in core_cm0.h */
-  SysTick->LOAD = (SystemCoreClock/1000UL*(unsigned long)SYS_TICK_PERIOD_IN_MS) - 1;
-  SysTick->VAL = 0;
-  SysTick->CTRL = 7;   /* enable, generate interrupt (SysTick_Handler), do not divide by 2 */
-}
-
-void __attribute__ ((interrupt)) SysTick_Handler(void)
-{
+  if ( gps_tracker_variables.uart_byte_cnt_gui != gps_tracker_variables.uart_byte_cnt_raw )
+  {
+    is_changed = 1;
+    gps_tracker_variables.uart_byte_cnt_gui = gps_tracker_variables.uart_byte_cnt_raw;
+  }
+  
+  return is_changed;
 }
 
 
@@ -117,6 +118,10 @@ M2_ALIGN(el_test_gps, "|0", &el_goto_home);
 
 M2_ALIGN(el_test_compass, "|0", &el_goto_home);
 
+/*=== show GPS UART ===*/
+
+M2_ALIGN(el_show_gps_uart, "|0", &el_goto_home);
+
 /*=== show battery ===*/
 
 M2_ALIGN(el_show_battery, "|0", &el_goto_home);
@@ -126,10 +131,12 @@ M2_ALIGN(el_show_battery, "|0", &el_goto_home);
 M2_ROOT(el_home_test_gps, NULL, "GPS" , &el_test_gps);
 M2_ROOT(el_home_test_compass, NULL, "Compass", &el_test_compass);
 M2_ROOT(el_home_show_battery, NULL, "Battery", &el_show_battery);
+M2_ROOT(el_home_show_gps_uart, NULL, "GPS UART", &el_show_gps_uart);
 M2_LIST(list_home) = {
   &el_home_test_gps,
   &el_home_test_compass,
-  &el_home_show_battery
+  &el_home_show_battery,
+  &el_home_show_gps_uart
 };
 M2_VLIST(el_home_vlist, NULL, list_home);
 M2_ALIGN(el_home, NULL, &el_home_vlist);
@@ -143,7 +150,7 @@ u8g_t u8g;
 /*=========================================================================*/
 /* controller, u8g and m2 setup */
 
-void setup(void)
+void display_init(void)
 {  
 
   /* eval board */
@@ -183,13 +190,6 @@ void setup(void)
 }
 
 /*=========================================================================*/
-/* system setup */
-
-void sys_init(void)
-{
-}
-
-/*=========================================================================*/
 /* u8g draw procedure (body of picture loop) */
 
 /* draw procedure of the u8g picture loop */
@@ -204,6 +204,23 @@ void draw(void)
     u8g_DrawStr(&u8g,  30, 12*2, u8g_u16toa(gps_tracker_variables.adc_battery, 4));
     u8g_DrawStr(&u8g,  0, 12*3, "mV: ");
     u8g_DrawStr(&u8g,  30, 12*3, u8g_u16toa((gps_tracker_variables.adc_battery*3300UL)/1024, 4));    
+  }
+  else if ( m2_GetRoot() == &el_show_gps_uart ) 
+  {
+    uint32_t h = 9;
+    //u8g_SetFont(&u8g, u8g_font_helvB08r);
+    u8g_SetFont(&u8g, u8g_font_5x8r);
+    u8g_SetDefaultForegroundColor(&u8g);
+    u8g_DrawStr(&u8g,  0, h, "GPS UART");
+    u8g_DrawStr(&u8g,  0, h*2, "RX: ");
+    u8g_DrawStr(&u8g,  30, h*2, u32toa(gps_tracker_variables.uart_byte_cnt_raw, 9));
+    u8g_DrawStr(&u8g,  0, h*3, "CRB: ");
+    u8g_DrawStr(&u8g,  30, h*3, u8g_u16toa(pq.crb.start, 3));    
+    u8g_DrawStr(&u8g,  0, h*4, "Msg: ");
+    u8g_DrawStr(&u8g,  30, h*4, u32toa(pq.processed_sentences, 9));
+    u8g_DrawStr(&u8g,  30+30, h*3, u8g_u16toa(pq.crb.end, 3));    
+    u8g_DrawStr(&u8g,  0, h*5, "Unsupported: ");
+    u8g_DrawStr(&u8g,  60, h*5, pq.last_unknown_msg);
     
   }
   
@@ -219,11 +236,12 @@ void draw(void)
 int main(void)
 {
   uint8_t is_changed;
-  /* setup controller */
-  sys_init();
 	
   /* setup u8g and m2 libraries */
-  setup();
+  display_init();
+  
+  /* setup all other parts of the gps device */
+  gps_init();
 
   /* application main loop */
   for(;;)
@@ -242,6 +260,8 @@ int main(void)
         m2_CheckKey();
       } while( u8g_NextPage(&u8g) );
     }
+    
+    pq_ParseSentence(&pq);
   }  
 }
 
