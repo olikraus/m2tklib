@@ -23,8 +23,8 @@ typedef struct _gps_pos_struct gps_pos_t;
 struct _pq_entry_struct
 {
   gps_pos_t pos;
-  uint32_t timestamp;	/* seconds since 1.1.2000 */
-  uint16_t millisecond;	/* milliseconds of the timestamp */
+  //uint32_t timestamp;	/* seconds since 1.1.2000 */
+  //uint16_t millisecond;	/* milliseconds of the timestamp */
 };
 typedef struct _pq_entry_struct pq_entry_t;
 
@@ -44,7 +44,7 @@ struct _pq_interface_struct
 };
 typedef struct _pq_interface_struct pq_interface_t;
 
-#define PQ_LEN 16
+#define PQ_LEN 24
 
 struct _pq_struct
 {

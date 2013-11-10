@@ -106,13 +106,19 @@ uint8_t update_gps_tracker_variables(void)
   
   if ( gps_tracker_variables.adc_battery != tmp16 )
   {
-    is_changed = 1;
+    // is_changed = 1;
     gps_tracker_variables.adc_battery = tmp16;
+  }
+  
+  if ( gps_tracker_variables.sec_cnt != gps_tracker_variables.sec_cnt_raw )
+  {
+    is_changed = 1;
+    gps_tracker_variables.sec_cnt = gps_tracker_variables.sec_cnt_raw;
   }
   
   if ( gps_tracker_variables.uart_byte_cnt_gui != gps_tracker_variables.uart_byte_cnt_raw )
   {
-    is_changed = 1;
+    //is_changed = 1;
     gps_tracker_variables.uart_byte_cnt_gui = gps_tracker_variables.uart_byte_cnt_raw;
   }
   
@@ -201,17 +207,26 @@ void prepare_map(void)
 {
 }
 
-#define MAP_RADIUS 30
+#define MAP_OFFSET 2
+#define MAP_SCALE_OFFSET 6
+#define MAP_RADIUS 25
 void draw_map(void)
 {
   uint8_t i;
   gps_float_t half_map_pixel_size = MAP_RADIUS;
-  u8g_int_t x_org = 51;
-  u8g_int_t y_org = 32;
+  u8g_int_t x_org = MAP_OFFSET+MAP_RADIUS;
+  u8g_int_t y_org = MAP_OFFSET+MAP_RADIUS;
   u8g_int_t x,y;
 
   set_map_origin_from_current_pos();
+
+  u8g_SetFont(&u8g, SMALL_FONT);
+  u8g_SetDefaultForegroundColor(&u8g);
   
+  u8g_DrawHLine(&u8g, MAP_OFFSET, MAP_OFFSET+ 2*MAP_RADIUS + MAP_SCALE_OFFSET, MAP_RADIUS);
+  u8g_DrawVLine(&u8g, MAP_OFFSET, MAP_OFFSET+ 2*MAP_RADIUS + MAP_SCALE_OFFSET - 1, 3);
+  u8g_DrawVLine(&u8g, MAP_OFFSET+MAP_RADIUS, MAP_OFFSET+ 2*MAP_RADIUS + MAP_SCALE_OFFSET - 1, 3);
+  u8g_DrawStr(&u8g, MAP_OFFSET+MAP_RADIUS+2, MAP_OFFSET+ 2*MAP_RADIUS + MAP_SCALE_OFFSET + 4, gps_get_half_map_str());
   u8g_DrawCircle(&u8g,  x_org,y_org,MAP_RADIUS, U8G_DRAW_ALL);
   for( i = 0; i < pq.cnt; i++ )
   {
@@ -219,12 +234,21 @@ void draw_map(void)
     if ( gps_tracker_variables.is_visible_on_map != 0 )
     {
       x = x_org + (gps_tracker_variables.e_w_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
-      y = y_org - (gps_tracker_variables.e_w_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
+      y = y_org - (gps_tracker_variables.n_s_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
+      
       u8g_DrawPixel(&u8g,  x,y);
-      u8g_DrawPixel(&u8g,  x-1,y);
-      u8g_DrawPixel(&u8g,  x+1,y);
-      u8g_DrawPixel(&u8g,  x,y-1);
-      u8g_DrawPixel(&u8g,  x,y+1);      
+      
+      if ( i > (PQ_LEN*2)/3 )
+      {
+	u8g_DrawPixel(&u8g,  x-1,y);
+	u8g_DrawPixel(&u8g,  x+1,y);
+	u8g_DrawPixel(&u8g,  x,y-1);
+	u8g_DrawPixel(&u8g,  x,y+1); 
+      }
+      else if ( i > (PQ_LEN*1)/3 )
+      {
+	u8g_DrawPixel(&u8g,  x+1,y);	
+      }
     }
   }
 }
@@ -232,6 +256,10 @@ void draw_map(void)
 
 /*=========================================================================*/
 /* menu definitions */
+
+const char fmt_f8w32[] = "f8w32";
+const char fmt_f12w40[] = "f12w40";
+const char fmt_lat_lon_u32[] = "a1c7.4";
 
 void fn_ok(m2_el_fnarg_p fnarg) {
   /* accept selection */
@@ -247,7 +275,90 @@ M2_EXTERN_ALIGN(el_home);
 
 /*=== reuseable elements ===*/
 
-M2_ROOT(el_goto_home, NULL, "Home", &el_home);
+M2_ROOT(el_goto_home, fmt_f8w32, "Home", &el_home);
+
+M2_SPACE(el_space4, "w4h4");
+
+
+/*=== GPS Data Entry (fractional notation) ===*/
+
+const char gps_text_E[] = "E";
+const char gps_text_W[] = "W";
+const char gps_text_N[] = "N";
+const char gps_text_S[] = "S";
+
+const char *combo_fn_n_s(uint8_t idx)
+{
+  if ( idx == 0 )
+    return gps_text_N;
+  return gps_text_S;
+}
+
+const char *combo_fn_e_w(uint8_t idx)
+{
+  if ( idx == 0 )
+    return gps_text_E;
+  return gps_text_W;
+}
+
+M2_LABEL(el_gps_frac_lat_label, NULL, "Lat: ");
+M2_U32NUM(el_gps_frac_lat_num, fmt_lat_lon_u32, &gps_tracker_variables.gps_frac_lat);
+M2_COMBO(el_gps_frac_lat_n_s, "w10", &gps_tracker_variables.gps_frac_lat_n_s, 2, combo_fn_n_s);
+M2_LABEL(el_gps_frac_lon_label, NULL, "Lon: ");
+M2_U32NUM(el_gps_frac_lon_num, fmt_lat_lon_u32, &gps_tracker_variables.gps_frac_lon);
+M2_COMBO(el_gps_frac_lon_e_w, "w10", &gps_tracker_variables.gps_frac_lon_e_w, 2, combo_fn_e_w);
+M2_LIST(list_gps_frac) = {
+  &el_gps_frac_lat_label,
+  &el_gps_frac_lat_num,
+  &el_gps_frac_lat_n_s,
+  &el_gps_frac_lon_label,
+  &el_gps_frac_lon_num,
+  &el_gps_frac_lon_e_w
+};
+M2_GRIDLIST(el_gps_frac_grid, "c3", list_gps_frac);
+
+M2_ROOT(el_gps_frac_ok, fmt_f12w40, "Ok", &el_home);
+M2_ROOT(el_gps_frac_cancel, fmt_f12w40, "Cancel", &el_home);
+M2_LIST(list_gps_frac_btns) = {
+  &el_gps_frac_ok,
+  &el_gps_frac_cancel
+};
+M2_HLIST(el_gps_frac_btns, NULL, list_gps_frac_btns);
+
+M2_LIST(list_gps_frac_vlist) = {
+  &el_gps_frac_grid,
+  &el_space4,
+  &el_gps_frac_btns
+};
+M2_VLIST(el_gps_frac_vlist, NULL, list_gps_frac_vlist);
+M2_ALIGN(top_el_gps_frac, NULL, &el_gps_frac_vlist);
+
+/*=== GPS Data Entry (sexagesimal notation) ===*/
+
+
+M2_U32NUM(el_gps_sexa_lat_grad, "a1c3", &gps_tracker_variables.gps_grad_lat);
+M2_U32NUM(el_gps_sexa_lat_num, "a1c5.3", &gps_tracker_variables.gps_frac_lat);
+M2_U32NUM(el_gps_sexa_lon_grad, "a1c3", &gps_tracker_variables.gps_grad_lon);
+M2_U32NUM(el_gps_sexa_lon_num, "a1c5.3", &gps_tracker_variables.gps_frac_lon);
+M2_LIST(list_gps_sexa) = {
+  &el_gps_frac_lat_label,
+  &el_gps_frac_lat_n_s,
+  &el_gps_sexa_lat_grad,
+  &el_gps_sexa_lat_num,
+  &el_gps_frac_lon_label,
+  &el_gps_frac_lon_e_w,
+  &el_gps_sexa_lon_grad,
+  &el_gps_sexa_lon_num
+};
+M2_GRIDLIST(el_gps_sexa_grid, "c4", list_gps_sexa);
+
+M2_LIST(list_gps_sexa_vlist) = {
+  &el_gps_sexa_grid,
+  &el_space4,
+  &el_gps_frac_btns
+};
+M2_VLIST(el_gps_sexa_vlist, NULL, list_gps_sexa_vlist);
+M2_ALIGN(top_el_gps_sexa, NULL, &el_gps_sexa_vlist);
 
 
 /*=== Info Menu ===*/
@@ -284,7 +395,28 @@ M2_ALIGN(top_el_info, NULL, &el_info_vlist);
 
 /*=== map ===*/
 
-M2_ALIGN(el_map, "|0", &el_goto_home);
+void btn_cb_map_zoom_dec(m2_el_fnarg_p fnarg)
+{
+  gps_dec_half_map_size();
+}
+
+M2_BUTTON(el_map_zoom_dec, fmt_f8w32, "In", btn_cb_map_zoom_dec);
+
+void btn_cb_map_zoom_inc(m2_el_fnarg_p fnarg)
+{
+  gps_inc_half_map_size();
+}
+
+M2_BUTTON(el_map_zoom_inc, fmt_f8w32, "Out", btn_cb_map_zoom_inc);
+
+M2_LIST(list_map) = {
+  &el_map_zoom_dec,
+  &el_map_zoom_inc,
+  &el_goto_home
+};
+
+M2_VLIST(el_map_vlist, NULL, list_map);
+M2_ALIGN(el_map, "|0-2", &el_map_vlist);
 
 /*=== test compass ===*/
 
@@ -293,7 +425,9 @@ M2_ALIGN(el_test_compass, "|0", &el_goto_home);
 /*=== toplevel menu ===*/
 
 M2_ROOT(el_home_map, NULL, "MAP" , &el_map);
-M2_ROOT(el_home_test_compass, NULL, "Compass", &el_test_compass);
+//M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_frac);
+M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_sexa);
+
 M2_ROOT(el_home_sys_info, NULL, "System Info", &top_el_info);
 M2_LIST(list_home) = {
   &el_home_map,
@@ -323,7 +457,9 @@ void display_init(void)
   u8g_pin_rst = PIN(0,6);
   
   /* 1. Setup and create u8g device */
-  u8g_InitComFn(&u8g, &u8g_dev_uc1701_dogs102_hw_spi, u8g_com_hw_spi_fn);
+  
+  //u8g_InitComFn(&u8g, &u8g_dev_uc1701_dogs102_hw_spi, u8g_com_hw_spi_fn);
+  u8g_InitComFn(&u8g, &u8g_dev_uc1701_dogs102_2x_hw_spi, u8g_com_hw_spi_fn);
   u8g_SetFontRefHeightAll(&u8g);
 
   /* 2. Setup m2 */
@@ -364,7 +500,7 @@ void draw(void)
   }
   else if ( m2_GetRoot() == &el_show_gps_uart ) 
   {
-    uint32_t h = 9;
+    uint32_t h = 8;
     u8g_SetFont(&u8g, SMALL_FONT);
     u8g_SetDefaultForegroundColor(&u8g);
     u8g_DrawStr(&u8g,  0, h, "GPS UART");
@@ -377,6 +513,8 @@ void draw(void)
     u8g_DrawStr(&u8g,  30+30, h*3, u8g_u16toa(pq.crb.end, 3));    
     u8g_DrawStr(&u8g,  0, h*5, "Unsupported: ");
     u8g_DrawStr(&u8g,  60, h*5, pq.last_unknown_msg);
+    u8g_DrawStr(&u8g,  0, h*6, "Clk: ");
+    u8g_DrawStr(&u8g,  30, h*6, u32toa(gps_tracker_variables.sec_cnt, 9));
   }
   else if ( m2_GetRoot() == &el_show_gps_stat )
   {

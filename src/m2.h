@@ -63,10 +63,12 @@
 #define M2_SECTION_PROGMEM __attribute__((section(".progmem.data")))
 //#define M2_AVR_OPT_ROM
 #define M2_PSTR(s) PSTR(s)
+#define M2_EL_CONST const
 #else
 #define M2_PROGMEM
 #define M2_SECTION_PROGMEM
 #define M2_PSTR(s) (s)
+#define M2_EL_CONST const
 #endif
 
 #ifdef __GNUC__
@@ -491,7 +493,7 @@ typedef const char *(*m2_strlist_cb_fnptr)(uint8_t idx, uint8_t msg);
 /* list of elements */
 /* M2_LIST(rgb_list) = { &red_el, &green_el, &blue_el }; */
 
-#define M2_LIST(list) const void *list[] M2_SECTION_PROGMEM 
+#define M2_LIST(list) M2_EL_CONST void *list[] M2_SECTION_PROGMEM 
 
 /*==============================================================*/
 /* elements */
@@ -521,13 +523,13 @@ typedef m2_el_space_t *m2_el_space_p;
 
 M2_EL_FN_DEF(m2_el_space_fn);
 
-#define M2_SPACE(el,fmt) m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_space_fn, (fmt) } }
-#define M2_EXTERN_SPACE(el) extern m2_el_space_t el
+#define M2_SPACE(el,fmt) M2_EL_CONST m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_space_fn, (fmt) } }
+#define M2_EXTERN_SPACE(el) extern M2_EL_CONST m2_el_space_t el
 
 M2_EL_FN_DEF(m2_el_box_fn);
 
-#define M2_BOX(el,fmt) m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_box_fn, (fmt) } }
-#define M2_EXTERN_BOX(el) extern m2_el_space_t el
+#define M2_BOX(el,fmt) M2_EL_CONST m2_el_space_t el M2_SECTION_PROGMEM = { { m2_el_box_fn, (fmt) } }
+#define M2_EXTERN_BOX(el) extern M2_EL_CONST m2_el_space_t el
 
 struct _m2_el_spacecb_struct
 {
@@ -538,8 +540,8 @@ typedef struct _m2_el_spacecb_struct m2_el_spacecb_t;
 typedef m2_el_spacecb_t *m2_el_spacecb_p;
 
 M2_EL_FN_DEF(m2_el_spacecb_fn);
-#define M2_SPACECB(el, fmt,callback) m2_el_spacecb_t el M2_SECTION_PROGMEM = { { { m2_el_spacecb_fn, (fmt) } },  (callback)  }
-#define M2_EXTERN_SPACECB(el) extern m2_el_spacecb_t el
+#define M2_SPACECB(el, fmt,callback) M2_EL_CONST m2_el_spacecb_t el M2_SECTION_PROGMEM = { { { m2_el_spacecb_fn, (fmt) } },  (callback)  }
+#define M2_EXTERN_SPACECB(el) extern M2_EL_CONST m2_el_spacecb_t el
 
 
 
@@ -554,8 +556,8 @@ typedef m2_el_strptr_t *m2_el_strptr_p;
 M2_EL_FN_DEF(m2_el_strptr_fn);
 
 M2_EL_FN_DEF(m2_el_labelptr_fn);
-#define M2_LABELPTR(el,fmt,strptr) m2_el_strptr_t el M2_SECTION_PROGMEM = { { m2_el_labelptr_fn, (fmt) }, (strptr) }
-#define M2_EXTERN_LABELPTR(el) extern m2_el_strptr_t el
+#define M2_LABELPTR(el,fmt,strptr) M2_EL_CONST m2_el_strptr_t el M2_SECTION_PROGMEM = { { m2_el_labelptr_fn, (fmt) }, (strptr) }
+#define M2_EXTERN_LABELPTR(el) extern M2_EL_CONST m2_el_strptr_t el
 
 struct _m2_el_buttonptr_struct
 {
@@ -566,8 +568,8 @@ typedef struct _m2_el_buttonptr_struct m2_el_buttonptr_t;
 typedef m2_el_buttonptr_t *m2_el_buttonptr_p;
 
 M2_EL_FN_DEF(m2_el_buttonptr_fn);
-#define M2_BUTTONPTR(el, fmt,strptr,callback) m2_el_buttonptr_t el M2_SECTION_PROGMEM = { { { m2_el_buttonptr_fn, (fmt) }, (strptr) },  (callback)  }
-#define M2_EXTERN_BUTTONPTR(el) extern m2_el_buttonptr_t el
+#define M2_BUTTONPTR(el, fmt,strptr,callback) M2_EL_CONST m2_el_buttonptr_t el M2_SECTION_PROGMEM = { { { m2_el_buttonptr_fn, (fmt) }, (strptr) },  (callback)  }
+#define M2_EXTERN_BUTTONPTR(el) extern M2_EL_CONST m2_el_buttonptr_t el
 
 
 struct _m2_el_xbm_struct
@@ -581,8 +583,8 @@ typedef struct _m2_el_xbm_struct m2_el_xbm_t;
 typedef m2_el_xbm_t *m2_el_xbm_p;
 
 M2_EL_FN_DEF(m2_el_xbmlabelp_fn);
-#define M2_XBMLABELP(el,fmt,w,h,ptr) m2_el_xbm_t el M2_SECTION_PROGMEM = { { m2_el_xbmlabelp_fn, (fmt) }, (w), (h), (ptr) }
-#define M2_EXTERN_XBMLABELP(el) extern m2_el_xbm_t el
+#define M2_XBMLABELP(el,fmt,w,h,ptr) M2_EL_CONST m2_el_xbm_t el M2_SECTION_PROGMEM = { { m2_el_xbmlabelp_fn, (fmt) }, (w), (h), (ptr) }
+#define M2_EXTERN_XBMLABELP(el) extern M2_EL_CONST m2_el_xbm_t el
 
 
 struct _m2_el_xbmtsk_struct
@@ -594,8 +596,8 @@ typedef struct _m2_el_xbmtsk_struct m2_el_xbmtsk_t;
 typedef m2_el_xbmtsk_t *m2_el_xbmtsk_p;
 
 M2_EL_FN_DEF(m2_el_xbmtsk_fn);
-#define M2_XBMTSKP(el,fmt,w,h,ptr,key) m2_el_xbmtsk_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmtsk_fn, (fmt) }, (w), (h), (ptr) }, (key) }
-#define M2_EXTERN_XBMTSKP(el) extern m2_el_xbmtsk_t el
+#define M2_XBMTSKP(el,fmt,w,h,ptr,key) M2_EL_CONST m2_el_xbmtsk_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmtsk_fn, (fmt) }, (w), (h), (ptr) }, (key) }
+#define M2_EXTERN_XBMTSKP(el) extern M2_EL_CONST m2_el_xbmtsk_t el
 
 
 struct _m2_el_xbmroot_struct
@@ -607,8 +609,8 @@ typedef struct _m2_el_xbmroot_struct m2_el_xbmroot_t;
 typedef m2_el_xbmroot_t *m2_el_xbmroot_p;
 
 M2_EL_FN_DEF(m2_el_xbmrootp_fn);
-#define M2_XBMROOTP(el,fmt,w,h,ptr,root) m2_el_xbmroot_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmrootp_fn, (fmt) }, (w), (h), (ptr) }, (root) }
-#define M2_EXTERN_XBMROOTP(el) extern m2_el_xbmroot_t el
+#define M2_XBMROOTP(el,fmt,w,h,ptr,root) M2_EL_CONST m2_el_xbmroot_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmrootp_fn, (fmt) }, (w), (h), (ptr) }, (root) }
+#define M2_EXTERN_XBMROOTP(el) extern M2_EL_CONST m2_el_xbmroot_t el
 
 struct _m2_el_xbmbutton_struct
 {
@@ -619,8 +621,8 @@ typedef struct _m2_el_xbmbutton_struct m2_el_xbmbutton_t;
 typedef m2_el_xbmbutton_t *m2_el_xbmbutton_p;
 
 M2_EL_FN_DEF(m2_el_xbmbuttonp_fn);
-#define M2_XBMBUTTONP(el,fmt,w,h,ptr,cb) m2_el_xbmbutton_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmbuttonp_fn, (fmt) }, (w), (h), (ptr) }, (cb) }
-#define M2_EXTERN_XBMBUTTONP(el) extern m2_el_xbmbutton_t el
+#define M2_XBMBUTTONP(el,fmt,w,h,ptr,cb) M2_EL_CONST m2_el_xbmbutton_t el M2_SECTION_PROGMEM =  { { { m2_el_xbmbuttonp_fn, (fmt) }, (w), (h), (ptr) }, (cb) }
+#define M2_EXTERN_XBMBUTTONP(el) extern M2_EL_CONST m2_el_xbmbutton_t el
 
 
 struct _m2_el_str_struct
@@ -634,16 +636,16 @@ typedef m2_el_str_t *m2_el_str_p;
 M2_EL_FN_DEF(m2_el_str_fn);
 
 M2_EL_FN_DEF(m2_el_str_up_fn);
-#define M2_STR_UP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_str_up_fn, (fmt) }, (str) }
-#define M2_EXTERN_STR_UP(el) extern m2_el_str_t el
+#define M2_STR_UP(el,fmt,str) M2_EL_CONST m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_str_up_fn, (fmt) }, (str) }
+#define M2_EXTERN_STR_UP(el) extern M2_EL_CONST m2_el_str_t el
 
 M2_EL_FN_DEF(m2_el_label_fn);
-#define M2_LABEL(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_label_fn, (fmt) }, (str) }
-#define M2_EXTERN_LABEL(el) extern m2_el_str_t el
+#define M2_LABEL(el,fmt,str) M2_EL_CONST m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_label_fn, (fmt) }, (str) }
+#define M2_EXTERN_LABEL(el) extern M2_EL_CONST m2_el_str_t el
 
 M2_EL_FN_DEF(m2_el_labelp_fn);
-#define M2_LABELP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_labelp_fn, (fmt) }, (str) }
-#define M2_EXTERN_LABELP(el) extern m2_el_str_t el
+#define M2_LABELP(el,fmt,str) M2_EL_CONST m2_el_str_t el M2_SECTION_PROGMEM = { { m2_el_labelp_fn, (fmt) }, (str) }
+#define M2_EXTERN_LABELP(el) extern M2_EL_CONST m2_el_str_t el
 
 struct _m2_el_tsk_struct
 {
@@ -654,12 +656,12 @@ typedef struct _m2_el_tsk_struct m2_el_tsk_t;
 typedef m2_el_tsk_t *m2_el_tsk_p;
 
 M2_EL_FN_DEF(m2_el_tsk_fn);
-#define M2_TSK(el,fmt,str,key) m2_el_tsk_t el M2_SECTION_PROGMEM = { { { m2_el_tsk_fn, (fmt) }, (str) }, (key)}
-#define M2_EXTERN_TSK(el) extern m2_el_tsk_t el
+#define M2_TSK(el,fmt,str,key) M2_EL_CONST m2_el_tsk_t el M2_SECTION_PROGMEM = { { { m2_el_tsk_fn, (fmt) }, (str) }, (key)}
+#define M2_EXTERN_TSK(el) extern M2_EL_CONST m2_el_tsk_t el
 
 M2_EL_FN_DEF(m2_el_tskp_fn);
-#define M2_TSKP(el,fmt,str) m2_el_str_t el M2_SECTION_PROGMEM = { { { m2_el_tskp_fn, (fmt) }, (str) }, (key)}
-#define M2_EXTERN_TSKP(el) extern m2_el_str_t el
+#define M2_TSKP(el,fmt,str) M2_EL_CONST m2_el_str_t el M2_SECTION_PROGMEM = { { { m2_el_tskp_fn, (fmt) }, (str) }, (key)}
+#define M2_EXTERN_TSKP(el) extern M2_EL_CONST m2_el_str_t el
 
 struct _m2_el_labelfn_struct
 {
@@ -670,8 +672,8 @@ typedef struct _m2_el_labelfn_struct m2_el_labelfn_t;
 typedef m2_el_labelfn_t *m2_el_labelfn_p;
 
 M2_EL_FN_DEF(m2_el_labelfn_fn);
-#define M2_LABELFN(el,fmt,cb) m2_el_labelfn_t el M2_SECTION_PROGMEM = { { m2_el_labelfn_fn, (fmt) }, (cb) }
-#define M2_EXTERN_LABELFN(el) extern m2_el_str_t el
+#define M2_LABELFN(el,fmt,cb) M2_EL_CONST m2_el_labelfn_t el M2_SECTION_PROGMEM = { { m2_el_labelfn_fn, (fmt) }, (cb) }
+#define M2_EXTERN_LABELFN(el) extern M2_EL_CONST m2_el_str_t el
 
 
 struct _m2_el_root_struct
@@ -683,8 +685,8 @@ typedef struct _m2_el_root_struct m2_el_root_t;
 typedef m2_el_root_t *m2_el_root_p;
 
 M2_EL_FN_DEF(m2_el_root_fn);
-#define M2_ROOT(el, fmt, str, element) m2_el_root_t el M2_SECTION_PROGMEM = { { { m2_el_root_fn, (fmt) }, (str) },  (element)  }
-#define M2_EXTERN_ROOT(el) extern m2_el_root_t el
+#define M2_ROOT(el, fmt, str, element) M2_EL_CONST m2_el_root_t el M2_SECTION_PROGMEM = { { { m2_el_root_fn, (fmt) }, (str) },  (element)  }
+#define M2_EXTERN_ROOT(el) extern M2_EL_CONST m2_el_root_t el
 
 struct _m2_el_button_struct
 {
@@ -695,8 +697,8 @@ typedef struct _m2_el_button_struct m2_el_button_t;
 typedef m2_el_button_t *m2_el_button_p;
 
 M2_EL_FN_DEF(m2_el_button_fn);
-#define M2_BUTTON(el, fmt, str, callback) m2_el_button_t el M2_SECTION_PROGMEM = { { { m2_el_button_fn, (fmt) }, (str) },  (callback)  }
-#define M2_EXTERN_BUTTON(el) extern m2_el_button_t el
+#define M2_BUTTON(el, fmt, str, callback) M2_EL_CONST m2_el_button_t el M2_SECTION_PROGMEM = { { { m2_el_button_fn, (fmt) }, (str) },  (callback)  }
+#define M2_EXTERN_BUTTON(el) extern M2_EL_CONST m2_el_button_t el
 
 
 struct _m2_el_s8_struct
@@ -728,12 +730,12 @@ typedef m2_el_s8_fn_t *m2_el_s8_fn_p;
 
 M2_EL_FN_DEF(m2_el_s8base_fn);												/* m2els8base.c */
 M2_EL_FN_DEF(m2_el_s8num_fn);
-#define M2_S8NUM(el,fmt,min,max,variable) m2_el_s8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_s8num_fn, (fmt) }, (min), (max) }, (variable) }
-#define M2_EXTERN_S8NUM(el) extern m2_el_s8_ptr_t el
+#define M2_S8NUM(el,fmt,min,max,variable) M2_EL_CONST m2_el_s8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_s8num_fn, (fmt) }, (min), (max) }, (variable) }
+#define M2_EXTERN_S8NUM(el) extern M2_EL_CONST m2_el_s8_ptr_t el
 
 M2_EL_FN_DEF(m2_el_s8numfn_fn);
-#define M2_S8NUMFN(el,fmt,min,max,cb) m2_el_s8_fn_t el M2_SECTION_PROGMEM = { { { m2_el_s8numfn_fn, (fmt) }, (min), (max) }, (cb) }
-#define M2_EXTERN_S8NUMFN(el) extern m2_el_s8_fn_t el
+#define M2_S8NUMFN(el,fmt,min,max,cb) M2_EL_CONST m2_el_s8_fn_t el M2_SECTION_PROGMEM = { { { m2_el_s8numfn_fn, (fmt) }, (min), (max) }, (cb) }
+#define M2_EXTERN_S8NUMFN(el) extern M2_EL_CONST m2_el_s8_fn_t el
 
 
 
@@ -767,15 +769,15 @@ typedef m2_el_u8_fn_t *m2_el_u8_fn_p;
 
 M2_EL_FN_DEF(m2_el_u8base_fn);												/* m2elu8base.c */
 M2_EL_FN_DEF(m2_el_u8num_fn);
-#define M2_U8NUM(el,fmt,min,max,variable) m2_el_u8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_u8num_fn, (fmt) }, (min), (max) }, (variable) }
-#define M2_EXTERN_U8NUM(el) extern m2_el_u8_ptr_t el
+#define M2_U8NUM(el,fmt,min,max,variable) M2_EL_CONST m2_el_u8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_u8num_fn, (fmt) }, (min), (max) }, (variable) }
+#define M2_EXTERN_U8NUM(el) extern M2_EL_CONST m2_el_u8_ptr_t el
 M2_EL_FN_DEF(m2_el_u8hs_fn);
-#define M2_U8HS(el,fmt,min,max,variable) m2_el_u8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_u8hs_fn, (fmt) }, (min), (max) }, (variable) }
-#define M2_EXTERN_U8HS(el) extern m2_el_u8_ptr_t el
+#define M2_U8HS(el,fmt,min,max,variable) M2_EL_CONST m2_el_u8_ptr_t el M2_SECTION_PROGMEM = { { { m2_el_u8hs_fn, (fmt) }, (min), (max) }, (variable) }
+#define M2_EXTERN_U8HS(el) extern M2_EL_CONST m2_el_u8_ptr_t el
 
 M2_EL_FN_DEF(m2_el_u8numfn_fn);
-#define M2_U8NUMFN(el,fmt,min,max,cb) m2_el_u8_fn_t el M2_SECTION_PROGMEM = { { { m2_el_u8numfn_fn, (fmt) }, (min), (max) }, (cb) }
-#define M2_EXTERN_U8NUMFN(el) extern m2_el_u8_fn_t el
+#define M2_U8NUMFN(el,fmt,min,max,cb) M2_EL_CONST m2_el_u8_fn_t el M2_SECTION_PROGMEM = { { { m2_el_u8numfn_fn, (fmt) }, (min), (max) }, (cb) }
+#define M2_EXTERN_U8NUMFN(el) extern M2_EL_CONST m2_el_u8_fn_t el
 
 
 
@@ -793,15 +795,15 @@ M2_EL_FN_DEF(m2_el_hlist_fn);
 M2_EL_FN_DEF(m2_el_gridlist_fn);
 M2_EL_FN_DEF(m2_el_xylist_fn);
 
-#define M2_VLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_vlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
-#define M2_HLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_hlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
-#define M2_GRIDLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_gridlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
-#define M2_XYLIST(el,fmt,list) m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_xylist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
+#define M2_VLIST(el,fmt,list) M2_EL_CONST m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_vlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
+#define M2_HLIST(el,fmt,list) M2_EL_CONST m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_hlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
+#define M2_GRIDLIST(el,fmt,list) M2_EL_CONST m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_gridlist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
+#define M2_XYLIST(el,fmt,list) M2_EL_CONST m2_el_list_t el M2_SECTION_PROGMEM = { { m2_el_xylist_fn, (fmt) } , sizeof(list)/sizeof(*(list)), (list) }
 
-#define M2_EXTERN_VLIST(el) extern m2_el_list_t el
-#define M2_EXTERN_HLIST(el) extern m2_el_list_t el
-#define M2_EXTERN_GRIDLIST(el) extern m2_el_list_t el
-#define M2_EXTERN_XYLIST(el) extern m2_el_list_t el
+#define M2_EXTERN_VLIST(el) extern M2_EL_CONST m2_el_list_t el
+#define M2_EXTERN_HLIST(el) extern M2_EL_CONST m2_el_list_t el
+#define M2_EXTERN_GRIDLIST(el) extern M2_EL_CONST m2_el_list_t el
+#define M2_EXTERN_XYLIST(el) extern M2_EL_CONST m2_el_list_t el
 
 uint8_t m2_calc_vlist_height_overlap_correction(uint8_t height, uint8_t cnt) M2_NOINLINE; /* m2ellistv.c */
 
@@ -816,8 +818,8 @@ typedef struct _m2_el_text_struct m2_el_text_t;
 typedef m2_el_text_t *m2_el_text_p;
 
 M2_EL_FN_DEF(m2_el_text_fn);
-#define M2_TEXT(el,fmt,text,len) m2_el_text_t el M2_SECTION_PROGMEM = { { m2_el_text_fn, (fmt) }, (text), (len) }
-#define M2_EXTERN_TEXT(el) extern m2_el_text_t el
+#define M2_TEXT(el,fmt,text,len) M2_EL_CONST m2_el_text_t el M2_SECTION_PROGMEM = { { m2_el_text_fn, (fmt) }, (text), (len) }
+#define M2_EXTERN_TEXT(el) extern M2_EL_CONST m2_el_text_t el
 
 struct _m2_el_u32_struct
 {
@@ -828,8 +830,8 @@ typedef struct _m2_el_u32_struct m2_el_u32_t;
 typedef m2_el_u32_t *m2_el_u32_p;
 
 M2_EL_FN_DEF(m2_el_u32_fn);
-#define M2_U32NUM(el,fmt,variable) m2_el_u32_t el M2_SECTION_PROGMEM = { { m2_el_u32_fn, (fmt) }, (variable) }
-#define M2_EXTERN_U32NUM(el) extern m2_el_u32_t el
+#define M2_U32NUM(el,fmt,variable) M2_EL_CONST m2_el_u32_t el M2_SECTION_PROGMEM = { { m2_el_u32_fn, (fmt) }, (variable) }
+#define M2_EXTERN_U32NUM(el) extern M2_EL_CONST m2_el_u32_t el
 
 struct _m2_el_u32fn_struct
 {
@@ -840,8 +842,8 @@ typedef struct _m2_el_u32fn_struct m2_el_u32fn_t;
 typedef m2_el_u32fn_t *m2_el_u32fn_p;
 
 M2_EL_FN_DEF(m2_el_u32fn_fn);
-#define M2_U32NUMFN(el,fmt,cb) m2_el_u32fn_t el M2_SECTION_PROGMEM = { { m2_el_u32fn_fn, (fmt) }, (cb) }
-#define M2_EXTERN_U32NUMFN(el) extern m2_el_u32fn_t el
+#define M2_U32NUMFN(el,fmt,cb) M2_EL_CONST m2_el_u32fn_t el M2_SECTION_PROGMEM = { { m2_el_u32fn_fn, (fmt) }, (cb) }
+#define M2_EXTERN_U32NUMFN(el) extern M2_EL_CONST m2_el_u32fn_t el
 
 
 
@@ -857,8 +859,8 @@ m2_rom_void_p m2_el_align_get_element(m2_el_fnarg_p fn_arg);	/* m2elalign.c */
 uint8_t m2_el_align_get_child_size(m2_el_fnarg_p fn_arg, uint8_t is_height);	/* m2elalign.c */
 
 M2_EL_FN_DEF(m2_el_align_fn);
-#define M2_ALIGN(el, fmt, element) m2_el_align_t el M2_SECTION_PROGMEM = {{ m2_el_align_fn, (fmt) }, (element) }
-#define M2_EXTERN_ALIGN(el) extern m2_el_align_t el
+#define M2_ALIGN(el, fmt, element) M2_EL_CONST m2_el_align_t el M2_SECTION_PROGMEM = {{ m2_el_align_fn, (fmt) }, (element) }
+#define M2_EXTERN_ALIGN(el) extern M2_EL_CONST m2_el_align_t el
 
 /* derived from el_align */
 struct _m2_el_hide_struct
@@ -870,8 +872,8 @@ typedef struct _m2_el_hide_struct m2_el_hide_t;
 typedef m2_el_hide_t *m2_el_hide_p;
 
 M2_EL_FN_DEF(m2_el_hide_fn);
-#define M2_HIDE(el, fmt, hideptr, element) m2_el_hide_t el M2_SECTION_PROGMEM = { {{ m2_el_hide_fn, (fmt) }, (element) }, hideptr }
-#define M2_EXTERN_HIDE(el) extern m2_el_hide_t el
+#define M2_HIDE(el, fmt, hideptr, element) M2_EL_CONST m2_el_hide_t el M2_SECTION_PROGMEM = { {{ m2_el_hide_fn, (fmt) }, (element) }, hideptr }
+#define M2_EXTERN_HIDE(el) extern M2_EL_CONST m2_el_hide_t el
 
 /* used for toggle and radio buttons */
 struct _m2_el_setval_struct
@@ -884,12 +886,12 @@ typedef m2_el_setval_t *m2_el_setval_p;
 
 M2_EL_FN_DEF(m2_el_setval_fn);
 M2_EL_FN_DEF(m2_el_toggle_fn);
-#define M2_TOGGLE(el,fmt,variable) m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_toggle_fn, (fmt) }, (variable) }
-#define M2_EXTERN_TOGGLE(el) extern m2_el_setval_t el
+#define M2_TOGGLE(el,fmt,variable) M2_EL_CONST m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_toggle_fn, (fmt) }, (variable) }
+#define M2_EXTERN_TOGGLE(el) extern M2_EL_CONST m2_el_setval_t el
 
 M2_EL_FN_DEF(m2_el_radio_fn);
-#define M2_RADIO(el,fmt,variable) m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_radio_fn, (fmt) }, (variable) }
-#define M2_EXTERN_RADIO(el) extern m2_el_setval_t el
+#define M2_RADIO(el,fmt,variable) M2_EL_CONST m2_el_setval_t el M2_SECTION_PROGMEM = { { m2_el_radio_fn, (fmt) }, (variable) }
+#define M2_EXTERN_RADIO(el) extern M2_EL_CONST m2_el_setval_t el
 
 
 struct _m2_el_combo_struct
@@ -902,8 +904,8 @@ typedef struct _m2_el_combo_struct m2_el_combo_t;
 typedef m2_el_combo_t *m2_el_combo_p;
 
 M2_EL_FN_DEF(m2_el_combo_fn);		/* m2elcombofn.c */
-#define M2_COMBO(el,fmt,variable,cnt,fnptr) m2_el_combo_t el M2_SECTION_PROGMEM = { { { m2_el_combo_fn, (fmt) }, (variable) }, (cnt), (fnptr) }
-#define M2_EXTERN_COMBO(el) extern m2_el_combo_t el
+#define M2_COMBO(el,fmt,variable,cnt,fnptr) M2_EL_CONST m2_el_combo_t el M2_SECTION_PROGMEM = { { { m2_el_combo_fn, (fmt) }, (variable) }, (cnt), (fnptr) }
+#define M2_EXTERN_COMBO(el) extern M2_EL_CONST m2_el_combo_t el
 
 
 /* combofn box (callback procedure) */
@@ -922,8 +924,8 @@ typedef struct _m2_el_combofn_struct m2_el_combofn_t;
 typedef m2_el_combofn_t *m2_el_combofn_p;
 
 M2_EL_FN_DEF(m2_el_combofn_fn);
-#define M2_COMBOFN(el,fmt,cnt,fnptr) m2_el_combofn_t el M2_SECTION_PROGMEM = { { m2_el_combofn_fn, (fmt) }, (cnt), (fnptr) }
-#define M2_EXTERN_COMBOFN(el) extern m2_el_combofn_t el
+#define M2_COMBOFN(el,fmt,cnt,fnptr) M2_EL_CONST m2_el_combofn_t el M2_SECTION_PROGMEM = { { m2_el_combofn_fn, (fmt) }, (cnt), (fnptr) }
+#define M2_EXTERN_COMBOFN(el) extern M2_EL_CONST m2_el_combofn_t el
 
 struct _m2_el_comboptr_struct
 {
@@ -935,8 +937,8 @@ typedef struct _m2_el_comboptr_struct m2_el_comboptr_t;
 typedef m2_el_comboptr_t *m2_el_comboptr_p;
 
 M2_EL_FN_DEF(m2_el_comboptr_fn);
-#define M2_COMBOPTR(el,fmt,variable,cntptr,fnptr) m2_el_comboptr_t el M2_SECTION_PROGMEM = { { { m2_el_comboptr_fn, (fmt) }, (variable) }, (cntptr), (fnptr) }
-#define M2_EXTERN_COMBOPTR(el) extern m2_el_comboptr_t el
+#define M2_COMBOPTR(el,fmt,variable,cntptr,fnptr) M2_EL_CONST m2_el_comboptr_t el M2_SECTION_PROGMEM = { { { m2_el_comboptr_fn, (fmt) }, (variable) }, (cntptr), (fnptr) }
+#define M2_EXTERN_COMBOPTR(el) extern M2_EL_CONST m2_el_comboptr_t el
 
 uint8_t m2_el_combo_get_len(m2_el_fnarg_p fn_arg) M2_NOINLINE;
 m2_get_str_fnptr m2_el_combo_get_str_fnptr(m2_el_fnarg_p fn_arg) M2_NOINLINE;
@@ -955,8 +957,8 @@ typedef struct _m2_el_slbase_struct m2_el_slbase_t;
 typedef m2_el_slbase_t *m2_el_slbase_p;
 
 M2_EL_FN_DEF(m2_el_vsb_fn);
-#define M2_VSB(el,fmt,first,cnt) m2_el_slbase_t el M2_SECTION_PROGMEM = { { m2_el_vsb_fn, (fmt) }, (first), (cnt) }
-#define M2_EXTERN_VSB(el) extern m2_el_slbase_t el
+#define M2_VSB(el,fmt,first,cnt) M2_EL_CONST m2_el_slbase_t el M2_SECTION_PROGMEM = { { m2_el_vsb_fn, (fmt) }, (first), (cnt) }
+#define M2_EXTERN_VSB(el) extern M2_EL_CONST m2_el_slbase_t el
 
 struct _m2_el_strlist_struct
 {
@@ -967,8 +969,8 @@ typedef struct _m2_el_strlist_struct m2_el_strlist_t;
 typedef m2_el_strlist_t *m2_el_strlist_p;
 
 M2_EL_FN_DEF(m2_el_strlist_fn);
-#define M2_STRLIST(el,fmt,first,cnt,fnptr) m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
-#define M2_EXTERN_STRLIST(el) extern m2_el_strlist_t el
+#define M2_STRLIST(el,fmt,first,cnt,fnptr) M2_EL_CONST m2_el_strlist_t el M2_SECTION_PROGMEM = { { { m2_el_strlist_fn, (fmt) }, (first), (cnt) }, (fnptr) }
+#define M2_EXTERN_STRLIST(el) extern M2_EL_CONST m2_el_strlist_t el
 
 struct _m2_menu_entry
 {
@@ -993,8 +995,8 @@ typedef m2_el_2lmenu_t *m2_el_2lmenu_p;
 
 M2_EL_FN_DEF(m2_el_2lmenu_fn);
 
-#define M2_2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
-#define M2_EXTERN_2LMENU(el) extern m2_el_2lmenu_t el
+#define M2_2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) M2_EL_CONST m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
+#define M2_EXTERN_2LMENU(el) extern M2_EL_CONST m2_el_2lmenu_t el
 
 struct _m2_xmenu_entry
 {
@@ -1006,8 +1008,8 @@ typedef struct _m2_xmenu_entry m2_xmenu_entry;
 
 M2_EL_FN_DEF(m2_el_x2lmenu_fn);
 
-#define M2_X2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_x2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
-#define M2_EXTERN_X2LMENU(el) extern m2_el_2lmenu_t el
+#define M2_X2LMENU(el,fmt,first,cnt,menu,mchr,exchr,subchr) M2_EL_CONST m2_el_2lmenu_t el M2_SECTION_PROGMEM = { { { m2_el_x2lmenu_fn, (fmt) }, (first), (cnt) },(menu),(mchr),(exchr),(subchr) }
+#define M2_EXTERN_X2LMENU(el) extern M2_EL_CONST m2_el_2lmenu_t el
 
 
 struct _m2_el_infobase_struct
@@ -1036,12 +1038,12 @@ typedef struct _m2_el_infop_struct m2_el_infop_t;
 typedef m2_el_infop_t *m2_el_infop_p;
 
 M2_EL_FN_DEF(m2_el_info_fn);
-#define M2_INFO(el,fmt,first,cnt,str,cb) m2_el_info_t el M2_SECTION_PROGMEM = { { { { m2_el_info_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
-#define M2_EXTERN_INFO(el) extern m2_el_info_t el
+#define M2_INFO(el,fmt,first,cnt,str,cb) M2_EL_CONST m2_el_info_t el M2_SECTION_PROGMEM = { { { { m2_el_info_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
+#define M2_EXTERN_INFO(el) extern M2_EL_CONST m2_el_info_t el
 
 M2_EL_FN_DEF(m2_el_infop_fn);
-#define M2_INFOP(el,fmt,first,cnt,str,cb) m2_el_infop_t el M2_SECTION_PROGMEM = { { { { m2_el_infop_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
-#define M2_EXTERN_INFOP(el) extern m2_el_infop_t el
+#define M2_INFOP(el,fmt,first,cnt,str,cb) M2_EL_CONST m2_el_infop_t el M2_SECTION_PROGMEM = { { { { m2_el_infop_fn, (fmt) }, (first), (cnt) }, (cb)}, (str) }
+#define M2_EXTERN_INFOP(el) extern M2_EL_CONST m2_el_infop_t el
 
 /* defines the buffer for the info line, this is also used by some callback procedures */
 #define M2_INFO_LINE_LEN 40
