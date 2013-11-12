@@ -291,11 +291,15 @@ uint8_t pq_ParseGPRMC(pq_t *pq)
   if ( is_valid != 0 )
   {
     pq_AddInterfaceValuesToQueue(pq);
+#ifdef PH_ERR_STATISTICS
     pq->valid_gprmc++;
+#endif
   }
   else
   {
+#ifdef PH_ERR_STATISTICS
     pq->invalid_gprmc++;
+#endif
   }
   return 1;
 }
@@ -370,11 +374,15 @@ uint8_t pq_ParseGPGGA(pq_t *pq)
   if ( gps_quality != 0 )
   {
     pq_AddInterfaceValuesToQueue(pq);
+#ifdef PH_ERR_STATISTICS
     pq->valid_gpgga++;
+#endif
   }
   else
   {
+#ifdef PH_ERR_STATISTICS
     pq->invalid_gpgga++;
+#endif
   }
   return 1;
 }
@@ -395,17 +403,21 @@ uint8_t pq_ParseSentence(pq_t *pq)
   {
     if (  strcmp(s, "$GPRMC") == 0 )
     {
-      pq->processed_gprmc++;
       result = pq_ParseGPRMC(pq);
+#ifdef PH_ERR_STATISTICS
+      pq->processed_gprmc++;
       if ( result == 0 )
 	pq->parser_error_gprmc++; 
+#endif
     }
     else if (  strcmp(s, "$GPGGA") == 0 )
     {
-      pq->processed_gpgga++;
       result = pq_ParseGPGGA(pq);
+#ifdef PH_ERR_STATISTICS
+      pq->processed_gpgga++;
       if ( result == 0 )
 	pq->parser_error_gpgga++; 
+#endif
       
     }
     else
@@ -470,7 +482,6 @@ void pq_itoa(char *s, uint16_t x, uint8_t cnt)
 */
 void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
 {
-  uint8_t cnt;
   if ( is_lat != 0 )
   {
     if ( pq->pos_is_neg != 0 )

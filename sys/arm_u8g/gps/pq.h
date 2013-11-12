@@ -52,6 +52,7 @@ struct _pq_struct
   pq_interface_t interface;
   
   uint32_t processed_sentences;
+#ifdef PH_ERR_STATISTICS
   uint32_t processed_gprmc;
   uint32_t parser_error_gprmc;
   uint32_t valid_gprmc;
@@ -60,6 +61,7 @@ struct _pq_struct
   uint32_t parser_error_gpgga;
   uint32_t valid_gpgga;
   uint32_t invalid_gpgga;
+#endif
   uint8_t gps_quality;	/* GPS quality from GPGGA record */
   uint8_t sat_cnt;	/* satellites in use (GPGGA record) */
   uint8_t cnt;		/* entries in the queue */	

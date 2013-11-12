@@ -493,7 +493,7 @@ typedef const char *(*m2_strlist_cb_fnptr)(uint8_t idx, uint8_t msg);
 /* list of elements */
 /* M2_LIST(rgb_list) = { &red_el, &green_el, &blue_el }; */
 
-#define M2_LIST(list) M2_EL_CONST void *list[] M2_SECTION_PROGMEM 
+#define M2_LIST(list) M2_EL_CONST void * M2_EL_CONST list[] M2_SECTION_PROGMEM 
 
 /*==============================================================*/
 /* elements */
@@ -785,7 +785,7 @@ struct _m2_el_list_struct
 {
   m2_el_fnfmt_t ff;
   uint8_t len;
-  m2_rom_void_p *el_list;	/* Because we use M2_SECTION_PROGMEM, there is no type checking for PROGMEM */
+  M2_EL_CONST m2_rom_void_p *el_list;	/* Because we use M2_SECTION_PROGMEM, there is no type checking for PROGMEM */
 };
 typedef struct _m2_el_list_struct m2_el_list_t;
 typedef m2_el_list_t *m2_el_list_p;

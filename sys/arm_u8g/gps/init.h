@@ -9,6 +9,14 @@
 #define NORMAL_FONT u8g_font_helvB08r
 #define SMALL_FONT u8g_font_5x8r
 
+#define MAP_POS_CNT 4
+
+struct gps_map_pos_struct
+{
+  gps_pos_t pos;
+  uint8_t is_enable;
+};
+
 struct gps_tracker_variables_struct {
   uint32_t cnt_10ms;
   uint32_t sec_cnt_raw;
@@ -40,6 +48,15 @@ struct gps_tracker_variables_struct {
   uint32_t gps_grad_lon;		/* M2 Data Entry */
 
   gps_pos_t m2_gps_pos;
+  
+  /* map special elements */
+  struct gps_map_pos_struct map_pos_list[MAP_POS_CNT];
+  uint32_t map_pos_idx;
+  uint8_t is_frac_mode;
+  
+  /* str buffer for gps pos */
+  char str_lat[16];
+  char str_lon[16];
 
 };
 
@@ -48,10 +65,16 @@ extern struct gps_tracker_variables_struct gps_tracker_variables;
 
 extern pq_t pq;	/* GPS Parser Object */
 
+
+
 void gps_set_half_map_size_by_index(uint8_t idx) __attribute__((noinline));
 void gps_inc_half_map_size(void) __attribute__((noinline));
 void gps_dec_half_map_size(void) __attribute__((noinline));
 const char *gps_get_half_map_str(void) __attribute__((noinline));
+
+void m2_gps_pos_to_frac_fields(void) __attribute__((noinline));
+void m2_frac_fields_to_gps_pos(void) __attribute__((noinline));
+
 
 extern void gps_init(void);
 

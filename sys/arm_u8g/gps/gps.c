@@ -260,6 +260,7 @@ void draw_map(void)
 const char fmt_f8w32[] = "f8w32";
 const char fmt_f12w40[] = "f12w40";
 const char fmt_lat_lon_u32[] = "a1c7.4";
+const char fmt_w4h4[] = "w4h4";
 
 void fn_ok(m2_el_fnarg_p fnarg) {
   /* accept selection */
@@ -277,7 +278,7 @@ M2_EXTERN_ALIGN(el_home);
 
 M2_ROOT(el_goto_home, fmt_f8w32, "Home", &el_home);
 
-M2_SPACE(el_space4, "w4h4");
+M2_SPACE(el_space4, fmt_w4h4);
 
 
 /*=== GPS Data Entry (fractional notation) ===*/
@@ -317,7 +318,19 @@ M2_LIST(list_gps_frac) = {
 };
 M2_GRIDLIST(el_gps_frac_grid, "c3", list_gps_frac);
 
-M2_ROOT(el_gps_frac_ok, fmt_f12w40, "Ok", &el_home);
+void cb_gps_frac_load_pos(m2_el_fnarg_p fnarg) 
+{
+  m2_gps_pos_to_frac_fields();
+}
+M2_SPACECB(el_gps_frac_space4, fmt_w4h4, cb_gps_frac_load_pos);
+
+void cb_gps_frac_ok(m2_el_fnarg_p fnarg) 
+{
+  m2_frac_fields_to_gps_pos();
+  m2_SetRoot(&el_home);
+}
+
+M2_BUTTON(el_gps_frac_ok, fmt_f12w40, "Ok", cb_gps_frac_ok);
 M2_ROOT(el_gps_frac_cancel, fmt_f12w40, "Cancel", &el_home);
 M2_LIST(list_gps_frac_btns) = {
   &el_gps_frac_ok,
@@ -327,7 +340,7 @@ M2_HLIST(el_gps_frac_btns, NULL, list_gps_frac_btns);
 
 M2_LIST(list_gps_frac_vlist) = {
   &el_gps_frac_grid,
-  &el_space4,
+  &el_gps_frac_space4,
   &el_gps_frac_btns
 };
 M2_VLIST(el_gps_frac_vlist, NULL, list_gps_frac_vlist);
@@ -360,6 +373,94 @@ M2_LIST(list_gps_sexa_vlist) = {
 M2_VLIST(el_gps_sexa_vlist, NULL, list_gps_sexa_vlist);
 M2_ALIGN(top_el_gps_sexa, NULL, &el_gps_sexa_vlist);
 
+/*=== edit special map position list ===*/
+
+void map_pos_update(void)
+{
+  if ( gps_tracker_variables.is_frac_mode == 0 )
+  {
+    pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude);
+    pq_DegreeMinutesToStr(&pq, 1, gps_tracker_variables.str_lat);
+
+    pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.longitude);
+    pq_DegreeMinutesToStr(&pq, 0, gps_tracker_variables.str_lon);    
+  }
+  else
+  {
+    pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude, gps_tracker_variables.str_lat);
+    pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.longitude, gps_tracker_variables.str_lon);
+  }
+}
+
+M2_LABEL(el_ml_idx_label, NULL, "Idx: ");
+M2_U32NUM(el_ml_idx_num, "c1r1", &gps_tracker_variables.map_pos_idx);
+M2_LABEL(el_ml_lat_label, NULL, "Lat: ");
+M2_LABEL(el_ml_lat, NULL, gps_tracker_variables.str_lat);
+M2_LABEL(el_ml_lon_label, NULL, "Lon: ");
+M2_LABEL(el_ml_lon, NULL, gps_tracker_variables.str_lon);
+
+M2_LIST(list_ml_grid) = {
+  &el_ml_idx_label,
+  &el_ml_idx_num,
+  &el_ml_lat_label,
+  &el_ml_lat,
+  &el_ml_lon_label,
+  &el_ml_lon,
+};
+M2_GRIDLIST(el_ml_grid, "c2", list_ml_grid);
+
+void ml_dec(m2_el_fnarg_p fnarg) 
+{
+  if ( gps_tracker_variables.map_pos_idx == 0 )
+    gps_tracker_variables.map_pos_idx = MAP_POS_CNT;
+  gps_tracker_variables.map_pos_idx--;
+  map_pos_update();
+}
+
+void ml_inc(m2_el_fnarg_p fnarg) 
+{
+  gps_tracker_variables.map_pos_idx++;
+  if ( gps_tracker_variables.map_pos_idx >= MAP_POS_CNT )
+    gps_tracker_variables.map_pos_idx = 0;
+  map_pos_update();
+}
+
+void ml_edit(m2_el_fnarg_p fnarg) 
+{
+  if ( gps_tracker_variables.is_frac_mode == 0 )
+  {
+    //m2_SetRoot(&top_el_gps_sexa);
+  }
+  else
+  {
+    m2_SetRoot(&top_el_gps_frac);
+  }
+}
+
+M2_SPACECB(el_ml_space4, fmt_w4h4, map_pos_update);
+
+M2_BUTTON(el_ml_inc, "f12w10", "+", ml_inc);
+M2_BUTTON(el_ml_dec, "f12w10", "-", ml_dec);
+M2_BUTTON(el_ml_edit, "f4", "Edit", ml_edit);
+M2_ROOT(el_ml_home, "f4", "Home", &el_home);
+
+M2_LIST(list_ml_btns) = {
+  &el_ml_inc,
+  &el_ml_dec,
+  &el_ml_edit,
+  &el_ml_home
+};
+M2_HLIST(el_ml_btns, NULL, list_ml_btns);
+
+M2_LIST(list_ml_vlist) = {
+  &el_ml_grid,
+  &el_ml_space4,
+  &el_ml_btns
+};
+M2_VLIST(el_ml_vlist, NULL, list_ml_vlist);
+M2_ALIGN(top_el_ml, NULL, &el_ml_vlist);
+
+
 
 /*=== Info Menu ===*/
 
@@ -389,8 +490,6 @@ M2_LIST(list_info) = {
 };
 M2_VLIST(el_info_vlist, NULL, list_info);
 M2_ALIGN(top_el_info, NULL, &el_info_vlist);
-
-
 
 
 /*=== map ===*/
@@ -426,7 +525,8 @@ M2_ALIGN(el_test_compass, "|0", &el_goto_home);
 
 M2_ROOT(el_home_map, NULL, "MAP" , &el_map);
 //M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_frac);
-M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_sexa);
+//M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_sexa);
+M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_ml);
 
 M2_ROOT(el_home_sys_info, NULL, "System Info", &top_el_info);
 M2_LIST(list_home) = {

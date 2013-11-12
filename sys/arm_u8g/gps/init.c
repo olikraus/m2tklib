@@ -170,6 +170,11 @@ void m2_frac_fields_to_gps_pos(void)
 void gps_init(void)
 {
   gps_tracker_variables.cnt_10ms = 0;
+  
+  gps_tracker_variables.map_pos_list[0].pos.latitude = 1.0;
+  gps_tracker_variables.map_pos_list[1].pos.latitude = 2.0;
+  gps_tracker_variables.is_frac_mode = 1;
+  
   gps_set_half_map_size_by_index(1);
   
   /* init gps parser */  
