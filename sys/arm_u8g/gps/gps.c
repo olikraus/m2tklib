@@ -468,6 +468,10 @@ M2_ALIGN(top_el_ml, NULL, &el_ml_vlist);
 
 M2_ALIGN(el_show_battery, "|0", &el_goto_home);
 
+/*=== show system ===*/
+
+M2_ALIGN(el_show_system, "|0", &el_goto_home);
+
 /*=== show GPS UART ===*/
 
 M2_ALIGN(el_show_gps_uart, "|0", &el_goto_home);
@@ -479,11 +483,13 @@ M2_ALIGN(el_show_gps_stat, "|0", &el_goto_home);
 
 
 M2_ROOT(el_info_show_battery, NULL, "Battery", &el_show_battery);
+M2_ROOT(el_info_show_system, NULL, "System", &el_show_system);
 M2_ROOT(el_info_show_gps_uart, NULL, "GPS UART", &el_show_gps_uart);
 M2_ROOT(el_info_show_gps_stat, NULL, "GPS Status", &el_show_gps_stat);
 M2_ROOT(el_info_back, NULL, "Back", &el_home);
 M2_LIST(list_info) = {
   &el_info_show_battery,
+  &el_info_show_system,
   &el_info_show_gps_uart,
   &el_info_show_gps_stat,
   &el_info_back
@@ -598,6 +604,22 @@ void draw(void)
     u8g_DrawStr(&u8g,  0, 12*3, "mV: ");
     u8g_DrawStr(&u8g,  30, 12*3, u8g_u16toa((gps_tracker_variables.adc_battery*3300UL)/1024, 4));    
   }
+  else if ( m2_GetRoot() == &el_show_system )
+  {
+    uint32_t h = 8;
+    u8g_SetFont(&u8g, SMALL_FONT);
+    u8g_SetDefaultForegroundColor(&u8g);
+    u8g_DrawStr(&u8g,  0, h, "System Info:");
+    u8g_DrawStr(&u8g,  0, h*2, "Clk: ");
+    u8g_DrawStr(&u8g,  30, h*2, u32toa(gps_tracker_variables.sec_cnt, 9));
+    u8g_DrawStr(&u8g,  0, h*3, "Stack: ");
+    u8g_DrawStr(&u8g,  30, h*3, u32toa(stackmon_GetUsage(), 9));
+    u8g_DrawStr(&u8g,  0, h*4, "Top: ");
+    u8g_DrawStr(&u8g,  30, h*4, u32toa(stackmon_upper_limit, 9));
+    u8g_DrawStr(&u8g,  0, h*5, "Low: ");
+    u8g_DrawStr(&u8g,  30, h*5, u32toa(stackmon_start_adr, 9));
+  }
+  
   else if ( m2_GetRoot() == &el_show_gps_uart ) 
   {
     uint32_t h = 8;
@@ -678,6 +700,8 @@ int main(void)
 {
   uint8_t is_changed;
 	
+  stackmon_Init();
+  
   /* setup u8g and m2 libraries */
   display_init();
   

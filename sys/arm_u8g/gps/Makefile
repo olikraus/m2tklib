@@ -104,7 +104,8 @@ COMMON_FLAGS = -mthumb -mcpu=$(MCPU)
 COMMON_FLAGS += -Wall -I. -I$(SYSINC)
 COMMON_FLAGS += -I$(U8GPATH) -I$(M2TKPATH) -I$(M2TKU8GDEVPATH)
 # default stack size is 0x0c00
-COMMON_FLAGS += -D__STACK_SIZE=0x0a00
+# 13 Nov 2013: Internal measure 824 Bytes --> 0x0600=1536
+COMMON_FLAGS += -D__STACK_SIZE=0x0600
 COMMON_FLAGS += -Os -flto 
 COMMON_FLAGS += -ffunction-sections -fdata-sections
 # Assembler flags
