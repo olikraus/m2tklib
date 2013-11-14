@@ -183,14 +183,31 @@ void set_map_origin_from_current_pos(void)
   calculate
       e_w_distance;
       n_s_distance;
-      is_visible_on_map
-  based on current map_origin
+  just calculate the direct view. Should be good for small distances.
+
+  assumes
+    gps_tracker_variables.map_origin
+    gps_tracker_variables.map_e_w_factor
+ to be set correctly (call set_map_origin_from_current_pos)
 */
+void calculate_map_distance(gps_pos_t *pos) __attribute__ (( noinline ));
 void calculate_map_distance(gps_pos_t *pos)
 {
   gps_tracker_variables.n_s_distance = (pos->latitude - gps_tracker_variables.map_origin.latitude)*(gps_float_t)111000;
   gps_tracker_variables.e_w_distance = gps_tracker_variables.map_e_w_factor * (pos->longitude- gps_tracker_variables.map_origin.longitude);
-  
+}
+
+/*
+  calculate
+      e_w_distance;
+      n_s_distance;
+      is_visible_on_map
+  based on current map_origin
+*/
+void calculate_map_distance_and_visibility(gps_pos_t *pos) __attribute__ (( noinline ));
+void calculate_map_distance_and_visibility(gps_pos_t *pos)
+{
+  calculate_map_distance(pos);
   gps_tracker_variables.is_visible_on_map = 1;
   if ( gps_tracker_variables.n_s_distance > gps_tracker_variables.half_map_size )
     gps_tracker_variables.is_visible_on_map = 0;
@@ -200,6 +217,26 @@ void calculate_map_distance(gps_pos_t *pos)
     gps_tracker_variables.is_visible_on_map = 0;
   if ( gps_tracker_variables.e_w_distance < -gps_tracker_variables.half_map_size )
     gps_tracker_variables.is_visible_on_map = 0;
+}
+
+/*
+  scale down distance, so that it fits to the screen.
+  calculate
+      e_w_distance;
+      n_s_distance;
+*/
+void calculate_map_direction(gps_pos_t *pos) __attribute__ (( noinline ));
+void calculate_map_direction(gps_pos_t *pos)
+{
+  gps_float_t max;
+  calculate_map_distance(pos);
+  max = pos->latitude;
+  if ( max < pos->longitude )
+    max = pos->longitude;
+  gps_tracker_variables.n_s_distance *= gps_tracker_variables.half_map_size;
+  gps_tracker_variables.n_s_distance /= max;
+  gps_tracker_variables.e_w_distance *= gps_tracker_variables.half_map_size;
+  gps_tracker_variables.e_w_distance /= max;  
 }
 
 
@@ -228,9 +265,11 @@ void draw_map(void)
   u8g_DrawVLine(&u8g, MAP_OFFSET+MAP_RADIUS, MAP_OFFSET+ 2*MAP_RADIUS + MAP_SCALE_OFFSET - 1, 3);
   u8g_DrawStr(&u8g, MAP_OFFSET+MAP_RADIUS+2, MAP_OFFSET+ 2*MAP_RADIUS + MAP_SCALE_OFFSET + 4, gps_get_half_map_str());
   u8g_DrawCircle(&u8g,  x_org,y_org,MAP_RADIUS, U8G_DRAW_ALL);
+  
+  /* loop through last positions, returned from the GPS receiver */
   for( i = 0; i < pq.cnt; i++ )
   {
-    calculate_map_distance( &(pq.queue[i].pos) );
+    calculate_map_distance_and_visibility( &(pq.queue[i].pos) );
     if ( gps_tracker_variables.is_visible_on_map != 0 )
     {
       x = x_org + (gps_tracker_variables.e_w_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
@@ -251,6 +290,20 @@ void draw_map(void)
       }
     }
   }
+  
+  /* loop through fixed positions */
+  for( i = 0; i < MAP_POS_CNT; i++ )
+  {
+    if ( gps_tracker_variables.map_pos_list[i].is_enable != 0 )
+    {
+      calculate_map_direction(&(gps_tracker_variables.map_pos_list[i].pos));
+      
+      x = x_org + (gps_tracker_variables.e_w_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
+      y = y_org - (gps_tracker_variables.n_s_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
+      u8g_DrawGlyph(&u8g,  x, y, i+'1');	      
+    }
+  }
+  
 }
 
 
@@ -437,7 +490,7 @@ void ml_edit(m2_el_fnarg_p fnarg)
   }
 }
 
-M2_SPACECB(el_ml_space4, fmt_w4h4, map_pos_update);
+M2_SPACECB(el_ml_space4, fmt_w4h4, map_pos_update);		/* gcc warning is ok here */
 
 M2_BUTTON(el_ml_inc, "f12w10", "+", ml_inc);
 M2_BUTTON(el_ml_dec, "f12w10", "-", ml_dec);
