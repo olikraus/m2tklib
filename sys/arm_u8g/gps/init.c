@@ -29,6 +29,7 @@
 #include "u8g_arm.h"
 #include "uart.h"
 #include "init.h"
+#include "exmem.h"
 
 
 /*========================================================================*/
@@ -169,6 +170,7 @@ void m2_frac_fields_to_gps_pos(void)
 
 void gps_init(void)
 {
+  uint16_t i;
   gps_tracker_variables.cnt_10ms = 0;
   
   gps_tracker_variables.map_pos_list[0].pos.latitude = 1.0;
@@ -183,4 +185,14 @@ void gps_init(void)
   /* init uart, connect uart to gps parser */
   UART_Init(1, gps_rx);
   
+  /* check for external memory */
+  check_ExternalMemory();
+  
+  /*
+  for( i = 0; i < MAP_POS_CNT; i++ )
+  {
+    read_MapPos(i, &(gps_tracker_variables.map_pos_list[i]));
+  }
+  */
+
 }

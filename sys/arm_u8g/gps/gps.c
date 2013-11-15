@@ -32,6 +32,7 @@
 #include "adc.h"
 #include "init.h"
 #include "util.h"
+#include "exmem.h"
 
 /*=========================================================================*/
 /* global variables and objects */
@@ -671,6 +672,9 @@ void draw(void)
     u8g_DrawStr(&u8g,  30, h*4, u32toa(stackmon_upper_limit, 9));
     u8g_DrawStr(&u8g,  0, h*5, "Low: ");
     u8g_DrawStr(&u8g,  30, h*5, u32toa(stackmon_start_adr, 9));
+    u8g_DrawStr(&u8g,  0, h*6, "EE: ");
+    u8g_DrawStr(&u8g,  30, h*6, u32toa(1-is_exmem_not_available, 1));
+    
   }
   
   else if ( m2_GetRoot() == &el_show_gps_uart ) 
