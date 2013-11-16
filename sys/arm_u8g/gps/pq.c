@@ -445,12 +445,17 @@ void pq_FloatToDegreeMinutes(pq_t *pq, gps_float_t f)
   float g;
   pq->pos_is_neg = 0;
   if ( f < (gps_float_t)0 )
+  {
     f = -f;
+    pq->pos_is_neg = 1;
+  }
   f = GPS_MODF(f,&g);
   pq->pos_degree = g;
   f *=(gps_float_t)60;
+  pq->pos_minutes_frac = f;
   f = GPS_MODF(f,&g);
   pq->pos_minutes = g;
+  
   f *= (gps_float_t)1000;
   pq->pos_fraction = f;  
 }

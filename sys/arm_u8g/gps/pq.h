@@ -69,6 +69,7 @@ struct _pq_struct
 
   uint8_t pos_is_neg;	/* temp variable for gps_float_t conversion */
   uint8_t pos_minutes;	/* temp variable for gps_float_t conversion 0..59 */
+  gps_float_t pos_minutes_frac;	/* same as pos_minutes, but including the fraction */
   uint16_t pos_fraction;	/* 0...999 */
   uint16_t pos_degree;	/* temp variable for gps_float_t conversion */
   
@@ -95,7 +96,7 @@ uint8_t pq_ParseGPGGA(pq_t *pq);
 uint8_t pq_ParseSentence(pq_t *pq);
 
 void pq_itoa(char *s, uint16_t x, uint8_t cnt);
-void pq_FloatToDegreeMinutes(pq_t *pq, gps_float_t f);
+void pq_FloatToDegreeMinutes(pq_t *pq, gps_float_t f) __attribute__((noinline));
 void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s);
 void pq_FloatToStr(gps_float_t f, char *s);
 

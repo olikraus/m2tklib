@@ -14,7 +14,7 @@
 struct gps_map_pos_struct
 {
   gps_pos_t pos;
-  uint8_t is_enable;
+  uint8_t map_symbol;		/* 0 = none */
 };
 
 struct gps_tracker_variables_struct {
@@ -75,6 +75,7 @@ const char *gps_get_half_map_str(void) __attribute__((noinline));
 void m2_gps_pos_to_frac_fields(void) __attribute__((noinline));
 void m2_frac_fields_to_gps_pos(void) __attribute__((noinline));
 
+void m2_gps_pos_to_sexa_fields(void) __attribute__((noinline));
 
 extern void gps_init(void);
 

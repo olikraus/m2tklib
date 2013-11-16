@@ -119,8 +119,9 @@ const char *gps_get_half_map_str(void)
   return gps_half_map_str[gps_tracker_variables.half_map_size_index];
 }
 
+gps_float_t tenthousand = 10000.0;
 
-/* convert from m2_gps_pos to m2 fields */
+/* convert from m2_gps_pos to m2 fields (frac notation) */
 void m2_gps_pos_to_frac_fields(void)
 {
   gps_float_t f;
@@ -133,7 +134,7 @@ void m2_gps_pos_to_frac_fields(void)
     f = -f;
     gps_tracker_variables.gps_frac_lat_n_s = 1;
   }
-  f *= 1000.0;
+  f *=tenthousand;
   gps_tracker_variables.gps_frac_lat = (long)f;
 
   f = gps_tracker_variables.m2_gps_pos.longitude;
@@ -144,7 +145,7 @@ void m2_gps_pos_to_frac_fields(void)
     f = -f;
     gps_tracker_variables.gps_frac_lon_e_w = 1;
   }
-  f *= 1000.0;
+  f *= tenthousand;
   gps_tracker_variables.gps_frac_lon = (long)f;  
 }
 
@@ -154,16 +155,38 @@ void m2_frac_fields_to_gps_pos(void)
   gps_float_t f;
   
   f = gps_tracker_variables.gps_frac_lat;
-  f /= 1000.0;
+  f /= tenthousand;
   if ( gps_tracker_variables.gps_frac_lat_n_s != 0 )
     f = -f;  
   gps_tracker_variables.m2_gps_pos.latitude = f;
 
   f = gps_tracker_variables.gps_frac_lon;
-  f /= 1000.0;
+  f /= tenthousand;
   if ( gps_tracker_variables.gps_frac_lon_e_w != 0 )
     f = -f;  
   gps_tracker_variables.m2_gps_pos.longitude = f;
+}
+
+/* convert from m2_gps_pos to m2 fields (sexa notation) */
+void m2_gps_pos_to_sexa_fields(void)
+{
+  pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.m2_gps_pos.latitude);
+  /*
+    results are in:
+    pq->pos_is_neg
+    pq->pos_degree
+    pq->pos_minutes
+    pq->pos_minutes_frac
+    pq->pos_fraction
+  */  
+  gps_tracker_variables.gps_frac_lat_n_s = pq.pos_is_neg;
+  gps_tracker_variables.gps_grad_lat = (long)(pq.pos_degree);
+  gps_tracker_variables.gps_frac_lat = (long)(pq.pos_minutes_frac*1000.0);
+
+  pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.m2_gps_pos.longitude);
+  gps_tracker_variables.gps_frac_lon_e_w = pq.pos_is_neg;
+  gps_tracker_variables.gps_grad_lon = (long)(pq.pos_degree);
+  gps_tracker_variables.gps_frac_lon = (long)(pq.pos_minutes_frac*1000.0);
   
 }
 
@@ -173,8 +196,6 @@ void gps_init(void)
   uint16_t i;
   gps_tracker_variables.cnt_10ms = 0;
   
-  gps_tracker_variables.map_pos_list[0].pos.latitude = 1.0;
-  gps_tracker_variables.map_pos_list[1].pos.latitude = 2.0;
   gps_tracker_variables.is_frac_mode = 1;
   
   gps_set_half_map_size_by_index(1);
@@ -187,12 +208,11 @@ void gps_init(void)
   
   /* check for external memory */
   check_ExternalMemory();
-  
-  /*
+
+  /* read map position list from external memory */  
   for( i = 0; i < MAP_POS_CNT; i++ )
   {
     read_MapPos(i, &(gps_tracker_variables.map_pos_list[i]));
   }
-  */
 
 }
