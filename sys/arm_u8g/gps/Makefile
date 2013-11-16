@@ -108,6 +108,8 @@ COMMON_FLAGS += -I$(U8GPATH) -I$(M2TKPATH) -I$(M2TKU8GDEVPATH)
 COMMON_FLAGS += -D__STACK_SIZE=0x0600
 COMMON_FLAGS += -Os -flto 
 COMMON_FLAGS += -ffunction-sections -fdata-sections
+COMMON_FLAGS += -fmerge-all-constants -fmerge-constants -foptimize-sibling-calls 
+COMMON_FLAGS += -fomit-frame-pointer -fregmove -frename-registers -freorder-blocks
 # Assembler flags
 ASFLAGS:=$(COMMON_FLAGS) -D__STARTUP_CLEAR_BSS -D__START=main
 # C flags

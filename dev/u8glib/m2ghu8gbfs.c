@@ -44,14 +44,13 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
       if ( (arg->font & 4) != 0 )
       {
         /* highlight flag is set, draw frame with shadow */
-      	m2_u8g_draw_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
+      	m2_u8g_draw_frame_shadow(arg->x+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
 
-      m2_u8g_current_text_color = m2_u8g_fg_text_color;
-      if ( m2_gh_u8g_invert_at_depth < m2_gh_u8g_current_depth )
+      m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_fg_text_color;
+      if ( m2_u8g_dev_variables.m2_gh_u8g_invert_at_depth < m2_u8g_dev_variables.m2_gh_u8g_current_depth )
       {
-        m2_u8g_current_text_color = m2_u8g_bg_text_color;
-        // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
+        m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_bg_text_color;
       }
       break;
     case M2_GFX_MSG_DRAW_NORMAL_PARENT_FOCUS:
@@ -63,9 +62,9 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
             highlight version
             draw frame with shadow together with a filled box 
         */
-        m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_bg_text_color;
         m2_u8g_draw_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2);
-      	m2_u8g_draw_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h);
+      	m2_u8g_draw_frame_shadow(arg->x+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->h);
       }
       else
       {
@@ -73,15 +72,15 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
             normal version
             draw only the box
         */
-        m2_u8g_current_text_color = m2_u8g_bg_text_color;
+        m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_bg_text_color;
         m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
       }
       /* in all cases, the text below needs to be inverted */
-      m2_gh_u8g_invert_at_depth = m2_gh_u8g_current_depth;
+      m2_u8g_dev_variables.m2_gh_u8g_invert_at_depth = m2_u8g_dev_variables.m2_gh_u8g_current_depth;
       // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       break;
     case M2_GFX_MSG_DRAW_SMALL_FOCUS:
-      m2_u8g_current_text_color = m2_u8g_bg_text_color;
+      m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_bg_text_color;
       m2_u8g_draw_box(arg->x, arg->y, arg->w, arg->h);
       break;
     case M2_GFX_MSG_DRAW_GO_UP:
@@ -96,12 +95,12 @@ uint8_t m2_gh_u8g_bfs(m2_gfx_arg_p  arg)
       return 0;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
       if ( (arg->font & 4) != 0 )
-	return 3+2*m2_gh_u8g_invisible_frame_border_x_size+2*m2_gh_u8g_additional_text_border_x_size;
-      return 2*m2_gh_u8g_additional_text_border_x_size;
+	return 3+2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size+2*m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size;
+      return 2*m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
       if ( (arg->font & 4) != 0 )
-	return 1+m2_gh_u8g_invisible_frame_border_x_size+m2_gh_u8g_additional_text_border_x_size;
-      return m2_gh_u8g_additional_text_border_x_size;
+	return 1+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size+m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size;
+      return m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       if ( (arg->font & 4) != 0 )
 	return 2;

@@ -48,17 +48,17 @@ uint8_t m2_u8g_background_color = BG_COLOR;
 void m2_u8g_draw_color_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t frame_color, uint8_t shadow_color)
 {
   u8g_uint_t y;
-  y = m2_u8g_height_minus_one;
+  y = m2_u8g_dev_variables.m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
   y++;			/* 13 Jan 2013: Issue 95 */
   w--;
   h--;
-  u8g_SetColorIndex(m2_u8g, frame_color);
-  u8g_DrawFrame(m2_u8g, x0, y, w, h);
-  u8g_SetColorIndex(m2_u8g, shadow_color);
-  u8g_DrawVLine(m2_u8g, x0+w, y+1, h);
-  u8g_DrawHLine(m2_u8g, x0+1, y+h, w);
+  u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, frame_color);
+  u8g_DrawFrame(m2_u8g_dev_variables.m2_u8g, x0, y, w, h);
+  u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, shadow_color);
+  u8g_DrawVLine(m2_u8g_dev_variables.m2_u8g, x0+w, y+1, h);
+  u8g_DrawHLine(m2_u8g_dev_variables.m2_u8g, x0+1, y+h, w);
 }
 
 /* origin is low left */
@@ -66,13 +66,13 @@ void m2_u8g_draw_color_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t
 {
   u8g_uint_t y;
   /* transform y to upper left */
-  y = m2_u8g_height_minus_one;
+  y = m2_u8g_dev_variables.m2_u8g_height_minus_one;
   y -= y0;
   y -= h;
   y++;			/* 13 Jan 2013: Issue 95 */
-  //u8g_SetColorIndex(m2_u8g, m2_u8g_draw_color);
-  u8g_SetColorIndex(m2_u8g, color);
-  u8g_DrawBox(m2_u8g, x0, y, w, h);
+  //u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, m2_u8g_draw_color);
+  u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, color);
+  u8g_DrawBox(m2_u8g_dev_variables.m2_u8g, x0, y, w, h);
 }
 
 
@@ -93,10 +93,10 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
       {
         /* highlight flag is set, draw frame with shadow */
         m2_u8g_draw_color_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2, m2_u8g_highlight_bg_color);
-      	m2_u8g_draw_color_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_highlight_frame_color, m2_u8g_highlight_shadow_color);
+      	m2_u8g_draw_color_frame_shadow(arg->x+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_highlight_frame_color, m2_u8g_highlight_shadow_color);
       }
 
-      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_fg_text_color;
       // if ( m2_gh_u8g_invert_at_depth < m2_gh_u8g_current_depth )
       // {
       //   m2_u8g_current_text_color = m2_u8g_bg_text_color;
@@ -113,10 +113,9 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
         */
 	
         //m2_u8g_current_text_color = m2_u8g_bg_text_color;
-        m2_u8g_current_text_color = m2_u8g_fg_text_color;
-        m2_u8g_draw_color_box(arg->x+1, arg->
-	y+1, arg->w-2, arg->h-2, m2_u8g_highlight_focus_bg_color);
-      	m2_u8g_draw_color_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_highlight_focus_frame_color, m2_u8g_highlight_focus_shadow_color);
+        m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_fg_text_color;
+        m2_u8g_draw_color_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2, m2_u8g_highlight_focus_bg_color);
+      	m2_u8g_draw_color_frame_shadow(arg->x+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_highlight_focus_frame_color, m2_u8g_highlight_focus_shadow_color);
         // m2_gh_u8g_invert_at_depth = m2_gh_u8g_current_depth;
       }
       else
@@ -125,9 +124,9 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
             normal version
             draw only the frame with shadow
         */
-        m2_u8g_current_text_color = m2_u8g_fg_text_color;
+        m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_fg_text_color;
         m2_u8g_draw_color_box(arg->x+1, arg->y+1, arg->w-2, arg->h-2, m2_u8g_normal_focus_bg_color);
-      	m2_u8g_draw_color_frame_shadow(arg->x+m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_normal_focus_frame_color, m2_u8g_normal_focus_shadow_color);
+      	m2_u8g_draw_color_frame_shadow(arg->x+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->y, arg->w-2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size, arg->h, m2_u8g_normal_focus_frame_color, m2_u8g_normal_focus_shadow_color);
       }
       // printf("invert %d, width %d x:%d y:%d\n", m2_gh_u8g_invert_at_depth, arg->w, arg->x, arg->y);
       break;
@@ -137,7 +136,7 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
       m2_u8g_draw_color_box(arg->x, arg->y, arg->w, arg->h, m2_u8g_fg_text_color);
       */
 
-      m2_u8g_current_text_color = m2_u8g_fg_text_color;
+      m2_u8g_dev_variables.m2_u8g_current_text_color = m2_u8g_dev_variables.m2_u8g_fg_text_color;
       m2_u8g_draw_color_box(arg->x, arg->y, arg->w, arg->h, m2_u8g_small_focus_bg_color);
       break;
     case M2_GFX_MSG_DRAW_GO_UP:
@@ -149,9 +148,9 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_GET_NORMAL_BORDER_HEIGHT:
       return 3;
     case M2_GFX_MSG_GET_NORMAL_BORDER_WIDTH:
-      return 3+2*m2_gh_u8g_invisible_frame_border_x_size+2*m2_gh_u8g_additional_text_border_x_size;
+      return 3+2*m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size+2*m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_X_OFFSET:
-      return 1+m2_gh_u8g_invisible_frame_border_x_size+m2_gh_u8g_additional_text_border_x_size;
+      return 1+m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size+m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size;
     case M2_GFX_MSG_GET_NORMAL_BORDER_Y_OFFSET:
       return 2;
     case M2_GFX_MSG_GET_LIST_OVERLAP_HEIGHT:
@@ -161,8 +160,8 @@ uint8_t m2_gh_u8g_cffs(m2_gfx_arg_p  arg)
     case M2_GFX_MSG_IS_FRAME_DRAW_AT_END:
       return 0; /* focus (highlight) is drawn first, then the text string */
     case M2_GFX_MSG_START:
-      u8g_SetColorIndex(m2_u8g, m2_u8g_background_color);
-      u8g_DrawBox(m2_u8g, 0, 0, u8g_GetWidth(m2_u8g), u8g_GetHeight(m2_u8g));
+      u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, m2_u8g_background_color);
+      u8g_DrawBox(m2_u8g_dev_variables.m2_u8g, 0, 0, u8g_GetWidth(m2_u8g_dev_variables.m2_u8g), u8g_GetHeight(m2_u8g_dev_variables.m2_u8g));
       break;
   }
 

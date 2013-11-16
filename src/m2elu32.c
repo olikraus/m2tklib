@@ -57,6 +57,7 @@ uint32_t m2_el_u32_pow10[9] = {
 100000000UL };
 
 /* returns the number of requested digits */
+static uint8_t m2_el_u32_get_digits(m2_rom_void_p element) M2_NOINLINE;
 static uint8_t m2_el_u32_get_digits(m2_rom_void_p element)
 {
   uint8_t c = m2_opt_get_val_any_default(m2_el_fnfmt_get_fmt_by_element(element), 'c', 9);
@@ -67,6 +68,7 @@ static uint8_t m2_el_u32_get_digits(m2_rom_void_p element)
   return c;
 }
 
+static uint8_t m2_el_u32_get_dot_pos(m2_rom_void_p element) M2_NOINLINE;
 static uint8_t m2_el_u32_get_dot_pos(m2_rom_void_p element)
 {
   uint8_t c = m2_el_u32_get_digits(element);
@@ -77,6 +79,7 @@ static uint8_t m2_el_u32_get_dot_pos(m2_rom_void_p element)
 }
 
 /* returns the number of chars in the field, includes the dot */
+static uint8_t m2_el_u32_get_char_size(m2_rom_void_p element)  M2_NOINLINE;
 static uint8_t m2_el_u32_get_char_size(m2_rom_void_p element)
 {
   uint8_t c = m2_el_u32_get_digits(element);
@@ -93,11 +96,13 @@ static uint8_t m2_el_u32_get_parent_digits(m2_nav_p nav)
 }
 */
 
+static uint8_t m2_el_u32_get_parent_char_size(m2_nav_p nav) M2_NOINLINE;
 static uint8_t m2_el_u32_get_parent_char_size(m2_nav_p nav)
 {
   return m2_el_u32_get_char_size(m2_nav_get_parent_element(nav));
 }
 
+static uint8_t m2_el_u32_is_dot(m2_nav_p nav) M2_NOINLINE;
 static uint8_t m2_el_u32_is_dot(m2_nav_p nav)
 {
   uint8_t child_pos;
@@ -120,6 +125,7 @@ static uint8_t m2_el_u32_is_dot(m2_nav_p nav)
 }
 
 /* return the digit pos for the provided child */
+static uint8_t m2_el_u32_get_digit_pos(m2_nav_p nav) M2_NOINLINE;
 static uint8_t m2_el_u32_get_digit_pos(m2_nav_p nav)
 {
   uint8_t dot_pos;
@@ -137,6 +143,7 @@ static uint8_t m2_el_u32_get_digit_pos(m2_nav_p nav)
   return corrected_child_pos;
 }
 
+static void m2_el_u32_set_accumulator_by_parent(m2_nav_p nav) M2_NOINLINE;
 static void m2_el_u32_set_accumulator_by_parent(m2_nav_p nav)
 {
   m2_rom_void_p element = m2_nav_get_parent_element(nav);
@@ -151,6 +158,7 @@ static void m2_el_u32_set_accumulator_by_parent(m2_nav_p nav)
   }
 }
 
+static void m2_el_u32_put_accumulator_to_parent(m2_nav_p nav) M2_NOINLINE;
 static void m2_el_u32_put_accumulator_to_parent(m2_nav_p nav)
 {
   m2_rom_void_p element = m2_nav_get_parent_element(nav);
@@ -168,21 +176,21 @@ static void m2_el_u32_put_accumulator_to_parent(m2_nav_p nav)
 
 
 /* accumulator -= num */
-static void m2_el_u32_sub(uint32_t num)  M2_NOINLINE;
+//static void m2_el_u32_sub(uint32_t num)  M2_NOINLINE;
 static void m2_el_u32_sub(uint32_t num)
 {
   m2_el_u32_accumulator -= num;
 }
 
 /* accumulator += num */
-static void m2_el_u32_add(uint32_t num) M2_NOINLINE;
+//static void m2_el_u32_add(uint32_t num) M2_NOINLINE;
 static void m2_el_u32_add(uint32_t num)
 {
   m2_el_u32_accumulator += num;
 }
 
 /* if accumulator >= num then true else false */
-static uint8_t m2_el_u32_cmp(uint32_t num) M2_NOINLINE;
+// static uint8_t m2_el_u32_cmp(uint32_t num) M2_NOINLINE;
 static uint8_t m2_el_u32_cmp(uint32_t num)
 {
   if ( m2_el_u32_accumulator >= num )
@@ -218,11 +226,13 @@ static uint8_t m2_el_u32_get_digit(uint8_t pos)
   return c;
 }
 
+//static void __m2_el_u32_inc_digit(uint8_t pos) M2_NOINLINE;
 static void __m2_el_u32_inc_digit(uint8_t pos)
 {
   m2_el_u32_add(m2_el_u32_pow10[pos]);
 }
 
+//static void __m2_el_u32_dec_digit(uint8_t pos) M2_NOINLINE;
 static void __m2_el_u32_dec_digit(uint8_t pos)
 {
   m2_el_u32_sub(m2_el_u32_pow10[pos]);

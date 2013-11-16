@@ -33,20 +33,28 @@
 extern "C" {
 #endif
 
-extern u8g_t *m2_u8g;
-extern u8g_uint_t m2_u8g_height_minus_one;
-extern uint8_t m2_u8g_current_text_color;
+struct m2_u8g_dev_variables_struct
+{
+  u8g_t *m2_u8g;
+  u8g_uint_t m2_u8g_height_minus_one;
+  uint8_t m2_u8g_fg_text_color;
+  uint8_t m2_u8g_bg_text_color;
+  uint8_t m2_u8g_current_text_color;
+  uint8_t m2_u8g_draw_color;
 
-extern uint8_t m2_gh_u8g_current_depth;
-extern uint8_t m2_gh_u8g_invert_at_depth;
+  uint8_t m2_gh_u8g_current_depth;
+  uint8_t m2_gh_u8g_invert_at_depth;
 
-extern uint8_t m2_gh_u8g_invisible_frame_border_x_size;
-extern uint8_t m2_gh_u8g_additional_text_border_x_size;
-extern uint8_t m2_gh_u8g_additional_read_only_border_x_size;
+  uint8_t m2_gh_u8g_invisible_frame_border_x_size;
+  uint8_t m2_gh_u8g_additional_text_border_x_size;
+  uint8_t m2_gh_u8g_additional_read_only_border_x_size;
 
-/* bg and fg colors for all modes */
-extern uint8_t m2_u8g_fg_text_color;
-extern uint8_t m2_u8g_bg_text_color;
+  uint8_t (*m2_gh_u8g_icon_draw)(m2_gfx_arg_p  arg);
+
+};
+
+extern struct m2_u8g_dev_variables_struct m2_u8g_dev_variables;
+
 
 /* bg and fg colors for 332 color mode */
 extern uint8_t m2_u8g_highlight_shadow_color;

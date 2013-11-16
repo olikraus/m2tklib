@@ -60,31 +60,31 @@ void m2_SetU8gRadioFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint
 
 void m2_u8g_draw_font_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
 {
-  y = m2_u8g_height_minus_one - y;
+  y = m2_u8g_dev_variables.m2_u8g_height_minus_one - y;
   y++;			/* 13 Jan 2013: Issue 95 */
   
-  u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
+  u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, m2_u8g_dev_variables.m2_u8g_current_text_color);
   
   if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_TOGGLE_INACTIVE )
   {
     if ( m2_u8g_toggle_icon_font == NULL )
       return;
-    u8g_SetFont(m2_u8g, m2_u8g_toggle_icon_font);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_toggle_icon_font);
     if ( icon == M2_ICON_TOGGLE_ACTIVE )
-      u8g_DrawGlyph(m2_u8g, x, y, m2_u8g_toggle_active);
+      u8g_DrawGlyph(m2_u8g_dev_variables.m2_u8g, x, y, m2_u8g_toggle_active);
     else
-      u8g_DrawGlyph(m2_u8g, x, y, m2_u8g_toggle_inactive);      
+      u8g_DrawGlyph(m2_u8g_dev_variables.m2_u8g, x, y, m2_u8g_toggle_inactive);      
   }
   
   if ( icon == M2_ICON_RADIO_ACTIVE || icon == M2_ICON_RADIO_INACTIVE )
   {
     if ( m2_u8g_radio_icon_font == NULL )
       return;
-    u8g_SetFont(m2_u8g, m2_u8g_radio_icon_font);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_radio_icon_font);
     if ( icon == M2_ICON_RADIO_ACTIVE )
-      u8g_DrawGlyph(m2_u8g, x, y, m2_u8g_radio_active);
+      u8g_DrawGlyph(m2_u8g_dev_variables.m2_u8g, x, y, m2_u8g_radio_active);
     else
-      u8g_DrawGlyph(m2_u8g, x, y, m2_u8g_radio_inactive);      
+      u8g_DrawGlyph(m2_u8g_dev_variables.m2_u8g, x, y, m2_u8g_radio_inactive);      
   }
   
 }
@@ -93,17 +93,17 @@ uint8_t m2_u8g_get_font_icon_height(uint8_t font, uint8_t icon)
 {
   if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_TOGGLE_INACTIVE )
   {
-    u8g_SetFont(m2_u8g, m2_u8g_toggle_icon_font);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_toggle_icon_font);
   }
   else if ( icon == M2_ICON_RADIO_ACTIVE || icon == M2_ICON_RADIO_INACTIVE )
   {
-    u8g_SetFont(m2_u8g, m2_u8g_radio_icon_font);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_radio_icon_font);
   }
   else
   {
     return 0;
   }
-  return u8g_GetFontAscent(m2_u8g)-u8g_GetFontDescent(m2_u8g);
+  return u8g_GetFontAscent(m2_u8g_dev_variables.m2_u8g)-u8g_GetFontDescent(m2_u8g_dev_variables.m2_u8g);
 }
 
 uint8_t m2_u8g_get_font_icon_width(uint8_t font, uint8_t icon)
@@ -113,15 +113,15 @@ uint8_t m2_u8g_get_font_icon_width(uint8_t font, uint8_t icon)
   if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_TOGGLE_INACTIVE )
   {
     s[0] = m2_u8g_toggle_active;
-    u8g_SetFont(m2_u8g, m2_u8g_toggle_icon_font);
-    return u8g_GetStrWidth(m2_u8g, s);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_toggle_icon_font);
+    return u8g_GetStrWidth(m2_u8g_dev_variables.m2_u8g, s);
   }
   
   if ( icon == M2_ICON_RADIO_ACTIVE || icon == M2_ICON_RADIO_INACTIVE )
   {
     s[0] = m2_u8g_radio_active;
-    u8g_SetFont(m2_u8g, m2_u8g_radio_icon_font);
-    return u8g_GetStrWidth(m2_u8g, s);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_radio_icon_font);
+    return u8g_GetStrWidth(m2_u8g_dev_variables.m2_u8g, s);
   }
   return 0;
 }
@@ -130,7 +130,7 @@ uint8_t m2_u8g_get_font_icon_width(uint8_t font, uint8_t icon)
 uint8_t m2_u8g_font_icon(m2_gfx_arg_p  arg)
 {
   /* Do a safety check here: Abort if m2_SetU8g has not been called */
-  if ( m2_u8g == NULL )
+  if ( m2_u8g_dev_variables.m2_u8g == NULL )
     return 0;
 
   /* Proceed with normal message processing */
@@ -214,7 +214,7 @@ void m2_u8g_draw_bitmap_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
   //dog_SetBitmapP(x,y+7,ptr,8,8);
 
   u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
-  u8g_DrawBitmapP(m2_u8g, x, m2_u8g_height_minus_one - (y+8), 1, 8, ptr);
+  u8g_DrawBitmapP(m2_u8g, x, m2_u8g_dev_variables.m2_u8g_height_minus_one - (y+8), 1, 8, ptr);
 }
 
 uint8_t m2_u8g_get_bitmap_icon_height(uint8_t font, uint8_t icon)
@@ -255,8 +255,8 @@ uint8_t m2_u8g_bitmap_icon(m2_gfx_arg_p  arg)
 uint8_t m2_u8g_get_box_icon_size(uint8_t font)
 {
     int8_t x;
-    u8g_SetFont(m2_u8g, m2_u8g_get_font(font));
-    x = u8g_GetFontAscent(m2_u8g)-u8g_GetFontDescent(m2_u8g);
+    u8g_SetFont(m2_u8g_dev_variables.m2_u8g, m2_u8g_get_font(font));
+    x = u8g_GetFontAscent(m2_u8g_dev_variables.m2_u8g)-u8g_GetFontDescent(m2_u8g_dev_variables.m2_u8g);
     x*=5;
     x >>=3;
     if ( x < 6 )
@@ -268,22 +268,22 @@ void m2_u8g_draw_box_icon(uint8_t x, uint8_t y, uint8_t font, uint8_t icon)
 {
   uint8_t h;
   h = m2_u8g_get_box_icon_size(font);
-  y = m2_u8g_height_minus_one - y;
+  y = m2_u8g_dev_variables.m2_u8g_height_minus_one - y;
   
-  u8g_SetColorIndex(m2_u8g, m2_u8g_current_text_color);
-  u8g_DrawFrame(m2_u8g, x, y - h, h, h);
+  u8g_SetColorIndex(m2_u8g_dev_variables.m2_u8g, m2_u8g_dev_variables.m2_u8g_current_text_color);
+  u8g_DrawFrame(m2_u8g_dev_variables.m2_u8g, x, y - h, h, h);
   
   if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_RADIO_ACTIVE )
   {
     h -= 4;
-    u8g_DrawBox(m2_u8g, x + 2, y - h - 2, h, h);
+    u8g_DrawBox(m2_u8g_dev_variables.m2_u8g, x + 2, y - h - 2, h, h);
   }
 }
 
 uint8_t m2_u8g_box_icon(m2_gfx_arg_p  arg)
 {
   /* Do a safety check here: Abort if m2_SetU8g has not been called */
-  if ( m2_u8g == NULL )
+  if ( m2_u8g_dev_variables.m2_u8g == NULL )
     return 0;
 
   /* Proceed with normal message processing */
