@@ -12,5 +12,10 @@ Implementation Plan
 
 - the four map positions are showed correctly in the list, 
   but during edit, the wong values are used
-  
+--> more or less fixed
+
+- convert back from sexagesimal format
+- other map displays (etc speed)
+- format exmem?
+
   

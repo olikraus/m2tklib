@@ -631,10 +631,12 @@ M2_LIST(list_pref) = {
 };
 M2_GRIDLIST(el_pref_grid, "c2", list_pref);
 
+M2_ROOT(el_pref_goto_home, "f4", "Home", &el_home);
+
 M2_LIST(list_pref_vlist) = {
   &el_pref_grid,
   &el_space4,
-  &el_goto_home
+  &el_pref_goto_home
 };
 M2_VLIST(el_pref_vlist, NULL, list_pref_vlist);
 M2_ALIGN(top_el_pref, NULL, &el_pref_vlist);
