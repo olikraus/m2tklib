@@ -15,7 +15,8 @@ Implementation Plan
 --> more or less fixed
 
 - convert back from sexagesimal format
+  --> ok
 - other map displays (etc speed)
 - format exmem?
-
-  
+  --> not requred, instead allow to zero the position
+- edit target identifier

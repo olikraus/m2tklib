@@ -312,11 +312,13 @@ void draw_map(void)
 /* menu definitions */
 
 const char fmt_f8w32[] = "f8w32";
-const char fmt_f12w40[] = "f12w40";
+const char fmt_f4[] = "f4";
 const char fmt_lat_lon_u32[] = "a1c7.4";
 const char fmt_w4h4[] = "w4h4";
 const char fmt_a1c3[] = "a1c3";
 const char fmt_a1c53[] = "a1c5.3";
+const char fmt_W64f8[] = "W64f8";
+
 
 
 void fn_ok(m2_el_fnarg_p fnarg) {
@@ -394,18 +396,30 @@ void cb_gps_frac_ok(m2_el_fnarg_p fnarg)
   }
   else
   {
+    m2_sexa_fields_to_gps_pos();
   }
-  
   gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos = gps_tracker_variables.m2_gps_pos;
   write_MapPos(gps_tracker_variables.map_pos_idx, &(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx]));
   m2_SetRoot(&top_el_ml);
 }
 
-M2_BUTTON(el_gps_frac_ok, fmt_f12w40, "Ok", cb_gps_frac_ok);
-M2_ROOT(el_gps_frac_cancel, fmt_f12w40, "Cancel", &top_el_ml);
+void cb_gps_frac_default(m2_el_fnarg_p fnarg) 
+{
+  gps_tracker_variables.gps_frac_lat = 0;
+  gps_tracker_variables.gps_grad_lat = 0;
+  gps_tracker_variables.gps_frac_lat_n_s = 0;
+  gps_tracker_variables.gps_frac_lon = 0;
+  gps_tracker_variables.gps_grad_lon = 0;
+  gps_tracker_variables.gps_frac_lon_e_w = 0;
+}
+
+M2_BUTTON(el_gps_frac_ok, fmt_f4, "Ok", cb_gps_frac_ok);
+M2_ROOT(el_gps_frac_cancel, fmt_f4, "Cancel", &top_el_ml);
+M2_BUTTON(el_gps_frac_default, fmt_f4, "Zero", cb_gps_frac_default);
 M2_LIST(list_gps_frac_btns) = {
   &el_gps_frac_ok,
-  &el_gps_frac_cancel
+  &el_gps_frac_cancel,
+  &el_gps_frac_default
 };
 M2_HLIST(el_gps_frac_btns, NULL, list_gps_frac_btns);
 
@@ -524,8 +538,8 @@ M2_SPACECB(el_ml_space4, fmt_w4h4, map_pos_update);		/* gcc warning is ok here *
 
 M2_BUTTON(el_ml_inc, "f12w10", "+", ml_inc);
 M2_BUTTON(el_ml_dec, "f12w10", "-", ml_dec);
-M2_BUTTON(el_ml_edit, "f4", "Edit", ml_edit);
-M2_ROOT(el_ml_home, "f4", "Home", &el_home);
+M2_BUTTON(el_ml_edit, fmt_f4, "Edit", ml_edit);
+M2_ROOT(el_ml_home, fmt_f4, "Home", &el_home);
 
 M2_LIST(list_ml_btns) = {
   &el_ml_inc,
@@ -565,11 +579,11 @@ M2_ALIGN(el_show_gps_stat, "|0", &el_goto_home);
 
 
 
-M2_ROOT(el_info_show_battery, NULL, "Battery", &el_show_battery);
-M2_ROOT(el_info_show_system, NULL, "System", &el_show_system);
-M2_ROOT(el_info_show_gps_uart, NULL, "GPS UART", &el_show_gps_uart);
-M2_ROOT(el_info_show_gps_stat, NULL, "GPS Status", &el_show_gps_stat);
-M2_ROOT(el_info_back, NULL, "Back", &el_home);
+M2_ROOT(el_info_show_battery, fmt_W64f8, "Battery", &el_show_battery);
+M2_ROOT(el_info_show_system, fmt_W64f8, "System Info", &el_show_system);
+M2_ROOT(el_info_show_gps_uart, fmt_W64f8, "GPS UART", &el_show_gps_uart);
+M2_ROOT(el_info_show_gps_stat, fmt_W64f8, "GPS Status", &el_show_gps_stat);
+M2_ROOT(el_info_back, fmt_W64f8, "Home", &el_home);
 M2_LIST(list_info) = {
   &el_info_show_battery,
   &el_info_show_system,
@@ -606,10 +620,6 @@ M2_LIST(list_map) = {
 M2_VLIST(el_map_vlist, NULL, list_map);
 M2_ALIGN(el_map, "|0-2", &el_map_vlist);
 
-/*=== test compass ===*/
-
-M2_ALIGN(el_test_compass, "|0", &el_goto_home);
-
 /*=== preferences ===*/
 
 const char str_sexa[] = "sexa";
@@ -643,15 +653,13 @@ M2_ALIGN(top_el_pref, NULL, &el_pref_vlist);
 
 /*=== toplevel menu ===*/
 
-M2_ROOT(el_home_map, NULL, "MAP" , &el_map);
-//M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_frac);
-//M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_gps_sexa);
-M2_ROOT(el_home_test_compass, NULL, "Test", &top_el_ml);
-M2_ROOT(el_home_preferences, NULL, "Preferences", &top_el_pref);
-M2_ROOT(el_home_sys_info, NULL, "System Info", &top_el_info);
+M2_ROOT(el_home_map, fmt_W64f8, "GPS" , &el_map);
+M2_ROOT(el_home_pos_list, fmt_W64f8, "List", &top_el_ml);
+M2_ROOT(el_home_preferences, fmt_W64f8, "Preferences", &top_el_pref);
+M2_ROOT(el_home_sys_info, fmt_W64f8, "System", &top_el_info);
 M2_LIST(list_home) = {
   &el_home_map,
-  &el_home_test_compass,
+  &el_home_pos_list,
   &el_home_preferences,
   &el_home_sys_info
 };

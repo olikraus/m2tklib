@@ -76,6 +76,7 @@ void m2_gps_pos_to_frac_fields(void) __attribute__((noinline));
 void m2_frac_fields_to_gps_pos(void) __attribute__((noinline));
 
 void m2_gps_pos_to_sexa_fields(void) __attribute__((noinline));
+void m2_sexa_fields_to_gps_pos(void) __attribute__((noinline));
 
 extern void gps_init(void);
 
