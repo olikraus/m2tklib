@@ -358,7 +358,6 @@ const char *combo_symbol(uint8_t idx)
   return s;
 }
 
-
 const char *combo_fn_n_s(uint8_t idx)
 {
   if ( idx == 0 )
@@ -375,7 +374,6 @@ const char *combo_fn_e_w(uint8_t idx)
 
 M2_LABEL(el_gps_symbol_label, NULL, "Sym: ");
 M2_COMBO(el_gps_symbol_combo, "w10", &gps_tracker_variables.gps_symbol, 27, combo_symbol);
-
 M2_LABEL(el_gps_frac_lat_label, NULL, "Lat: ");
 M2_U32NUM(el_gps_frac_lat_num, fmt_lat_lon_u32, &gps_tracker_variables.gps_frac_lat);
 M2_COMBO(el_gps_frac_lat_n_s, "w10", &gps_tracker_variables.gps_frac_lat_n_s, 2, combo_fn_n_s);
@@ -417,6 +415,7 @@ void cb_gps_frac_ok(m2_el_fnarg_p fnarg)
   {
     m2_sexa_fields_to_gps_pos();
   }
+  gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].map_symbol = gps_tracker_variables.gps_symbol;
   gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos = gps_tracker_variables.m2_gps_pos;
   write_MapPos(gps_tracker_variables.map_pos_idx, &(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx]));
   m2_SetRoot(&top_el_ml);
@@ -457,10 +456,16 @@ M2_U32NUM(el_gps_sexa_lat_num, fmt_a1c53, &gps_tracker_variables.gps_frac_lat);
 M2_U32NUM(el_gps_sexa_lon_grad, fmt_a1c3, &gps_tracker_variables.gps_grad_lon);
 M2_U32NUM(el_gps_sexa_lon_num, fmt_a1c53, &gps_tracker_variables.gps_frac_lon);
 M2_LIST(list_gps_sexa) = {
+  &el_gps_symbol_label,
+  &el_gps_symbol_combo,
+  &m2_null_element,
+  &m2_null_element,
+  
   &el_gps_frac_lat_label,
   &el_gps_frac_lat_n_s,
   &el_gps_sexa_lat_grad,
   &el_gps_sexa_lat_num,
+  
   &el_gps_frac_lon_label,
   &el_gps_frac_lon_e_w,
   &el_gps_sexa_lon_grad,
@@ -491,6 +496,17 @@ M2_ALIGN(top_el_gps_sexa, NULL, &el_gps_sexa_vlist);
 
 void map_pos_update(void)
 {
+  gps_tracker_variables.gps_symbol = gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].map_symbol;
+  gps_tracker_variables.str_idx_and_symbol[0] = gps_tracker_variables.map_pos_idx+'0';
+  gps_tracker_variables.str_idx_and_symbol[1] = '\0';
+  
+  if ( gps_tracker_variables.gps_symbol > 0 )
+  {
+    gps_tracker_variables.str_idx_and_symbol[1] = '/';
+    gps_tracker_variables.str_idx_and_symbol[2] = gps_tracker_variables.gps_symbol + 'A'-1;
+    gps_tracker_variables.str_idx_and_symbol[3] = '\0';
+  }
+  
   if ( gps_tracker_variables.is_frac_mode == 0 )
   {
     pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude);
@@ -507,7 +523,8 @@ void map_pos_update(void)
 }
 
 M2_LABEL(el_ml_idx_label, NULL, "Idx: ");
-M2_U32NUM(el_ml_idx_num, "c1r1", &gps_tracker_variables.map_pos_idx);
+//M2_U32NUM(el_ml_idx_num, "c1r1", &gps_tracker_variables.map_pos_idx);
+M2_LABEL(el_ml_idx_num, NULL, gps_tracker_variables.str_idx_and_symbol);
 //M2_LABEL(el_ml_lat_label, NULL, "Lat: ");
 M2_LABEL(el_ml_lat, NULL, gps_tracker_variables.str_lat);
 //M2_LABEL(el_ml_lon_label, NULL, "Lon: ");

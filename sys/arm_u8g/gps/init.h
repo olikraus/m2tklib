@@ -59,6 +59,8 @@ struct gps_tracker_variables_struct {
   /* str buffer for gps pos */
   char str_lat[16];
   char str_lon[16];
+  char str_idx_and_symbol[8];
+  
 
 };
 
