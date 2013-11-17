@@ -20,3 +20,13 @@ Implementation Plan
 - format exmem?
   --> not requred, instead allow to zero the position
 - edit target identifier
+  --> done
+- draw circle for special targets
+  --> done (not tested)
+- display sats, battery, time(?) on all screens 
+  --> sat & bat
+- edit pos: zero or current pos: preferences 
+  better: [0] [x]
+
+- low power modes?
+

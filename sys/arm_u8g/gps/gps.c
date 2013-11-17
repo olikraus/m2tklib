@@ -231,13 +231,19 @@ void calculate_map_direction(gps_pos_t *pos)
 {
   gps_float_t max;
   calculate_map_distance(pos);
-  max = pos->latitude;
-  if ( max < pos->longitude )
-    max = pos->longitude;
-  gps_tracker_variables.n_s_distance *= gps_tracker_variables.half_map_size;
-  gps_tracker_variables.n_s_distance /= max;
-  gps_tracker_variables.e_w_distance *= gps_tracker_variables.half_map_size;
-  gps_tracker_variables.e_w_distance /= max;  
+  
+  gps_tracker_variables.is_visible_on_map = 1;
+  max = gps_abs(gps_tracker_variables.n_s_distance);
+  if ( max < gps_abs(gps_tracker_variables.e_w_distance) )
+    max = gps_abs(gps_tracker_variables.e_w_distance);
+  if ( max > gps_tracker_variables.half_map_size )
+  {
+    gps_tracker_variables.is_visible_on_map = 0;
+    gps_tracker_variables.n_s_distance *= gps_tracker_variables.half_map_size;
+    gps_tracker_variables.n_s_distance /= max;
+    gps_tracker_variables.e_w_distance *= gps_tracker_variables.half_map_size;
+    gps_tracker_variables.e_w_distance /= max;  
+  }
 }
 
 
@@ -248,6 +254,7 @@ void prepare_map(void)
 #define MAP_OFFSET 2
 #define MAP_SCALE_OFFSET 6
 #define MAP_RADIUS 25
+#define MAP_TARGET_RADIUS 3
 void draw_map(void)
 {
   uint8_t i;
@@ -298,13 +305,94 @@ void draw_map(void)
     if ( gps_tracker_variables.map_pos_list[i].map_symbol != 0 )
     {
       calculate_map_direction(&(gps_tracker_variables.map_pos_list[i].pos));
-      
       x = x_org + (gps_tracker_variables.e_w_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
       y = y_org - (gps_tracker_variables.n_s_distance * half_map_pixel_size)/gps_tracker_variables.half_map_size;
-      u8g_DrawGlyph(&u8g,  x, y, i+'1');	      
+      
+      if ( gps_tracker_variables.is_visible_on_map != 0 )
+      {
+	u8g_DrawGlyph(&u8g,  x+MAP_TARGET_RADIUS, y-MAP_TARGET_RADIUS, gps_tracker_variables.map_pos_list[i].map_symbol+'A'-1);
+	u8g_DrawCircle(&u8g,  x,y,MAP_TARGET_RADIUS, U8G_DRAW_ALL);
+      }
+      else
+      {
+	u8g_DrawGlyph(&u8g,  x, y, gps_tracker_variables.map_pos_list[i].map_symbol+'A'-1);
+      }
     }
   }
   
+}
+
+/*=========================================================================*/
+
+/*
+
+  +++###++	0x01c
+  +#######	0x07f
+  +#+++++#	0x041
+  +#+++++#
+  +#+++++#
+  +#+++++#
+  +#+++++#
+  +#######
+  +#######
+  +#######
+
+
+  ++++++++	0x00
+  #+++++++  0x80
+  ##++++#+  0xc2
+  +##++#++  0x64
+  +####+++  0x78
+  +####+++  0x78
+  +#####++  0x7c
+  +######+  0x7e
+  +##+++##  0x63
+  +##+++++  0x60
+
+  ++++++++  0x00
+  +++#++++  0x10
+  #++#++#+	0x92
+  +#+#+#++  0x54
+  ++###+++  0x38
+  +++#++++  0x10
+  +++#++++  0x10
+  +++#++++  0x10
+  +++#++++  0x10
+  +++#++++  0x10
+
+
+*/
+
+uint8_t battery_bitmap[10] = { 0x01c, 0x07f, 0x041, 0x041, 0x041, 0x041, 0x041, 0x041, 0x041, 0x07f };
+//const uint8_t satellite_bitmap[10] = { 0x00, 0x080, 0x0c2, 0x064, 0x078, 0x078, 0x07c, 0x07e, 0x063, 0x060};
+const uint8_t satellite_bitmap[10] = { 0x00, 0x010, 0x092, 0x054, 0x038, 0x010, 0x010, 0x010, 0x010, 0x010};
+
+#define BATTERY_EMPTY_LEVEL_mV 1800
+
+void draw_status(void)
+{
+  int32_t battery;
+  int32_t i;
+  battery = (gps_tracker_variables.adc_battery*3300L);
+  battery /= 1024;
+  battery -= BATTERY_EMPTY_LEVEL_mV;
+  if ( battery < 0 )
+    battery = 0;
+  battery *= 8;
+  battery /= 3300L-BATTERY_EMPTY_LEVEL_mV;
+  if ( battery >= 8 )
+    battery = 7;
+  for ( i = 0; i < 7; i++ )
+  {
+    if ( i < battery )
+      battery_bitmap[8-i] = 0x07f;
+    else
+      battery_bitmap[8-i] = 0x041;
+  }
+  u8g_DrawBitmap(&u8g, u8g_GetWidth(&u8g) - 8, 0, 1, 10, battery_bitmap);
+  u8g_DrawBitmap(&u8g, u8g_GetWidth(&u8g) - 27, 0, 1, 10, satellite_bitmap);
+  u8g_SetFont(&u8g, SMALL_FONT);
+  u8g_DrawStr(&u8g,  u8g_GetWidth(&u8g) - 20, 8, u8g_u16toa(pq.sat_cnt, 2));
 }
 
 
@@ -628,7 +716,7 @@ M2_LIST(list_info) = {
   &el_info_back
 };
 M2_VLIST(el_info_vlist, NULL, list_info);
-M2_ALIGN(top_el_info, NULL, &el_info_vlist);
+M2_ALIGN(top_el_info, "|0", &el_info_vlist);
 
 
 /*=== map ===*/
@@ -697,10 +785,11 @@ M2_LIST(list_home) = {
   &el_home_map,
   &el_home_pos_list,
   &el_home_preferences,
-  &el_home_sys_info
+  &el_home_sys_info,
+  &el_space4
 };
 M2_VLIST(el_home_vlist, NULL, list_home);
-M2_ALIGN(el_home, NULL, &el_home_vlist);
+M2_ALIGN(el_home, "|0", &el_home_vlist);
 
 
 /*=========================================================================*/
@@ -753,10 +842,11 @@ void display_init(void)
 /* draw procedure of the u8g picture loop */
 void draw(void)
 {	
+  u8g_SetDefaultForegroundColor(&u8g);
+  draw_status();
   if ( m2_GetRoot() == &el_show_battery )
   {
     u8g_SetFont(&u8g, NORMAL_FONT);
-    u8g_SetDefaultForegroundColor(&u8g);
     u8g_DrawStr(&u8g,  0, 12, "Battery Status");
     u8g_DrawStr(&u8g,  0, 12*2, "Raw: ");
     u8g_DrawStr(&u8g,  30, 12*2, u8g_u16toa(gps_tracker_variables.adc_battery, 4));
@@ -767,7 +857,6 @@ void draw(void)
   {
     uint32_t h = 8;
     u8g_SetFont(&u8g, SMALL_FONT);
-    u8g_SetDefaultForegroundColor(&u8g);
     u8g_DrawStr(&u8g,  0, h, "System Info:");
     u8g_DrawStr(&u8g,  0, h*2, "Clk: ");
     u8g_DrawStr(&u8g,  30, h*2, u32toa(gps_tracker_variables.sec_cnt, 9));
@@ -786,7 +875,6 @@ void draw(void)
   {
     uint32_t h = 8;
     u8g_SetFont(&u8g, SMALL_FONT);
-    u8g_SetDefaultForegroundColor(&u8g);
     u8g_DrawStr(&u8g,  0, h, "GPS UART");
     u8g_DrawStr(&u8g,  0, h*2, "RX: ");
     u8g_DrawStr(&u8g,  30, h*2, u32toa(gps_tracker_variables.uart_byte_cnt_raw, 9));
@@ -829,7 +917,6 @@ void draw(void)
     
     
     u8g_SetFont(&u8g, SMALL_FONT);
-    u8g_SetDefaultForegroundColor(&u8g);
     u8g_DrawStr(&u8g,  0, h, "GPS Status");
     u8g_DrawStr(&u8g,  0, h*2, "Sat: ");
     u8g_DrawStr(&u8g,  30, h*2, u8g_u16toa(pq.sat_cnt, 2));
