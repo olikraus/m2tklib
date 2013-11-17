@@ -348,6 +348,17 @@ const char gps_text_W[] = "W";
 const char gps_text_N[] = "N";
 const char gps_text_S[] = "S";
 
+const char *combo_symbol(uint8_t idx)
+{
+  static char s[2];
+  if ( idx == 0 )
+    s[0] = 32;
+  else
+    s[0] = idx - 1 + 'A';
+  return s;
+}
+
+
 const char *combo_fn_n_s(uint8_t idx)
 {
   if ( idx == 0 )
@@ -362,6 +373,9 @@ const char *combo_fn_e_w(uint8_t idx)
   return gps_text_W;
 }
 
+M2_LABEL(el_gps_symbol_label, NULL, "Sym: ");
+M2_COMBO(el_gps_symbol_combo, "w10", &gps_tracker_variables.gps_symbol, 27, combo_symbol);
+
 M2_LABEL(el_gps_frac_lat_label, NULL, "Lat: ");
 M2_U32NUM(el_gps_frac_lat_num, fmt_lat_lon_u32, &gps_tracker_variables.gps_frac_lat);
 M2_COMBO(el_gps_frac_lat_n_s, "w10", &gps_tracker_variables.gps_frac_lat_n_s, 2, combo_fn_n_s);
@@ -369,9 +383,14 @@ M2_LABEL(el_gps_frac_lon_label, NULL, "Lon: ");
 M2_U32NUM(el_gps_frac_lon_num, fmt_lat_lon_u32, &gps_tracker_variables.gps_frac_lon);
 M2_COMBO(el_gps_frac_lon_e_w, "w10", &gps_tracker_variables.gps_frac_lon_e_w, 2, combo_fn_e_w);
 M2_LIST(list_gps_frac) = {
+  &el_gps_symbol_label,
+  &el_gps_symbol_combo,
+  &m2_null_element,
+  
   &el_gps_frac_lat_label,
   &el_gps_frac_lat_num,
   &el_gps_frac_lat_n_s,
+  
   &el_gps_frac_lon_label,
   &el_gps_frac_lon_num,
   &el_gps_frac_lon_e_w

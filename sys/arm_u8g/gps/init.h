@@ -38,6 +38,8 @@ struct gps_tracker_variables_struct {
   
   
   /* data entry */
+  uint8_t gps_symbol;
+  
   uint8_t gps_frac_lat_n_s;
   uint8_t gps_frac_lon_e_w;
   
