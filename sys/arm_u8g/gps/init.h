@@ -66,6 +66,8 @@ struct gps_tracker_variables_struct {
   
   char speed[4];
   char course[4];
+  
+  char time[10];
 
 };
 

@@ -129,7 +129,8 @@ uint8_t update_gps_tracker_variables(void)
 /*=========================================================================*/
 /* create strings from provided position */
 
-void create_gps_pos_string(gps_pos_t *pos)
+static void create_gps_pos_string(gps_pos_t *pos)  __attribute__((noinline));
+static void create_gps_pos_string(gps_pos_t *pos)
 {
   if ( gps_tracker_variables.is_frac_mode == 0 )
   {
@@ -147,13 +148,21 @@ void create_gps_pos_string(gps_pos_t *pos)
 
 }
 
-static void create_gps_speed_course(void) __attribute__((noinline));
-static void create_gps_speed_course(void)
+static void create_gps_speed_course_time(void) __attribute__((noinline));
+static void create_gps_speed_course_time(void)
 {
   gps_float_t kmh;    
   kmh = pq.interface.speed_in_knots * (gps_float_t)1.852;
   pq_itoa(gps_tracker_variables.speed, (uint16_t)kmh, 3);
   pq_itoa(gps_tracker_variables.course, (uint16_t)pq.interface.true_course, 3);
+  
+  
+  pq_itoa(gps_tracker_variables.time, pq.interface.hour, 2);
+  pq_itoa(gps_tracker_variables.time+3, pq.interface.minute, 2);
+  pq_itoa(gps_tracker_variables.time+6, pq.interface.second, 2);
+  gps_tracker_variables.time[2] = ':';
+  gps_tracker_variables.time[5] = ':';
+  
 }
 
 
@@ -353,6 +362,7 @@ static void draw_map_mode_0(void)
   
 }
 
+#define MODE_1_LINE 18
 static void draw_map_mode_1(void)
 {
   // gps_tracker_variables.gps_view_mode == 1
@@ -360,16 +370,18 @@ static void draw_map_mode_1(void)
   u8g_SetDefaultForegroundColor(&u8g);
   
   create_gps_pos_string(&(pq.interface.pos));
-  create_gps_speed_course();
+  create_gps_speed_course_time();
   
   u8g_SetFont(&u8g, NORMAL_FONT);
-  u8g_DrawStr(&u8g, 0, 20, gps_tracker_variables.str_lat);
-  u8g_DrawStr(&u8g, 0, 40, gps_tracker_variables.str_lon);
-  u8g_DrawStr(&u8g, 0, 60, gps_tracker_variables.speed);
+  u8g_DrawStr(&u8g, 0, 18, gps_tracker_variables.str_lat);
+  u8g_DrawStr(&u8g, 0, 18+1*MODE_1_LINE, gps_tracker_variables.str_lon);
+  u8g_DrawStr(&u8g, 0, 18+2*MODE_1_LINE, gps_tracker_variables.speed);
+  u8g_DrawStr(&u8g, 24, 18+2*MODE_1_LINE, gps_tracker_variables.time);
   u8g_SetFont(&u8g, SMALL_FONT);
-  u8g_DrawStr(&u8g, 0, 10, "Latitude");
-  u8g_DrawStr(&u8g, 0, 30, "Longitude");
-  u8g_DrawStr(&u8g, 0, 50, "Speed [km/h]");
+  u8g_DrawStr(&u8g, 0, 8, "Latitude");
+  u8g_DrawStr(&u8g, 0, 8+1*MODE_1_LINE, "Longitude");
+  u8g_DrawStr(&u8g, 0, 8+2*MODE_1_LINE, "km/h");
+  u8g_DrawStr(&u8g, 24, 8+2*MODE_1_LINE, "Time");
 
 }
 
@@ -969,23 +981,9 @@ void draw(void)
   {
     uint32_t h = 7;
 
-    char lat[16];
-    char lon[16];
+    create_gps_pos_string(&(pq.interface.pos));
+    create_gps_speed_course_time();
 
-    char flat[12];
-    char flon[12];
-    
-    create_gps_speed_course();
-    
-    pq_FloatToDegreeMinutes(&pq, pq.interface.pos.latitude);
-    pq_DegreeMinutesToStr(&pq, 1, lat);
-    pq_FloatToStr(pq.interface.pos.latitude, flat);
-    
-    pq_FloatToDegreeMinutes(&pq, pq.interface.pos.longitude);
-    pq_DegreeMinutesToStr(&pq, 0, lon);
-    pq_FloatToStr(pq.interface.pos.longitude, flon);
-    
-    
     u8g_SetFont(&u8g, SMALL_FONT);
     u8g_DrawStr(&u8g,  0, h, "GPS Status");
     u8g_DrawStr(&u8g,  0, h*2, "Sat: ");
@@ -996,11 +994,12 @@ void draw(void)
     u8g_DrawStr(&u8g,  58, h*3, "km/h: ");
     u8g_DrawStr(&u8g,  83, h*3, gps_tracker_variables.speed);
     
-    u8g_DrawStr(&u8g,  0, h*4, flat);
-    u8g_DrawStr(&u8g,  0, h*5, lat);
+    u8g_DrawStr(&u8g,  0, h*4, gps_tracker_variables.str_lat);
+    u8g_DrawStr(&u8g,  0, h*5, gps_tracker_variables.str_lon);
+    /*
     u8g_DrawStr(&u8g,  0, h*6, flon);
     u8g_DrawStr(&u8g,  0, h*7, lon);
-    
+    */
   }    
   else if ( m2_GetRoot() == &el_map )
   {

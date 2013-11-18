@@ -17,7 +17,7 @@ Implementation Plan
 - convert back from sexagesimal format
   --> ok
 - other map displays (etc speed)
-  --> partly done
+  --> done
 - format exmem?
   --> not requred, instead allow to zero the position
 - edit target identifier
@@ -33,7 +33,8 @@ Implementation Plan
   
 - Add N,S,E,W to fractional from (instead of sign)
 
--   create_gps_pos_string(&(pq.interface.pos)); in GPS Stat übernehmen
+- create_gps_pos_string(&(pq.interface.pos)); in GPS Stat übernehmen
+  --> done
 
 
 - low power modes?
