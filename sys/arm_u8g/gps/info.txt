@@ -17,6 +17,7 @@ Implementation Plan
 - convert back from sexagesimal format
   --> ok
 - other map displays (etc speed)
+  --> partly done
 - format exmem?
   --> not requred, instead allow to zero the position
 - edit target identifier
@@ -25,8 +26,15 @@ Implementation Plan
   --> done (not tested)
 - display sats, battery, time(?) on all screens 
   --> sat & bat
+  
 - edit pos: zero or current pos: preferences 
   better: [0] [x]
+  copy from pq.interface.pos
+  
+- Add N,S,E,W to fractional from (instead of sign)
+
+-   create_gps_pos_string(&(pq.interface.pos)); in GPS Stat übernehmen
+
 
 - low power modes?
 

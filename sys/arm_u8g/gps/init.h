@@ -17,6 +17,8 @@ struct gps_map_pos_struct
   uint8_t map_symbol;		/* 0 = none */
 };
 
+#define GPS_VIEW_MODE_CNT 2
+
 struct gps_tracker_variables_struct {
   uint32_t cnt_10ms;
   uint32_t sec_cnt_raw;
@@ -33,6 +35,7 @@ struct gps_tracker_variables_struct {
   
   
   gps_float_t half_map_size;	/* in meter */
+  uint8_t gps_view_mode;		/* 0 .. GPS_VIEW_MODE_CNT-1 */
   uint8_t half_map_size_index;
   uint8_t is_visible_on_map;	/* internal variable during draw procedure */
   
@@ -61,6 +64,8 @@ struct gps_tracker_variables_struct {
   char str_lon[16];
   char str_idx_and_symbol[8];
   
+  char speed[4];
+  char course[4];
 
 };
 

@@ -127,6 +127,37 @@ uint8_t update_gps_tracker_variables(void)
 }
 
 /*=========================================================================*/
+/* create strings from provided position */
+
+void create_gps_pos_string(gps_pos_t *pos)
+{
+  if ( gps_tracker_variables.is_frac_mode == 0 )
+  {
+    pq_FloatToDegreeMinutes(&pq, pos->latitude);
+    pq_DegreeMinutesToStr(&pq, 1, gps_tracker_variables.str_lat);
+
+    pq_FloatToDegreeMinutes(&pq, pos->longitude);
+    pq_DegreeMinutesToStr(&pq, 0, gps_tracker_variables.str_lon);    
+  }
+  else
+  {
+    pq_FloatToStr(pos->latitude, gps_tracker_variables.str_lat);
+    pq_FloatToStr(pos->longitude, gps_tracker_variables.str_lon);
+  }  
+
+}
+
+static void create_gps_speed_course(void) __attribute__((noinline));
+static void create_gps_speed_course(void)
+{
+  gps_float_t kmh;    
+  kmh = pq.interface.speed_in_knots * (gps_float_t)1.852;
+  pq_itoa(gps_tracker_variables.speed, (uint16_t)kmh, 3);
+  pq_itoa(gps_tracker_variables.course, (uint16_t)pq.interface.true_course, 3);
+}
+
+
+/*=========================================================================*/
 
 /*
 M_PI
@@ -255,7 +286,7 @@ void prepare_map(void)
 #define MAP_SCALE_OFFSET 6
 #define MAP_RADIUS 25
 #define MAP_TARGET_RADIUS 3
-void draw_map(void)
+static void draw_map_mode_0(void)
 {
   uint8_t i;
   gps_float_t half_map_pixel_size = MAP_RADIUS;
@@ -320,6 +351,38 @@ void draw_map(void)
     }
   }
   
+}
+
+static void draw_map_mode_1(void)
+{
+  // gps_tracker_variables.gps_view_mode == 1
+
+  u8g_SetDefaultForegroundColor(&u8g);
+  
+  create_gps_pos_string(&(pq.interface.pos));
+  create_gps_speed_course();
+  
+  u8g_SetFont(&u8g, NORMAL_FONT);
+  u8g_DrawStr(&u8g, 0, 20, gps_tracker_variables.str_lat);
+  u8g_DrawStr(&u8g, 0, 40, gps_tracker_variables.str_lon);
+  u8g_DrawStr(&u8g, 0, 60, gps_tracker_variables.speed);
+  u8g_SetFont(&u8g, SMALL_FONT);
+  u8g_DrawStr(&u8g, 0, 10, "Latitude");
+  u8g_DrawStr(&u8g, 0, 30, "Longitude");
+  u8g_DrawStr(&u8g, 0, 50, "Speed [km/h]");
+
+}
+
+void draw_map(void)
+{
+  if ( gps_tracker_variables.gps_view_mode == 0 )
+  {
+    draw_map_mode_0();
+  }
+  else
+  {
+    draw_map_mode_1();
+  }
 }
 
 /*=========================================================================*/
@@ -399,7 +462,7 @@ void draw_status(void)
 /*=========================================================================*/
 /* menu definitions */
 
-const char fmt_f8w32[] = "f8w32";
+const char fmt_f8w32[] = "f8w30";
 const char fmt_f4[] = "f4";
 const char fmt_lat_lon_u32[] = "a1c7.4";
 const char fmt_w4h4[] = "w4h4";
@@ -595,6 +658,9 @@ void map_pos_update(void)
     gps_tracker_variables.str_idx_and_symbol[3] = '\0';
   }
   
+  create_gps_pos_string(&(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos));
+    
+  /*
   if ( gps_tracker_variables.is_frac_mode == 0 )
   {
     pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude);
@@ -608,6 +674,7 @@ void map_pos_update(void)
     pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude, gps_tracker_variables.str_lat);
     pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.longitude, gps_tracker_variables.str_lon);
   }
+  */
 }
 
 M2_LABEL(el_ml_idx_label, NULL, "Idx: ");
@@ -721,6 +788,15 @@ M2_ALIGN(top_el_info, "|0", &el_info_vlist);
 
 /*=== map ===*/
 
+void btn_cb_map_mode(m2_el_fnarg_p fnarg)
+{
+  gps_tracker_variables.gps_view_mode++;
+  if ( gps_tracker_variables.gps_view_mode >= GPS_VIEW_MODE_CNT )
+    gps_tracker_variables.gps_view_mode = 0;
+}
+
+M2_BUTTON(el_map_mode, fmt_f8w32, "Mode", btn_cb_map_mode);
+
 void btn_cb_map_zoom_dec(m2_el_fnarg_p fnarg)
 {
   gps_dec_half_map_size();
@@ -736,6 +812,7 @@ void btn_cb_map_zoom_inc(m2_el_fnarg_p fnarg)
 M2_BUTTON(el_map_zoom_inc, fmt_f8w32, "Out", btn_cb_map_zoom_inc);
 
 M2_LIST(list_map) = {
+  &el_map_mode,
   &el_map_zoom_dec,
   &el_map_zoom_inc,
   &el_goto_home
@@ -897,15 +974,8 @@ void draw(void)
 
     char flat[12];
     char flon[12];
-    char speed[4];
-    char course[4];
     
-    gps_float_t kmh;
-    
-    kmh = pq.interface.speed_in_knots * (gps_float_t)1.852;
-    pq_itoa(speed, (uint16_t)kmh, 3);
-
-    pq_itoa(course, (uint16_t)pq.interface.true_course, 3);
+    create_gps_speed_course();
     
     pq_FloatToDegreeMinutes(&pq, pq.interface.pos.latitude);
     pq_DegreeMinutesToStr(&pq, 1, lat);
@@ -922,9 +992,9 @@ void draw(void)
     u8g_DrawStr(&u8g,  30, h*2, u8g_u16toa(pq.sat_cnt, 2));
     
     u8g_DrawStr(&u8g,  0, h*3, "Course: ");
-    u8g_DrawStr(&u8g,  35, h*3, course);
+    u8g_DrawStr(&u8g,  35, h*3, gps_tracker_variables.course);
     u8g_DrawStr(&u8g,  58, h*3, "km/h: ");
-    u8g_DrawStr(&u8g,  83, h*3, speed);
+    u8g_DrawStr(&u8g,  83, h*3, gps_tracker_variables.speed);
     
     u8g_DrawStr(&u8g,  0, h*4, flat);
     u8g_DrawStr(&u8g,  0, h*5, lat);
