@@ -27,14 +27,15 @@ Implementation Plan
 - display sats, battery, time(?) on all screens 
   --> sat & bat
   
+- create_gps_pos_string(&(pq.interface.pos)); in GPS Stat übernehmen
+  --> done
+- time is UTC: new pref. correct by +/- h 
+
 - edit pos: zero or current pos: preferences 
   better: [0] [x]
   copy from pq.interface.pos
   
 - Add N,S,E,W to fractional from (instead of sign)
-
-- create_gps_pos_string(&(pq.interface.pos)); in GPS Stat übernehmen
-  --> done
 
 
 - low power modes?
