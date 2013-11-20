@@ -597,7 +597,14 @@ void cb_gps_frac_zero(m2_el_fnarg_p fnarg)
 void cb_gps_frac_current(m2_el_fnarg_p fnarg) 
 {
   gps_tracker_variables.m2_gps_pos = pq.interface.pos;
-  m2_gps_pos_to_frac_fields();  
+  if ( gps_tracker_variables.is_frac_mode != 0 )
+  {
+    m2_gps_pos_to_frac_fields();  
+  }
+  else
+  {
+    m2_gps_pos_to_sexa_fields();
+  }
 }
 
 M2_BUTTON(el_gps_frac_ok, fmt_f4, "Ok", cb_gps_frac_ok);
