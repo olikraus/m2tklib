@@ -36,7 +36,9 @@ Implementation Plan
   copy from pq.interface.pos
   
 - Add N,S,E,W to fractional from (instead of sign)
+  --> done
 
+- degree symbol not show, change font?
 
 - low power modes?
 

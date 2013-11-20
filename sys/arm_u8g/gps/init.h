@@ -41,6 +41,7 @@ struct gps_tracker_variables_struct {
   
   
   /* data entry */
+  uint8_t is_frac_mode;
   uint8_t gps_symbol;
   
   uint8_t gps_frac_lat_n_s;
@@ -54,20 +55,21 @@ struct gps_tracker_variables_struct {
 
   gps_pos_t m2_gps_pos;
   
-  /* map special elements */
-  struct gps_map_pos_struct map_pos_list[MAP_POS_CNT];
-  uint32_t map_pos_idx;
-  uint8_t is_frac_mode;
+  /* str buffer for other information */
+  char speed[4];
+  char course[4];
   
   /* str buffer for gps pos */
   char str_lat[16];
   char str_lon[16];
   char str_idx_and_symbol[8];
   
-  char speed[4];
-  char course[4];
-  
   char time[10];
+
+  /* map special elements */
+  uint32_t map_pos_idx;
+  struct gps_map_pos_struct map_pos_list[MAP_POS_CNT];
+  
 
 };
 

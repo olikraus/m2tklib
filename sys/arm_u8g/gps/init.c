@@ -85,6 +85,7 @@ void gps_set_half_map_size_by_index(uint8_t idx)
     idx = GPS_HALF_MAP_CNT-1;
   gps_tracker_variables.half_map_size_index = idx;
   gps_tracker_variables.half_map_size = gps_half_map_len[idx];
+  gps_tracker_variables.gps_view_mode = 0;	/* switch to map mode */
 }
 
 void gps_inc_half_map_size(void)

@@ -129,8 +129,8 @@ uint8_t update_gps_tracker_variables(void)
 /*=========================================================================*/
 /* create strings from provided position */
 
-static void create_gps_pos_string(gps_pos_t *pos)  __attribute__((noinline));
-static void create_gps_pos_string(gps_pos_t *pos)
+void create_gps_pos_string(gps_pos_t *pos)  __attribute__((noinline));
+void create_gps_pos_string(gps_pos_t *pos)
 {
   if ( gps_tracker_variables.is_frac_mode == 0 )
   {
@@ -142,14 +142,14 @@ static void create_gps_pos_string(gps_pos_t *pos)
   }
   else
   {
-    pq_FloatToStr(pos->latitude, gps_tracker_variables.str_lat);
-    pq_FloatToStr(pos->longitude, gps_tracker_variables.str_lon);
+    pq_FloatToStr(pos->latitude, 1, gps_tracker_variables.str_lat);
+    pq_FloatToStr(pos->longitude, 0, gps_tracker_variables.str_lon);
   }  
 
 }
 
-static void create_gps_speed_course_time(void) __attribute__((noinline));
-static void create_gps_speed_course_time(void)
+void create_gps_speed_course_time(void) __attribute__((noinline));
+void create_gps_speed_course_time(void)
 {
   gps_float_t kmh;    
   kmh = pq.interface.speed_in_knots * (gps_float_t)1.852;
@@ -584,7 +584,7 @@ void cb_gps_frac_ok(m2_el_fnarg_p fnarg)
   m2_SetRoot(&top_el_ml);
 }
 
-void cb_gps_frac_default(m2_el_fnarg_p fnarg) 
+void cb_gps_frac_zero(m2_el_fnarg_p fnarg) 
 {
   gps_tracker_variables.gps_frac_lat = 0;
   gps_tracker_variables.gps_grad_lat = 0;
@@ -594,13 +594,21 @@ void cb_gps_frac_default(m2_el_fnarg_p fnarg)
   gps_tracker_variables.gps_frac_lon_e_w = 0;
 }
 
+void cb_gps_frac_current(m2_el_fnarg_p fnarg) 
+{
+  gps_tracker_variables.m2_gps_pos = pq.interface.pos;
+  m2_gps_pos_to_frac_fields();  
+}
+
 M2_BUTTON(el_gps_frac_ok, fmt_f4, "Ok", cb_gps_frac_ok);
 M2_ROOT(el_gps_frac_cancel, fmt_f4, "Cancel", &top_el_ml);
-M2_BUTTON(el_gps_frac_default, fmt_f4, "Zero", cb_gps_frac_default);
+M2_BUTTON(el_gps_frac_default, fmt_f4, "0", cb_gps_frac_zero);
+M2_BUTTON(el_gps_frac_current, fmt_f4, "X", cb_gps_frac_current);
 M2_LIST(list_gps_frac_btns) = {
   &el_gps_frac_ok,
   &el_gps_frac_cancel,
-  &el_gps_frac_default
+  &el_gps_frac_default,
+  &el_gps_frac_current
 };
 M2_HLIST(el_gps_frac_btns, NULL, list_gps_frac_btns);
 
@@ -683,8 +691,8 @@ void map_pos_update(void)
   }
   else
   {
-    pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude, gps_tracker_variables.str_lat);
-    pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.longitude, gps_tracker_variables.str_lon);
+    pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude, 1, gps_tracker_variables.str_lat);
+    pq_FloatToStr(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.longitude, 0, gps_tracker_variables.str_lon);
   }
   */
 }
@@ -817,7 +825,7 @@ void btn_cb_map_zoom_dec(m2_el_fnarg_p fnarg)
 M2_BUTTON(el_map_zoom_dec, fmt_f8w32, "In", btn_cb_map_zoom_dec);
 
 void btn_cb_map_zoom_inc(m2_el_fnarg_p fnarg)
-{
+{  
   gps_inc_half_map_size();
 }
 

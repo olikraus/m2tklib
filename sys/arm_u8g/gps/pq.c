@@ -476,6 +476,34 @@ void pq_itoa(char *s, uint16_t x, uint8_t cnt)
   
 }
 
+void pq_SetSignPrefix(uint8_t is_lat, uint8_t is_neg, char *s) __attribute__((noinline));
+void pq_SetSignPrefix(uint8_t is_lat, uint8_t is_neg, char *s)
+{
+  if ( is_lat != 0 )
+  {
+    if ( is_neg != 0 )
+    {
+      s[0] = 'S';
+    }
+    else
+    {
+      s[0] = 'N';
+    }
+  }
+  else
+  {
+    if ( is_neg != 0 )
+    {
+      s[0] = 'W';
+    }
+    else
+    {
+      s[0] = 'E';
+    }
+  }
+  s[1] = ' ';
+}
+
 /*
   copy internal 
   uint8_t pos_is_neg;	temp variable for gps_float_t conversion 
@@ -487,29 +515,7 @@ void pq_itoa(char *s, uint16_t x, uint8_t cnt)
 */
 void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
 {
-  if ( is_lat != 0 )
-  {
-    if ( pq->pos_is_neg != 0 )
-    {
-      s[0] = 'S';
-    }
-    else
-    {
-      s[0] = 'N';
-    }
-  }
-  else
-  {
-    if ( pq->pos_is_neg != 0 )
-    {
-      s[0] = 'W';
-    }
-    else
-    {
-      s[0] = 'E';
-    }
-  }
-  s[1] = ' ';
+  pq_SetSignPrefix(is_lat, pq->pos_is_neg, s);
   pq_itoa(s+2, pq->pos_degree, 3);
   s[5] = '°';
   s[6] = ' ';
@@ -521,15 +527,24 @@ void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
 }
 
 /* s must be at least 10 chars long */
-void pq_FloatToStr(gps_float_t f, char *s)
+void pq_FloatToStr(gps_float_t f, uint8_t is_lat, char *s)
 {
   float g;
-  if ( f < (gps_float_t)0 )
+  uint8_t is_neg = 0;
+
+    if ( f < (gps_float_t)0 )
   {
     f = -f;
+    is_neg = 1;
+    /*
     *s = '-';
     s++;
+    */
   }
+
+  pq_SetSignPrefix(is_lat, is_neg, s);
+  s+=2;
+
   f = GPS_MODF(f,&g);
   pq_itoa(s, g, 3);
   f*=10000;

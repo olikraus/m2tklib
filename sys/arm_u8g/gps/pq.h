@@ -98,7 +98,8 @@ uint8_t pq_ParseSentence(pq_t *pq);
 void pq_itoa(char *s, uint16_t x, uint8_t cnt);
 void pq_FloatToDegreeMinutes(pq_t *pq, gps_float_t f) __attribute__((noinline));
 void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s);
-void pq_FloatToStr(gps_float_t f, char *s);
+//void pq_FloatToStr(gps_float_t f, char *s);
+void pq_FloatToStr(gps_float_t f, uint8_t is_lat, char *s);
 
 
 #endif 
