@@ -214,9 +214,7 @@ void m2_sexa_fields_to_gps_pos(void)
 void gps_init(void)
 {
   uint16_t i;
-  gps_tracker_variables.cnt_10ms = 0;
   
-  gps_tracker_variables.is_frac_mode = 1;
   
   gps_set_half_map_size_by_index(1);
   
@@ -234,5 +232,10 @@ void gps_init(void)
   {
     read_MapPos(i, &(gps_tracker_variables.map_pos_list[i]));
   }
+
+  gps_tracker_variables.cnt_10ms = 0;
+  // gps_tracker_variables.pref.is_frac_mode = 1;
+  
+  read_Preferences();
 
 }

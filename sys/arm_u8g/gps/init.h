@@ -19,6 +19,11 @@ struct gps_map_pos_struct
 
 #define GPS_VIEW_MODE_CNT 2
 
+struct gps_tracker_preferences_struct {
+  uint8_t is_frac_mode;
+  uint8_t utc_offset;
+};
+
 struct gps_tracker_variables_struct {
   uint32_t cnt_10ms;
   uint32_t sec_cnt_raw;
@@ -41,7 +46,6 @@ struct gps_tracker_variables_struct {
   
   
   /* data entry */
-  uint8_t is_frac_mode;
   uint8_t gps_symbol;
   
   uint8_t gps_frac_lat_n_s;
@@ -55,6 +59,8 @@ struct gps_tracker_variables_struct {
 
   gps_pos_t m2_gps_pos;
   
+  struct gps_tracker_preferences_struct pref;
+  
   /* str buffer for other information */
   char speed[4];
   char course[4];
@@ -63,6 +69,7 @@ struct gps_tracker_variables_struct {
   char str_lat[16];
   char str_lon[16];
   char str_idx_and_symbol[8];
+  char str_utc_offset[6];
   
   char time[10];
 

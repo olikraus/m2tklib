@@ -132,7 +132,7 @@ uint8_t update_gps_tracker_variables(void)
 void create_gps_pos_string(gps_pos_t *pos)  __attribute__((noinline));
 void create_gps_pos_string(gps_pos_t *pos)
 {
-  if ( gps_tracker_variables.is_frac_mode == 0 )
+  if ( gps_tracker_variables.pref.is_frac_mode == 0 )
   {
     pq_FloatToDegreeMinutes(&pq, pos->latitude);
     pq_DegreeMinutesToStr(&pq, 1, gps_tracker_variables.str_lat);
@@ -152,10 +152,14 @@ void create_gps_speed_course_time(void) __attribute__((noinline));
 void create_gps_speed_course_time(void)
 {
   gps_float_t kmh;    
+  uint8_t h = pq.interface.hour;
   kmh = pq.interface.speed_in_knots * (gps_float_t)1.852;
   pq_itoa(gps_tracker_variables.speed, (uint16_t)kmh, 3);
   pq_itoa(gps_tracker_variables.course, (uint16_t)pq.interface.true_course, 3);
   
+  h += gps_tracker_variables.pref.utc_offset;
+  h += 12;
+  h %= 24;
   
   pq_itoa(gps_tracker_variables.time, pq.interface.hour, 2);
   pq_itoa(gps_tracker_variables.time+3, pq.interface.minute, 2);
@@ -570,7 +574,7 @@ M2_SPACECB(el_gps_frac_space4, fmt_w4h4, cb_gps_frac_load_pos);
 
 void cb_gps_frac_ok(m2_el_fnarg_p fnarg) 
 {
-  if ( gps_tracker_variables.is_frac_mode != 0 )
+  if ( gps_tracker_variables.pref.is_frac_mode != 0 )
   {
     m2_frac_fields_to_gps_pos();
   }
@@ -597,7 +601,7 @@ void cb_gps_frac_zero(m2_el_fnarg_p fnarg)
 void cb_gps_frac_current(m2_el_fnarg_p fnarg) 
 {
   gps_tracker_variables.m2_gps_pos = pq.interface.pos;
-  if ( gps_tracker_variables.is_frac_mode != 0 )
+  if ( gps_tracker_variables.pref.is_frac_mode != 0 )
   {
     m2_gps_pos_to_frac_fields();  
   }
@@ -688,7 +692,7 @@ void map_pos_update(void)
   create_gps_pos_string(&(gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos));
     
   /*
-  if ( gps_tracker_variables.is_frac_mode == 0 )
+  if ( gps_tracker_variables.pref.is_frac_mode == 0 )
   {
     pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos.latitude);
     pq_DegreeMinutesToStr(&pq, 1, gps_tracker_variables.str_lat);
@@ -742,7 +746,7 @@ void ml_edit(m2_el_fnarg_p fnarg)
 {
   gps_tracker_variables.m2_gps_pos = gps_tracker_variables.map_pos_list[gps_tracker_variables.map_pos_idx].pos;
   
-  if ( gps_tracker_variables.is_frac_mode == 0 )
+  if ( gps_tracker_variables.pref.is_frac_mode == 0 )
   {
     m2_SetRoot(&top_el_gps_sexa);
   }
@@ -860,17 +864,50 @@ const char *combo_fn_frac_or_sexa(uint8_t idx)
   return str_frac;
 }
 
+const char *combo_fn_utc_offset(uint8_t idx)
+{
+  char *s = gps_tracker_variables.str_utc_offset;
+  if ( idx < 12 )
+  {
+    *s = '-';
+    s++;
+    idx = 12-idx;
+  }
+  else
+  {
+    idx -= 12;
+  }
+  pq_itoa(s, idx, 2);
+  return gps_tracker_variables.str_utc_offset;
+}
+
+void btn_cb_save_pref(m2_el_fnarg_p fnarg)
+{
+  write_Preferences();
+  m2_SetRoot(&el_home);
+}
+
+
 
 M2_LABEL(el_pref_frac_sexa_label, NULL, "Notation:");
-M2_COMBO(el_pref_frac_sexa, "w30", &gps_tracker_variables.is_frac_mode, 2, combo_fn_frac_or_sexa);
+M2_COMBO(el_pref_frac_sexa, "w30", &gps_tracker_variables.pref.is_frac_mode, 2, combo_fn_frac_or_sexa);
+M2_LABEL(el_pref_utc_offset_label, NULL, "UTC offset:");
+M2_COMBO(el_pref_utc_offset, "w30", &gps_tracker_variables.pref.utc_offset, 25, combo_fn_utc_offset);
+
+M2_ROOT(el_pref_goto_home, "f4", "Home", &el_home);
+M2_BUTTON(el_pref_save, "f4", "Save", btn_cb_save_pref);
+
 M2_LIST(list_pref) = {
   &el_pref_frac_sexa_label,
   &el_pref_frac_sexa,
+  &el_pref_utc_offset_label, 
+  &el_pref_utc_offset,
+  &el_pref_goto_home,
+  &el_pref_save
 };
 M2_GRIDLIST(el_pref_grid, "c2", list_pref);
 
-M2_ROOT(el_pref_goto_home, "f4", "Home", &el_home);
-
+/*
 M2_LIST(list_pref_vlist) = {
   &el_pref_grid,
   &el_space4,
@@ -878,6 +915,8 @@ M2_LIST(list_pref_vlist) = {
 };
 M2_VLIST(el_pref_vlist, NULL, list_pref_vlist);
 M2_ALIGN(top_el_pref, NULL, &el_pref_vlist);
+*/
+M2_ALIGN(top_el_pref, NULL, &el_pref_grid);
 
 /*=== toplevel menu ===*/
 

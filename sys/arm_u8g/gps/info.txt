@@ -34,6 +34,7 @@ Implementation Plan
 - edit pos: zero or current pos: preferences 
   better: [0] [x]
   copy from pq.interface.pos
+  --> done, testing required
   
 - Add N,S,E,W to fractional from (instead of sign)
   --> done
