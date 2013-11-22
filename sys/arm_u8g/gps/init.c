@@ -182,12 +182,12 @@ void m2_gps_pos_to_sexa_fields(void)
   */  
   gps_tracker_variables.gps_frac_lat_n_s = pq.pos_is_neg;
   gps_tracker_variables.gps_grad_lat = (long)(pq.pos_degree);
-  gps_tracker_variables.gps_frac_lat = (long)(pq.pos_minutes_frac*1000.0);
+  gps_tracker_variables.gps_frac_lat = (long)(pq.pos_minutes_frac*(gps_float_t)1000.0);
 
   pq_FloatToDegreeMinutes(&pq, gps_tracker_variables.m2_gps_pos.longitude);
   gps_tracker_variables.gps_frac_lon_e_w = pq.pos_is_neg;
   gps_tracker_variables.gps_grad_lon = (long)(pq.pos_degree);
-  gps_tracker_variables.gps_frac_lon = (long)(pq.pos_minutes_frac*1000.0);  
+  gps_tracker_variables.gps_frac_lon = (long)(pq.pos_minutes_frac*(gps_float_t)1000.0);  
 }
 
 void m2_sexa_fields_to_gps_pos(void)
