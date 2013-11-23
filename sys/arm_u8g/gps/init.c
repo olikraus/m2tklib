@@ -234,8 +234,8 @@ void gps_init(void)
   }
 
   gps_tracker_variables.cnt_10ms = 0;
-  // gps_tracker_variables.pref.is_frac_mode = 1;
   
   read_Preferences();
-
+  gps_tracker_variables.pref.is_frac_mode &= 1;
+  gps_tracker_variables.pref.utc_offset %= 25;
 }

@@ -161,7 +161,7 @@ void create_gps_speed_course_time(void)
   h += 12;
   h %= 24;
   
-  pq_itoa(gps_tracker_variables.time, pq.interface.hour, 2);
+  pq_itoa(gps_tracker_variables.time, h, 2);
   pq_itoa(gps_tracker_variables.time+3, pq.interface.minute, 2);
   pq_itoa(gps_tracker_variables.time+6, pq.interface.second, 2);
   gps_tracker_variables.time[2] = ':';
@@ -295,10 +295,10 @@ void prepare_map(void)
 {
 }
 
-#define MAP_OFFSET 2
+#define MAP_OFFSET 6
 #define MAP_SCALE_OFFSET 6
-#define MAP_RADIUS 25
-#define MAP_TARGET_RADIUS 3
+#define MAP_RADIUS 21
+#define MAP_TARGET_RADIUS 2
 static void draw_map_mode_0(void)
 {
   uint8_t i;
@@ -366,6 +366,7 @@ static void draw_map_mode_0(void)
   
 }
 
+#define MODE_1_TOP_OFFSET 20
 #define MODE_1_LINE 18
 static void draw_map_mode_1(void)
 {
@@ -377,15 +378,15 @@ static void draw_map_mode_1(void)
   create_gps_speed_course_time();
   
   u8g_SetFont(&u8g, NORMAL_FONT);
-  u8g_DrawStr(&u8g, 0, 18, gps_tracker_variables.str_lat);
-  u8g_DrawStr(&u8g, 0, 18+1*MODE_1_LINE, gps_tracker_variables.str_lon);
-  u8g_DrawStr(&u8g, 0, 18+2*MODE_1_LINE, gps_tracker_variables.speed);
-  u8g_DrawStr(&u8g, 24, 18+2*MODE_1_LINE, gps_tracker_variables.time);
+  u8g_DrawStr(&u8g, 0, MODE_1_TOP_OFFSET, gps_tracker_variables.str_lat);
+  u8g_DrawStr(&u8g, 0, MODE_1_TOP_OFFSET+1*MODE_1_LINE, gps_tracker_variables.str_lon);
+  u8g_DrawStr(&u8g, 0, MODE_1_TOP_OFFSET+2*MODE_1_LINE, gps_tracker_variables.speed);
+  u8g_DrawStr(&u8g, 24, MODE_1_TOP_OFFSET+2*MODE_1_LINE, gps_tracker_variables.time);
   u8g_SetFont(&u8g, SMALL_FONT);
-  u8g_DrawStr(&u8g, 0, 8, "Latitude");
-  u8g_DrawStr(&u8g, 0, 8+1*MODE_1_LINE, "Longitude");
-  u8g_DrawStr(&u8g, 0, 8+2*MODE_1_LINE, "km/h");
-  u8g_DrawStr(&u8g, 24, 8+2*MODE_1_LINE, "Time");
+  u8g_DrawStr(&u8g, 0, MODE_1_TOP_OFFSET-10, "Latitude");
+  u8g_DrawStr(&u8g, 0, MODE_1_TOP_OFFSET-10+1*MODE_1_LINE, "Longitude");
+  u8g_DrawStr(&u8g, 0, MODE_1_TOP_OFFSET-10+2*MODE_1_LINE, "km/h");
+  u8g_DrawStr(&u8g, 24, MODE_1_TOP_OFFSET-10+2*MODE_1_LINE, "Time");
 
 }
 

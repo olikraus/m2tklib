@@ -51,10 +51,12 @@ uint8_t read_MapPos(uint16_t idx, struct gps_map_pos_struct *map_pos)
 
 void write_Preferences(void)
 {
+  uint8_t buf[2] = { 0, 0 };
   if ( is_exmem_not_available != 0 )
     return;
   
-  i2c_send_pre_data(&i2c, 0x050, 0, NULL, sizeof(struct gps_tracker_preferences_struct),
+  
+  i2c_send_pre_data(&i2c, 0x050, 2, buf, sizeof(struct gps_tracker_preferences_struct),
     (uint8_t *)&(gps_tracker_variables.pref));
 
   u8g_Delay(5);
