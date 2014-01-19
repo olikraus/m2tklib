@@ -30,6 +30,7 @@
 #include "uart.h"
 #include "init.h"
 #include "exmem.h"
+#include "config.h"
 
 
 /*========================================================================*/
@@ -223,6 +224,17 @@ void gps_init(void)
 
   /* init uart, connect uart to gps parser */
   UART_Init(1, gps_rx);
+  
+#ifdef USE_LOW_HIGH_LOW_PULSE
+  /* generate high pulse on PIO1_5 */
+  set_gpio_mode(PIN(1,5), 1, 0);
+  
+  set_gpio_level(PIN(1,5), 0);
+  delay_micro_seconds(1*1000*1000);	/* wait 1 second */
+  set_gpio_level(PIN(1,5), 1);
+  delay_micro_seconds(200*1000);	/* wait 200ms second */
+  set_gpio_level(PIN(1,5), 0);
+#endif
   
   /* check for external memory */
   check_ExternalMemory();

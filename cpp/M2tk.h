@@ -21,6 +21,9 @@
 
 */
 
+#ifndef _M2TK_H
+#define _M2TK_H
+
 #include "m2.h"
 
 class M2tk
@@ -42,4 +45,6 @@ class M2tk
     void clear(void) { m2_Clear(); }
     m2_rom_void_p getRoot() { return m2_GetRoot(); }    
 };
+
+#endif
 

@@ -43,5 +43,9 @@
 */
 #define USE_GPS_4800BAUD
 
+/*
+  Define this to generate a LOW_HIGH_LOW Pulse on PIO1_5
+*/
+#define USE_LOW_HIGH_LOW_PULSE
 
 #endif
