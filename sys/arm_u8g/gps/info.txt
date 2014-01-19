@@ -23,23 +23,37 @@ Implementation Plan
 - edit target identifier
   --> done
 - draw circle for special targets
-  --> done (not tested)
+  --> done (not tested)  --> ok
 - display sats, battery, time(?) on all screens 
   --> sat & bat
   
 - create_gps_pos_string(&(pq.interface.pos)); in GPS Stat übernehmen
   --> done
 - time is UTC: new pref. correct by +/- h 
+  --> done
 
 - edit pos: zero or current pos: preferences 
   better: [0] [x]
   copy from pq.interface.pos
-  --> done, testing required
+  --> done, testing required --> ok
   
 - Add N,S,E,W to fractional from (instead of sign)
   --> done
 
 - degree symbol not show, change font?
+  --> done
+
+- Store some text with the position
+    --> M2_TEXT requires 900 Bytes extra --> too much 
+    --> will not be implemented
+
+- Show "course" on the GPS map
+  --> started, not tested --> needs more testing
+  
+- target position: clear map special char with "0"
+  --> done
+  
+- allow switching of baud rate (4800, 9600)
 
 - low power modes?
 

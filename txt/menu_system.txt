@@ -939,3 +939,124 @@ http://www.rn-wissen.de/index.php/Speicherverbrauch_bestimmen_mit_avr-gcc
 	  m2elu32.c:	m2_nav_user_up((m2_nav_p)(fn_arg->data));
 	  
       
+-----------------------------------------
+
+15.12.2013
+Ideas for Version 2
+
+Improvements
+- Faster (partial redraw, smaller code size)
+- Flickerfree without double buffer (partial redraw)
+- Simplified API
+- Smaller Code Size 
+- Simplify HLIST and GRID ('b' option)
+- Better visual feedback by key up/down 
+- Optional: Return to last menu with fn call and focus setting
+- More fonts?
+
+Take over:
+- event source
+- event handler (?)
+- format options
+
+
+1) Always use an internal sequence number as cursor/position, remove nav structure 
+    sequence number 0 means: error or not available
+    the root element has sequence number 1
+    Motivation: (a) element ptr is not unique because of virtual fields, (b) save space
+2) Remove button handling code from the structures, move this to the event source
+3) Two independent cursor types: Key cursor, Touch cursor
+4) Partial redraw: E.g. if cursor changes, then store old an new element, if a value
+  field changes, then redraw this field.
+  New flag: Always Redraw for numeric fields
+5) Simplify element draw procedures
+6) Return to last menu with correct update of key cursor
+7) Rework HLINE/GRID: Use ascent and decent
+
+Format option
+Opt	Current		V2
+a	Auto Down	no change
+b	Border Mod	obsolete with 7)
+c	Columns		no change
+d	deep draw	will be replaced by "decoration" flag
+eE	extra col width	no change
+F	extra col font	no change
+f	font/style sel.	font selection only, style will be selected by other option
+g	n.a.
+hH	Height		no change
+i	n.a.			
+j	n.a.
+k	n.a.			enable key cursor for this field
+l	visible line cnt	no change
+m	n.a.
+n	initial focus	replaced by '#'
+o	n.a.
+p	n.a.
+q	Quick Key		no change
+r	read only		replaced by k and t
+s	n.a.
+t	touch enable	no change
+u	n.a.
+v	value		no change
+wW	Width		no change
+x	x			no change
+y	y			no change
+z	n.a.			
+-	horz. align	extended (former 'f' option)
+|	vert. align		
+.	dot pos		no change
+#	n.a.			if "#1" then start key cursor here
+  
+Changes
+f0..3			d0-0
+f4..7			d1-0
+f8..11		d0-1
+f12..15		d1-1
+
+Key Cursor Draw styles
+k1a1d0
+  one child has focus
+  no child has focus
+k1a1d1
+  one child has focus, extra decoration on parent
+  no child has focus, extra decoration on parent
+k1a0d0
+  one child has focus
+  no child has focus, parent has focus, no key pressed ("half cursor")
+  no child has focus, parent has focus, key pressed ("half cursor")
+  no child has focus, parent has no focus
+k1a0d1
+  one child has focus
+  no child has focus, parent has focus, no key pressed ("half cursor"), extra decoration on parent
+  no child has focus, parent has focus, key pressed ("half cursor"), extra decoration on parent
+  no child has focus, parent has no focus, extra decoration on parent
+  
+internal element flags
+  IS_SMALL_CURSOR
+    == 0	normal behavior
+    == 1	only for text/numbers, 'd' is ignored
+  IS_AUTO_DOWN
+    Similar but not identical to 'a' flag.
+    Auto-Down is done if 'a' is set or IS_AUTO_DOWN is set
+  IS_READ_ONLY
+    == 0	This element can have focus, based on 'k' and 't' flags
+    == 1	This element can never be activated
+
+global flags
+  IS_TOUCH_UPDATES_KEY_CURSOR
+    == 0	Touch events do not update the key cursor
+    ==1	Touch events do update the key cursor
+    
+    
+get_default_key_cursor_start_position()
+  key_cursor_start_pos = 0;
+  with all elements in the tree
+    if 'k1' then
+      if key_cursor_start_pos != 0 then
+	key_cursor_start_pos = seq_num
+      if '#1' then
+	key_cursor_start_pos = seq_num
+	return key_cursor_start_pos
+  return key_cursor_start_pos
+    
+    

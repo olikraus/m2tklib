@@ -6,10 +6,13 @@
 #include "pq.h"
 #include "u8g.h"
 
-#define NORMAL_FONT u8g_font_helvB08r
+extern const u8g_fntpgm_uint8_t helvB08_gps[1295] U8G_FONT_SECTION("helvB08_gps");
+
+//#define NORMAL_FONT u8g_font_helvB08r
+#define NORMAL_FONT helvB08_gps
 #define SMALL_FONT u8g_font_5x8r
 
-#define MAP_POS_CNT 4
+#define MAP_POS_CNT 10
 
 struct gps_map_pos_struct
 {
@@ -50,6 +53,8 @@ struct gps_tracker_variables_struct {
   
   uint8_t gps_frac_lat_n_s;
   uint8_t gps_frac_lon_e_w;
+  
+  //char gps_pos_text[8];
   
   uint32_t gps_frac_lat;		/* M2 Data Entry */
   uint32_t gps_frac_lon;		/* M2 Data Entry */

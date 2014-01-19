@@ -517,7 +517,7 @@ void pq_DegreeMinutesToStr(pq_t *pq, uint8_t is_lat, char *s)
 {
   pq_SetSignPrefix(is_lat, pq->pos_is_neg, s);
   pq_itoa(s+2, pq->pos_degree, 3);
-  s[5] = '°';
+  s[5] = '\x7f';	/* degree symbol of helvB08 font */
   s[6] = ' ';
   pq_itoa(s+7, pq->pos_minutes, 2);
   s[9] = '.';

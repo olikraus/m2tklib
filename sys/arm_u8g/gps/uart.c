@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include "uart.h"
 #include "LPC11xx.h"
+#include "config.h"
 
 
 volatile int16_t uart_data;
@@ -22,7 +23,12 @@ void UART_Init(uint8_t is_48_mhz, void (*rx_handler)(uint8_t data))
 {
   LPC_SYSCON->SYSAHBCLKCTRL |= 1<<16;	/* enable IOCON clock */
   LPC_SYSCON->SYSAHBCLKCTRL |= 1<<12;	/* enable UART clock */
+#ifdef USE_GPS_4800BAUD  
+  LPC_SYSCON->UARTCLKDIV = 2;			/* PCLK = Master Clock / 2 */
+#else
+  /* default to 9600 */
   LPC_SYSCON->UARTCLKDIV = 1;			/* PCLK = Master Clock / 1 */
+#endif  
   
   uart_rx_handler = rx_handler;
   
@@ -35,9 +41,12 @@ void UART_Init(uint8_t is_48_mhz, void (*rx_handler)(uint8_t data))
   LPC_IOCON->PIO1_7 = 1;		/* connect UART to TXD pin */
   
   /*
-    12MHz/9600				DLM=0,DLL=71,DIVADDVAL=1,MULVAL=10		<===
-    48MHz/9600				DLM=0,DLL=250,DIVADDVAL=1,MULVAL=4
-    50MHz/9600				DLM=0,DLL=217,DIVADDVAL=5,MULVAL=10
+
+    48MHz/4800 			udiv=2, dll=250 divaddval=1, mulval=4
+
+    12MHz/9600			DLM=0,DLL=71,DIVADDVAL=1,MULVAL=10		<===
+    48MHz/9600			DLM=0,DLL=250,DIVADDVAL=1,MULVAL=4
+    50MHz/9600			DLM=0,DLL=217,DIVADDVAL=5,MULVAL=10
 
     12MHz/38400			DLM=0,DLL=16,DIVADDVAL=2,MULVAL=9
     48MHz/38400			DLM=0,DLL=71,DIVADDVAL=1,MULVAL=10

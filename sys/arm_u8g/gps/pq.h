@@ -32,7 +32,7 @@ struct _pq_interface_struct
 {
   gps_pos_t pos;
   gps_float_t speed_in_knots;
-  gps_float_t true_course;
+  gps_float_t true_course;			/* 0.0: North, 90.0: East */
   gps_float_t magnetic_variation;
   uint16_t year;
   uint8_t month;
