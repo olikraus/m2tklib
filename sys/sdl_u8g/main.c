@@ -746,15 +746,15 @@ M2_ALIGN(top_el_fsel, "-1|1W64H64", &el_fsel_hlist);
 /* Edit x width properties */
 
 void fn_xwp_zero(m2_el_fnarg_p fnarg) {
-  m2_gh_u8g_invisible_frame_border_x_size = 0;
-  m2_gh_u8g_additional_text_border_x_size = 0;
+  m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size = 0;
+  m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size = 0;
 }
 
 M2_LABEL(el_xwp_label1, NULL, "Add to Frame:");
-M2_U8NUM(el_xwp_1, "c1", 0, 4, &m2_gh_u8g_invisible_frame_border_x_size);
+M2_U8NUM(el_xwp_1, "c1", 0, 4, &m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size);
 
 M2_LABEL(el_xwp_label2, NULL, "Add to Text:");
-M2_U8NUM(el_xwp_2, "c1", 0, 4, &m2_gh_u8g_additional_text_border_x_size);
+M2_U8NUM(el_xwp_2, "c1", 0, 4, &m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size);
 
 M2_ROOT(el_xwp_goto_top, "f4", "Goto Top Menu", &top_el_tlsm);
 M2_BUTTON(el_xwp_zero, "f4", "Zero", fn_xwp_zero);
@@ -2363,7 +2363,7 @@ void generic_root_change_cb(m2_rom_void_p new_root, m2_rom_void_p old_root, uint
 /*======================================================================*/
 
 
-int main(void)
+int main(int argc, char *argv[])
 {  
   /* this is the setup sequence, steps 1..4 should be in this order */
   
