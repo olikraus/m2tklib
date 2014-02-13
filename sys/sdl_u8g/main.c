@@ -362,7 +362,7 @@ M2_ALIGN(top_el_sa, "-1|1W64H64", &el_sa);
 /*======================================================================*/
 /* speed mph kmh */
 uint8_t speed = 108;
-M2_U8NUM(el_num_speed, "f2r0", 0, 255, &speed);
+M2_U8NUM(el_num_speed, "f2r1", 0, 255, &speed);
 
 M2_LABEL(el_speed_unit, NULL, "mph");
 
