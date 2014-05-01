@@ -85,7 +85,7 @@ uint16_t mas_sd_get_directory_file_cnt(const char *path)
 	break;
     cnt++;
     f.close();
-    if ( cnt == 0x0ffff )
+    if ( cnt > 250 )	/* 1 May2014, changed to > 250 */
       break;
   }
   return cnt;
