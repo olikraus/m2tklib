@@ -65,7 +65,7 @@
 //#include "pff.h"
 //FATFS pff_fs;
 
-/* === Petit Fat File System Library === */
+/* === Simulated File System === */
 #define FS_SIM
 
 /*=========================================================================*/

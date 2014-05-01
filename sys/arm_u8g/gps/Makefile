@@ -36,7 +36,7 @@ FLASHTOOL:=~/prg/lpc21isp/lpc21isp
 # Project Information
 
 # The name for the project
-TARGETNAME:=gps
+TARGETNAME:=gps_tracker
 
 # The source files of the project
 SRC:=$(wildcard *.c)
