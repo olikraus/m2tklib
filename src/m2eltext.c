@@ -56,6 +56,54 @@ M2_EL_FN_DEF(m2_el_char_fn);
 
 
 /*==============================================================*/
+
+
+uint8_t m2_is_valid_text_char(uint8_t c)
+{
+  if ( c >= M2_EL_CHAR_MIN  && c <= M2_EL_CHAR_MAX )
+    return 1;
+  return 0;
+}
+
+/* only space and upper case */
+/*
+uint8_t m2_is_valid_text_char(uint8_t c)
+{
+  if ( c == ' ' || ( c >= 'A'  && c <= 'Z' ) )
+    return 1;
+  return 0;
+}
+*/
+
+uint8_t m2_get_next_valid_text_char(uint8_t c)
+{
+  uint8_t i = c;
+  for(;;)
+  {
+    i++;
+    if ( c == i )
+      break;
+    if ( m2_is_valid_text_char(i) != 0 )
+      break;
+  }
+  return i;
+}
+
+uint8_t m2_get_prev_valid_text_char(uint8_t c)
+{
+  uint8_t i = c;
+  for(;;)
+  {
+    i--;
+    if ( c == i )
+      break;
+    if ( m2_is_valid_text_char(i) != 0 )
+      break;
+  }
+  return i;
+}
+
+/*==============================================================*/
 /* char function */
 
 static char *m2_get_char_ptr(m2_nav_p nav)
@@ -113,17 +161,23 @@ M2_EL_FN_DEF(m2_el_char_fn)
       return 1;
     case M2_EL_MSG_DATA_UP:
       cp = m2_get_char_ptr(fn_arg->nav);
+      *cp = m2_get_next_valid_text_char(*cp);
+      /*
       if ( *cp >= M2_EL_CHAR_MAX )
 	*cp = M2_EL_CHAR_MIN;
       else
 	(*cp)++;
+      */
       return 1;
     case M2_EL_MSG_DATA_DOWN:
       cp = m2_get_char_ptr(fn_arg->nav);
+      *cp = m2_get_prev_valid_text_char(*cp);
+      /*
       if ( *cp <= M2_EL_CHAR_MIN )
 	*cp = M2_EL_CHAR_MAX;
       else
 	(*cp)--;
+      */
       return 1;
     case M2_EL_MSG_GET_HEIGHT:
       return m2_gfx_get_char_height_with_small_border(font);
