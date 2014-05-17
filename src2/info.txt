@@ -1,0 +1,132 @@
+focus group:
+ 1) Über das parent element laufen
+ 2) Ohne das parent element
+
+Eventuell solte man doch ein flag dafür einführen, damit man den zustand
+des parent elements unterscheiden kann.
+
+Options:
+Leaf elements (no list)
+o0:	Can not get navigation focus, with t0 this is a read only field
+o1: 	Can get navigation focus
+t0:	Not touchable
+t1:	Touchable
+List elements
+o0:	No focus group, just proceed to the child elements
+o1:	Define focus group. "Go up" event is required to leave focus group
+o2:	Focus group navigation goes through this list element. 
+t?:	Ignored for list elements
+
+Element 
+Leaf Elements:
+  - no focus
+  - nav focus
+  - touch focus
+List Elements
+ - no focus (always)
+ - nav upper group (o1)
+ - nav group (o1 and o2) 
+ 
+Vielleicht sollte man die navigation besser trennen
+1. Suche nach dem aktuellen Element und ermitteln der eigenschaften, insbesondere,
+  - focus group tiefe des aktuellen Elements
+  - focus parent des aktuellen Elements
+2. Ermitteln des ersten und letzten elements des aktuellen focus parent
+  Hier wird jetzt nur noch der tiefenzähler benötigt.
+  state 0: Suche nach dem parent
+  state 1: erstes und letztes element in dieser gruppe (gleiche depth)
+  --> damit können first und last implementiert werden
+Ermitteln von First/last:
+  erledigt, aus dem 2. Schritt
+Ermitteln von next:
+ State 0: Suche nach dem aktuellen Element
+ state 1: Suche nach dem nächsten element gleicher tiefe
+   wenn es das nicht gibt --> First
+Ermitteln von prev:
+  State 0: Suche nach dem Parent, last element mit 0 initalisieren
+  State 1: Suche nach dem aktuellen Element
+    wenn nicht gefunden: last element = current element
+    wenn gefunden; last element ist prev, wenn last lement 0 ist --> Last
+ 
+ 
+=============
+
+vielleicht doch alles zu kompliziert. Alternative:
+Einführen eines Filters, der nur die aktive Gruppe darstellt.
+Optionen: 
+"g<num>"
+Abfrage über callback funktion, so daß sich auch elemente über die gruppe hinwegsetzen können
+(parent element für text und zahleneingabe)
+Buttons zum setzen der Gruppe, beispielsweise via "v<num>"
+Allerdings wäre dann die wiederverwendung etwas eingeschränkt.
+
+Das besste wäre wohl das filtern komplett in die callback zu verlagern.
+Es sollte nur noch eine Nachricht geben:
+IS_NAV
+IS_TOUCH
+Alles andere kann man dann da drin regeln
+
+
+TODO
+
+Add selectable procedure
+  #define M2EL_MSG_IS_SELECTABLE 31
+  #define M2EL_MSG_IS_TOUCHABLE 32
+  in m2_elapi entsprechende funktionen einführen.
+  in m2_nav diese funktionen nutzen
+
+  vermutlich brauchen wir die nachrichten nicht --> gelöst über 
+  eine eigene function in m2_nav.c
+  
+=============
+
+Option Specification
+
+o	o0:	can not get focus,	o1: can get focus
+
+
+
+=============
+Size Calculation
+
+length[0][0]		origin (included) to top
+length[0][1]		origin (excluded) to bottom
+length[1][0]		origin (included) to right
+length[1][1]		origin (excluded) to left
+
+
+m2_size {
+  uint16_t length[2][2];
+};
+
+Size 1x1 has up=1 and right=1, down=0 and left=0
+
+GetSize(el_ptr, &m2_size)
+  m2_size = {0,0,0,0}
+  CalculateInnerSize(el_ptr, &m2_size)
+  ExpandWithBorder(el_ptr, &m2_size)
+  
+#define D_VERTICAL 0
+#define D_HORIZONTAL 1
+
+SetSizeZeroD(d, m2_size)
+  length[d][0] = 0;
+  length[d][1] = 0;
+
+SetSizeZero(m2_size)
+  SetSizeZeroD(0)
+  SetSizeZeroD(1)
+
+MaxSizeD(d, m2_size_dest, m2_size_src)
+  m2_size_dest.length[d][0] = max(m2_size_dest.length[d][0], m2_size_src.length[d][0])
+  m2_size_dest.length[d][1] = max(m2_size_dest.length[d][1], m2_size_src.length[d][1])
+
+AddSizeD(d, m2_size, uint16_t up_right, uint16_t down_left)
+  m2_size.length[d][0] += up_right;
+  m2_size.length[d][0] += down_left;
+
+=============
+Recursive Position Calculation
+Used for: (A) drawing, (B) touched button identification
+
+
