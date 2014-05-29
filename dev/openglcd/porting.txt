@@ -1,0 +1,10 @@
+
+
+m2ghglcd.h renamed to m2ghopenglcd.h
+m2_gh_glcd_ubf renamed to m2_gh_openglcd_bf
+m2_gh_glcd_uffs renamed to m2_gh_openglcd_ffs
+
+m2_gh_glcd_bf has been removed: use m2_gh_openglcd_bf with m2_SetFont()
+m2_gh_glcd_ffs has been removed: use m2_gh_openglcd_ffs with m2_SetFont()
+
+
