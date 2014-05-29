@@ -26,7 +26,7 @@
 
 #include <string.h>
 #include "m2.h"
-#include <glcd.h>
+#include <openGLCD.h>
 #include "m2ghopenglcd.h"
 
 
@@ -50,9 +50,9 @@ extern "C" uint8_t m2_gh_openglcd_bf(m2_gfx_arg_p arg)
       break;
     case M2_GFX_MSG_DRAW_TEXT:
       m2_gh_glcd_set_user_font(arg->font);
-      //GLCD.GotoXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_user_font_height(arg)+m2_gh_glcd_get_user_font_corrcetion(arg));
       GLCD.CursorToXY(arg->x,m2_gh_glcd_y(arg->y)-m2_gh_glcd_get_user_font_height(arg)+m2_gh_glcd_get_user_font_corrcetion(arg));
       GLCD.Puts(arg->s);
+
       return 0;
     case M2_GFX_MSG_DRAW_NORMAL_NO_FOCUS:
       if ( (arg->font & 4) != 0 )
@@ -66,10 +66,10 @@ extern "C" uint8_t m2_gh_openglcd_bf(m2_gfx_arg_p arg)
       break;
     
     case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
-      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w-1);
+      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w);
       break;
     case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
-      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w-1);
+      GLCD.DrawHLine(arg->x, m2_gh_glcd_y(arg->y), arg->w);
       break;
     
     case M2_GFX_MSG_DRAW_GO_UP:

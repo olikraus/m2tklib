@@ -1,8 +1,8 @@
 /*
 
-  HelloWorld.pde
+  Text.pde
   
-  GLCD Example
+  openGLCD Example
 
   m2tklib = Mini Interative Interface Toolkit Library
   
@@ -28,18 +28,41 @@
 #include "m2ghopenglcd.h"
 
 #include "fonts/System5x7.h"
+#include "fonts/Arial14.h"
 
+uint8_t uiKeySelectPin = 3;
+uint8_t uiKeyDownPin = 2;
+uint8_t uiKeyUpPin = 1;
+uint8_t uiKeyExitPin = 0;
 
-M2_LABEL(hello_world_label, "f0", "Hello World");
-M2tk m2(&hello_world_label, NULL, NULL, m2_gh_openglcd_bf);
+#define TEXT_LEN 12
+char text[] = "abcdefghijkl";
+
+void fn_text_ok(m2_el_fnarg_p fnarg) {
+  /* do something with the text */
+}
+
+M2_LABEL(el_label, "", "Enter Text:");
+M2_TEXT(el_text, NULL, text, TEXT_LEN);
+M2_BUTTON(el_ok, "", " ok ", fn_text_ok);
+M2_LIST(list) = { &el_label, &el_text, &el_ok };
+M2_VLIST(list_element, NULL, list);
+//M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_openglcd_bf);
+M2tk m2(&list_element, m2_es_arduino, m2_eh_2bs, m2_gh_openglcd_ffs);
 
 void setup() {
   m2.setFont(0, System5x7);
+  //m2.setFont(0, Arial14);
+  
+  m2.setPin(M2_KEY_SELECT, uiKeySelectPin);
+  m2.setPin(M2_KEY_NEXT, uiKeyDownPin);
+  m2.setPin(M2_KEY_PREV, uiKeyUpPin);
+  m2.setPin(M2_KEY_EXIT, uiKeyExitPin);  
 }
 
 void loop() {
-  m2.draw();
-  delay(1000);
+  m2.checkKey();
+  if ( m2.handleKey() ) {
+      m2.draw();
+  }
 }
-
-

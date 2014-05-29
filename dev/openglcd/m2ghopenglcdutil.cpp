@@ -26,7 +26,7 @@
 
 
 #include "m2.h"
-#include <glcd.h>
+#include <openGLCD.h>
 /*
 #include "fonts/Arial14.h"         
 #include "fonts/SystemFont5x7.h"
@@ -50,6 +50,7 @@ extern "C" uint8_t m2_gh_glcd_y(uint8_t y)
   return val;
 }
 
+/*
 extern "C" uint8_t m2_gh_glcd_get_font_height(m2_gfx_arg_p  arg)
 {
   if ( (arg->font & 1) == 0 )
@@ -72,30 +73,49 @@ extern "C" void m2_gh_glcd_set_font(uint8_t font)
   else 
       GLCD.SelectFont(Arial14); 
 }
+*/
 
 
 /* y0 is in m2 coordinate system, (x0,y0) = (0,0) = lower left edge  */
 extern "C" void m2_gh_glcd_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  w--;
-  h--;
+  //w--;
+  //h--;
   y0 +=h;
   GLCD.DrawRect(x0, m2_gh_glcd_y(y0), w, h);
 }
 
+extern "C" void m2_gh_glcd_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
+{
+  //w--;
+  //h--;
+  y0 +=h;
+  GLCD.FillRect(x0, m2_gh_glcd_y(y0), w, h);
+}
+
+extern "C" void m2_gh_glcd_draw_x(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
+{
+  //w--;
+  //h--;
+  y0 +=h;
+  //GLCD.FillRect(x0, m2_gh_glcd_y(y0), w, h);
+  GLCD.DrawLine(x0,m2_gh_glcd_y(y0),x0+w-1,m2_gh_glcd_y(y0)+h-1);
+  GLCD.DrawLine(x0+w-1,m2_gh_glcd_y(y0),x0,m2_gh_glcd_y(y0)+h-1);
+}
+
 extern "C" void m2_gh_glcd_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {  
-  GLCD.DrawHLine(x0+1, m2_gh_glcd_y(y0), w-2);
+  GLCD.DrawHLine(x0+1, m2_gh_glcd_y(y0+1), w-1);
   GLCD.DrawVLine(x0+w-1, m2_gh_glcd_y(y0)-h+1, h-1);
-  m2_gh_glcd_draw_frame(x0, y0+1, w-1, h);
+  m2_gh_glcd_draw_frame(x0, y0+1, w-1, h-1);
 }
 
 
 /* y0 is in m2 coordinate system, (x0,y0) = (0,0) = lower left edge  */
 extern "C" void m2_gh_glcd_draw_xorbox(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  w--;
-  h--;
+  //w--;
+  //h--;
   y0 +=h;
   GLCD.InvertRect(x0, m2_gh_glcd_y(y0), w, h);
 }
@@ -121,18 +141,24 @@ struct _m2_gfx_arg
 /* y0 is in m2 coordinate system, (x0,y0) = (0,0) = lower left edge  */
 extern "C" void m2_gh_glcd_draw_icon(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, uint8_t icon)
 {
-  x0++;
-  y0++;
-  w-=2;
-  h-=2;
-  m2_gh_glcd_draw_frame(x0, y0, w, h);
+  //x0++;
+  //y0++;
+  //w-=1;
+  //h-=1;
   if ( icon == M2_ICON_TOGGLE_ACTIVE || icon == M2_ICON_RADIO_ACTIVE )
   {
+    //m2_gh_glcd_draw_box(x0, y0, w, h);
+    m2_gh_glcd_draw_frame(x0, y0, w, h);
+    m2_gh_glcd_draw_x(x0, y0, w, h);
     x0+=2;
     y0+=2;
     w-=4;
     h-=4;
-    m2_gh_glcd_draw_xorbox(x0, y0, w, h);
+    //m2_gh_glcd_draw_frame(x0, y0, w, h);
+  }
+  else
+  {
+    m2_gh_glcd_draw_frame(x0, y0, w, h);
   }
 }
 
@@ -166,13 +192,17 @@ extern "C" uint8_t m2_gh_glcd_get_user_font_height(m2_gfx_arg_p  arg)
 
 extern "C" uint8_t m2_gh_glcd_get_user_font_corrcetion(m2_gfx_arg_p  arg)
 {
+  /*
   if (m2_gh_glcd_get_user_font_height(arg) > 8)
     return 2;
   return 1;
+  */
+  return 0;
 }
 
 extern "C" void m2_gh_glcd_set_user_font(uint8_t font)
 {
+  GLCD.SelectFont(System5x7); 
   font &= 3;
   GLCD.SelectFont((const uint8_t *)m2_gh_glcd_fonts[font]);
 }

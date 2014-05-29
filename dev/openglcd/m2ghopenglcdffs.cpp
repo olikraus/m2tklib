@@ -27,7 +27,7 @@
 
 #include <string.h>
 #include "m2.h"
-#include <glcd.h>
+#include <openGLCD.h>
 #include "m2ghopenglcd.h"
 
 
