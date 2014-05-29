@@ -65,6 +65,6 @@ M2tklib ChangeLog
 	* Changed default behavioir for M2_ALGIN (Issue 121)
 	* New element: M2_COMBOFN (Issue 122)
 	* New tutorial on event sources (Issues  117 and 123)
-2014-05-05	v1.12	Oliver Kraus <olikraus@gmail.com>
+2014-xx-xx	v1.12	Oliver Kraus <olikraus@gmail.com>
 	* M2_TEXT update
-	
+	* Native support for openGLCD	
