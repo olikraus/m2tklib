@@ -89,41 +89,49 @@ o	o0:	can not get focus,	o1: can get focus
 =============
 Size Calculation
 
-length[0][0]		origin (included) to top
-length[0][1]		origin (excluded) to bottom
-length[1][0]		origin (included) to right
-length[1][1]		origin (excluded) to left
+
+length[0..3]	inner area
+lentgh[4..7]	border
+
+length[0, 4]	left		(horizontal min)
+length[1, 5]	right		(horizontal max)
+length[2, 6]	bottom	(vertical min, descent)
+length[3, 7]	top		(vertical max, ascent)
 
 
 m2_size {
-  uint16_t length[2][2];
+  uint16_t length[8];
 };
 
-Size 1x1 has up=1 and right=1, down=0 and left=0
+Size 1x1 has top=1 and right=1, bottom=0 and left=0
+
+GetIdx(is_border, is_vertical, is_max)
+	idx = is_border
+	idx <<= 1;
+	idx += is_vertical
+	idx <<= 1
+	idx += is_max
+	return idx
 
 GetSize(el_ptr, &m2_size)
-  m2_size = {0,0,0,0}
+  m2_size = {0,0,0,0,0,0,0,0}
   CalculateInnerSize(el_ptr, &m2_size)
   ExpandWithBorder(el_ptr, &m2_size)
   
-#define D_VERTICAL 0
-#define D_HORIZONTAL 1
+  
+  
 
-SetSizeZeroD(d, m2_size)
-  length[d][0] = 0;
-  length[d][1] = 0;
+SetSizeZeroD(m2_size, idx)
+  length[idx] = 0;
 
-SetSizeZero(m2_size)
-  SetSizeZeroD(0)
-  SetSizeZeroD(1)
+SetSizeAllZero(m2_size)
+	for( i = 0; i < 8; i++ )
+		length[idx] = 0;
 
-MaxSizeD(d, m2_size_dest, m2_size_src)
-  m2_size_dest.length[d][0] = max(m2_size_dest.length[d][0], m2_size_src.length[d][0])
-  m2_size_dest.length[d][1] = max(m2_size_dest.length[d][1], m2_size_src.length[d][1])
+MaxSize(m2_size_dest, m2_size_src, idx)
+  m2_size_dest.length[idx] = max(m2_size_dest.length[idx], m2_size_src.length[idx])
 
-AddSizeD(d, m2_size, uint16_t up_right, uint16_t down_left)
-  m2_size.length[d][0] += up_right;
-  m2_size.length[d][0] += down_left;
+
 
 =============
 Recursive Position Calculation
