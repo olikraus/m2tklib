@@ -18,7 +18,7 @@
       m2->dfs_el_nr		Internal sequence number, do not use this: Instead use the argument to the callback
 */
 
-uint8_t m2_DoDFS(m2_t *m2, const  m2el_t *el_ptr)
+static uint8_t m2_DoDFS(m2_t *m2, const  m2el_t *el_ptr)
 {
   uint16_t el_nr;
   uint16_t i;
