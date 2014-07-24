@@ -1,6 +1,6 @@
 /*
   
-  mnuopt.c
+  m2_opt.c
   
   A parser for the string OPTions
 
@@ -37,9 +37,9 @@ static void m2_parser_inc_str(void)
   m2_parser_str++;
 }
 
-static char m2_parser_get_c(void)
+static uint8_t m2_parser_get_c(void)
 {
-  return *m2_parser_str;
+  return (uint8_t)*m2_parser_str;
 }
 
 static uint8_t m2_parser_is_digit(void)
@@ -65,18 +65,18 @@ static void m2_parser_skip_space(void)
   }
 }
 
-static uint8_t m2_parser_get_val(void)
+static uint16_t m2_parser_get_val(void)
 {
-  register uint8_t val = 0;
-  register int8_t c;
+  register uint16_t val = 0;
+  register uint8_t c;
   for(;;)
   {
     c = m2_parser_get_c();
     if ( c >= '0' && c <= '9' )
     {
-      val *= 10;
-      val += c;
-      val -= '0';
+      val *= (uint16_t)10;
+      val += (uint16_t)c;
+      val -= (uint16_t)'0';
     }
     else
       break;
@@ -118,7 +118,7 @@ void m2_parser_set_str(const char *str)
   m2_parser_str = str;
 }
 
-uint8_t m2_parser_get_cmd_val(char cmd, uint8_t not_found_val)
+uint16_t m2_parser_get_cmd_val(char cmd, uint16_t not_found_val)
 {
   if ( m2_parser_find_cmd(cmd) != 0 )
   {
@@ -132,7 +132,7 @@ uint8_t m2_parser_get_cmd_val(char cmd, uint8_t not_found_val)
 
 /*==============================================================*/
 
-uint8_t m2_opt_get_val_any_default(const char *str, char cmd, uint8_t default_value)
+uint16_t m2_opt_get_val_any_default(const char *str, char cmd, uint16_t default_value)
 {
   if ( str == NULL )
     return default_value;
@@ -140,7 +140,7 @@ uint8_t m2_opt_get_val_any_default(const char *str, char cmd, uint8_t default_va
   return m2_parser_get_cmd_val(cmd, default_value);
 }
 
-uint8_t m2_opt_get_val_zero_default(const char *str, char cmd)
+uint16_t m2_opt_get_val_zero_default(const char *str, char cmd)
 {
   return m2_opt_get_val_any_default(str, cmd, 0);
 }
