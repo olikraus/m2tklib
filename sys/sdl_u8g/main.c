@@ -1970,6 +1970,58 @@ M2_GRIDLIST(el_top_combofn, "c2", list_combofn);
 
 
 /*======================================================================*/
+
+char *svo_pos_str = "<keine>";
+int svo_pos = 0;
+
+
+/* svo_hm: Servo Untermenue */
+
+M2_EXTERN_VLIST(top_el_svo_um);
+
+void fn_svo_pos1(m2_el_fnarg_p fnarg) {
+  svo_pos_str = "Servostellung 1";
+  svo_pos = 1;
+  m2_SetRoot(&top_el_svo_um);
+}
+void fn_svo_pos2(m2_el_fnarg_p fnarg) {
+  svo_pos_str = "Servostellung 2";
+  svo_pos = 2;
+  m2_SetRoot(&top_el_svo_um);
+}
+void fn_svo_pos3(m2_el_fnarg_p fnarg) {
+  svo_pos_str = "Servostellung 3";
+  svo_pos = 3;
+  m2_SetRoot(&top_el_svo_um);
+}
+void fn_svo_pos4(m2_el_fnarg_p fnarg) {
+  svo_pos_str = "Servostellung 4";
+  svo_pos = 4;
+  m2_SetRoot(&top_el_svo_um);
+}
+
+M2_BUTTON(el_svo_um_pos1, NULL, "Servostellung 1", &fn_svo_pos1);
+M2_BUTTON(el_svo_um_pos2, NULL, "Servostellung 2", &fn_svo_pos2);
+M2_BUTTON(el_svo_um_pos3, NULL, "Servostellung 3", &fn_svo_pos3);
+M2_BUTTON(el_svo_um_pos4, NULL, "Servostellung 4", &fn_svo_pos4);
+M2_LIST(list_svo_um) = { &el_svo_um_pos1, &el_svo_um_pos2, &el_svo_um_pos3, &el_svo_um_pos4};
+M2_VLIST(top_el_svo_um, NULL, list_svo_um);
+
+
+/* svo_hm: Servo Hauptmenue */
+
+M2_LABEL(el_svo_hm_title, "f8W64", "Servoeinstellung");
+M2_ROOT(el_svo_hm_jmp_um, "f8W64", "Auswahl", &top_el_svo_um);
+
+M2_LABEL(el_svo_hm_space, NULL, "");
+M2_LABELPTR(el_svo_hm_pos, "f8W64", &svo_pos_str);
+
+M2_LIST(list_svo_hm) = { &el_svo_hm_title, &el_svo_hm_jmp_um, &el_svo_hm_space, &el_svo_hm_pos};
+M2_VLIST(el_svo_hm_vlist, NULL, list_svo_hm);
+M2_ALIGN(top_el_svo_hm, "-1|1W64H64", &el_svo_hm_vlist);
+
+
+/*======================================================================*/
 /* top level sdl menu: top_el_tlsm */
 
 
@@ -2215,6 +2267,13 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
       m2_SetRoot(&el_top_combofn);
     }    
   }
+  else if ( idx == 37 ) {
+    s = "ServoPos";
+    if ( msg == M2_STRLIST_MSG_SELECT )
+    {
+      m2_SetRoot(&top_el_svo_hm);
+    }    
+  }
 
   
  
@@ -2228,7 +2287,7 @@ const char *el_tlsm_strlist_cb(uint8_t idx, uint8_t msg) {
 
 
 uint8_t el_tlsm_first = 0;
-uint8_t el_tlsm_cnt = 37;
+uint8_t el_tlsm_cnt = 38;
 
 M2_STRLIST(el_tlsm_strlist, "l3W56t1", &el_tlsm_first, &el_tlsm_cnt, el_tlsm_strlist_cb);
 M2_SPACE(el_tlsm_space, "W1h1");
@@ -2374,12 +2433,8 @@ int main(int argc, char *argv[])
   u8g_EnableCursor(&u8g);
   
   /* 2. Now, setup m2 */
-  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
   m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
-  //m2_Init(&top_el_align_check, m2_es_sdl, m2_eh_6bsts, m2_gh_u8g_bfs);
-  
-  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_6bs, m2_gh_tty);
-  //m2_Init(&el_ts_mnu1_sel, m2_es_sdl, m2_eh_4bsts, m2_gh_u8g_bfs);
+  //m2_Init(&top_el_tlsm, m2_es_sdl, m2_eh_4bd, m2_gh_u8g_bfs);
 
   /* 3. Connect the u8g display to m2.  */
   m2_SetU8g(&u8g, m2_u8g_box_icon);
