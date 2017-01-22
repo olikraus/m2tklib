@@ -27,7 +27,7 @@
 #define _M2GHU8G_H
 
 #include "m2.h"
-#include "u8g.h"
+#include "u8g2.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -118,8 +118,8 @@ uint8_t m2_u8g2_box_icon(m2_gfx_arg_p arg);
 
 /* icon font setup procedures */
 
-void m2_SetU8g2ToggleFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint8_t inactive);
-void m2_SetU8g2RadioFontIcon(const u8g_fntpgm_uint8_t *font, uint8_t active, uint8_t inactive);
+//void m2_SetU8g2ToggleFontIcon(const uint8_t *font, uint8_t active, uint8_t inactive);
+//void m2_SetU8g2RadioFontIcon(const uint8_t *font, uint8_t active, uint8_t inactive);
 
 /* connect U8g2 and M2tklib */
 

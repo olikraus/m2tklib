@@ -24,7 +24,7 @@
 */
 
 #include "m2.h"
-#include "m2ghu8g.h"
+#include "m2ghu8g2.h"
 
 /*
 struct m2_u8g2_dev_variables_struct
