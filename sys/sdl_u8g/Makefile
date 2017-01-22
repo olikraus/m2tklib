@@ -1,5 +1,5 @@
 
-U8GPATH = ../../../../u8g/u8glib/
+U8GPATH = ../../../u8glib/
 M2TKPATH = ../../
 
 
