@@ -4,7 +4,7 @@
 
 #include "m2.h"
 #include "m2utl.h"
-#include "m2ghu8g.h"
+#include "m2ghu8g2.h"
 #include "m2ghtty.h"
 #include "mas.h"
 

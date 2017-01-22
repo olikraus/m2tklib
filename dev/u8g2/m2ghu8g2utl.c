@@ -30,7 +30,7 @@
 struct m2_u8g2_dev_variables_struct
 {
   u8g2_t *m2_u8g2 = NULL;
-  u8g_uint_t m2_u8g2_height_minus_one = 0;
+  u8g2_uint_t m2_u8g2_height_minus_one = 0;
   uint8_t m2_u8g2_fg_text_color;
   uint8_t m2_u8g2_bg_text_color;
   uint8_t m2_u8g2_current_text_color;
@@ -73,31 +73,31 @@ void m2_SetU8g2AdditionalReadOnlyXBorder(uint8_t w)
 
 
 /* update local information */
-static void m2_u8g_update(void)
+static void m2_u8g2_update(void)
 {
-  m2_u8g2_dev_variables.m2_u8g2_height_minus_one = u8g2_GetHeight(m2_u8g2_dev_variables.m2_u8g2);
+  m2_u8g2_dev_variables.m2_u8g2_height_minus_one = u8g2_GetDisplayHeight(m2_u8g2_dev_variables.m2_u8g2);
   m2_u8g2_dev_variables.m2_u8g2_height_minus_one--;
   
   /* force lower left edge of a text as reference */
   u8g2_SetFontPosBottom(m2_u8g2_dev_variables.m2_u8g2);
 
-  m2_u8g2_dev_variables.m2_u8g2_fg_text_color = u8g_GetDefaultForegroundColor(m2_u8g2_dev_variables.m2_u8g2);
-  m2_u8g2_dev_variables.m2_u8g2_bg_text_color = u8g_GetDefaultBackgroundColor(m2_u8g2_dev_variables.m2_u8g2);
+  m2_u8g2_dev_variables.m2_u8g2_fg_text_color = 1;
+  m2_u8g2_dev_variables.m2_u8g2_bg_text_color = 0;
   m2_u8g2_dev_variables.m2_u8g2_current_text_color = m2_u8g2_dev_variables.m2_u8g2_fg_text_color;
-  m2_u8g2_dev_variables.m2_u8g2_draw_color = u8g_GetDefaultForegroundColor(m2_u8g2_dev_variables.m2_u8g2);
+  m2_u8g2_dev_variables.m2_u8g2_draw_color = 1;
 }
 
 
 void m2_SetU8g2(u8g2_t *u8g2, uint8_t (*gh_icon_draw)(m2_gfx_arg_p  arg))
 {
   m2_u8g2_dev_variables.m2_u8g2 = u8g2;
-  m2_u8g2_dev_variables.m2_gh_u8g_icon_draw = gh_icon_draw;
+  m2_u8g2_dev_variables.m2_gh_u8g2_icon_draw = gh_icon_draw;
   m2_u8g2_update();
 }
 
 void m2_u8g2_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  u8g_uint_t y;
+  u8g2_uint_t y;
   y = m2_u8g2_dev_variables.m2_u8g2_height_minus_one;
   y -= y0;
   y -= h;
@@ -111,7 +111,7 @@ void m2_u8g2_draw_frame(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 
 void m2_u8g2_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  u8g_uint_t y;
+  u8g2_uint_t y;
   y = m2_u8g2_dev_variables.m2_u8g2_height_minus_one;
   y -= y0;
   y -= h;
@@ -127,7 +127,7 @@ void m2_u8g2_draw_frame_shadow(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 /* origin is low left */
 void m2_u8g_draw_box(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h)
 {
-  u8g_uint_t y;
+  u8g2_uint_t y;
   /* transform y to upper left */
   y = m2_u8g2_dev_variables.m2_u8g2_height_minus_one;
   y -= y0;
@@ -191,8 +191,8 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_DRAW_TEXT:
       {
-        u8g_uint_t x = arg->x;
-        u8g_uint_t y;
+        u8g2_uint_t x = arg->x;
+        u8g2_uint_t y;
 
         u8g2_SetDrawColor(m2_u8g2_dev_variables.m2_u8g2, m2_u8g2_dev_variables.m2_u8g2_current_text_color);
         u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_u8g_get_font(arg->font));
@@ -218,9 +218,10 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       }
       break;
     case M2_GFX_MSG_DRAW_TEXT_P:
+#ifdef WITH_P
       {
-	u8g_uint_t x = arg->x;
-	u8g_uint_t y;
+	u8g2_uint_t x = arg->x;
+	u8g2_uint_t y;
         
         u8g2_SetDrawColor(m2_u8g2_dev_variables.m2_u8g2, m2_u8g2_dev_variables.m2_u8g2_current_text_color);
         u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_u8g_get_font(arg->font));
@@ -243,23 +244,24 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
 	y++;			/* 13 Jan 2013: Issue 95, problem 2 */
       	u8g2_DrawStrP(m2_u8g2_dev_variables.m2_u8g2, x, y, (const u8g_pgm_uint8_t *)arg->s);
       }
+#endif 
       break;
     case M2_GFX_MSG_DRAW_NORMAL_DATA_ENTRY:
       m2_u8g2_dev_variables.m2_u8g2_current_text_color = m2_u8g2_dev_variables.m2_u8g2_fg_text_color;
       //u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
-      u8g_DrawHLine(m2_u8g2_dev_variables.m2_u8g2, arg->x, m2_u8g2_dev_variables.m2_u8g2_height_minus_one - arg->y , arg->w); 	/* 13 Jan 2013: Issue 95, problem 2 */
+      u8g2_DrawHLine(m2_u8g2_dev_variables.m2_u8g2, arg->x, m2_u8g2_dev_variables.m2_u8g2_height_minus_one - arg->y , arg->w); 	/* 13 Jan 2013: Issue 95, problem 2 */
       break;
     case M2_GFX_MSG_DRAW_SMALL_DATA_ENTRY:
       m2_u8g2_dev_variables.m2_u8g2_current_text_color = m2_u8g2_dev_variables.m2_u8g2_fg_text_color;
       // u8g_DrawHLine(m2_u8g, arg->x, m2_u8g_height_minus_one - arg->y - 1, arg->w);
-      u8g_DrawHLine(m2_u8g2_dev_variables.m2_u8g2, arg->x, m2_u8g2_dev_variables.m2_u8g2_height_minus_one - arg->y , arg->w); 	/* 13 Jan 2013: Issue 95, problem 2 */
+      u8g2_DrawHLine(m2_u8g2_dev_variables.m2_u8g2, arg->x, m2_u8g2_dev_variables.m2_u8g2_height_minus_one - arg->y , arg->w); 	/* 13 Jan 2013: Issue 95, problem 2 */
       break;
     case M2_GFX_MSG_SET_FONT:
       {
 	      uint8_t idx;
 	      idx = arg->font;
 	      idx &=3;
-	      m2_gh_u8g_fonts[idx] = (const u8g_fntpgm_uint8_t *)(arg->s);
+	      m2_gh_u8g_fonts[idx] = (const uint8_t *)(arg->s);
         u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_gh_u8g_fonts[idx]);
         m2_gh_u8g_ref_dx[idx] = u8g_GetGlyphDeltaX(m2_u8g2_dev_variables.m2_u8g2, 'm');
 	m2_gh_u8g_ref_num_dx[idx] = u8g_GetGlyphDeltaX(m2_u8g2_dev_variables.m2_u8g2, '0');
@@ -268,25 +270,29 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       }
       return 0;
     case M2_GFX_MSG_GET_TEXT_WIDTH:
-      u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_u8g_get_font(arg->font));
-      return u8g2_GetStrPixelWidth(m2_u8g2_dev_variables.m2_u8g2, arg->s);
+      u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_u8g_get_font(arg->font));	
+      return u8g2_GetStrWidth(m2_u8g2_dev_variables.m2_u8g2, arg->s);		// ### or u8g2_GetExactStrWidth ??
     case M2_GFX_MSG_GET_TEXT_WIDTH_P:
+#ifdef WITH_P
       u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_u8g_get_font(arg->font));
       return u8g2_GetStrPixelWidthP(m2_u8g2_dev_variables.m2_u8g2, (const u8g_pgm_uint8_t *)arg->s);
+#else
+      return 1;
+#endif
     case M2_GFX_MSG_GET_NUM_CHAR_WIDTH:
       return m22_u8g_get_reference_num_delta_x(arg->font);
     case M2_GFX_MSG_GET_CHAR_WIDTH:
-      return m22_u8g_get_reference_delta_x(arg->font);
+      return m2_u8g2_get_reference_delta_x(arg->font);
     case M2_GFX_MSG_GET_CHAR_HEIGHT:
       u8g2_SetFont(m2_u8g2_dev_variables.m2_u8g2, m2_u8g_get_font(arg->font));
       return u8g2_GetFontLineSpacing(m2_u8g2_dev_variables.m2_u8g2);
       
     case M2_GFX_MSG_GET_DISPLAY_WIDTH:
       /* printf("display width = %d\n", (int)u8g_GetWidth(m2_u8g)); */
-      return u8g2_GetWidth(m2_u8g2_dev_variables.m2_u8g2);
+      return u8g2_GetDisplayWidth(m2_u8g2_dev_variables.m2_u8g2);
     case M2_GFX_MSG_GET_DISPLAY_HEIGHT:
       /* printf("display height = %d\n", (int)u8g_GetHeight(m2_u8g)); */
-      return u8g2_GetHeight(m2_u8g2_dev_variables.m2_u8g2);
+      return u8g2_GetDisplayHeight(m2_u8g2_dev_variables.m2_u8g2);
     case M2_GFX_MSG_DRAW_VERTICAL_SCROLL_BAR:
       /* scroll bar: "total" total number of items */
       /* scroll bar: "top" topmost item (first visible item) 0 .. total-visible*/
@@ -327,14 +333,14 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
     */
     case M2_GFX_MSG_LEVEL_DOWN:
       // printf("down %d\n", arg->top);
-      m2_u8g2_dev_variables.m2_gh_u8g_current_depth = arg->top;
+      m2_u8g2_dev_variables.m2_gh_u8g2_current_depth = arg->top;
       break;
     case M2_GFX_MSG_LEVEL_NEXT:
       // printf("next %d ", arg->top);
     case M2_GFX_MSG_LEVEL_UP:
       // printf("up %d\n", arg->top);
       m2_u8g2_dev_variables.m2_gh_u8g2_current_depth = arg->top;
-      if ( m2_u8g2_dev_variables.m2_gh_u8g2_invert_at_depth >= m2_u8g_dev_variables.m2_gh_u8g_current_depth )
+      if ( m2_u8g2_dev_variables.m2_gh_u8g2_invert_at_depth >= m2_u8g2_dev_variables.m2_gh_u8g2_current_depth )
       {
         // printf("invert remove %d\n", m2_gh_u8g_invert_at_depth);
         m2_u8g2_dev_variables.m2_gh_u8g2_invert_at_depth = 255;
@@ -343,8 +349,8 @@ uint8_t m2_gh_u8g_base(m2_gfx_arg_p  arg)
       break;
     case M2_GFX_MSG_DRAW_XBM_P:
       {
-	u8g_uint_t x = arg->x;
-	u8g_uint_t y;        
+	u8g2_uint_t x = arg->x;
+	u8g2_uint_t y;        
         u8g2_SetDrawColor(m2_u8g2_dev_variables.m2_u8g2, m2_u8g2_dev_variables.m2_u8g2_current_text_color);
         y = m2_u8g2_dev_variables.m2_u8g2_height_minus_one;
       	y -= arg->y;
