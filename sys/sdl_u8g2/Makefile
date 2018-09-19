@@ -3,7 +3,7 @@ U8G2PATH = ../../../u8g2/
 M2TKPATH = ../../
 
 
-CFLAGS = -g -Wall -I$(U8G2PATH)csrc/.  -I$(M2TKPATH)src/. -I$(M2TKPATH)dev/u8g2/. -I$(M2TKPATH)dev/tty/. `sdl-config --cflags` 
+CFLAGS = -g -I$(U8G2PATH)csrc/.  -I$(M2TKPATH)src/. -I$(M2TKPATH)dev/u8g2/. -I$(M2TKPATH)dev/tty/. `sdl2-config --cflags` 
 # CFLAGS += -DM2_EL_MSG_DBG_SHOW
 
 # CFLAGS += -DM2_EL_MSG_DBG_SHOW -DU8G_16BIT 
@@ -19,7 +19,7 @@ SRC += main.c
 OBJ = $(SRC:.c=.o)
 
 helloworld: $(OBJ) 
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) `sdl-config --libs` -o u8g2_sdl
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) `sdl2-config --libs` -o u8g2_sdl
 
 clean:	
 	-rm $(OBJ) u8g2_sdl

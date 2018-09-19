@@ -491,23 +491,23 @@ M2_ALIGN(top_el_tsk_num_menu, "-1|1W64H64", &el_tsk_num_menu);
 */
 
 
-static unsigned char down_bits[] U8G_PROGMEM = {
+static unsigned char down_bits[] U8X8_PROGMEM = {
    0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41,
    0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0xf2, 0x4f, 0xe2, 0x47, 0xc2, 0x43,
    0x82, 0x41, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static unsigned char enter_bits[] U8G_PROGMEM  = {
+static unsigned char enter_bits[] U8X8_PROGMEM  = {
    0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x02, 0x40, 0x02, 0x4c,
    0x02, 0x4c, 0x22, 0x4c, 0x32, 0x4c, 0xfa, 0x4f, 0xfa, 0x4f, 0x32, 0x40,
    0x22, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static unsigned char left_bits[] U8G_PROGMEM  = {
+static unsigned char left_bits[] U8X8_PROGMEM  = {
    0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x42, 0x40, 0x62, 0x40,
    0x72, 0x40, 0xfa, 0x5f, 0xfa, 0x5f, 0x72, 0x40, 0x62, 0x40, 0x42, 0x40,
    0x02, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static unsigned char right_bits[] U8G_PROGMEM  = {
+static unsigned char right_bits[] U8X8_PROGMEM  = {
    0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x02, 0x40, 0x02, 0x42, 0x02, 0x46,
    0x02, 0x4e, 0xfa, 0x5f, 0xfa, 0x5f, 0x02, 0x4e, 0x02, 0x46, 0x02, 0x42,
    0x02, 0x40, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
-static unsigned char up_bits[] U8G_PROGMEM  = {
+static unsigned char up_bits[] U8X8_PROGMEM  = {
    0x00, 0x00, 0xf8, 0x1f, 0x04, 0x20, 0x82, 0x41, 0xc2, 0x43, 0xe2, 0x47,
    0xf2, 0x4f, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41,
    0x82, 0x41, 0x04, 0x20, 0xf8, 0x1f, 0x00, 0x00};
@@ -604,16 +604,16 @@ const char *el_gfx_strlist_cb(uint8_t idx, uint8_t msg) {
   } 
   else if ( msg == M2_STRLIST_MSG_SELECT ) {
     if ( idx == 0 ) {
-      m2_SetGraphicsHandler(m2_gh_u8g_fb);
+      m2_SetGraphicsHandler(m2_gh_u8g2_fb);
     }
     else if ( idx == 1 ) {
-      m2_SetGraphicsHandler(m2_gh_u8g_bf);
+      m2_SetGraphicsHandler(m2_gh_u8g2_bf);
     }
     else if ( idx == 2 ) {
-      m2_SetGraphicsHandler(m2_gh_u8g_bfs);
+      //m2_SetGraphicsHandler(m2_gh_u8g_bfs);
     }
     else if ( idx == 3 ) {
-      m2_SetGraphicsHandler(m2_gh_u8g_ffs);
+      //m2_SetGraphicsHandler(m2_gh_u8g_ffs);
     }
     m2_SetRoot(&top_el_tlsm);
   }
@@ -621,7 +621,7 @@ const char *el_gfx_strlist_cb(uint8_t idx, uint8_t msg) {
 }
 
 uint8_t el_gfx_first = 0;
-uint8_t el_gfx_cnt = 4;
+uint8_t el_gfx_cnt = 2;
 
 M2_STRLIST(el_gfx_strlist, "l3W56", &el_gfx_first, &el_gfx_cnt, el_gfx_strlist_cb);
 M2_SPACE(el_gfx_space, "W1h1");
@@ -641,90 +641,90 @@ const char *el_fsel_strlist_cb(uint8_t idx, uint8_t msg) {
   if ( idx == 0 ) {
     s = "4x6";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_4x6);
-      m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_4x6_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 1 ) {
     s = "5x8";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_5x8);
-      m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_5x8_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 2 ) {
     s = "6x12";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_6x12);
-      m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_6x12_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_6x12_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 3 ) {
     s = "6x13";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_6x13);
-      m2_SetU8gToggleFontIcon(u8g_font_6x13_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_6x13_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_6x13_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_6x13_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_6x13_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 4 ) {
     s = "7x13";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_7x13);
-      m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_7x13_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 5 ) {
     s = "8x13";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_8x13);
-      m2_SetU8gToggleFontIcon(u8g_font_8x13_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_8x13_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_8x13_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_8x13_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_8x13_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 6 ) {
-    s = "tpss";
+    s = "baby";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_tpss);
-      m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_baby_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 7 ) {
     s = "cu12";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_cu12);
-      m2_SetU8gToggleFontIcon(u8g_font_cu12_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_cu12_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_cu12_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_cu12_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_cu12_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 8 ) {
     s = "unifont";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_unifont);
-      m2_SetU8gToggleFontIcon(u8g_font_unifont_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_unifont_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_unifont_t_extended);
+      //m2_SetU8gToggleFontIcon(u8g_font_unifont_75r, active_encoding, inactive_encoding);
+      ////m2_SetU8gRadioFontIcon(u8g_font_unifont_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
   else if ( idx == 9 ) {
     s = "9x15";
     if ( msg == M2_STRLIST_MSG_SELECT ) {
-      m2_SetFont(0, (const void *)u8g_font_9x15);
-      m2_SetU8gToggleFontIcon(u8g_font_9x15_75r, active_encoding, inactive_encoding);
-      m2_SetU8gRadioFontIcon(u8g_font_9x15_75r, active_encoding, inactive_encoding);
+      m2_SetFont(0, (const void *)u8g2_font_9x15_tf);
+      //m2_SetU8gToggleFontIcon(u8g_font_9x15_75r, active_encoding, inactive_encoding);
+      //m2_SetU8gRadioFontIcon(u8g_font_9x15_75r, active_encoding, inactive_encoding);
       m2_SetRoot(&top_el_tlsm);
     }
   }
@@ -746,15 +746,15 @@ M2_ALIGN(top_el_fsel, "-1|1W64H64", &el_fsel_hlist);
 /* Edit x width properties */
 
 void fn_xwp_zero(m2_el_fnarg_p fnarg) {
-  m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size = 0;
-  m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size = 0;
+  m2_u8g2_dev_variables.m2_gh_u8g2_invisible_frame_border_x_size = 0;
+  m2_u8g2_dev_variables.m2_gh_u8g2_additional_text_border_x_size = 0;
 }
 
 M2_LABEL(el_xwp_label1, NULL, "Add to Frame:");
-M2_U8NUM(el_xwp_1, "c1", 0, 4, &m2_u8g_dev_variables.m2_gh_u8g_invisible_frame_border_x_size);
+M2_U8NUM(el_xwp_1, "c1", 0, 4, &m2_u8g2_dev_variables.m2_gh_u8g2_invisible_frame_border_x_size);
 
 M2_LABEL(el_xwp_label2, NULL, "Add to Text:");
-M2_U8NUM(el_xwp_2, "c1", 0, 4, &m2_u8g_dev_variables.m2_gh_u8g_additional_text_border_x_size);
+M2_U8NUM(el_xwp_2, "c1", 0, 4, &m2_u8g2_dev_variables.m2_gh_u8g2_additional_text_border_x_size);
 
 M2_ROOT(el_xwp_goto_top, "f4", "Goto Top Menu", &top_el_tlsm);
 M2_BUTTON(el_xwp_zero, "f4", "Zero", fn_xwp_zero);
@@ -1561,7 +1561,7 @@ M2_VLIST(el_bm_m8_vl, NULL, list_bm_m8);
 M2_ALIGN(el_bm_m8, "W64H64", &el_bm_m8_vl);
 /*======================================================================*/
 
-static char memory_card_28_bits[] U8G_PROGMEM = {
+static char memory_card_28_bits[] U8X8_PROGMEM = {
   0xF8, 0xFF, 0x3F, 0x00, 0xFC, 0xFF, 0x7F, 0x00, 0xFC, 0xFF, 0xFF, 0x00, 
   0x3C, 0xE7, 0xFC, 0x01, 0x3C, 0xE7, 0xFC, 0x03, 0x3C, 0xE7, 0xFC, 0x03, 
   0x3C, 0xE7, 0xFC, 0x03, 0x3C, 0xE7, 0xFC, 0x03, 0x3C, 0xE7, 0xFC, 0x03, 
@@ -1573,7 +1573,7 @@ static char memory_card_28_bits[] U8G_PROGMEM = {
   0x3C, 0x00, 0xE0, 0x03, 0xFC, 0xFF, 0xFF, 0x03, 0xFC, 0xFF, 0xFF, 0x03, 
   0xF8, 0xFF, 0xFF, 0x01, };
 
-static char tools_28_bits[] U8G_PROGMEM = {
+static char tools_28_bits[] U8X8_PROGMEM = {
   0x00, 0x00, 0x0E, 0x00, 0x00, 0x80, 0x0F, 0x00, 0x04, 0xC0, 0x0F, 0x00, 
   0x0E, 0xE0, 0x07, 0x00, 0x1F, 0xE0, 0x03, 0x00, 0x3F, 0xF0, 0x03, 0x00, 
   0x3E, 0xF0, 0x03, 0x00, 0x7C, 0xF0, 0x03, 0x00, 0xF0, 0xF0, 0x03, 0x0E, 
@@ -1857,7 +1857,7 @@ M2_ALIGN(el_top_hide_example, "-1|1W64H64", &el_hide_example);
 #define i111_u8g_logo_width 38
 #define i111_u8g_logo_height 24
 //static unsigned char u8g_logo_bits[] = {
-static char i111_u8g_logo_bits[] U8G_PROGMEM = {
+static char i111_u8g_logo_bits[] U8X8_PROGMEM = {
 0xff, 0xff, 0xff, 0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xe0, 0xe0,
 0xff, 0xff, 0x3f, 0xe3, 0xe1, 0xff, 0xff, 0x3f, 0xf3, 0xf1, 0xff, 0xff,
 0x3f, 0xf3, 0xf1, 0xfe, 0xbf, 0x37, 0xf3, 0x11, 0x1c, 0x1f, 0x30, 0xf3,
@@ -2307,6 +2307,7 @@ u8g2_t u8g2;
 
 void screenshot(void)
 {
+#ifdef NOT_YET_PORTED
   u8g_t screenshot_u8g;
   /* 1. Setup and create device access */
   u8g_Init(&screenshot_u8g, &u8g_dev_pbm);
@@ -2331,7 +2332,7 @@ void screenshot(void)
     
     system(cmd);
   }
-  
+#endif  
 }
 
 /* create video: 
@@ -2340,7 +2341,7 @@ then create gif animation
 avconv -i u8g.avi -pix_fmt rgb24 -vf scale=256:128 -s qcif -loop 0 output.gif
 
 */
-#ifdev HAVE_PBM
+#ifdef HAVE_PBM
 void screenshot_n(int x)
 {
   u8g_t screenshot_u8g;
@@ -2455,16 +2456,17 @@ int main(int argc, char *argv[])
   m2_SetU8g2(&u8g2, m2_u8g2_box_icon);
 
   /* 4. And finally, set at least one font, use normal u8g_font's */
-  m2_SetFont(0, (const void *)u8g_font2_7x13_tf);
-  m2_SetFont(1, (const void *)u8g_font2_symb12_tf);
-  m2_SetFont(2, (const void *)u8g_font2_fub25_tf);
+  m2_SetFont(0, (const void *)u8g2_font_7x13_tf);
+  //m2_SetFont(1, (const void *)u8g2_font_symb12_tf);
+  m2_SetFont(1, (const void *)u8g2_font_timR12_tf);
+  m2_SetFont(2, (const void *)u8g2_font_fub25_tf);
 
   //m2_SetU8gToggleFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
   //m2_SetU8gRadioFontIcon(u8g_font_7x13_75r, active_encoding, inactive_encoding);
 
   // m2_SetU8gAdditionalReadOnlyXBorder(0);  
   /* set the font for the multi selection */
-  m2_SetFont(3, (const void *)u8g_font_m2icon_7);
+  m2_SetFont(3, (const void *)u8g2_font_m2icon_7_tf);
   
 
   mas_Init(mas_device_sim, 0);
@@ -2474,31 +2476,15 @@ int main(int argc, char *argv[])
   for(;;)
   {
     m2_CheckKey();
-    if ( m2_HandleKey() || is_motion) {
-      if ( is_motion )
-      {
-	u8g_SetCursorPos(&u8g, mouse_x, 63-mouse_y);
-	//m2_FindByXY(mouse_x, mouse_y, 0, 0);
-
-	      if ( is_mouse_down )
-	      {
-		u8g_SetCursorStyle(&u8g, 66);
-	      }
-	      else
-	      {
-		u8g_SetCursorStyle(&u8g, 62);
-	      }
-	
-      }
-      is_motion = 0;
-      u8g_FirstPage(&u8g);
+    if ( m2_HandleKey() ) {
+      u8g2_FirstPage(&u8g2);
       do{
         //u8g_SetFont(&u8g, u8g_font_unifont);
         //u8g_DrawStr(&u8g, 0, 20, "Hello World!");
         m2_CheckKey();
         m2_Draw();
 	//u8g_DrawPixel(&u8g, mouse_x, 63-mouse_y);
-      } while( u8g_NextPage(&u8g) );
+      } while( u8g2_NextPage(&u8g2) );
       
       if ( is_record != 0 )
       {
